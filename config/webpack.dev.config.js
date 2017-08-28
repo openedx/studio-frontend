@@ -7,10 +7,10 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = {
   devtool: 'cheap-module-eval-source-map',
   entry: [
-    require.resolve('webpack-dev-server/client') + '?/',
+    `${require.resolve('webpack-dev-server/client')}?/`,
     require.resolve('webpack/hot/dev-server'),
     require.resolve('react-error-overlay'),
-    path.resolve(__dirname, '../src/index.js'),
+    path.resolve(__dirname, '../src/index.jsx'),
   ],
   module: {
     rules: [
@@ -24,6 +24,9 @@ module.exports = {
       },
     ],
   },
+  resolve: {
+    extensions: ['.js', '.jsx'],
+  },
   plugins: [
     new HtmlWebpackPlugin({
       inject: true,
@@ -33,9 +36,9 @@ module.exports = {
   ],
   devServer: {
     proxy: {
-      "/api": {
-        target: "http://localhost:18010",
-        pathRewrite: {"^/api" : ""},
+      '/api': {
+        target: 'http://localhost:18010',
+        pathRewrite: { '^/api': '' },
       },
     },
   },
