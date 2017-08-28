@@ -4,15 +4,30 @@ React front end for edX Studio
 ## Development
 
 Requirements:
-* https://github.com/edx/devstack
+* https://github.com/edx/devstack (including the docker and docker-compose prereqs)
 * node 6+ (https://github.com/tj/n is recommended for setting up a local nodeenv)
 
 To install and run locally:
 ```
 $ git clone git@github.com:edx/studio-frontend.git
 $ cd studio-frontend
-$ npm i
-$ npm run start
+$ docker-compose -f docker-compose.yml up studio-frontend
 ```
 
-Webpack will serve pages in development mode at http://localhost:8080.
+To install a new node package in the repo (assumes container is running):
+```
+$ make shell
+$ npm install <package> --save-dev
+$ exit
+$ git add package.json
+```
+To make changes to the Docker image locally, modify the Dockerfile as needed and run:
+```
+$ docker build -t mroytman/studio-frontend:latest .
+```
+
+Webpack will serve pages in development mode at http://localhost:18011.
+
+Notes:
+
+The development server will run regardless of whether devstack is running along side it. If devstack is not running, requests to the studio API will fail. You can start up the devstack at any time by following the instructions in the devstack repository, and the development server will then be able to communicate with the studio container. If studio is not running, requests to the API will return a 504 error. If studio is running, but you are not logged in, requests to the API will return a 404 error.
