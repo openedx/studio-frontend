@@ -37,7 +37,6 @@ module.exports = {
         target: "http://localhost:18010",
         pathRewrite: {"^/api" : ""},
       },
-      "/signin": "http://localhost:18010"
     },
   },
 };
