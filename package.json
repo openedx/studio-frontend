@@ -4,8 +4,8 @@
   "description": "The frontend for the Open edX platform",
   "scripts": {
     "lint": "eslint --ext .js --ext .jsx .",
-    "start": "NODE_ENV=development BABEL_ENV=development webpack-dev-server --config=config/webpack.dev.config.js --progress",
-    "build": "NODE_ENV=production BABEL_ENV=production webpack --config=config/webpack.prod.config.js",
+    "start": "NODE_ENV=development BABEL_ENV=development $(npm bin)/webpack-dev-server --config=./config/webpack.dev.config.js --progress",
+    "build": "NODE_ENV=production BABEL_ENV=production $(npm bin)/webpack --config=./config/webpack.prod.config.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "license": "AGPL-3.0",

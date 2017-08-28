@@ -33,6 +33,9 @@ module.exports = Merge.smart(commonConfig, {
     new webpack.HotModuleReplacementPlugin(),
   ],
   devServer: {
+    host: '0.0.0.0',
+    port: 18123,
+    hot: true,
     proxy: {
       '/api': {
         target: 'http://localhost:18010',
