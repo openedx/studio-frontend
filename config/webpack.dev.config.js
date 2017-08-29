@@ -1,16 +1,17 @@
 'use strict';
 
+const Merge = require('webpack-merge');
+const commonConfig = require('./webpack.common.config.js');
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
-module.exports = {
+module.exports = Merge.smart(commonConfig, {
   devtool: 'cheap-module-eval-source-map',
   entry: [
     `${require.resolve('webpack-dev-server/client')}?/`,
     require.resolve('webpack/hot/dev-server'),
     require.resolve('react-error-overlay'),
-    path.resolve(__dirname, '../src/index.jsx'),
   ],
   module: {
     rules: [
@@ -23,9 +24,6 @@ module.exports = {
         },
       },
     ],
-  },
-  resolve: {
-    extensions: ['.js', '.jsx'],
   },
   plugins: [
     new HtmlWebpackPlugin({
@@ -42,4 +40,4 @@ module.exports = {
       },
     },
   },
-};
+});
