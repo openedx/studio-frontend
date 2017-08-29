@@ -8,11 +8,13 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = Merge.smart(commonConfig, {
   devtool: 'cheap-module-eval-source-map',
-  entry: [
-    `${require.resolve('webpack-dev-server/client')}?/`,
-    require.resolve('webpack/hot/dev-server'),
-    require.resolve('react-error-overlay'),
-  ],
+  entry: {
+    devServer: [
+      `${require.resolve('webpack-dev-server/client')}?/`,
+      require.resolve('webpack/hot/dev-server'),
+      require.resolve('react-error-overlay'),
+    ],
+  },
   module: {
     rules: [
       {
@@ -22,6 +24,20 @@ module.exports = Merge.smart(commonConfig, {
         options: {
           cacheDirectory: true,
         },
+      },
+      {
+        test: /.css$/,
+        use: [
+          'style-loader',
+          {
+            loader: 'css-loader',
+            options: {
+              sourceMap: true,
+              modules: true,
+              localIdentName: '[path][name]__[local]--[hash:base64:5]',
+            },
+          },
+        ],
       },
     ],
   },

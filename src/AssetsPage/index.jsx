@@ -1,4 +1,5 @@
 import React from 'react';
+import styles from './styles.css';
 
 class AssetsPage extends React.Component {
   static request() {
@@ -20,7 +21,7 @@ class AssetsPage extends React.Component {
   render() {
     AssetsPage.request();
     return (
-      <div>
+      <div className={styles.assets}>
         <h2>I am the AssetsPage</h2>
       </div>
     );
