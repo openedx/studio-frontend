@@ -1,0 +1,12 @@
+version: "2.1"
+services:
+  studio-frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: dahlia.studio-frontend
+    image: dahlia.studio_frontend:WIP
+    volumes:
+      - .:/edx/src/studio-frontend
+    ports:
+      - "18123:18123"
