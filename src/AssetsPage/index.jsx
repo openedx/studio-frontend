@@ -1,7 +1,7 @@
 import React from 'react';
 
 class AssetsPage extends React.Component {
-  request() {
+  static request() {
     fetch('/api/assets/course-v1:edX+DemoX+Demo_Course/?page=0&page_size=50&sort=sort&asset_type=', {
       credentials: 'same-origin',
       headers: {
@@ -9,16 +9,16 @@ class AssetsPage extends React.Component {
       },
     })
       .then(data => data.json())
-      .catch((error) => {
-        console.log(error);
+      .catch(() => {
+        // console.log(error);
       })
-      .then((json) => {
-        console.log(json);
+      .then(() => {
+        // console.log(json);
       });
   }
 
   render() {
-    this.request();
+    AssetsPage.request();
     return (
       <div>
         <h2>I am the AssetsPage</h2>

@@ -45,6 +45,16 @@
     ]
   },
   "eslintConfig": {
-    "extends": "eslint-config-edx"
+    "extends": "eslint-config-edx",
+    "rules": {
+      "import/no-extraneous-dependencies": [
+        "error",
+        {
+          "devDependencies": [
+            "config/*.js"
+          ]
+        }
+      ]
+    }
   }
 }
