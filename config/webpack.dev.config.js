@@ -4,6 +4,7 @@ const Merge = require('webpack-merge');
 const commonConfig = require('./webpack.common.config.js');
 const path = require('path');
 const webpack = require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = Merge.smart(commonConfig, {
   devtool: 'cheap-module-eval-source-map',
@@ -25,6 +26,10 @@ module.exports = Merge.smart(commonConfig, {
     ],
   },
   plugins: [
+    new HtmlWebpackPlugin({
+      inject: true,
+      template: path.resolve(__dirname, '../public/index.html'),
+    }),
     new webpack.HotModuleReplacementPlugin(),
   ],
   devServer: {

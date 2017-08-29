@@ -7,6 +7,9 @@ const webpack = require('webpack');
 
 module.exports = Merge.smart(commonConfig, {
   devtool: 'source-map',
+  output: {
+    filename: 'studio-frontend.js',
+  },
   module: {
     rules: [
       {
