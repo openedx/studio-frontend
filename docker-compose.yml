@@ -5,7 +5,7 @@ services:
             context: .
             dockerfile: Dockerfile
         container_name: dahlia.studio-frontend
-        image: mroytman/studio-frontend:latest
+        image: edxops/studio-frontend:latest
         volumes:
             - .:/studio-frontend
         ports:

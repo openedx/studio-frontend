@@ -3,5 +3,12 @@ language: node_js
 node_js:
   - 6
 
+sudo: required
+services:
+  - docker
+
+before_script:
+  - docker build -t studio-frontend --no-cache .
+
 script:
   - npm run lint
