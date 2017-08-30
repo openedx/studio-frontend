@@ -30,4 +30,11 @@ Webpack will serve pages in development mode at http://localhost:18011.
 
 Notes:
 
-The development server will run regardless of whether devstack is running along side it. If devstack is not running, requests to the studio API will fail. You can start up the devstack at any time by following the instructions in the devstack repository, and the development server will then be able to communicate with the studio container. If studio is not running, requests to the API will return a 504 error. If studio is running, but you are not logged in, requests to the API will return a 404 error.
+The development server will run regardless of whether devstack is running along side it. If devstack is not running, requests to the studio API will fail. You can start up the devstack at any time by following the instructions in the devstack repository, and the development server will then be able to communicate with the studio container. API requests will return the following statuses, given your current setup:
+
+| Studio Running? | Logged in?             | API return |
+|-----------------|------------------------|------------|
+| No              | n/a                    | 504        |
+| Yes             | No                     | 404        |
+| Yes             | Yes, non-staff account | 403        |
+| Yes             | Yes, staff account     | 200        |
