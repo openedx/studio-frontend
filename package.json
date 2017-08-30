@@ -12,7 +12,7 @@
   "dependencies": {
     "bootstrap": "^4.0.0-beta",
     "edx-bootstrap": "^0.1.7",
-    "paragon": "git+ssh://git@github.com/edx/paragon.git",
+    "paragon": "git://github.com/edx/paragon.git",
     "popper.js": "^1.12.5",
     "react": "^15.6.1",
     "react-dom": "^15.6.1"
