@@ -8,25 +8,21 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = Merge.smart(commonConfig, {
   devtool: 'cheap-module-eval-source-map',
-  entry: {
-    devServer: [
-      `${require.resolve('webpack-dev-server/client')}?/`,
-      require.resolve('webpack/hot/dev-server'),
-      require.resolve('react-error-overlay'),
-    ],
-  },
   module: {
     rules: [
       {
         test: /\.(js|jsx)$/,
-        include: path.resolve(__dirname, '../src'),
+        include: [
+          path.resolve(__dirname, '../src'),
+          path.resolve(__dirname, '../node_modules/paragon'),
+        ],
         loader: 'babel-loader',
         options: {
           cacheDirectory: true,
         },
       },
       {
-        test: /.css$/,
+        test: /.scss$/,
         use: [
           'style-loader',
           {
@@ -35,6 +31,16 @@ module.exports = Merge.smart(commonConfig, {
               sourceMap: true,
               modules: true,
               localIdentName: '[path][name]__[local]--[hash:base64:5]',
+            },
+          },
+          {
+            loader: 'sass-loader',
+            options: {
+              sourceMap: true,
+              data: '@import "paragon-reset";',
+              includePaths: [
+                path.join(__dirname, '../node_modules/paragon/src/utils'),
+              ],
             },
           },
         ],

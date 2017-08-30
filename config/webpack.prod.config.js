@@ -15,21 +15,36 @@ module.exports = Merge.smart(commonConfig, {
     rules: [
       {
         test: /\.(js|jsx)$/,
-        include: path.resolve(__dirname, '../src'),
+        include: [
+          path.resolve(__dirname, '../src'),
+          path.resolve(__dirname, '../node_modules/paragon'),
+        ],
         loader: 'babel-loader',
       },
       {
         test: /.css$/,
         use: ExtractTextPlugin.extract({
           fallback: 'style-loader',
-          use: {
-            loader: 'css-loader',
-            options: {
-              sourceMap: true,
-              modules: true,
-              minimize: true,
+          use: [
+            {
+              loader: 'css-loader',
+              options: {
+                sourceMap: true,
+                modules: true,
+                minimize: true,
+              },
             },
-          },
+            {
+              loader: 'sass-loader',
+              options: {
+                sourceMap: true,
+                data: '@import "paragon-reset";',
+                includePaths: [
+                  path.join(__dirname, '../node_modules/paragon/src/utils'),
+                ],
+              },
+            },
+          ],
         }),
       },
     ],

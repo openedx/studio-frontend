@@ -1,5 +1,7 @@
 import React from 'react';
-import styles from './styles.css';
+import CheckBox from 'paragon/src/CheckBox';
+
+import styles from './styles.scss';
 
 class AssetsPage extends React.Component {
   static request() {
@@ -18,11 +20,31 @@ class AssetsPage extends React.Component {
       });
   }
 
-  render() {
+  constructor(props) {
+    super(props);
+    this.state = {
+      checked: 'off',
+    };
     AssetsPage.request();
+  }
+
+  handleCheckBoxChange = (event) => {
+    console.log(`checked: ${event}`);
+    this.setState({
+      checked: event,
+    });
+  }
+
+  render() {
     return (
       <div className={styles.assets}>
         <h2>I am the AssetsPage</h2>
+        <CheckBox
+          name="checkbox"
+          label="I am a checkbox!"
+          onChange={this.handleCheckBoxChange}
+          checked={this.state.checked === 'on'}
+        />
       </div>
     );
   }
