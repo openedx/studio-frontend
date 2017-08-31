@@ -28,10 +28,9 @@ class AssetsPage extends React.Component {
     AssetsPage.request();
   }
 
-  handleCheckBoxChange = (checked, name) => {
-    console.log(`checked: ${checked}`);
+  handleCheckBoxChange = (checked) => {
     this.setState({
-      checked: checked,
+      checked,
     });
   }
 

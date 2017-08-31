@@ -12,7 +12,7 @@
   "dependencies": {
     "bootstrap": "^4.0.0-beta",
     "edx-bootstrap": "^0.1.7",
-    "paragon": "git://github.com/edx/paragon.git",
+    "paragon": "edx/paragon",
     "popper.js": "^1.12.5",
     "react": "^15.6.1",
     "react-dom": "^15.6.1"
@@ -58,18 +58,5 @@
       "transform-object-rest-spread",
       "transform-class-properties"
     ]
-  },
-  "eslintConfig": {
-    "extends": "eslint-config-edx",
-    "rules": {
-      "import/no-extraneous-dependencies": [
-        "error",
-        {
-          "devDependencies": [
-            "config/*.js"
-          ]
-        }
-      ]
-    }
   }
 }
