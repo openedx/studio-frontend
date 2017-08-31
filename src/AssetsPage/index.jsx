@@ -23,15 +23,15 @@ class AssetsPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      checked: 'off',
+      checked: false,
     };
     AssetsPage.request();
   }
 
-  handleCheckBoxChange = (event) => {
-    console.log(`checked: ${event}`);
+  handleCheckBoxChange = (checked, name) => {
+    console.log(`checked: ${checked}`);
     this.setState({
-      checked: event,
+      checked: checked,
     });
   }
 
@@ -43,7 +43,7 @@ class AssetsPage extends React.Component {
           name="checkbox"
           label="I am a checkbox!"
           onChange={this.handleCheckBoxChange}
-          checked={this.state.checked === 'on'}
+          checked={this.state.checked}
         />
       </div>
     );
