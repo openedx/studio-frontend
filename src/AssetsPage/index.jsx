@@ -1,6 +1,7 @@
 import React from 'react';
 import CheckBox from 'paragon/src/CheckBox';
 
+import displayStrings from './display_strings.json';
 import styles from './styles.scss';
 
 class AssetsPage extends React.Component {
@@ -20,10 +21,10 @@ class AssetsPage extends React.Component {
   render() {
     return (
       <div className={styles.assets}>
-        <h2>I am the AssetsPage</h2>
+        <h2>{displayStrings.header}</h2>
         <CheckBox
           name="checkbox"
-          label="I am a checkbox!"
+          label={displayStrings.checkboxLabel}
           onChange={this.handleCheckBoxChange}
           checked={this.state.checked}
         />
