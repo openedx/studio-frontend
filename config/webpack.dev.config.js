@@ -6,6 +6,12 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
+let targetUrl = 'localhost';
+if (!process.env.RUNNING_ON_LINUX) {
+  targetUrl = `docker.for.mac.${targetUrl}`;
+}
+targetUrl = `http://${targetUrl}:18010`;
+
 module.exports = Merge.smart(commonConfig, {
   devtool: 'cheap-module-eval-source-map',
   module: {
@@ -59,7 +65,7 @@ module.exports = Merge.smart(commonConfig, {
     port: 18011,
     proxy: {
       '/api': {
-        target: 'http://docker.for.mac.localhost:18010',
+        target: targetUrl,
         pathRewrite: { '^/api': '' },
       },
     },
