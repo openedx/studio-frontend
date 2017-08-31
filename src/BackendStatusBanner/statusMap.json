@@ -1,0 +1,6 @@
+{
+  "504": "Studio is not running",
+  "500": "Server error from Studio",
+  "404": "You are not logged in to Studio",
+  "403": "You are logged in to Studio, but your account doesn't have the correct permissions"
+}
