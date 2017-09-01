@@ -5,7 +5,6 @@ const commonConfig = require('./webpack.common.config.js');
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const errorOverlayMiddleware = require('react-error-overlay/middleware');
 
 let targetUrl = 'localhost';
 if (!process.env.RUNNING_ON_LINUX) {
@@ -15,6 +14,12 @@ targetUrl = `http://${targetUrl}:18010`;
 
 module.exports = Merge.smart(commonConfig, {
   devtool: 'cheap-module-eval-source-map',
+  entry: [
+    // enable react's custom hot dev client so we get errors reported
+    // in the browser
+    require.resolve('react-dev-utils/webpackHotDevClient'),
+    path.resolve(__dirname, '../src/index.jsx'),
+  ],
   module: {
     rules: [
       {
@@ -70,13 +75,5 @@ module.exports = Merge.smart(commonConfig, {
         pathRewrite: { '^/api': '' },
       },
     },
-    setup(app) {
-      app.use(errorOverlayMiddleware());
-    },
   },
-  entry: [
-    require.resolve('react-dev-utils/webpackHotDevClient'),
-    require.resolve('react-error-overlay'),
-    path.resolve(__dirname, '../src/index.jsx'),
-  ],
 });
