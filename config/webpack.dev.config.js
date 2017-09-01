@@ -5,6 +5,7 @@ const commonConfig = require('./webpack.common.config.js');
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const errorOverlayMiddleware = require('react-error-overlay/middleware');
 
 let targetUrl = 'localhost';
 if (!process.env.RUNNING_ON_LINUX) {
@@ -69,5 +70,13 @@ module.exports = Merge.smart(commonConfig, {
         pathRewrite: { '^/api': '' },
       },
     },
+    setup(app) {
+      app.use(errorOverlayMiddleware());
+    },
   },
+  entry: [
+    require.resolve('react-dev-utils/webpackHotDevClient'),
+    require.resolve('react-error-overlay'),
+    path.resolve(__dirname, '../src/index.jsx'),
+  ],
 });
