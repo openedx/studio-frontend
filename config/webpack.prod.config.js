@@ -51,6 +51,11 @@ module.exports = Merge.smart(commonConfig, {
   },
   plugins: [
     new ExtractTextPlugin('studio-frontend.min.css'),
+    new webpack.DefinePlugin({
+      'process.env': {
+        NODE_ENV: JSON.stringify('production'),
+      },
+    }),
     new webpack.optimize.UglifyJsPlugin({ sourceMap: true }),
   ],
 });

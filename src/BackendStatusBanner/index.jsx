@@ -7,10 +7,15 @@ class BackendStatusBanner extends React.Component {
     this.state = {
       apiConnectionStatus: 200,
     };
+
+    this.apiUrl = '/assets/course-v1:edX+DemoX+Demo_Course/?page=0&page_size=50&sort=sort&asset_type=';
+    if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
+      this.apiUrl = `/api${this.apiUrl}`;
+    }
   }
 
   componentDidMount() {
-    fetch('/api/assets/course-v1:edX+DemoX+Demo_Course/?page=0&page_size=50&sort=sort&asset_type=', {
+    fetch(this.apiUrl, {
       credentials: 'same-origin',
       headers: {
         Accept: 'application/json',
