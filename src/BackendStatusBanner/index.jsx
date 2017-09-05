@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import statusMap from './statusMap.json';
-import { pingStudio } from '../data/store';
+import { pingStudio } from '../data/actions/pingStudio';
 
 class BackendStatusBanner extends React.Component {
   constructor(props) {
@@ -18,24 +18,28 @@ class BackendStatusBanner extends React.Component {
   }
 
   render() {
-    return (this.apiConnectionStatus === 200) ?
+    return (this.props.connectionStatus === 200) ?
       null :
       (
         <div className="api-error">
-          {statusMap[this.props.apiConnectionStatus]}
+          {statusMap[this.props.connectionStatus]}
         </div>
       );
   }
 }
 
 BackendStatusBanner.propTypes = {
-  apiConnectionStatus: PropTypes.string.isRequired,
+  connectionStatus: PropTypes.number,
   pingStudio: PropTypes.func.isRequired,
+};
+
+BackendStatusBanner.defaultProps = {
+  connectionStatus: null,
 };
 
 const WrappedBackendStatusBanner = connect(
   state => ({
-    apiConnectionStatus: state.apiConnectionStatus,
+    connectionStatus: state.connectionStatus,
   }), dispatch => ({
     pingStudio: () => dispatch(pingStudio()),
   }),
