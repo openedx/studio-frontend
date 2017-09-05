@@ -15,10 +15,12 @@
     "edx-bootstrap": "^0.1.7",
     "paragon": "edx/paragon",
     "popper.js": "^1.12.5",
+    "prop-types": "^15.5.10",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
     "react-redux": "^5.0.6",
-    "redux": "^3.7.2"
+    "redux": "^3.7.2",
+    "redux-thunk": "^2.2.0"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
