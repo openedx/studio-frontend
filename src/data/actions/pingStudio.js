@@ -1,4 +1,4 @@
-import { callAssets } from '../../api/client';
+import { getAssets } from '../../api/client';
 
 export const PING_RESPONSE = 'PING_RESPONSE';
 
@@ -11,7 +11,7 @@ function pingResponse(response) {
 
 export function pingStudio() {
   return dispatch =>
-    callAssets('course-v1:edX+DemoX+Demo_Course', {
+    getAssets('course-v1:edX+DemoX+Demo_Course', {
       page: 0,
     })
       .then(response => dispatch(pingResponse(response)));
