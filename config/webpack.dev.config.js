@@ -1,10 +1,12 @@
 'use strict';
 
 const Merge = require('webpack-merge');
-const commonConfig = require('./webpack.common.config.js');
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+
+const apiEndpoints = require('../src/api/endpoints.js');
+const commonConfig = require('./webpack.common.config.js');
 
 let targetUrl = 'localhost';
 if (!process.env.RUNNING_ON_LINUX) {
@@ -12,7 +14,7 @@ if (!process.env.RUNNING_ON_LINUX) {
 }
 targetUrl = `http://${targetUrl}:18010`;
 
-module.exports = Merge.smart(commonConfig, {
+const devConfig = Merge.smart(commonConfig, {
   devtool: 'cheap-module-eval-source-map',
   entry: [
     // enable react's custom hot dev client so we get errors reported
@@ -69,11 +71,14 @@ module.exports = Merge.smart(commonConfig, {
   devServer: {
     host: '0.0.0.0',
     port: 18011,
-    proxy: {
-      '/api': {
-        target: targetUrl,
-        pathRewrite: { '^/api': '' },
-      },
-    },
+    proxy: {},
   },
 });
+
+Object.keys(apiEndpoints).forEach((endpoint) => {
+  devConfig.devServer.proxy[apiEndpoints[endpoint]] = {
+    target: targetUrl,
+  };
+});
+
+module.exports = devConfig;
