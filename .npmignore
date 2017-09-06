@@ -6,6 +6,7 @@ docker-compose.linux.yml
 docker-compose.yml
 Dockerfile
 Makefile
+npm-debug.log
 
 config
 coverage
