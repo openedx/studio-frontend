@@ -7,10 +7,9 @@ export const pingResponse = response => ({
   status: response.status,
 });
 
-export const pingStudio = () => {
-  return dispatch =>
+export const pingStudio = () =>
+  dispatch =>
     getAssets('course-v1:edX+DemoX+Demo_Course', {
       page: 0,
     })
       .then(response => dispatch(pingResponse(response)));
-};
