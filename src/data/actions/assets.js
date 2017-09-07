@@ -7,7 +7,7 @@ export const assetsResponse = response => ({
   data: response.assets,
 });
 
-export const getAssets = (courseId) =>
+export const getAssets = courseId =>
   dispatch =>
     fetchAssets(courseId, {
       page: 0,
