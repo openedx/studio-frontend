@@ -1,10 +1,12 @@
 'use strict';
 
 const Merge = require('webpack-merge');
-const commonConfig = require('./webpack.common.config.js');
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+
+const apiEndpoints = require('../src/api/endpoints.js');
+const commonConfig = require('./webpack.common.config.js');
 
 let targetUrl = 'localhost';
 if (!process.env.RUNNING_ON_LINUX) {
@@ -69,11 +71,10 @@ module.exports = Merge.smart(commonConfig, {
   devServer: {
     host: '0.0.0.0',
     port: 18011,
-    proxy: {
-      '/api': {
-        target: targetUrl,
-        pathRewrite: { '^/api': '' },
-      },
-    },
+    proxy: Object.keys(apiEndpoints).reduce(
+      (map, endpoint) => {
+        map[apiEndpoints[endpoint]] = targetUrl;// eslint-disable-line no-param-reassign
+        return map;
+      }, {}),
   },
 });
