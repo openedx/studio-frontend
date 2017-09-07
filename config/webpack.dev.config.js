@@ -14,7 +14,7 @@ if (!process.env.RUNNING_ON_LINUX) {
 }
 targetUrl = `http://${targetUrl}:18010`;
 
-const devConfig = Merge.smart(commonConfig, {
+module.exports = Merge.smart(commonConfig, {
   devtool: 'cheap-module-eval-source-map',
   entry: [
     // enable react's custom hot dev client so we get errors reported
@@ -71,14 +71,10 @@ const devConfig = Merge.smart(commonConfig, {
   devServer: {
     host: '0.0.0.0',
     port: 18011,
-    proxy: {},
+    proxy: Object.keys(apiEndpoints).reduce(
+      (map, endpoint) => {
+        map[apiEndpoints[endpoint]] = targetUrl;// eslint-disable-line no-param-reassign
+        return map;
+      }, {}),
   },
 });
-
-Object.keys(apiEndpoints).forEach((endpoint) => {
-  devConfig.devServer.proxy[apiEndpoints[endpoint]] = {
-    target: targetUrl,
-  };
-});
-
-module.exports = devConfig;
