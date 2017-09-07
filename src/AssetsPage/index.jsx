@@ -20,7 +20,7 @@ class AssetsPage extends React.Component {
   render() {
     return (
       <div className={styles.assets}>
-        <h2>I am the AssetsPage</h2>
+        <h2>Files & Uploads</h2>
         <CheckBox
           name="checkbox"
           label="I am a checkbox!"

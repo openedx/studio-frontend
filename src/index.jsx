@@ -10,7 +10,7 @@ const App = () => (
   <Provider store={store}>
     <div>
       <BackendStatusBanner />
-      <h1>I am a app</h1>
+      <h1>studio-frontend</h1>
       <AssetsPage />
     </div>
   </Provider>
