@@ -24,6 +24,29 @@ class AssetsPage extends React.Component {
     });
   }
 
+  renderTable = () => (
+    (!this.props.assetsList.length) ? (
+      <span>loading....</span>
+    ) : (
+      <table>
+        <tbody>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Date Added</th>
+          </tr>
+          {this.props.assetsList.map(asset => (
+            <tr key={asset.id}>
+              <td>{asset.display_name}</td>
+              <td>{asset.content_type}</td>
+              <td>{asset.date_added}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    )
+  );
+
   render() {
     return (
       <div className={styles.assets}>
@@ -34,18 +57,15 @@ class AssetsPage extends React.Component {
           onChange={this.handleCheckBoxChange}
           checked={this.state.checked}
         />
+        {this.renderTable()}
       </div>
     );
   }
 }
 
 AssetsPage.propTypes = {
-  // assetsList: PropTypes.number,
+  assetsList: PropTypes.arrayOf(PropTypes.object).isRequired,
   getAssets: PropTypes.func.isRequired,
-};
-
-AssetsPage.defaultProps = {
-  assetsList: [],
 };
 
 const WrappedAssetsPage = connect(
