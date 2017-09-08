@@ -1,0 +1,8 @@
+@import '~bootstrap/scss/alert';
+@import '~bootstrap/scss/buttons';
+
+.api-error {
+  button {
+    margin-right: $spacer / 3;
+  }
+}

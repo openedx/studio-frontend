@@ -22,7 +22,7 @@ module.exports = Merge.smart(commonConfig, {
         loader: 'babel-loader',
       },
       {
-        test: /.css$/,
+        test: /(.scss|.css)$/,
         use: ExtractTextPlugin.extract({
           fallback: 'style-loader',
           use: [
@@ -41,6 +41,7 @@ module.exports = Merge.smart(commonConfig, {
                 data: '@import "paragon-reset";',
                 includePaths: [
                   path.join(__dirname, '../node_modules/paragon/src/utils'),
+                  path.join(__dirname, '../node_modules'),
                 ],
               },
             },

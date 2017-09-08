@@ -11,9 +11,8 @@
   },
   "license": "AGPL-3.0",
   "dependencies": {
-    "bootstrap": "^4.0.0-beta",
-    "edx-bootstrap": "^0.1.7",
-    "paragon": "edx/paragon",
+    "classnames": "^2.2.5",
+    "paragon": "edx/paragon#thallada/edx-bootstrap",
     "popper.js": "^1.12.5",
     "prop-types": "^15.5.10",
     "react": "^15.6.1",

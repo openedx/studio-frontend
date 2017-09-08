@@ -1,6 +1,25 @@
 {
-  "504": "Studio is not running",
-  "500": "Server error from Studio",
-  "404": "You are not logged in to Studio",
-  "403": "You are logged in to Studio, but your account doesn't have the correct permissions"
+  "504": {
+    "message": "Studio is not running",
+    "alertLevel": "danger",
+    "link": null
+  },
+  "500": {
+    "message": "Server error from Studio",
+    "alertLevel": "danger",
+    "link": null
+  },
+  "404": {
+    "message": "You are not logged in to Studio.",
+    "alertLevel": "warning",
+    "link": {
+      "url": "http://localhost:18010/signin",
+      "text": "Log in."
+    }
+  },
+  "403": {
+    "message": "You are logged in to Studio, but your account doesn't have the correct permissions",
+    "alertLevel": "warning",
+    "link": null
+  }
 }
