@@ -1,7 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import classNames from 'classnames';
+import Button from 'paragon/src/Button';
 
+import styles from './styles.scss';
 import statusMap from './statusMap.json';
 import { pingStudio } from '../data/actions/pingStudio';
 
@@ -17,12 +20,40 @@ class BackendStatusBanner extends React.Component {
     this.props.pingStudio();
   }
 
+  renderStatusMessage() {
+    const status = statusMap[this.props.connectionStatus];
+    if (status.link) {
+      return (
+        <span>
+          {status.message}
+          {' '}
+          <a href={status.link.url} className={styles['alert-link']}>{status.link.text}</a>
+        </span>
+      );
+    }
+    return status.message;
+  }
+
   render() {
-    return (this.props.connectionStatus === 200) ?
+    const status = statusMap[this.props.connectionStatus];
+    return (!status || this.props.connectionStatus === 200) ?
       null :
       (
-        <div className="api-error">
-          {statusMap[this.props.connectionStatus]}
+        <div
+          className={classNames(
+            styles['api-error'],
+            styles.alert,
+            styles[`alert-${status.alertLevel}`],
+          )}
+        >
+          <Button
+            display="↻"
+            buttonType="sm"
+            className={[styles['btn-outline-primary']]}
+            onClick={this.props.pingStudio}
+          />
+          {' '}
+          {this.renderStatusMessage()}
         </div>
       );
   }

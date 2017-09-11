@@ -36,7 +36,7 @@ module.exports = Merge.smart(commonConfig, {
         },
       },
       {
-        test: /.scss$/,
+        test: /(.scss|.css)$/,
         use: [
           'style-loader',
           {
@@ -54,6 +54,7 @@ module.exports = Merge.smart(commonConfig, {
               data: '@import "paragon-reset";',
               includePaths: [
                 path.join(__dirname, '../node_modules/paragon/src/utils'),
+                path.join(__dirname, '../node_modules'),
               ],
             },
           },
