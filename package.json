@@ -12,7 +12,7 @@
   "license": "AGPL-3.0",
   "dependencies": {
     "classnames": "^2.2.5",
-    "paragon": "edx/paragon#thallada/edx-bootstrap",
+    "paragon": "edx/paragon",
     "popper.js": "^1.12.5",
     "prop-types": "^15.5.10",
     "react": "^15.6.1",
