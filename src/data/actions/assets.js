@@ -1,16 +1,16 @@
-import { getAssetsClient } from '../../api/client';
-import { pingResponse } from './pingStudio';
+import { getAssets } from '../../api/client';
 
-export const ASSETS_RESPONSE = 'ASSETS_RESPONSE';
+export const REQUEST_ASSETS_SUCCESS = 'REQUEST_ASSETS_SUCCESS';
 
-export const assetsResponse = response => ({
-  type: ASSETS_RESPONSE,
-  data: response.data,
+export const requestAssetsSuccess = response => ({
+  type: REQUEST_ASSETS_SUCCESS,
+  data: response.assets,
 });
 
-export const getAssets = () =>
+export const requestAssets = courseId =>
   dispatch =>
-    getAssetsClient('course-v1:edX+DemoX+Demo_Course', {
+    getAssets(courseId, {
       page: 0,
     })
-      .then(response => dispatch(pingResponse(response)));
+      .then(response => response.json())
+      .then(json => dispatch(requestAssetsSuccess(json)));
