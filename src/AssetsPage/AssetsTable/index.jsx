@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Table from 'paragon/src/Table';
 
-const AssetsTable = ({assetsList}) => (
+const AssetsTable = ({ assetsList }) => (
   (!assetsList.length) ? (
     <span>Loading....</span>
   ) : (
