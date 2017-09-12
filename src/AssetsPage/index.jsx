@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import CheckBox from 'paragon/src/CheckBox';
+import Table from 'paragon/src/Table';
 
 import { getAssets } from '../data/actions/assets';
 import styles from './styles.scss';
@@ -28,22 +29,23 @@ class AssetsPage extends React.Component {
     (!this.props.assetsList.length) ? (
       <span>loading....</span>
     ) : (
-      <table>
-        <tbody>
-          <tr>
-            <th>Name</th>
-            <th>Type</th>
-            <th>Date Added</th>
-          </tr>
-          {this.props.assetsList.map(asset => (
-            <tr key={asset.id}>
-              <td>{asset.display_name}</td>
-              <td>{asset.content_type}</td>
-              <td>{asset.date_added}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <Table
+        headings={[
+          {
+            display: 'Name',
+            key: 'display_name',
+          },
+          {
+            display: 'Type',
+            key: 'content_type',
+          },
+          {
+            display: 'Date Added',
+            key: 'date_added',
+          },
+        ]}
+        data={this.props.assetsList}
+      />
     )
   );
 
