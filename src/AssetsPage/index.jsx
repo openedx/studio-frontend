@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import CheckBox from 'paragon/src/CheckBox';
-import Table from 'paragon/src/Table';
+import AssetsTable from './AssetsTable';
 
 import { getAssets } from '../data/actions/assets';
 import styles from './styles.scss';
@@ -25,30 +25,6 @@ class AssetsPage extends React.Component {
     });
   }
 
-  renderTable = () => (
-    (!this.props.assetsList.length) ? (
-      <span>loading....</span>
-    ) : (
-      <Table
-        headings={[
-          {
-            display: 'Name',
-            key: 'display_name',
-          },
-          {
-            display: 'Type',
-            key: 'content_type',
-          },
-          {
-            display: 'Date Added',
-            key: 'date_added',
-          },
-        ]}
-        data={this.props.assetsList}
-      />
-    )
-  );
-
   render() {
     return (
       <div className={styles.assets}>
@@ -59,7 +35,9 @@ class AssetsPage extends React.Component {
           onChange={this.handleCheckBoxChange}
           checked={this.state.checked}
         />
-        {this.renderTable()}
+        <AssetsTable
+          assetsList={this.props.assetsList}
+        />
       </div>
     );
   }
