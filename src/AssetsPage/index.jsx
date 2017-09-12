@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import CheckBox from 'paragon/src/CheckBox';
 import AssetsTable from './AssetsTable';
 
-import { getAssets } from '../data/actions/assets';
+import { requestAssets } from '../data/actions/assets';
 import styles from './styles.scss';
 
 class AssetsPage extends React.Component {
@@ -16,7 +16,7 @@ class AssetsPage extends React.Component {
   }
 
   componentDidMount() {
-    this.props.getAssets('course-v1:edX+DemoX+Demo_Course');
+    this.props.requestAssets('course-v1:edX+DemoX+Demo_Course');
   }
 
   handleCheckBoxChange = (checked) => {
@@ -45,14 +45,14 @@ class AssetsPage extends React.Component {
 
 AssetsPage.propTypes = {
   assetsList: PropTypes.arrayOf(PropTypes.object).isRequired,
-  getAssets: PropTypes.func.isRequired,
+  requestAssets: PropTypes.func.isRequired,
 };
 
 const WrappedAssetsPage = connect(
   state => ({
     assetsList: state.assetsList,
   }), dispatch => ({
-    getAssets: courseId => dispatch(getAssets(courseId)),
+    requestAssets: courseId => dispatch(requestAssets(courseId)),
   }),
 )(AssetsPage);
 

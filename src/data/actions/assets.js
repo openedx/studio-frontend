@@ -1,16 +1,16 @@
-import { fetchAssets } from '../../api/client';
+import { getAssets } from '../../api/client';
 
-export const ASSETS_RESPONSE = 'ASSETS_RESPONSE';
+export const REQUEST_ASSETS_SUCCESS = 'REQUEST_ASSETS_SUCCESS';
 
-export const assetsResponse = response => ({
-  type: ASSETS_RESPONSE,
+export const requestAssetsSuccess = response => ({
+  type: REQUEST_ASSETS_SUCCESS,
   data: response.assets,
 });
 
-export const getAssets = courseId =>
+export const requestAssets = courseId =>
   dispatch =>
-    fetchAssets(courseId, {
+    getAssets(courseId, {
       page: 0,
     })
       .then(response => response.json())
-      .then(json => dispatch(assetsResponse(json)));
+      .then(json => dispatch(requestAssetsSuccess(json)));
