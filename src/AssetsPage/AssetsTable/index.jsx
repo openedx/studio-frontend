@@ -7,17 +7,17 @@ const AssetsTable = ({ assetsList }) => (
     <span>Loading....</span>
   ) : (
     <Table
-      headings={[
+      columns={[
         {
-          display: 'Name',
+          label: 'Name',
           key: 'display_name',
         },
         {
-          display: 'Type',
+          label: 'Type',
           key: 'content_type',
         },
         {
-          display: 'Date Added',
+          label: 'Date Added',
           key: 'date_added',
         },
       ]}
