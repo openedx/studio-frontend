@@ -4,9 +4,10 @@ import CheckBox from 'paragon/src/CheckBox';
 import { connect } from 'react-redux';
 
 import { filterUpdate } from '../../data/actions/assets';
+import styles from './styles.scss';
 
 const AssetsFilters = ({ assetTypes, assetsFilters, updateFilter }) => (
-  <ul>
+  <ul className={styles['filter-set']}>
     {assetTypes.map(type => (
       <li key={type.key}>
         <CheckBox
