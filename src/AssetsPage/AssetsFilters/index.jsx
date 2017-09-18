@@ -6,9 +6,24 @@ import { connect } from 'react-redux';
 import { filterUpdate } from '../../data/actions/assets';
 import styles from './styles.scss';
 
-const AssetsFilters = ({ assetTypes, assetsFilters, updateFilter }) => (
+const ASSET_TYPES = [
+  {
+    key: 'images',
+    displayName: 'Images',
+  },
+  {
+    key: 'documents',
+    displayName: 'Documents',
+  },
+  {
+    key: 'other',
+    displayName: 'Other',
+  },
+];
+
+const AssetsFilters = ({ assetsFilters, updateFilter }) => (
   <ul className={styles['filter-set']}>
-    {assetTypes.map(type => (
+    {ASSET_TYPES.map(type => (
       <li key={type.key}>
         <CheckBox
           name={type.key}
@@ -22,7 +37,6 @@ const AssetsFilters = ({ assetTypes, assetsFilters, updateFilter }) => (
 );
 
 AssetsFilters.propTypes = {
-  assetTypes: PropTypes.arrayOf(PropTypes.object).isRequired,
   assetsFilters: PropTypes.objectOf(
     PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool]),
   ).isRequired,

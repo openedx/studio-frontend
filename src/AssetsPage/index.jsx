@@ -36,22 +36,7 @@ class AssetsPage extends React.Component {
     return (
       <div className={styles.assets}>
         <h2>Files & Uploads</h2>
-        <AssetsFilters
-          assetTypes={[
-            {
-              key: 'images',
-              displayName: 'Images',
-            },
-            {
-              key: 'documents',
-              displayName: 'Documents',
-            },
-            {
-              key: 'other',
-              displayName: 'Other',
-            },
-          ]}
-        />
+        <AssetsFilters />
         <AssetsTable
           assetsList={this.props.assetsList}
         />
