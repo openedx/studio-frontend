@@ -1,8 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import CheckBox from 'paragon/src/CheckBox';
 import AssetsTable from './AssetsTable';
+import AssetsFilters from './AssetsFilters';
 
 import { requestAssets } from '../data/actions/assets';
 import styles from './styles.scss';
@@ -16,7 +16,14 @@ class AssetsPage extends React.Component {
   }
 
   componentDidMount() {
-    this.props.requestAssets('course-v1:edX+DemoX+Demo_Course');
+    this.props.requestAssets(this.props.assetsFilters);
+  }
+
+  componentDidUpdate(prevProps) {
+    // if filters changed, update the assetsList
+    if (prevProps.assetsFilters !== this.props.assetsFilters) {
+      this.props.requestAssets(this.props.assetsFilters);
+    }
   }
 
   handleCheckBoxChange = (checked) => {
@@ -29,11 +36,21 @@ class AssetsPage extends React.Component {
     return (
       <div className={styles.assets}>
         <h2>Files & Uploads</h2>
-        <CheckBox
-          name="checkbox"
-          label="I am a checkbox!"
-          onChange={this.handleCheckBoxChange}
-          checked={this.state.checked}
+        <AssetsFilters
+          assetTypes={[
+            {
+              key: 'images',
+              displayName: 'Images',
+            },
+            {
+              key: 'documents',
+              displayName: 'Documents',
+            },
+            {
+              key: 'other',
+              displayName: 'Other',
+            },
+          ]}
         />
         <AssetsTable
           assetsList={this.props.assetsList}
@@ -45,12 +62,16 @@ class AssetsPage extends React.Component {
 
 AssetsPage.propTypes = {
   assetsList: PropTypes.arrayOf(PropTypes.object).isRequired,
+  assetsFilters: PropTypes.objectOf(
+    PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool]),
+  ).isRequired,
   requestAssets: PropTypes.func.isRequired,
 };
 
 const WrappedAssetsPage = connect(
   state => ({
     assetsList: state.assetsList,
+    assetsFilters: state.assetsFilters,
   }), dispatch => ({
     requestAssets: courseId => dispatch(requestAssets(courseId)),
   }),
