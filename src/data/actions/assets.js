@@ -12,6 +12,7 @@ export const requestAssets = assetsFilters =>
   dispatch =>
     getAssets(assetsFilters.courseId, {
       page: assetsFilters.page,
+      assetsFilters,
     })
       .then(response => response.json())
       .then(json => dispatch(requestAssetsSuccess(json)));
