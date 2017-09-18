@@ -20,8 +20,9 @@ class AssetsPage extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    // if filters changed, update the assetsList
     if (prevProps.assetsFilters !== this.props.assetsFilters) {
+      // if filters changed, update the assetsList
+      // TODO: consider using the reselect library for this
       this.props.requestAssets(this.props.assetsFilters);
     }
   }
