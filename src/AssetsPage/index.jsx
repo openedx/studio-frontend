@@ -1,8 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import CheckBox from 'paragon/src/CheckBox';
 import AssetsTable from './AssetsTable';
+import AssetsFilters from './AssetsFilters';
 
 import { requestAssets } from '../data/actions/assets';
 import styles from './styles.scss';
@@ -16,7 +16,15 @@ class AssetsPage extends React.Component {
   }
 
   componentDidMount() {
-    this.props.requestAssets('course-v1:edX+DemoX+Demo_Course');
+    this.props.requestAssets(this.props.assetsParameters);
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.assetsParameters.assetTypes !== this.props.assetsParameters.assetTypes) {
+      // if filters changed, update the assetsList
+      // TODO: consider using the reselect library for this
+      this.props.requestAssets(this.props.assetsParameters);
+    }
   }
 
   handleCheckBoxChange = (checked) => {
@@ -29,12 +37,7 @@ class AssetsPage extends React.Component {
     return (
       <div className={styles.assets}>
         <h2>Files & Uploads</h2>
-        <CheckBox
-          name="checkbox"
-          label="I am a checkbox!"
-          onChange={this.handleCheckBoxChange}
-          checked={this.state.checked}
-        />
+        <AssetsFilters />
         <AssetsTable
           assetsList={this.props.assetsList}
         />
@@ -45,14 +48,18 @@ class AssetsPage extends React.Component {
 
 AssetsPage.propTypes = {
   assetsList: PropTypes.arrayOf(PropTypes.object).isRequired,
+  assetsParameters: PropTypes.objectOf(
+    PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool, PropTypes.object]),
+  ).isRequired,
   requestAssets: PropTypes.func.isRequired,
 };
 
 const WrappedAssetsPage = connect(
   state => ({
     assetsList: state.assetsList,
+    assetsParameters: state.assetsParameters,
   }), dispatch => ({
-    requestAssets: courseId => dispatch(requestAssets(courseId)),
+    requestAssets: assetsParameters => dispatch(requestAssets(assetsParameters)),
   }),
 )(AssetsPage);
 
