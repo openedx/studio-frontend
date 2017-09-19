@@ -12,20 +12,13 @@ export function pingStudioHome() {
   );
 }
 
-function assetTypeValueFromState(assetFilters) {
+function assetTypeValueFromState(assetTypes) {
   // TODO: change this to multi-value once API supports it
-  if (assetFilters.other) {
-    return 'OTHER';
-  } else if (assetFilters.images) {
-    return 'Images';
-  } else if (assetFilters.documents) {
-    return 'Documents';
-  }
-  return '';
+  return Object.keys(assetTypes).find(key => assetTypes[key]) || '';
 }
 
-export function getAssets(courseId, { page = 0, pageSize = 50, sort = 'sort', assetsFilters = {} }) {
-  const assetType = assetTypeValueFromState(assetsFilters);
+export function getAssets(courseId, { page = 0, pageSize = 50, sort = 'sort', assetTypes = {} }) {
+  const assetType = assetTypeValueFromState(assetTypes);
   return fetch(
     `${endpoints.assets}/${courseId}/?page=${page}&page_size=${pageSize}&sort=${sort}&asset_type=${assetType}`, {
       credentials: 'same-origin',

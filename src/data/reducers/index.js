@@ -1,12 +1,12 @@
 import { combineReducers } from 'redux';
 
 import assetsList from './assetsList';
-import assetsFilters from './assetsFilters';
+import assetsParameters from './assetsParameters';
 import connectionStatus from './connectionStatus';
 
 const rootReducer = combineReducers({
   assetsList,
-  assetsFilters,
+  assetsParameters,
   connectionStatus,
 });
 

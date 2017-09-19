@@ -8,11 +8,11 @@ export const requestAssetsSuccess = response => ({
   data: response.assets,
 });
 
-export const requestAssets = assetsFilters =>
+export const requestAssets = assetsParameters =>
   dispatch =>
-    getAssets(assetsFilters.courseId, {
-      page: assetsFilters.page,
-      assetsFilters,
+    getAssets(assetsParameters.courseId, {
+      page: assetsParameters.page,
+      assetTypes: assetsParameters.assetTypes,
     })
       .then(response => response.json())
       .then(json => dispatch(requestAssetsSuccess(json)));

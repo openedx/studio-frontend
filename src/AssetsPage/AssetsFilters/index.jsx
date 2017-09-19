@@ -8,27 +8,27 @@ import styles from './styles.scss';
 
 const ASSET_TYPES = [
   {
-    key: 'images',
+    key: 'Images',
     displayName: 'Images',
   },
   {
-    key: 'documents',
+    key: 'Documents',
     displayName: 'Documents',
   },
   {
-    key: 'other',
+    key: 'OTHER',
     displayName: 'Other',
   },
 ];
 
-const AssetsFilters = ({ assetsFilters, updateFilter }) => (
+const AssetsFilters = ({ assetsParameters, updateFilter }) => (
   <ul className={styles['filter-set']}>
     {ASSET_TYPES.map(type => (
       <li key={type.key}>
         <CheckBox
           name={type.key}
           label={type.displayName}
-          checked={assetsFilters[type.key]}
+          checked={assetsParameters[type.key]}
           onChange={checked => updateFilter(type.key, checked)}
         />
       </li>
@@ -37,15 +37,15 @@ const AssetsFilters = ({ assetsFilters, updateFilter }) => (
 );
 
 AssetsFilters.propTypes = {
-  assetsFilters: PropTypes.objectOf(
-    PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool]),
+  assetsParameters: PropTypes.objectOf(
+    PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool, PropTypes.object]),
   ).isRequired,
   updateFilter: PropTypes.func.isRequired,
 };
 
 const WrappedAssetsFilters = connect(
   state => ({
-    assetsFilters: state.assetsFilters,
+    assetsParameters: state.assetsParameters,
   }), dispatch => ({
     updateFilter: (filterKey, filterValue) => dispatch(filterUpdate(filterKey, filterValue)),
   }),
