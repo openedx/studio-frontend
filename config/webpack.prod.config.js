@@ -38,9 +38,8 @@ module.exports = Merge.smart(commonConfig, {
               loader: 'sass-loader',
               options: {
                 sourceMap: true,
-                data: '@import "paragon-reset";',
+                data: '@import "bootstrap/scss/bootstrap-reboot";',
                 includePaths: [
-                  path.join(__dirname, '../node_modules/paragon/src/utils'),
                   path.join(__dirname, '../node_modules'),
                 ],
               },
