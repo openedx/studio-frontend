@@ -1,6 +1,6 @@
 {
   "name": "@edx/studio-frontend",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "The frontend for the Open edX platform",
   "scripts": {
     "build": "NODE_ENV=production BABEL_ENV=production $(npm bin)/webpack --config=config/webpack.prod.config.js",
