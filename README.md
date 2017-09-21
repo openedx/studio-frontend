@@ -41,16 +41,20 @@ The development server will run regardless of whether devstack is running along 
 
 ## Releases
 
-We are exploring automated release management for this package, but for now you have to do it by hand. Currently, the process for releasing to npm is as follows:
+Currently, the process for releasing a new version of our package is as follows:
 
-1. Within your PR, update the version in package.json. Follow [semver](http://semver.org/).
-2. Once your PR has been approved and merged, check out master locally and pull the latest.
-3. Make sure you have no untracked/junk files within your local directory, and ensure you have npm publish access as a member of the `@edx` organization. If you're not sure, ask for help!
-4. Within your `studio-frontend` directory, run `npm publish --access public`. The `prepublish` script will kick in and build production files before bundling up the package and sending it up to npm.
-5. [Create a new tagged release](https://github.com/edx/studio-frontend/releases/new) on Github.
-    - For "Tag version", use the exact version you used in step 1 (e.g. 1.2.3). Don't prepend it with a "v".
-    - Leave target as master.
-    - Pick a release title and summary that accurately reflect the changes that have been made since the previous release.
-6. Send an email to release-notifications@edx.org. Summarize your change and link to:
+1. Make your changes in a PR and get them into master, as usual. Do not bump the version in package.json!
+2. After merging your changes, `git checkout master && git pull`. Ensure your current directory is cleaned, with no outstanding commits or files.
+3. Be a member of the correct edX and npm orgs, and be logged in. All of @edx/educator-dahlia should be set up, and others shouldn't need to be publishing this package.
+4. `make publish`. This will:
+  - verify that you're on a clean master branch
+  - bump the version in package.json, as a commit on your local master branch
+    - note that this will be a patch version bump by default; for other release types modify the `npm version patch` sub-command under the `publish` make target.
+  - tag that commit as a Github release tag
+  - `git checkout` to a new branch
+  - run our publish script to build everything and send it up to npm, and
+  - push all git changes up to the remote.
+5. Go view your newly created PR, and merge it. Also consider modifying the release tag with more descriptive release notes.
+6. If needed, send an email to release-notifications@edx.org. Summarize your change and link to:
     - the github release
     - the npm package
