@@ -38,3 +38,21 @@ from-scratch: ## start development environment from scratch
 	docker rmi edxops/studio-frontend
 	docker build -t edxops/studio-frontend:latest --no-cache .
 	make up
+
+devstack-install: ## install local version of package into docker devstack for development
+	docker exec -t edx.devstack.lms bash -c 'source /edx/app/edxapp/nodeenvs/edxapp/bin/activate && cd /edx/app/edxapp/edx-platform && npm uninstall @edx/studio-frontend && cd /edx/src/studio-frontend && npm link && cd /edx/app/edxapp/edx-platform && npm link @edx/studio-frontend'
+
+asset-page-flag: ## insert a waffle flag into local docker devstack
+	docker exec -t edx.devstack.lms bash -c 'source /edx/app/edxapp/edxapp_env && cd /edx/app/edxapp/edx-platform && echo "from cms.djangoapps.contentstore.config.models import NewAssetsPageFlag; NewAssetsPageFlag.objects.all().delete(); NewAssetsPageFlag.objects.create(enabled=True, enabled_for_all_courses=True);" | ./manage.py lms --settings=devstack_docker shell && echo "NewAssetsPageFlag inserted!"'
+
+publish: publish-patch ## default is a path release
+
+publish-%: ## publish a new version from master. Argument will be fed into `npm version`, see https://docs.npmjs.com/cli/version for valid values.
+	CURRENT_BRANCH=$$(git rev-parse --abbrev-ref HEAD)
+	if [ "$$CURRENT_BRANCH" != "master" ]; then echo "you may only publish from master" && exit 1; fi
+	@git diff --quiet || (echo 'unclean git repo, please commit all changes before publish'; exit 1)
+	VERSION=$$(npm version patch)
+	git checkout -b dahlia/$VERSION
+	npm publish --access public
+	git push --set-upstream origin dahlia/$$VERSION && git push --tags
+	echo "NPM package published, git branch created and tags pushed. Go to https://github.com/edx/studio-frontend to see your PR and merge the package.json update"
