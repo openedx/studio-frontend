@@ -41,7 +41,9 @@ from-scratch: ## start development environment from scratch
 
 devstack-install: ## install local version of package into docker devstack for development
 	docker exec -t edx.devstack.studio bash -c 'source /edx/app/edxapp/nodeenvs/edxapp/bin/activate && cd /edx/app/edxapp/edx-platform && npm uninstall @edx/studio-frontend && cd /edx/src/studio-frontend && npm link && cd /edx/app/edxapp/edx-platform && npm link @edx/studio-frontend'
+	docker exec -t edx.devstack.studio_watcher bash -c 'source /edx/app/edxapp/nodeenvs/edxapp/bin/activate && cd /edx/app/edxapp/edx-platform && npm uninstall @edx/studio-frontend && cd /edx/src/studio-frontend && npm link && cd /edx/app/edxapp/edx-platform && npm link @edx/studio-frontend'
 	docker exec -t edx.devstack.lms bash -c 'source /edx/app/edxapp/nodeenvs/edxapp/bin/activate && cd /edx/app/edxapp/edx-platform && npm uninstall @edx/studio-frontend && cd /edx/src/studio-frontend && npm link && cd /edx/app/edxapp/edx-platform && npm link @edx/studio-frontend'
+	docker exec -t edx.devstack.lms_watcher bash -c 'source /edx/app/edxapp/nodeenvs/edxapp/bin/activate && cd /edx/app/edxapp/edx-platform && npm uninstall @edx/studio-frontend && cd /edx/src/studio-frontend && npm link && cd /edx/app/edxapp/edx-platform && npm link @edx/studio-frontend'
 
 asset-page-flag: ## insert a waffle flag into local docker devstack
 	docker exec -t edx.devstack.lms bash -c 'source /edx/app/edxapp/edxapp_env && cd /edx/app/edxapp/edx-platform && echo "from cms.djangoapps.contentstore.config.models import NewAssetsPageFlag; NewAssetsPageFlag.objects.all().delete(); NewAssetsPageFlag.objects.create(enabled=True, enabled_for_all_courses=True);" | ./manage.py lms --settings=devstack_docker shell && echo "NewAssetsPageFlag inserted!"'
