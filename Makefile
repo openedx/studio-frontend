@@ -40,6 +40,7 @@ from-scratch: ## start development environment from scratch
 	make up
 
 devstack-install: ## install local version of package into docker devstack for development
+	docker exec -t edx.devstack.studio bash -c 'source /edx/app/edxapp/nodeenvs/edxapp/bin/activate && cd /edx/app/edxapp/edx-platform && npm uninstall @edx/studio-frontend && cd /edx/src/studio-frontend && npm link && cd /edx/app/edxapp/edx-platform && npm link @edx/studio-frontend'
 	docker exec -t edx.devstack.lms bash -c 'source /edx/app/edxapp/nodeenvs/edxapp/bin/activate && cd /edx/app/edxapp/edx-platform && npm uninstall @edx/studio-frontend && cd /edx/src/studio-frontend && npm link && cd /edx/app/edxapp/edx-platform && npm link @edx/studio-frontend'
 
 asset-page-flag: ## insert a waffle flag into local docker devstack
