@@ -14,6 +14,7 @@
   "dependencies": {
     "@edx/paragon": "^0.0.1",
     "classnames": "^2.2.5",
+    "@edx/edx-bootstrap": "0.3.3",
     "font-awesome": "^4.7.0",
     "popper.js": "^1.12.5",
     "prop-types": "^15.5.10",

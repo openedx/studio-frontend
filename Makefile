@@ -39,11 +39,27 @@ from-scratch: ## start development environment from scratch
 	docker build -t edxops/studio-frontend:latest --no-cache .
 	make up
 
-devstack-install: ## install local version of package into docker devstack for development
-	docker exec -t edx.devstack.lms bash -c 'source /edx/app/edxapp/nodeenvs/edxapp/bin/activate && cd /edx/app/edxapp/edx-platform && npm uninstall @edx/studio-frontend && cd /edx/src/studio-frontend && npm link && cd /edx/app/edxapp/edx-platform && npm link @edx/studio-frontend'
+devstack-install: validate-devstack-folders ## install local version of package into docker devstack for development
+	# note that this assumes a structure /src/sfe_parent/studio-frontend
+	# step 0: remove studio-frontend from edx-platform/node_modules
+	docker exec -t edx.devstack.studio bash -c 'source /edx/app/edxapp/nodeenvs/edxapp/bin/activate && cd /edx/app/edxapp/edx-platform && npm uninstall @edx/studio-frontend && rm -rf ./node_modules/@edx/studio-frontend'
+	# step 1: create symlink in /edx/src/sfe_parent/symlinks
+	# note that we delete studio-frontend/node_modules; this is deliberate
+	docker exec -t edx.devstack.studio bash -c 'mkdir -p /edx/src/sfe_parent/symlinks && rm -rf /edx/src/sfe_parent/symlinks/* && source /edx/app/edxapp/edxapp_env && cd /edx/src/sfe_parent/studio-frontend && export npm_config_prefix=/edx/src/sfe_parent/symlinks && npm link && rm -rf /edx/src/sfe_parent/studio-frontend/node_modules'
+	# step 2: install symlinked package under edx-platform
+	# if studio-frontend/node_modules exists during this step, it can cause issues
+	docker exec -t edx.devstack.studio bash -c 'source /edx/app/edxapp/edxapp_env && cd /edx/app/edxapp/edx-platform && export npm_config_prefix=/edx/src/sfe_parent/symlinks && npm link @edx/studio-frontend'
+	# step 3: repair installations
+	docker exec -t edx.devstack.studio bash -c 'source /edx/app/edxapp/edxapp_env && cd /edx/app/edxapp/edx-platform && npm update && npm install'
+	docker exec -t edx.devstack.studio bash -c 'source /edx/app/edxapp/edxapp_env && cd /edx/app/edxapp/edx-platform/node_modules/@edx/studio-frontend && npm install && npm run build'
+	# step 4: update assets properly, so webservers know about them
+	docker exec -t edx.devstack.studio bash -c 'source /edx/app/edxapp/edxapp_env && cd /edx/app/edxapp/edx-platform && paver update_assets'
+
+devstack.update: ## use this if you don't want to fire up the dedicated asset watching containers
+	docker exec -t edx.devstack.studio bash -c 'source /edx/app/edxapp/edxapp_env && cd /edx/app/edxapp/edx-platform && paver webpack'
 
 asset-page-flag: ## insert a waffle flag into local docker devstack
-	docker exec -t edx.devstack.lms bash -c 'source /edx/app/edxapp/edxapp_env && cd /edx/app/edxapp/edx-platform && echo "from cms.djangoapps.contentstore.config.models import NewAssetsPageFlag; NewAssetsPageFlag.objects.all().delete(); NewAssetsPageFlag.objects.create(enabled=True, enabled_for_all_courses=True);" | ./manage.py lms --settings=devstack_docker shell && echo "NewAssetsPageFlag inserted!"'
+	docker exec -t edx.devstack.studio bash -c 'source /edx/app/edxapp/edxapp_env && cd /edx/app/edxapp/edx-platform && echo "from cms.djangoapps.contentstore.config.models import NewAssetsPageFlag; NewAssetsPageFlag.objects.all().delete(); NewAssetsPageFlag.objects.create(enabled=True, enabled_for_all_courses=True);" | ./manage.py lms --settings=devstack_docker shell && echo "NewAssetsPageFlag inserted!"'
 
 publish: publish-patch ## default is a path release
 
@@ -52,3 +68,6 @@ publish-%: ## publish a new version from master. Argument will be fed into `npm 
 	@git diff --quiet || (echo 'unclean git repo, please commit all changes before publish'; exit 1)
 	export VERSION=$$(npm version patch) && git checkout -b dahlia/$$VERSION && npm publish --access public && git push --set-upstream origin dahlia/$$VERSION && git push --tags
 	echo "NPM package published, git branch created and tags pushed. Go to https://github.com/edx/studio-frontend to see your PR and merge the package.json update"
+
+validate-devstack-folders:
+	export TEMP_FILE=$$(date +%s) && touch $$TEMP_FILE && docker exec -t edx.devstack.studio bash -c 'if [[ $$(ls /edx/src/sfe_parent/studio-frontend/$$TEMP_FILE) ]]; then echo "Folder structure looks good"; else echo "Your folders are FUBAR, talk to Eric (who should really come up with an automatic way of repairing this situation)"; exit 1; fi' && rm -rf $$TEMP_FILE
