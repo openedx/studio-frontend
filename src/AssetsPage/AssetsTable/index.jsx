@@ -26,7 +26,11 @@ class AssetsTable extends React.Component {
   addDeleteButton() {
     const newAssetsList = this.props.assetsList.map((asset) => {
       const currentAsset = Object.assign({}, asset);
-      const deleteButton = (<Button className={['fa', 'fa-trash', styles['icon']]} display='' buttonType='link' />);
+      const deleteButton = (<Button
+        className={['fa', 'fa-trash', styles.icon]}
+        display={''}
+        buttonType={'link'}
+      />);
       currentAsset.delete_asset = deleteButton;
       return currentAsset;
     });
