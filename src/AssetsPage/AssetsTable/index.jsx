@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Table from 'paragon/src/Table';
 import Button from 'paragon/src/Button';
 
-import styles from '../styles.scss';
+import FontAwesomeStyles from 'font-awesome/css/font-awesome.min.css';
 
 class AssetsTable extends React.Component {
   constructor(props) {
@@ -11,6 +11,9 @@ class AssetsTable extends React.Component {
     this.state = {
       finalAssetsList: [],
     };
+
+    this.onDeleteClick = this.onDeleteClick.bind(this);
+    this.addDeleteButton = this.addDeleteButton.bind(this);
   }
 
   componentDidMount() {
@@ -23,14 +26,23 @@ class AssetsTable extends React.Component {
     }
   }
 
+  onDeleteClick() {
+    this.setState({
+      // TODO: Update application state for Modal and delete logic
+    });
+  }
+
   addDeleteButton() {
     const newAssetsList = this.props.assetsList.map((asset) => {
       const currentAsset = Object.assign({}, asset);
       const deleteButton = (<Button
-        className={['fa', 'fa-trash', styles.icon]}
+        className={[FontAwesomeStyles.fa, FontAwesomeStyles['fa-trash']]}
         display={''}
-        buttonType={'link'}
+        buttonType={'light'}
+        aria-label={`Delete current asset named ${currentAsset.display_name}`}
+        onClick={this.onDeleteClick}
       />);
+
       currentAsset.delete_asset = deleteButton;
       return currentAsset;
     });

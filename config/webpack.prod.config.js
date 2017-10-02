@@ -47,6 +47,10 @@ module.exports = Merge.smart(commonConfig, {
           ],
         }),
       },
+      {
+        test: /\.(woff2?|ttf|svg|eot)(\?v=\d+\.\d+\.\d+)?$/,
+        loader: 'file-loader',
+      },
     ],
   },
   plugins: [
