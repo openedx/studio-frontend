@@ -9,7 +9,7 @@ class AssetsTable extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      finalAssetsList: [],
+      displayAssetsList: [],
     };
 
     this.onDeleteClick = this.onDeleteClick.bind(this);
@@ -17,7 +17,7 @@ class AssetsTable extends React.Component {
   }
 
   componentDidMount() {
-
+    this.addDeleteButton();
   }
 
   componentDidUpdate(prevProps) {
@@ -39,7 +39,7 @@ class AssetsTable extends React.Component {
         className={[FontAwesomeStyles.fa, FontAwesomeStyles['fa-trash']]}
         display={''}
         buttonType={'light'}
-        aria-label={`Delete current asset named ${currentAsset.display_name}`}
+        aria-label={`Delete ${currentAsset.display_name}`}
         onClick={this.onDeleteClick}
       />);
 
@@ -48,7 +48,7 @@ class AssetsTable extends React.Component {
     });
 
     this.setState({
-      finalAssetsList: newAssetsList,
+      displayAssetsList: newAssetsList,
     });
   }
 
@@ -75,7 +75,7 @@ class AssetsTable extends React.Component {
             key: 'delete_asset',
           },
         ]}
-        data={this.state.finalAssetsList}
+        data={this.state.displayAssetsList}
       />
     );
   }
