@@ -12,6 +12,7 @@
   "license": "AGPL-3.0",
   "dependencies": {
     "classnames": "^2.2.5",
+    "font-awesome": "^4.7.0",
     "paragon": "edx/paragon#bdde7afe5d1ade1dce83f50112e778b6d6d25215",
     "popper.js": "^1.12.5",
     "prop-types": "^15.5.10",
@@ -33,6 +34,7 @@
     "css-loader": "^0.28.5",
     "eslint-config-edx": "4.0.0",
     "extract-text-webpack-plugin": "^3.0.0",
+    "file-loader": "^1.1.4",
     "html-webpack-harddisk-plugin": "^0.1.0",
     "html-webpack-plugin": "^2.30.1",
     "husky": "^0.14.3",
