@@ -1,16 +1,20 @@
-import { getAssets } from '../../api/client';
+import * as clientApi from '../../api/client';
 
-export const REQUEST_ASSETS_SUCCESS = 'REQUEST_ASSETS_SUCCESS';
-export const FILTER_UPDATED = 'FILTER_UPDATED';
+export const assetActions = {
+  REQUEST_ASSETS_SUCCESS: 'REQUEST_ASSETS_SUCCESS',
+  FILTER_UPDATED: 'FILTER_UPDATED',
+  DELETE_ASSET_SUCCESS: 'DELETE_ASSET_SUCCESS',
+  ASSET_XHR_FAILURE: 'ASSET_XHR_FAILURE',
+};
 
 export const requestAssetsSuccess = response => ({
-  type: REQUEST_ASSETS_SUCCESS,
+  type: assetActions.REQUEST_ASSETS_SUCCESS,
   data: response.assets,
 });
 
-export const requestAssets = assetsParameters =>
+export const getAssets = assetsParameters =>
   dispatch =>
-    getAssets(assetsParameters.courseId, {
+    clientApi.requestAssets(assetsParameters.courseId, {
       page: assetsParameters.page,
       assetTypes: assetsParameters.assetTypes,
     })
@@ -18,6 +22,29 @@ export const requestAssets = assetsParameters =>
       .then(json => dispatch(requestAssetsSuccess(json)));
 
 export const filterUpdate = (filterKey, filterValue) => ({
-  type: FILTER_UPDATED,
+  type: assetActions.FILTER_UPDATED,
   data: { [filterKey]: filterValue },
 });
+
+export const deleteAssetSuccess = assetId => ({
+  type: assetActions.DELETE_ASSET_SUCCESS,
+  assetId,
+});
+
+export const assetXHRFailure = (response, text) => ({
+  type: assetActions.ASSET_XHR_FAILURE,
+  response,
+  text,
+});
+
+export const deleteAsset = (assetsParameters, assetId) =>
+  dispatch =>
+    clientApi.requestDeleteAsset(assetsParameters.courseId, assetId)
+      .then((response) => {
+        if (response.ok) {
+          dispatch(deleteAssetSuccess(assetId));
+        } else {
+          dispatch(assetXHRFailure(response, 'File could not be deleted.'));
+        }
+      });
+

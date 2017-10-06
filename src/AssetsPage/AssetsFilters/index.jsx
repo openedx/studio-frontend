@@ -45,7 +45,7 @@ AssetsFilters.propTypes = {
 
 const WrappedAssetsFilters = connect(
   state => ({
-    assetsParameters: state.assetsParameters,
+    assetsParameters: state.assets.parameters,
   }), dispatch => ({
     updateFilter: (filterKey, filterValue) => dispatch(filterUpdate(filterKey, filterValue)),
   }),

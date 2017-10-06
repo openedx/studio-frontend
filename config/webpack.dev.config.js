@@ -77,7 +77,9 @@ module.exports = Merge.smart(commonConfig, {
     port: 18011,
     proxy: Object.keys(apiEndpoints).reduce(
       (map, endpoint) => {
-        map[apiEndpoints[endpoint]] = targetUrl;// eslint-disable-line no-param-reassign
+        map[apiEndpoints[endpoint]] = { // eslint-disable-line no-param-reassign
+          target: targetUrl,
+        };
         return map;
       }, {}),
   },
