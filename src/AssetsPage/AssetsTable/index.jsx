@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Table from 'paragon/src/Table';
-import Button from 'paragon/src/Button';
+import Table from '@edx/paragon/src/Table';
+import Button from '@edx/paragon/src/Button';
 
 import FontAwesomeStyles from 'font-awesome/css/font-awesome.min.css';
 
