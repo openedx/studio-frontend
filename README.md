@@ -1,4 +1,6 @@
 # studio-frontend
+[![codecov](https://codecov.io/gh/edx/studio-frontend/branch/master/graph/badge.svg)](https://codecov.io/gh/edx/studio-frontend)
+
 React front end for edX Studio
 
 ## Development

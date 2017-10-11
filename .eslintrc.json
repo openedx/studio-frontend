@@ -6,12 +6,16 @@
       "error",
       {
         "devDependencies": [
-          "config/*.js"
+          "config/*.js",
+          "**/*.test.jsx"
         ]
       }
     ],
     "class-methods-use-this": [
       "off"
     ]
+  },
+  "env": {
+    "jest": true
   }
 }

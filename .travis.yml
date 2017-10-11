@@ -5,10 +5,14 @@ node_js:
 
 sudo: required
 services:
-  - docker
+ - docker
 
 before_script:
-  - docker build -t studio-frontend --no-cache .
+ - docker build -t studio-frontend --no-cache .
 
 script:
   - npm run lint
+  - npm run test
+
+after_script:
+  - codecov

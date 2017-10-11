@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import AssetsTable from './AssetsTable';
+import { AssetsTable } from './AssetsTable';
 import AssetsFilters from './AssetsFilters';
 
 import { getAssets } from '../data/actions/assets';

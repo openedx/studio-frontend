@@ -10,7 +10,7 @@ import FontAwesomeStyles from 'font-awesome/css/font-awesome.min.css';
 import { deleteAsset } from '../../data/actions/assets';
 
 
-class AssetsTable extends React.Component {
+export class AssetsTable extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
