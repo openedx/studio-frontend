@@ -17,7 +17,7 @@ module.exports = Merge.smart(commonConfig, {
         test: /\.(js|jsx)$/,
         include: [
           path.resolve(__dirname, '../src'),
-          path.resolve(__dirname, '../node_modules/paragon'),
+          path.resolve(__dirname, '../node_modules/@edx/paragon'),
         ],
         loader: 'babel-loader',
       },

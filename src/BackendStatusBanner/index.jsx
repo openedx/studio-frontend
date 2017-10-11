@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import Button from 'paragon/src/Button';
+import Button from '@edx/paragon/src/Button';
 
 import styles from './styles.scss';
 import statusMap from './statusMap.json';
