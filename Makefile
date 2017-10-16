@@ -63,11 +63,12 @@ asset-page-flag: ## insert a waffle flag into local docker devstack
 
 publish: publish-patch ## default is a path release
 
-publish-%: ## publish a new version from master. Argument will be fed into `npm version`, see https://docs.npmjs.com/cli/version for valid values.
-	if [ $$(git rev-parse --abbrev-ref HEAD) != "master" ]; then echo "you may only publish from master" && exit 1; fi
-	@git diff --quiet || (echo 'unclean git repo, please commit all changes before publish'; exit 1)
-	export VERSION=$$(npm version patch) && git checkout -b dahlia/$$VERSION && npm publish --access public && git push --set-upstream origin dahlia/$$VERSION && git push --tags
-	echo "NPM package published, git branch created and tags pushed. Go to https://github.com/edx/studio-frontend to see your PR and merge the package.json update"
+publish-%: ## don't use this, it's broken. Do the following manually (from your host machine unless specified):
+	# npm version [patch | minor | major]
+	# git checkout dahlia/<version>
+	# (do this in you docker container, it actually builds things) npm publish --access public
+	# git push --set-upstream origin dahlia/<version>
+	# git push --tags
 
 validate-devstack-folders:
 	export TEMP_FILE=$$(date +%s) && touch $$TEMP_FILE && docker exec -t edx.devstack.studio bash -c 'if [[ $$(ls /edx/src/sfe_parent/studio-frontend/$$TEMP_FILE) ]]; then echo "Folder structure looks good"; else echo "Your folders are FUBAR, talk to Eric (who should really come up with an automatic way of repairing this situation)"; exit 1; fi' && rm -rf $$TEMP_FILE
