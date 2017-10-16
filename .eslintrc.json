@@ -9,6 +9,9 @@
           "config/*.js"
         ]
       }
+    ],
+    "class-methods-use-this": [
+      "off"
     ]
   }
 }

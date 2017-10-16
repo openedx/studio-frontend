@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import AssetsTable from './AssetsTable';
 import AssetsFilters from './AssetsFilters';
 
-import { requestAssets } from '../data/actions/assets';
+import { getAssets } from '../data/actions/assets';
 import styles from './styles.scss';
 
 class AssetsPage extends React.Component {
@@ -16,14 +16,14 @@ class AssetsPage extends React.Component {
   }
 
   componentDidMount() {
-    this.props.requestAssets(this.props.assetsParameters);
+    this.props.getAssets(this.props.assetsParameters);
   }
 
   componentDidUpdate(prevProps) {
     if (prevProps.assetsParameters.assetTypes !== this.props.assetsParameters.assetTypes) {
       // if filters changed, update the assetsList
       // TODO: consider using the reselect library for this
-      this.props.requestAssets(this.props.assetsParameters);
+      this.props.getAssets(this.props.assetsParameters);
     }
   }
 
@@ -51,15 +51,15 @@ AssetsPage.propTypes = {
   assetsParameters: PropTypes.objectOf(
     PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool, PropTypes.object]),
   ).isRequired,
-  requestAssets: PropTypes.func.isRequired,
+  getAssets: PropTypes.func.isRequired,
 };
 
 const WrappedAssetsPage = connect(
   state => ({
-    assetsList: state.assetsList,
-    assetsParameters: state.assetsParameters,
+    assetsList: state.assets.list,
+    assetsParameters: state.assets.parameters,
   }), dispatch => ({
-    requestAssets: assetsParameters => dispatch(requestAssets(assetsParameters)),
+    getAssets: assetsParameters => dispatch(getAssets(assetsParameters)),
   }),
 )(AssetsPage);
 
