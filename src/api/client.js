@@ -14,15 +14,14 @@ export function pingStudioHome() {
   );
 }
 
-function assetTypeValueFromState(assetTypes) {
-  // TODO: change this to multi-value once API supports it
-  return Object.keys(assetTypes).find(key => assetTypes[key]) || '';
+function assetTypesFromState(assetTypes) {
+  return Object.keys(assetTypes).filter(key => assetTypes);
 }
 
 export function requestAssets(courseId, { page = 0, pageSize = 50, sort = 'sort', assetTypes = {} }) {
-  const assetType = assetTypeValueFromState(assetTypes);
+  const assetTypesToFilter = assetTypesFromState(assetTypes)
   return fetch(
-    `${endpoints.assets}/${courseId}/?page=${page}&page_size=${pageSize}&sort=${sort}&asset_type=${assetType}`, {
+    `${endpoints.assets}/${courseId}/?page=${page}&page_size=${pageSize}&sort=${sort}&asset_type=${assetTypesToFilter.join(',')}`, {
       credentials: 'same-origin',
       headers: {
         Accept: 'application/json',
