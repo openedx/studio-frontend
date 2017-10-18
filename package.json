@@ -5,7 +5,8 @@
   "repository": "edx/studio-frontend",
   "scripts": {
     "build": "NODE_ENV=production BABEL_ENV=production $(npm bin)/webpack --config=config/webpack.prod.config.js",
-    "extract_i18n": "BABEL_ENV=i18n $(npm bin)/babel src --quiet > /dev/null",
+    "i18n_extract": "BABEL_ENV=i18n $(npm bin)/babel src --quiet > /dev/null",
+    "i18n_manage": "node scripts/translationRunner.js",
     "lint": "eslint --ext .js --ext .jsx .",
     "prepublishOnly": "npm run build",
     "start": "NODE_ENV=development BABEL_ENV=development $(npm bin)/webpack-dev-server --config=config/webpack.dev.config.js --hot --inline --progress",
@@ -46,6 +47,7 @@
     "husky": "^0.14.3",
     "node-sass": "^4.5.3",
     "react-dev-utils": "^4.0.0",
+    "react-intl-translations-manager": "^5.0.1",
     "sass-loader": "^6.0.6",
     "style-loader": "^0.18.2",
     "webpack": "^3.5.5",
