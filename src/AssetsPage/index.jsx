@@ -1,6 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { FormattedMessage } from 'react-intl';
+
 import AssetsTable from './AssetsTable';
 import AssetsFilters from './AssetsFilters';
 
@@ -36,7 +38,12 @@ class AssetsPage extends React.Component {
   render() {
     return (
       <div className={styles.assets}>
-        <h2>Files & Uploads</h2>
+        <FormattedMessage
+          tagName="h2"
+          id="AssetsPage.title"
+          defaultMessage="Files & Uploads"
+          description="Title for AssetsPage"
+        />
         <AssetsFilters />
         <AssetsTable
           assetsList={this.props.assetsList}
