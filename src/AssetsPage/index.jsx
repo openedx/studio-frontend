@@ -1,11 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { FormattedMessage } from 'react-intl';
+
 import AssetsTable from './AssetsTable';
 import AssetsFilters from './AssetsFilters';
 
 import { getAssets } from '../data/actions/assets';
 import styles from './styles.scss';
+import defaultMessages from './messages';
 
 class AssetsPage extends React.Component {
   constructor(props) {
@@ -36,7 +39,7 @@ class AssetsPage extends React.Component {
   render() {
     return (
       <div className={styles.assets}>
-        <h2>Files & Uploads</h2>
+        <FormattedMessage {...this.props.messages.title} tagName="h2" />
         <AssetsFilters />
         <AssetsTable
           assetsList={this.props.assetsList}
@@ -52,6 +55,16 @@ AssetsPage.propTypes = {
     PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool, PropTypes.object]),
   ).isRequired,
   getAssets: PropTypes.func.isRequired,
+  messages: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      defaultMessage: PropTypes.string.isRequired,
+      description: PropTypes.string,
+    }),
+  ),
+};
+AssetsPage.defaultProps = {
+  messages: defaultMessages,
 };
 
 const WrappedAssetsPage = connect(
