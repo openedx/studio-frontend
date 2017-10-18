@@ -19,7 +19,7 @@ function assetTypesFromState(assetTypes) {
 }
 
 export function requestAssets(courseId, { page = 0, pageSize = 50, sort = 'sort', assetTypes = {} }) {
-  const assetTypesToFilter = assetTypesFromState(assetTypes)
+  const assetTypesToFilter = assetTypesFromState(assetTypes);
   return fetch(
     `${endpoints.assets}/${courseId}/?page=${page}&page_size=${pageSize}&sort=${sort}&asset_type=${assetTypesToFilter.join(',')}`, {
       credentials: 'same-origin',
