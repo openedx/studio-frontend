@@ -8,7 +8,6 @@ import AssetsFilters from './AssetsFilters';
 
 import { getAssets } from '../data/actions/assets';
 import styles from './styles.scss';
-import defaultMessages from './messages';
 
 class AssetsPage extends React.Component {
   constructor(props) {
@@ -39,7 +38,12 @@ class AssetsPage extends React.Component {
   render() {
     return (
       <div className={styles.assets}>
-        <FormattedMessage {...this.props.messages.title} tagName="h2" />
+        <FormattedMessage
+          tagName="h2"
+          id="AssetsPage.title"
+          defaultMessage="Files & Uploads"
+          description="Title for AssetsPage"
+        />
         <AssetsFilters />
         <AssetsTable
           assetsList={this.props.assetsList}
@@ -55,16 +59,6 @@ AssetsPage.propTypes = {
     PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool, PropTypes.object]),
   ).isRequired,
   getAssets: PropTypes.func.isRequired,
-  messages: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      defaultMessage: PropTypes.string.isRequired,
-      description: PropTypes.string,
-    }),
-  ),
-};
-AssetsPage.defaultProps = {
-  messages: defaultMessages,
 };
 
 const WrappedAssetsPage = connect(

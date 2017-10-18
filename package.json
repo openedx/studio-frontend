@@ -5,6 +5,7 @@
   "repository": "edx/studio-frontend",
   "scripts": {
     "build": "NODE_ENV=production BABEL_ENV=production $(npm bin)/webpack --config=config/webpack.prod.config.js",
+    "extract_i18n": "BABEL_ENV=i18n $(npm bin)/babel src --quiet > /dev/null",
     "lint": "eslint --ext .js --ext .jsx .",
     "prepublishOnly": "npm run build",
     "start": "NODE_ENV=development BABEL_ENV=development $(npm bin)/webpack-dev-server --config=config/webpack.dev.config.js --hot --inline --progress",
@@ -50,25 +51,5 @@
     "webpack": "^3.5.5",
     "webpack-dev-server": "^2.7.1",
     "webpack-merge": "^4.1.0"
-  },
-  "babel": {
-    "presets": [
-      [
-        "env",
-        {
-          "targets": {
-            "browsers": [
-              "last 2 versions",
-              "ie 11"
-            ]
-          }
-        }
-      ],
-      "babel-preset-react"
-    ],
-    "plugins": [
-      "transform-object-rest-spread",
-      "transform-class-properties"
-    ]
   }
 }
