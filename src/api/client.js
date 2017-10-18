@@ -15,7 +15,7 @@ export function pingStudioHome() {
 }
 
 function assetTypesFromState(assetTypes) {
-  return Object.keys(assetTypes).filter(key => assetTypes);
+  return Object.keys(assetTypes).filter(key => assetTypes[key]);
 }
 
 export function requestAssets(courseId, { page = 0, pageSize = 50, sort = 'sort', assetTypes = {} }) {
