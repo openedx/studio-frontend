@@ -3,21 +3,19 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { addLocaleData, IntlProvider } from 'react-intl';
 import enLocaleData from 'react-intl/locale-data/en';
-import frLocaleData from 'react-intl/locale-data/fr';
 
 import AssetsPage from './AssetsPage';
 import BackendStatusBanner from './BackendStatusBanner';
 import store from './data/store';
 
-import frenchMessages from '../i18n/locales/fr.json';
-
-// en is hardcoded in right now, eventually this will be a dynamic locale
 addLocaleData(enLocaleData);
-addLocaleData(frLocaleData);
 
+const localeDataDiv = document.getElementById('studio-frontend-messages');
+const locale = localeDataDiv.dataset.locale || 'en';
+const messages = localeDataDiv.textContent || {};
 
 const App = () => (
-  <IntlProvider locale="fr" messages={frenchMessages}>
+  <IntlProvider locale={locale} messages={messages}>
     <Provider store={store}>
       <div>
         <BackendStatusBanner />
