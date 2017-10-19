@@ -9,7 +9,6 @@ import { connect } from 'react-redux';
 import FontAwesomeStyles from 'font-awesome/css/font-awesome.min.css';
 import { deleteAsset } from '../../data/actions/assets';
 
-
 export class AssetsTable extends React.Component {
   constructor(props) {
     super(props);
@@ -67,7 +66,6 @@ export class AssetsTable extends React.Component {
 
     this.trashcanRefs = {};
   }
-
 
   componentDidMount() {
     this.addDeleteButton();
@@ -144,22 +142,16 @@ export class AssetsTable extends React.Component {
     />);
   }
 
-  deleteAsset() {
-    this.props.deleteAsset(this.props.assetsParameters, this.state.assetToDelete.id);
-    this.setState({ modalOpen: false });
-
-    // TODO shift focus to banner, something like:
-    // this.setState({
-    //  elementToFocusOnModalClose: <alertStatus>
-    // })
-    // this.state.elementToFocusOnModalClose.focus();
-  }
-
   addTableColumnButton(column) {
     const newColumn = Object.assign({}, column);
     const columnButton = this.renderTableColumnButton(newColumn);
     newColumn.label = columnButton;
     return newColumn;
+  }
+
+  closeModal() {
+    this.setState({ modalOpen: false });
+    this.state.elementToFocusOnModalClose.focus();
   }
 
   addDeleteButton() {
@@ -181,6 +173,17 @@ export class AssetsTable extends React.Component {
     this.setState({
       displayAssetsList: newAssetsList,
     });
+  }
+
+  deleteAsset() {
+    this.props.deleteAsset(this.props.assetsParameters, this.state.assetToDelete.id);
+    this.setState({ modalOpen: false });
+
+    // TODO shift focus to banner, something like:
+    // this.setState({
+    //  elementToFocusOnModalClose: <alertStatus>
+    // })
+    // this.state.elementToFocusOnModalClose.focus();
   }
 
   renderTableColumnButton(column) {
