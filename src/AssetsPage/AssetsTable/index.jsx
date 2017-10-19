@@ -49,7 +49,8 @@ export class AssetsTable extends React.Component {
         },
       ],
       sortState: {
-        // should this be dynamic instead of hardcoded? first sortable element of the columns? how to do that?
+        // should this be dynamic instead of hardcoded?
+        // first sortable element of the columns? how to do that?
         columnKey: 'display_name',
         direction: 'descending',
       },
@@ -99,7 +100,8 @@ export class AssetsTable extends React.Component {
       column.sortDirection = newDirection;
 
       // then we want to make the appropriate API call
-      // who should handle this? AssetsTable? What happens if a user has a filter selected and a sort? Does this integrate
+      // who should handle this? AssetsTable?
+      // What happens if a user has a filter selected and a sort? Does this integrate
       // with what's happening in AssetsPage? I need to look into this further.
     }
 
@@ -190,7 +192,8 @@ export class AssetsTable extends React.Component {
     return (column.sortable ?
       <Button
         // LINE BREAK?
-        display={<span> <span> {column.label} </span> {this.getSortIcon(column.sortDirection)} </span>}
+        display={<span> <span> {column.label} </span>
+          {this.getSortIcon(column.sortDirection)} </span>}
         buttonType="light"
         onClick={() => this.onSortClick(column.key)}
       /> :
