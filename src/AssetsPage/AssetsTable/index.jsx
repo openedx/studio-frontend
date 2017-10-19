@@ -18,14 +18,61 @@ export class AssetsTable extends React.Component {
       modalOpen: false,
       assetToDelete: {},
       elementToFocusOnModalClose: {},
+      tableColumns: [
+        // keyed object? or just search through the object when I need it? performance?
+        {
+          // label: this.renderTableColumnButton('Name', true, 'descending'),
+          label: 'Name',
+          key: 'display_name',
+          sortable: true,
+          // redundancy :(
+          sortDirection: 'descending',
+        },
+        {
+          // label: this.renderTableColumnButton('Type', true, 'none'),
+          label: 'Type',
+          key: 'content_type',
+          sortable: true,
+          sortDirection: 'none',
+        },
+        {
+          // label: this.renderTableColumnButton('Date Added', true, ''),
+          label: 'Date Added',
+          key: 'date_added',
+          sortable: true,
+          sortDirection: 'none',
+        },
+        {
+          // label: this.renderTableColumnButton('Delete Asset', false, ''),
+          label: 'Delete Asset',
+          key: 'delete_asset',
+          sortable: false,
+        },
+      ],
+      sortState: {
+        // should this be dynamic instead of hardcoded? first sortable element of the columns? how to do that?
+        columnKey: 'display_name',
+        direction: 'descending',
+      },
     };
 
     this.onDeleteClick = this.onDeleteClick.bind(this);
     this.deleteAsset = this.deleteAsset.bind(this);
     this.addDeleteButton = this.addDeleteButton.bind(this);
     this.closeModal = this.closeModal.bind(this);
+    this.getSortIcon = this.getSortIcon.bind(this);
+    this.renderTableColumnButton = this.renderTableColumnButton.bind(this);
+    this.addTableColumnButton = this.addTableColumnButton.bind(this);
+    this.onSortClick = this.onSortClick.bind(this);
 
     this.trashcanRefs = {};
+  }
+
+  addTableColumnButton(column) {
+    const newColumn = Object.assign({}, column);
+    const columnButton = this.renderTableColumnButton(newColumn);
+    newColumn.label = columnButton;
+    return newColumn;
   }
 
   componentDidMount() {
@@ -36,6 +83,41 @@ export class AssetsTable extends React.Component {
     if (prevProps.assetsList.length !== this.props.assetsList.length) {
       this.addDeleteButton();
     }
+  }
+
+  onSortClick(columnKey) {
+    // const prevColumnKey = this.state.sortState.columnKey;
+    const columns = [...this.state.tableColumns];
+    const column = this.state.tableColumns.find(col => (col.key === columnKey));
+    let newDirection;
+
+    if (this.state.sortState.columnKey === columnKey) {
+      newDirection = this.state.sortState.direction === 'descending' ? 'ascending' : 'descending';
+      column.sortDirection = newDirection;
+
+      // then we want to make the appropriate API call
+    } else {
+      // is this the best way to do a line break?
+      const oldColumn = this.state.tableColumns.find(col =>
+        (col.key === this.state.sortState.columnKey));
+
+      // can we have a better way to do this that's less ambiguous than relying on the default?
+      oldColumn.sortDirection = '';
+      newDirection = 'ascending';
+      column.sortDirection = newDirection;
+
+      // then we want to make the appropriate API call
+      // who should handle this? AssetsTable? What happens if a user has a filter selected and a sort? Does this integrate
+      // with what's happening in AssetsPage? I need to look into this further.
+    }
+
+    this.setState({
+      sortState: {
+        columnKey,
+        direction: newDirection,
+      },
+      tableColumns: columns,
+    });
   }
 
   onDeleteClick(assetId) {
@@ -85,6 +167,41 @@ export class AssetsTable extends React.Component {
     // this.state.elementToFocusOnModalClose.focus();
   }
 
+  getSortIcon(sortDirection) {
+    let sortIconClassName = '';
+
+    switch (sortDirection) {
+      case 'ascending':
+        sortIconClassName = 'fa-sort-asc';
+        break;
+      case 'descending':
+        sortIconClassName = 'fa-sort-desc';
+        break;
+      default:
+        sortIconClassName = 'fa-sort';
+        break;
+    }
+
+    return (<span
+      className={classNames(FontAwesomeStyles.fa, FontAwesomeStyles[sortIconClassName])}
+    />);
+  }
+
+  renderTableColumnButton(column) {
+    return (column.sortable ?
+      <Button
+        // LINE BREAK?
+        display={<span> <span> {column.label} </span> {this.getSortIcon(column.sortDirection)} </span>}
+        buttonType="light"
+        onClick={() => this.onSortClick(column.key)}
+      /> :
+      <Button
+        display={column.label}
+        buttonType="light"
+      />
+    );
+  }
+
   renderModal() {
     return (
       <Modal
@@ -121,24 +238,9 @@ export class AssetsTable extends React.Component {
     ) : (
       <div>
         <Table
-          columns={[
-            {
-              label: 'Name',
-              key: 'display_name',
-            },
-            {
-              label: 'Type',
-              key: 'content_type',
-            },
-            {
-              label: 'Date Added',
-              key: 'date_added',
-            },
-            {
-              label: 'Delete Asset',
-              key: 'delete_asset',
-            },
-          ]}
+          columns={this.state.tableColumns.map(column => (
+            this.addTableColumnButton(column)
+          ))}
           data={this.state.displayAssetsList}
         />
         {this.renderModal()}
