@@ -68,12 +68,6 @@ export class AssetsTable extends React.Component {
     this.trashcanRefs = {};
   }
 
-  addTableColumnButton(column) {
-    const newColumn = Object.assign({}, column);
-    const columnButton = this.renderTableColumnButton(newColumn);
-    newColumn.label = columnButton;
-    return newColumn;
-  }
 
   componentDidMount() {
     this.addDeleteButton();
@@ -130,6 +124,44 @@ export class AssetsTable extends React.Component {
     });
   }
 
+  getSortIcon(sortDirection) {
+    let sortIconClassName = '';
+
+    switch (sortDirection) {
+      case 'ascending':
+        sortIconClassName = 'fa-sort-asc';
+        break;
+      case 'descending':
+        sortIconClassName = 'fa-sort-desc';
+        break;
+      default:
+        sortIconClassName = 'fa-sort';
+        break;
+    }
+
+    return (<span
+      className={classNames(FontAwesomeStyles.fa, FontAwesomeStyles[sortIconClassName])}
+    />);
+  }
+
+  deleteAsset() {
+    this.props.deleteAsset(this.props.assetsParameters, this.state.assetToDelete.id);
+    this.setState({ modalOpen: false });
+
+    // TODO shift focus to banner, something like:
+    // this.setState({
+    //  elementToFocusOnModalClose: <alertStatus>
+    // })
+    // this.state.elementToFocusOnModalClose.focus();
+  }
+
+  addTableColumnButton(column) {
+    const newColumn = Object.assign({}, column);
+    const columnButton = this.renderTableColumnButton(newColumn);
+    newColumn.label = columnButton;
+    return newColumn;
+  }
+
   addDeleteButton() {
     const newAssetsList = this.props.assetsList.map((asset) => {
       const currentAsset = Object.assign({}, asset);
@@ -149,42 +181,6 @@ export class AssetsTable extends React.Component {
     this.setState({
       displayAssetsList: newAssetsList,
     });
-  }
-
-  closeModal() {
-    this.setState({ modalOpen: false });
-    this.state.elementToFocusOnModalClose.focus();
-  }
-
-  deleteAsset() {
-    this.props.deleteAsset(this.props.assetsParameters, this.state.assetToDelete.id);
-    this.setState({ modalOpen: false });
-
-    // TODO shift focus to banner, something like:
-    // this.setState({
-    //  elementToFocusOnModalClose: <alertStatus>
-    // })
-    // this.state.elementToFocusOnModalClose.focus();
-  }
-
-  getSortIcon(sortDirection) {
-    let sortIconClassName = '';
-
-    switch (sortDirection) {
-      case 'ascending':
-        sortIconClassName = 'fa-sort-asc';
-        break;
-      case 'descending':
-        sortIconClassName = 'fa-sort-desc';
-        break;
-      default:
-        sortIconClassName = 'fa-sort';
-        break;
-    }
-
-    return (<span
-      className={classNames(FontAwesomeStyles.fa, FontAwesomeStyles[sortIconClassName])}
-    />);
   }
 
   renderTableColumnButton(column) {
