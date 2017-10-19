@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { AssetsTable } from './AssetsTable';
+import WrappedAssetsTable from './AssetsTable';
 import AssetsFilters from './AssetsFilters';
 
 import { getAssets } from '../data/actions/assets';
@@ -38,7 +38,7 @@ class AssetsPage extends React.Component {
       <div className={styles.assets}>
         <h2>Files & Uploads</h2>
         <AssetsFilters />
-        <AssetsTable
+        <WrappedAssetsTable
           assetsList={this.props.assetsList}
         />
       </div>
