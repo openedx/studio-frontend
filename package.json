@@ -46,6 +46,7 @@
     "husky": "^0.14.3",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^21.2.1",
+    "fetch-mock": "^5.13.1",
     "node-sass": "^4.5.3",
     "react-dev-utils": "^4.0.0",
     "react-test-renderer": "^15.6.1",
