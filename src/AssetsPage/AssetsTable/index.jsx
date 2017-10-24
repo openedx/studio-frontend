@@ -7,58 +7,53 @@ import classNames from 'classnames';
 import { connect } from 'react-redux';
 
 import FontAwesomeStyles from 'font-awesome/css/font-awesome.min.css';
-import { deleteAsset } from '../../data/actions/assets';
+import { deleteAsset, sortUpdate } from '../../data/actions/assets';
 
 export class AssetsTable extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      displayAssetsList: [],
       modalOpen: false,
       assetToDelete: {},
       elementToFocusOnModalClose: {},
-      tableColumns: [
-        // keyed object? or just search through the object when I need it? performance?
-        {
-          // label: this.renderTableColumnButton('Name', true, 'descending'),
+      tableColumns: {
+        display_name: {
           label: 'Name',
           key: 'display_name',
           sortable: true,
           // redundancy :(
-          sortDirection: 'descending',
+          sortDirection: 'none',
         },
-        {
-          // label: this.renderTableColumnButton('Type', true, 'none'),
+        content_type: {
           label: 'Type',
           key: 'content_type',
           sortable: true,
           sortDirection: 'none',
         },
-        {
-          // label: this.renderTableColumnButton('Date Added', true, ''),
+        date_added: {
           label: 'Date Added',
           key: 'date_added',
           sortable: true,
-          sortDirection: 'none',
+          sortDirection: 'desc',
         },
-        {
-          // label: this.renderTableColumnButton('Delete Asset', false, ''),
+        delete_asset: {
           label: 'Delete Asset',
           key: 'delete_asset',
           sortable: false,
         },
-      ],
+      },
       sortState: {
         // should this be dynamic instead of hardcoded?
         // first sortable element of the columns? how to do that?
-        columnKey: 'display_name',
-        direction: 'descending',
+        columnKey: 'date_added',
+        direction: 'desc',
       },
     };
 
+
+
     this.onDeleteClick = this.onDeleteClick.bind(this);
     this.deleteAsset = this.deleteAsset.bind(this);
-    this.addDeleteButton = this.addDeleteButton.bind(this);
     this.closeModal = this.closeModal.bind(this);
     this.getSortIcon = this.getSortIcon.bind(this);
     this.renderTableColumnButton = this.renderTableColumnButton.bind(this);
@@ -68,50 +63,56 @@ export class AssetsTable extends React.Component {
     this.trashcanRefs = {};
   }
 
-  componentDidMount() {
-    this.addDeleteButton();
-  }
+  // componentDidMount() {
+    //moved this logic into componentWillReceiveProps, but I worry this will cause two renders?
+  // }
 
-  componentDidUpdate(prevProps) {
-    if (prevProps.assetsList.length !== this.props.assetsList.length) {
-      this.addDeleteButton();
-    }
-  }
+  // componentWillReceiveProps(nextProps) {
+    // const x = this.addDeleteButton(nextProps.assetsList);
+
+    // this.setState({
+    //   displayAssetsList: x,
+    // });
+  // }
+
+  // componentDidUpdate(prevProps) {
+    // if (prevProps.assetsList.length !== this.props.assetsList.length) {
+    //   this.addDeleteButton(this.props.assetsList);
+    // }
+    // else if (prevProps.assetsParameters !== this.props.assetsParameters) {
+    //   this.addDeleteButton(this.props.assetsList);
+    // }
+  // }
 
   onSortClick(columnKey) {
-    // const prevColumnKey = this.state.sortState.columnKey;
-    const columns = [...this.state.tableColumns];
-    const column = this.state.tableColumns.find(col => (col.key === columnKey));
-    let newDirection;
+    const columns = this.state.tableColumns;
+    const column = this.state.tableColumns[columnKey];
+    const sortState = this.state.sortState;
+    let newDirection = '';
 
     if (this.state.sortState.columnKey === columnKey) {
-      newDirection = this.state.sortState.direction === 'descending' ? 'ascending' : 'descending';
+      newDirection = this.state.sortState.direction === 'desc' ? 'asc' : 'desc';
       column.sortDirection = newDirection;
-
-      // then we want to make the appropriate API call
+      sortState.direction = newDirection;
     } else {
-      // is this the best way to do a line break?
-      const oldColumn = this.state.tableColumns.find(col =>
-        (col.key === this.state.sortState.columnKey));
+      const oldColumn = this.state.tableColumns[this.state.sortState.columnKey];
 
       // can we have a better way to do this that's less ambiguous than relying on the default?
       oldColumn.sortDirection = '';
-      newDirection = 'ascending';
+      newDirection = 'asc';
       column.sortDirection = newDirection;
-
-      // then we want to make the appropriate API call
-      // who should handle this? AssetsTable?
-      // What happens if a user has a filter selected and a sort? Does this integrate
-      // with what's happening in AssetsPage? I need to look into this further.
+      sortState.direction = newDirection;
     }
 
+    sortState.columnKey = column.key;
+    sortState.direction = newDirection;
+
     this.setState({
-      sortState: {
-        columnKey,
-        direction: newDirection,
-      },
+      sortState,
       tableColumns: columns,
     });
+
+    this.props.updateSort(this.state.sortState.columnKey, this.state.sortState.direction);
   }
 
   onDeleteClick(assetId) {
@@ -128,10 +129,10 @@ export class AssetsTable extends React.Component {
     let sortIconClassName = '';
 
     switch (sortDirection) {
-      case 'ascending':
+      case 'asc':
         sortIconClassName = 'fa-sort-asc';
         break;
-      case 'descending':
+      case 'desc':
         sortIconClassName = 'fa-sort-desc';
         break;
       default:
@@ -156,8 +157,8 @@ export class AssetsTable extends React.Component {
     this.state.elementToFocusOnModalClose.focus();
   }
 
-  addDeleteButton() {
-    const newAssetsList = this.props.assetsList.map((asset) => {
+  addDeleteButton(assetsList) {
+    const newAssetsList = assetsList.map((asset) => {
       const currentAsset = Object.assign({}, asset);
       const deleteButton = (<Button
         className={[FontAwesomeStyles.fa, FontAwesomeStyles['fa-trash']]}
@@ -172,9 +173,7 @@ export class AssetsTable extends React.Component {
       return currentAsset;
     });
 
-    this.setState({
-      displayAssetsList: newAssetsList,
-    });
+    return newAssetsList;
   }
 
   deleteAsset() {
@@ -191,9 +190,7 @@ export class AssetsTable extends React.Component {
   renderTableColumnButton(column) {
     return (column.sortable ?
       <Button
-        // LINE BREAK?
-        display={<span> <span> {column.label} </span>
-          {this.getSortIcon(column.sortDirection)} </span>}
+        display={<span> {column.label} {this.getSortIcon(column.sortDirection)} </span>}
         buttonType="light"
         onClick={() => this.onSortClick(column.key)}
       /> :
@@ -240,10 +237,10 @@ export class AssetsTable extends React.Component {
     ) : (
       <div>
         <Table
-          columns={this.state.tableColumns.map(column => (
-            this.addTableColumnButton(column)
+          columns={Object.keys(this.state.tableColumns).map(columnKey => (
+            this.addTableColumnButton(this.state.tableColumns[columnKey])
           ))}
-          data={this.state.displayAssetsList}
+          data={this.addDeleteButton(this.props.assetsList)}
         />
         {this.renderModal()}
       </div>
@@ -257,6 +254,7 @@ AssetsTable.propTypes = {
     PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool, PropTypes.object]),
   ).isRequired,
   deleteAsset: PropTypes.func.isRequired,
+  updateSort: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -267,6 +265,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   deleteAsset: (assetsParameters, assetId) => dispatch(deleteAsset(assetsParameters, assetId)),
+  updateSort: (sortKey, sortDirection) => dispatch(sortUpdate(sortKey, sortDirection)),
 });
 
 const WrappedAssetsTable = connect(
