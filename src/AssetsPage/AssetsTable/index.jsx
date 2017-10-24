@@ -77,7 +77,7 @@ export class AssetsTable extends React.Component {
       const currentAsset = Object.assign({}, asset);
       const deleteButton = (<Button
         className={[FontAwesomeStyles.fa, FontAwesomeStyles['fa-trash']]}
-        display={''}
+        label={''}
         buttonType={'light'}
         aria-label={`Delete ${currentAsset.display_name}`}
         onClick={() => { this.onDeleteClick(currentAsset.id); }}
@@ -131,7 +131,7 @@ export class AssetsTable extends React.Component {
         onClose={this.closeModal}
         buttons={[
           <Button
-            display="Yes, delete."
+            label="Yes, delete."
             buttonType="primary"
             onClick={this.deleteAsset}
           />,
