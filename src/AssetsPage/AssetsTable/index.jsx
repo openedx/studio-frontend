@@ -42,15 +42,7 @@ export class AssetsTable extends React.Component {
           sortable: false,
         },
       },
-      sortState: {
-        // should this be dynamic instead of hardcoded?
-        // first sortable element of the columns? how to do that?
-        columnKey: 'date_added',
-        direction: 'desc',
-      },
     };
-
-
 
     this.onDeleteClick = this.onDeleteClick.bind(this);
     this.deleteAsset = this.deleteAsset.bind(this);
@@ -86,33 +78,29 @@ export class AssetsTable extends React.Component {
 
   onSortClick(columnKey) {
     const columns = this.state.tableColumns;
-    const column = this.state.tableColumns[columnKey];
-    const sortState = this.state.sortState;
+    const column = columns[columnKey];
+    const sortedColumn = this.props.assetsParameters.sort;
+    const sortedDirection = this.props.assetsParameters.direction;
+
     let newDirection = '';
 
-    if (this.state.sortState.columnKey === columnKey) {
-      newDirection = this.state.sortState.direction === 'desc' ? 'asc' : 'desc';
+    if (sortedColumn === columnKey) {
+      newDirection = sortedDirection === 'desc' ? 'asc' : 'desc';
       column.sortDirection = newDirection;
-      sortState.direction = newDirection;
     } else {
-      const oldColumn = this.state.tableColumns[this.state.sortState.columnKey];
+      const oldColumn = this.state.tableColumns[sortedColumn];
 
       // can we have a better way to do this that's less ambiguous than relying on the default?
       oldColumn.sortDirection = '';
       newDirection = 'asc';
       column.sortDirection = newDirection;
-      sortState.direction = newDirection;
     }
 
-    sortState.columnKey = column.key;
-    sortState.direction = newDirection;
-
     this.setState({
-      sortState,
       tableColumns: columns,
     });
 
-    this.props.updateSort(this.state.sortState.columnKey, this.state.sortState.direction);
+    this.props.updateSort(column.key, newDirection);
   }
 
   onDeleteClick(assetId) {
