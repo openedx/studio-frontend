@@ -16,91 +16,66 @@ export class AssetsTable extends React.Component {
       modalOpen: false,
       assetToDelete: {},
       elementToFocusOnModalClose: {},
-      tableColumns: {
-        display_name: {
-          label: 'Name',
-          key: 'display_name',
-          sortable: true,
-          // redundancy :(
-          sortDirection: 'none',
-        },
-        content_type: {
-          label: 'Type',
-          key: 'content_type',
-          sortable: true,
-          sortDirection: 'none',
-        },
-        date_added: {
-          label: 'Date Added',
-          key: 'date_added',
-          sortable: true,
-          sortDirection: 'desc',
-        },
-        delete_asset: {
-          label: 'Delete Asset',
-          key: 'delete_asset',
-          sortable: false,
-        },
+      columnSortState: {
+        display_name: 'none',
+        content_type: 'none',
+        date_added: 'desc',
+      },
+    };
+
+    this.columns = {
+      display_name: {
+        label: 'Name',
+        key: 'display_name',
+        columnSortable: true,
+      },
+      content_type: {
+        label: 'Type',
+        key: 'content_type',
+        columnSortable: true,
+      },
+      date_added: {
+        label: 'Date Added',
+        key: 'date_added',
+        columnSortable: true,
+      },
+      delete_asset: {
+        label: 'Delete Asset',
+        key: 'delete_asset',
+        columnSortable: false,
       },
     };
 
     this.onDeleteClick = this.onDeleteClick.bind(this);
     this.deleteAsset = this.deleteAsset.bind(this);
     this.closeModal = this.closeModal.bind(this);
-    this.getSortIcon = this.getSortIcon.bind(this);
-    this.renderTableColumnButton = this.renderTableColumnButton.bind(this);
-    this.addTableColumnButton = this.addTableColumnButton.bind(this);
     this.onSortClick = this.onSortClick.bind(this);
 
     this.trashcanRefs = {};
   }
 
-  // componentDidMount() {
-    //moved this logic into componentWillReceiveProps, but I worry this will cause two renders?
-  // }
-
-  // componentWillReceiveProps(nextProps) {
-    // const x = this.addDeleteButton(nextProps.assetsList);
-
-    // this.setState({
-    //   displayAssetsList: x,
-    // });
-  // }
-
-  // componentDidUpdate(prevProps) {
-    // if (prevProps.assetsList.length !== this.props.assetsList.length) {
-    //   this.addDeleteButton(this.props.assetsList);
-    // }
-    // else if (prevProps.assetsParameters !== this.props.assetsParameters) {
-    //   this.addDeleteButton(this.props.assetsList);
-    // }
-  // }
-
   onSortClick(columnKey) {
-    const columns = this.state.tableColumns;
-    const column = columns[columnKey];
     const sortedColumn = this.props.assetsParameters.sort;
     const sortedDirection = this.props.assetsParameters.direction;
 
-    let newDirection = '';
+    let newDirection = 'desc';
 
     if (sortedColumn === columnKey) {
       newDirection = sortedDirection === 'desc' ? 'asc' : 'desc';
-      column.sortDirection = newDirection;
-    } else {
-      const oldColumn = this.state.tableColumns[sortedColumn];
 
-      // can we have a better way to do this that's less ambiguous than relying on the default?
-      oldColumn.sortDirection = '';
-      newDirection = 'asc';
-      column.sortDirection = newDirection;
+      this.setState({
+        ...this.state.columnSortState,
+        columnKey: newDirection,
+      });
+    } else {
+      this.setState({
+        ...this.state.columnSortState,
+        sortedColumn: '',
+        columnKey: newDirection,
+      });
     }
 
-    this.setState({
-      tableColumns: columns,
-    });
-
-    this.props.updateSort(column.key, newDirection);
+    this.props.updateSort(columnKey, newDirection);
   }
 
   onDeleteClick(assetId) {
@@ -111,33 +86,6 @@ export class AssetsTable extends React.Component {
       assetToDelete,
       elementToFocusOnModalClose: this.trashcanRefs[assetId],
     });
-  }
-
-  getSortIcon(sortDirection) {
-    let sortIconClassName = '';
-
-    switch (sortDirection) {
-      case 'asc':
-        sortIconClassName = 'fa-sort-asc';
-        break;
-      case 'desc':
-        sortIconClassName = 'fa-sort-desc';
-        break;
-      default:
-        sortIconClassName = 'fa-sort';
-        break;
-    }
-
-    return (<span
-      className={classNames(FontAwesomeStyles.fa, FontAwesomeStyles[sortIconClassName])}
-    />);
-  }
-
-  addTableColumnButton(column) {
-    const newColumn = Object.assign({}, column);
-    const columnButton = this.renderTableColumnButton(newColumn);
-    newColumn.label = columnButton;
-    return newColumn;
   }
 
   closeModal() {
@@ -167,26 +115,6 @@ export class AssetsTable extends React.Component {
   deleteAsset() {
     this.props.deleteAsset(this.props.assetsParameters, this.state.assetToDelete.id);
     this.setState({ modalOpen: false });
-
-    // TODO shift focus to banner, something like:
-    // this.setState({
-    //  elementToFocusOnModalClose: <alertStatus>
-    // })
-    // this.state.elementToFocusOnModalClose.focus();
-  }
-
-  renderTableColumnButton(column) {
-    return (column.sortable ?
-      <Button
-        display={<span> {column.label} {this.getSortIcon(column.sortDirection)} </span>}
-        buttonType="light"
-        onClick={() => this.onSortClick(column.key)}
-      /> :
-      <Button
-        display={column.label}
-        buttonType="light"
-      />
-    );
   }
 
   renderModal() {
@@ -225,10 +153,14 @@ export class AssetsTable extends React.Component {
     ) : (
       <div>
         <Table
-          columns={Object.keys(this.state.tableColumns).map(columnKey => (
-            this.addTableColumnButton(this.state.tableColumns[columnKey])
-          ))}
+          columns={Object.values(this.columns).map(column => ({
+            ...column,
+            onSort: () => this.onSortClick(column.key),
+          }))}
           data={this.addDeleteButton(this.props.assetsList)}
+          tableSortable
+          defaultSortedColumn="date_added"
+          defaultSortDirection="desc"
         />
         {this.renderModal()}
       </div>
