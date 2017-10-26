@@ -72,6 +72,9 @@
     ],
     "transformIgnorePatterns": [
       "/node_modules/(?!(@edx/paragon)/).*/"
-    ]
+    ],
+    "globals": {
+      "courseContext": {}
+    }
   }
 }

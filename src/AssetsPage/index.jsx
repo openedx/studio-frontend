@@ -16,13 +16,18 @@ class AssetsPage extends React.Component {
   }
 
   componentDidMount() {
-    this.props.getAssets(this.props.assetsParameters);
+    this.props.getAssets(this.props.assetsParameters, this.props.courseDetails);
   }
 
   componentDidUpdate(prevProps) {
+    if (prevProps.courseDetails !== this.props.courseDetails) {
+      this.props.getAssets(this.props.assetsParameters, this.props.courseDetails);
+    }
+
     if (prevProps.assetsParameters !== this.props.assetsParameters) {
+      // if filters changed, update the assetsList
       // TODO: consider using the reselect library for this
-      this.props.getAssets(this.props.assetsParameters);
+      this.props.getAssets(this.props.assetsParameters, this.props.courseDetails);
     }
   }
 
@@ -48,13 +53,25 @@ AssetsPage.propTypes = {
     PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool, PropTypes.object]),
   ).isRequired,
   getAssets: PropTypes.func.isRequired,
+  courseDetails: PropTypes.shape({
+    lang: PropTypes.string,
+    url_name: PropTypes.string,
+    name: PropTypes.string,
+    display_course_number: PropTypes.string,
+    num: PropTypes.string,
+    org: PropTypes.string,
+    id: PropTypes.string,
+    revision: PropTypes.string,
+  }).isRequired,
 };
 
 const WrappedAssetsPage = connect(
   state => ({
     assetsParameters: state.assets.parameters,
+    courseDetails: state.courseDetails,
   }), dispatch => ({
-    getAssets: assetsParameters => dispatch(getAssets(assetsParameters)),
+    getAssets: (assetsParameters, courseDetails) =>
+      dispatch(getAssets(assetsParameters, courseDetails)),
   }),
 )(AssetsPage);
 

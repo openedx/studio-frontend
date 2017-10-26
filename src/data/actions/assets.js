@@ -6,16 +6,29 @@ export const requestAssetsSuccess = response => ({
   data: response.assets,
 });
 
-export const getAssets = assetsParameters =>
+export const assetXHRFailure = response => ({
+  type: assetActions.ASSET_XHR_FAILURE,
+  response,
+});
+
+export const getAssets = (assetsParameters, courseDetails) =>
   dispatch =>
-    clientApi.requestAssets(assetsParameters.courseId, {
+    clientApi.requestAssets(courseDetails.id, {
       page: assetsParameters.page,
       assetTypes: assetsParameters.assetTypes,
       sort: assetsParameters.sort,
       direction: assetsParameters.direction,
     })
-      .then(response => response.json())
-      .then(json => dispatch(requestAssetsSuccess(json)));
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+        throw new Error(response);
+      })
+      .then(json => dispatch(requestAssetsSuccess(json)))
+      .catch((error) => {
+        dispatch(assetXHRFailure(error));
+      });
 
 export const filterUpdate = (filterKey, filterValue) => ({
   type: assetActions.FILTER_UPDATED,
@@ -34,14 +47,9 @@ export const deleteAssetSuccess = (assetId, response) => ({
   response,
 });
 
-export const assetXHRFailure = response => ({
-  type: assetActions.ASSET_XHR_FAILURE,
-  response,
-});
-
-export const deleteAsset = (assetsParameters, assetId) =>
+export const deleteAsset = (assetsParameters, assetId, courseDetails) =>
   dispatch =>
-    clientApi.requestDeleteAsset(assetsParameters.courseId, assetId)
+    clientApi.requestDeleteAsset(courseDetails.id, assetId)
       .then((response) => {
         if (response.ok) {
           dispatch(deleteAssetSuccess(assetId, response));

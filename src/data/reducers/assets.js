@@ -3,7 +3,6 @@ import { combineReducers } from 'redux';
 import { assetActions } from '../constants/actionTypes';
 
 const initialState = {
-  courseId: 'course-v1:edX+DemoX+Demo_Course',
   page: 0,
   pageSize: 50,
   assetTypes: {},
@@ -17,6 +16,8 @@ const list = (state = [], action) => {
       return action.data;
     case assetActions.DELETE_ASSET_SUCCESS:
       return state.filter(asset => asset.id !== action.assetId);
+    case assetActions.ASSET_XHR_FAILURE:
+      return [];
     default:
       return state;
   }
