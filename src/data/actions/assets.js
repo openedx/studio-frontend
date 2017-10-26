@@ -23,8 +23,8 @@ export const getAssets = assetsParameters =>
     })
       .then(response => response.json())
       .then(json => {
-        console.log(`json: ${json}`);
-        console.log(json);
+        // console.log(`json: `);
+        // console.log(json);
         dispatch(requestAssetsSuccess(json));
       }
     );

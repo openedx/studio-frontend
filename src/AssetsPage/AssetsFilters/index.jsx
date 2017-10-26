@@ -8,6 +8,14 @@ import styles from './styles.scss';
 
 const ASSET_TYPES = [
   {
+    key: 'Audio',
+    displayName: 'Audio',
+  },
+  {
+    key: 'Code',
+    displayName: 'Code',
+  },
+  {
     key: 'Images',
     displayName: 'Images',
   },

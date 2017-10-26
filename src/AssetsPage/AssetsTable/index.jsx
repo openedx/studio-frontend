@@ -46,12 +46,12 @@ export class AssetsTable extends React.Component {
       },
     };
 
+    this.trashcanRefs = {};
+
     this.onDeleteClick = this.onDeleteClick.bind(this);
     this.deleteAsset = this.deleteAsset.bind(this);
     this.closeModal = this.closeModal.bind(this);
     this.onSortClick = this.onSortClick.bind(this);
-
-    this.trashcanRefs = {};
   }
 
   onSortClick(columnKey) {
@@ -79,7 +79,7 @@ export class AssetsTable extends React.Component {
   }
 
   onDeleteClick(assetId) {
-    const assetToDelete = this.state.displayAssetsList.find(asset => (asset.id === assetId));
+    const assetToDelete = this.props.assetsList.find(asset => (asset.id === assetId));
 
     this.setState({
       modalOpen: true,
@@ -153,9 +153,14 @@ export class AssetsTable extends React.Component {
     ) : (
       <div>
         <Table
-          columns={Object.values(this.columns).map(column => ({
-            ...column,
-            onSort: () => this.onSortClick(column.key),
+          // https://stackoverflow.com/questions/40421825/how-to-use-object-values-on-server-side-in-node-js
+          // columns={Object.values(this.columns).map(column => ({
+          //   ...column,
+          //   onSort: () => this.onSortClick(column.key),
+          // }))}
+          columns={Object.keys(this.columns).map(columnKey => ({
+            ...this.columns[columnKey],
+            onSort: () => this.onSortClick(columnKey),
           }))}
           data={this.addDeleteButton(this.props.assetsList)}
           tableSortable

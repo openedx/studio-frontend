@@ -10,6 +10,12 @@ const assetAttributesToDatabaseAttributes = {
   date_added: 'uploadDate',
 };
 
+// const assetParametersToAPIParameters = {
+//   pageSize: 'page_size',
+//   page: 'page',
+
+// }
+
 export function pingStudioHome() {
   return fetch(
     endpoints.home, {
@@ -29,14 +35,28 @@ function getDatabaseAttributesFromAssetAttributes(sort) {
   return assetAttributesToDatabaseAttributes[sort];
 }
 
-export function requestAssets(courseId, { page = 0, pageSize = 50, sort = 'sort', direction = '', assetTypes = {} }) {
-  const assetTypesToFilter = assetTypesFromState(assetTypes);
-  const sortType = getDatabaseAttributesFromAssetAttributes(sort);
-  console.log('sortType: ' + sortType);
+function objectIsNonEmpty(object) {
+  return Object.keys(object).length > 0;
+}
 
-  console.log(`${endpoints.assets}/${courseId}/?page=${page}&page_size=${pageSize}&sort=${sort}&direction=${direction}&asset_type=${assetTypesToFilter.join(',')}`);
+export function requestAssets(courseId, params) {
+  const assetTypesToFilter = assetTypesFromState(params.assetTypes);
+  const sortType = getDatabaseAttributesFromAssetAttributes(params.sort);
+
+  const parameters = {
+    ...params,
+    sort: sortType,
+    asset_type: (objectIsNonEmpty(assetTypesToFilter) ? assetTypesToFilter : undefined),
+    assetTypes: undefined,
+    page_size: params.pageSize,
+    pageSize: undefined,
+  };
+
+  const requestString = Object.keys(parameters).reduce((memo, key) => { if (parameters[key]) { memo.push(`${key}=${parameters[key]}`); } return memo; }, []).join('&');
+  // console.log(requestString);
+  // console.log(`${endpoints.assets}/${courseId}/?${requestString}`);
   return fetch(
-    `${endpoints.assets}/${courseId}/?page=${page}&page_size=${pageSize}&sort=${sortType}&direction=${direction}&asset_type=${assetTypesToFilter.join(',')}`, {
+    `${endpoints.assets}/${courseId}/?${requestString}`, {
       credentials: 'same-origin',
       headers: {
         Accept: 'application/json',
