@@ -146,9 +146,7 @@ export class AssetsTable extends React.Component {
   deleteAsset() {
     const deletedAsset = { ...this.state.assetToDelete };
 
-    this.props.deleteAsset(this.props.assetsParameters,
-      this.state.assetToDelete.id,
-      this.props.courseDetails);
+    this.props.deleteAsset(this.state.assetToDelete.id, this.props.courseDetails);
 
     this.setState({
       assetToDelete: {},
@@ -228,13 +226,14 @@ export class AssetsTable extends React.Component {
   }
 
   render() {
+    let renderOutput;
     // TODO: Add UI for when there is nothing in the list and we have a status returned from the API
     // TODO: http://fhtwd0.axshare.com/#g=1&p=files-and-uploads-empty
     // Only show Loading when the list is empty AND the status from the APIs are empty
-    return (this.props.assetsList.length === 0 &&
-      Object.keys(this.props.assetsStatus).length === 0) ? (
-        <span>Loading....</span>
-      ) : (
+    if (this.props.assetsList.length === 0 && Object.keys(this.props.assetsStatus).length === 0) {
+      renderOutput = (<span>Loading....</span>);
+    } else {
+      renderOutput = (
         <div>
           {this.renderStatusAlert()}
           <Table
@@ -250,6 +249,9 @@ export class AssetsTable extends React.Component {
           {this.renderModal()}
         </div>
       );
+    }
+
+    return renderOutput;
   }
 }
 
@@ -286,8 +288,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   clearAssetsStatus: () => dispatch(clearAssetsStatus()),
-  deleteAsset: (assetsParameters, assetId, courseDetails) =>
-    dispatch(deleteAsset(assetsParameters, assetId, courseDetails)),
+  deleteAsset: (assetId, courseDetails) => dispatch(deleteAsset(assetId, courseDetails)),
   updateSort: (sortKey, sortDirection) => dispatch(sortUpdate(sortKey, sortDirection)),
 });
 

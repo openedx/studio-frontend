@@ -20,12 +20,9 @@ class AssetsPage extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.courseDetails !== this.props.courseDetails) {
-      this.props.getAssets(this.props.assetsParameters, this.props.courseDetails);
-    }
-
-    if (prevProps.assetsParameters !== this.props.assetsParameters) {
-      // if filters changed, update the assetsList
+    if (prevProps.assetsParameters !== this.props.assetsParameters ||
+      prevProps.courseDetails !== this.props.courseDetails) {
+      // if filters or course details are changed, update the assetsList
       // TODO: consider using the reselect library for this
       this.props.getAssets(this.props.assetsParameters, this.props.courseDetails);
     }

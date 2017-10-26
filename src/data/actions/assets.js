@@ -47,7 +47,7 @@ export const deleteAssetSuccess = (assetId, response) => ({
   response,
 });
 
-export const deleteAsset = (assetsParameters, assetId, courseDetails) =>
+export const deleteAsset = (assetId, courseDetails) =>
   dispatch =>
     clientApi.requestDeleteAsset(courseDetails.id, assetId)
       .then((response) => {

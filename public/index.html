@@ -2,6 +2,10 @@
 <html>
   <head></head>
   <body>
+    <!-- This script tag is being included for testing within -->
+    <!-- the studio frontend container locally.  This value will be -->
+    <!-- dynamically passed in from Studio backend when SFE is -->
+    <!-- run from within Platform/Studio. -->
     <script type="text/javascript" id='courseContext'>
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-var */
@@ -15,6 +19,7 @@ var courseContext = {
   org: "edX",
   id: "course-v1:edX+DemoX+Demo_Course",
   revision: "",
+  base_url: "http://localhost:18010",
 };
     </script>
     <div id="root"></div>

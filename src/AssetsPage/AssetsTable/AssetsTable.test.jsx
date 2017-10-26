@@ -254,7 +254,6 @@ describe('<AssetsTable />', () => {
 
       expect(deleteAssetSpy).toHaveBeenCalledTimes(1);
       expect(deleteAssetSpy).toHaveBeenCalledWith(
-        defaultProps.assetsParameters,
         defaultProps.assetsList[0].id,
         defaultProps.courseDetails,
       );
@@ -384,7 +383,6 @@ describe('<AssetsTable />', () => {
 
         expect(mockDeleteAsset).toHaveBeenCalledTimes(1);
         expect(mockDeleteAsset).toHaveBeenCalledWith(
-          defaultProps.assetsParameters,
           assetToDeleteId,
           defaultProps.courseDetails,
         );
