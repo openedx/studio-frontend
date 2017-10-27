@@ -1,5 +1,6 @@
 /* eslint import/prefer-default-export: "off" */
 import Cookies from 'js-cookie';
+import 'whatwg-fetch';  // fetch polyfill
 
 import endpoints from './endpoints';
 
