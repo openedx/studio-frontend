@@ -70,11 +70,10 @@ export class AssetsTable extends React.Component {
     } else {
       this.setState({
         ...this.state.columnSortState,
-        sortedColumn: '',
+        sortedColumn: 'none',
         columnKey: newDirection,
       });
     }
-
     this.props.updateSort(columnKey, newDirection);
   }
 
@@ -153,11 +152,6 @@ export class AssetsTable extends React.Component {
     ) : (
       <div>
         <Table
-          // https://stackoverflow.com/questions/40421825/how-to-use-object-values-on-server-side-in-node-js
-          // columns={Object.values(this.columns).map(column => ({
-          //   ...column,
-          //   onSort: () => this.onSortClick(column.key),
-          // }))}
           columns={Object.keys(this.columns).map(columnKey => ({
             ...this.columns[columnKey],
             onSort: () => this.onSortClick(columnKey),
