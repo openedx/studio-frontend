@@ -26,12 +26,9 @@ const defaultProps = {
     },
   ],
   assetsParameters: {
-    assetTypes: {
-      courseId: 'test-course',
-      page: '0',
-      pageSize: '50',
-      sort: 'sort',
-    },
+    courseId: 'test-course',
+    page: '0',
+    pageSize: '50',
   },
   assetsStatus: {},
   deleteAsset: () => {},
@@ -42,47 +39,355 @@ const defaultProps = {
 let wrapper;
 
 describe('<AssetsTable />', () => {
-  it('renders correct number of assets', () => {
-    wrapper = mount(
-      <AssetsTable
-        {...defaultProps}
-      />,
-    );
-    // + 1 because it includes row item for headings
-    expect(wrapper.find('tr')).toHaveLength(defaultProps.assetsList.length + 1);
+  describe('renders', () => {
+    it(' correct number of assets', () => {
+      wrapper = mount(
+        <AssetsTable
+          {...defaultProps}
+        />,
+      );
+      // + 1 because it includes row item for headings
+      expect(wrapper.find('tr')).toHaveLength(defaultProps.assetsList.length + 1);
+    });
+    it('correct number of trashcan buttons', () => {
+      wrapper = mount(
+        <AssetsTable
+          {...defaultProps}
+        />,
+      );
+
+      expect(wrapper.find('button').filterWhere(button => button.hasClass('fa-trash'))).toHaveLength(defaultProps.assetsList.length);
+    });
   });
-  it('has the correct initial sort state', () => {
-    wrapper = shallow(
-      <AssetsTable
-        {...defaultProps}
-      />,
-    );
-    expect(wrapper.find('Table')).toHaveLength(1);
-    expect(wrapper.find('Table').shallow().find('thead')).toHaveLength(1);
-    expect(wrapper.find('Table').shallow().find('thead').shallow().find('Button')).toHaveLength(4);
+  describe('onSortClick', () => {
+    let updateSortSpy;
 
-    const tableColumns = wrapper.state('tableColumns');
+    beforeEach(() => {
+      updateSortSpy = jest.fn();
+    });
 
-    expect(wrapper.find('Table').shallow().find('th').filter('Type')).toHaveLength(0);
+    const params = [
+      {
+        sort: 'date_added',
+        direction: 'desc',
+      },
+      {
+        sort: 'date_added',
+        direction: 'asc',
+      },
+      {
+        sort: 'date_added',
+        direction: 'desc',
+      },
+    ];
 
-    console.log(wrapper.find('Table').shallow().find('th').at(0).contains('<span> Name </span>'));
-    console.log(wrapper.find('Table').shallow().find('th').at(0).html());
-    console.log(wrapper.find('Table').shallow().find('th').at(0).props());
-    // console.log(wrapper.find('Table').shallow().find('th').at(0).prop['scope']);
-    // wrapper.find('Table').shallow().find('thead').shallow().find('Button').forEach((node) => {
-    //   console.log(node.state('display'));
-    //   // const isSortable = tableColumns[]
-    //   // console.log(isSortable);
+    const assertValues = [
+      {
+        buttonIndexToClick: 2,
+        buttonToClickText: 'Date Added',
+        onSortColumnParameter: 'date_added',
+        onSortDirectionParameter: 'asc',
+      },
+      {
+        buttonIndexToClick: 2,
+        buttonToClickText: 'Date Added',
+        onSortColumnParameter: 'date_added',
+        onSortDirectionParameter: 'desc',
+      },
+      {
+        buttonIndexToClick: 0,
+        buttonToClickText: 'Name',
+        onSortColumnParameter: 'display_name',
+        onSortDirectionParameter: 'desc',
+      },
+    ];
+
+    params.forEach((sortableAssetsValues, index) => {
+      it(`calls onSort function appropriately for ${sortableAssetsValues.direction} click`, () => {
+        const sortableAssetsParameters = {
+          ...defaultProps.assetsParameters,
+          ...sortableAssetsValues,
+        };
+
+        const testValues = assertValues[index];
+
+        wrapper = mount(
+          <AssetsTable
+            {...defaultProps}
+            updateSort={updateSortSpy}
+            assetsParameters={sortableAssetsParameters}
+          />,
+        );
+
+        const sortButtons = wrapper.find('button').filterWhere(button =>
+          (button.find('span > span .fa-sort').exists() ||
+          button.find('span > span .fa-sort-desc').exists() ||
+          button.find('span > span .fa-sort-asc').exists()));
+
+        expect(sortButtons).toHaveLength(3);
+        // console.log(testValues.buttonIndexToClick);
+        // console.log(testValues.buttonToClickText);
+        // console.log(sortButtons.at(testValues.buttonIndexToClick).html());
+
+        expect(sortButtons.at(testValues.buttonIndexToClick).filterWhere(button =>
+          (button.text().includes(testValues.buttonToClickText)))).toHaveLength(1);
+
+        sortButtons.at(testValues.buttonIndexToClick).simulate('click');
+
+        expect(updateSortSpy).toHaveBeenCalledTimes(1);
+        expect(updateSortSpy).toHaveBeenLastCalledWith(testValues.onSortColumnParameter, testValues.onSortDirectionParameter);
+      });
+    });
+
+    // it('calls onSort function appropriately for ascending click', () => {
+    //   const sortableAssetsParameters = {
+    //     ...defaultProps.assetsParameters,
+    //     sort: 'date_added',
+    //     direction: 'desc',
+    //   };
+
+    //   wrapper = mount(
+    //     <AssetsTable
+    //       {...defaultProps}
+    //       updateSort={updateSortSpy}
+    //       assetsParameters={sortableAssetsParameters}
+    //     />,
+    //   );
+
+    //   const sortButtons = wrapper.find('button').filterWhere(button => (button.find('span > span .fa-sort').exists() || button.find('span > span .fa-sort-desc').exists() || button.find('span > span .fa-sort-asc').exists()));
+    //   expect(sortButtons).toHaveLength(3);
+
+    //   sortButtons.at(2).simulate('click');
+
+    //   expect(updateSortSpy).toHaveBeenCalledTimes(1);
+    //   expect(updateSortSpy).toHaveBeenLastCalledWith('date_added', 'asc');
     // });
+    // it('onSortClick calls onSort function appropriately for descending click', () => {
+    //   const sortableAssetsParameters = {
+    //     ...defaultProps.assetsParameters,
+    //     sort: 'date_added',
+    //     direction: 'asc',
+    //   };
 
-    // expect(wrapper.find('Table').shallow()
-    //   .find('Button')).toHaveLength(4);
+    //   wrapper = mount(
+    //     <AssetsTable
+    //       {...defaultProps}
+    //       updateSort={updateSortSpy}
+    //       assetsParameters={sortableAssetsParameters}
+    //     />,
+    //   );
 
-    // wrapper.find('Table').shallow().find('th').shallow().find('Button').forEach((node) => {
+    //   const sortButtons = wrapper.find('button').filterWhere(button => (button.find('span > span .fa-sort').exists() || button.find('span > span .fa-sort-desc').exists() || button.find('span > span .fa-sort-asc').exists()));
+    //   expect(sortButtons).toHaveLength(3);
 
+    //   expect(sortButtons.at(2).filterWhere(button => (button.text().includes('Date Added')))).toHaveLength(1);
+
+    //   sortButtons.at(2).simulate('click');
+
+    //   expect(updateSortSpy).toHaveBeenCalledTimes(1);
+    //   expect(updateSortSpy).toHaveBeenLastCalledWith('date_added', 'desc');
     // });
+    // it('onSortClick calls onSort function appropriately for descending click on different column', () => {
+    //   const sortableAssetsParameters = {
+    //     ...defaultProps.assetsParameters,
+    //     sort: 'date_added',
+    //     direction: 'desc',
+    //   };
+
+    //   wrapper = mount(
+    //     <AssetsTable
+    //       {...defaultProps}
+    //       updateSort={updateSortSpy}
+    //       assetsParameters={sortableAssetsParameters}
+    //     />,
+    //   );
+
+    //   const sortButtons = wrapper.find('button').filterWhere(button => (button.find('span > span .fa-sort').exists() || button.find('span > span .fa-sort-desc').exists() || button.find('span > span .fa-sort-asc').exists()));
+    //   expect(sortButtons).toHaveLength(3);
+
+    //   sortButtons.at(0).simulate('click');
+
+    //   expect(updateSortSpy).toHaveBeenCalledTimes(1);
+    //   expect(updateSortSpy).toHaveBeenLastCalledWith('display_name', 'desc');
+    // });
+  });
+
+  describe('modal', () => {
+    it('renders', () => {
+      const modal = wrapper.find('[role="dialog"]');
+      expect(modal).toHaveLength(1);
+    });
+    it('is closed by default', () => {
+      wrapper = mount(
+        <AssetsTable
+          {...defaultProps}
+        />,
+      );
+
+      const modal = wrapper.find('[role="dialog"]');
+      // expect(modal).toHaveLength(1);
+
+      // const deleteButtons = modal.find('button');
+      // expect(deleteButtons).toHaveLength(3);
+
+      // const deleteButton = deleteButtons.filterWhere(button => (button.props('display')));
+      // const deleteButton = deleteButtons.filterWhere(button => button.matchesElement(<button>Yes, delete.</button>));
+
+      // expect(deleteButton).toHaveLength(1);
+      // console.log(deleteButton.at(0).html());
+
+      expect(modal.hasClass('modal-open')).toEqual(false);
+      expect(wrapper.state('modalOpen')).toEqual(false);
+    });
+    it('opens when trash button clicked', () => {
+      wrapper = mount(
+        <AssetsTable
+          {...defaultProps}
+        />,
+      );
+
+      const modal = wrapper.find('[role="dialog"]');
+      expect(modal).toHaveLength(1);
+
+      const buttons = wrapper.find('button');
+      // expect(deleteButtons).toHaveLength(3);
+
+      // const deleteButton = deleteButtons.filterWhere(button => button.matchesElement(<button>Yes, delete.</button>));
+      const trashButtons = buttons.filterWhere(button => button.hasClass('fa-trash'));
+
+      expect(trashButtons).toHaveLength(3);
+
+      trashButtons.at(0).simulate('click');
+
+      expect(modal.hasClass('modal-open')).toEqual(true);
+      expect(wrapper.state('modalOpen')).toEqual(true);
+
+    });
+  });
+  describe('deleteAsset', () => {
+    it('calls deleteAsset function prop correctly', () => {
+      const deleteAssetSpy = jest.fn();
+
+      wrapper = mount(
+        <AssetsTable
+          {...defaultProps}
+          deleteAsset={deleteAssetSpy}
+        />,
+      );
+
+      const deleteButtons = wrapper.find('button');
+
+      const trashButtons = deleteButtons.filterWhere(button => button.hasClass('fa-trash'));
+
+      const deleteButton = deleteButtons.filterWhere(button => button.matchesElement(<button>Yes, delete.</button>));
 
 
+      trashButtons.at(0).simulate('click');
+
+      deleteButton.at(0).simulate('click');
+
+      expect(deleteAssetSpy).toHaveBeenCalledTimes(1);
+      expect(deleteAssetSpy).toHaveBeenCalledWith(defaultProps.assetsParameters, defaultProps.assetsList[0].id);
+
+      //this.props.assetsParameters, this.state.assetToDelete.id
+
+    });
+    it('closes on deleteAsset call', () => {
+      wrapper = mount(
+        <AssetsTable
+          {...defaultProps}
+        />,
+      );
+
+      const deleteButtons = wrapper.find('button');
+
+      const trashButtons = deleteButtons.filterWhere(button => button.hasClass('fa-trash'));
+      const modal = wrapper.find('[role="dialog"]');
+
+      const deleteButton = deleteButtons.filterWhere(button => button.matchesElement(<button>Yes, delete.</button>));
+
+      trashButtons.at(0).simulate('click');
+
+      deleteButton.at(0).simulate('click');
+
+      expect(modal.hasClass('modal-open')).toEqual(false);
+      expect(wrapper.state('modalOpen')).toEqual(false);
+    });
+    // it('sets modalOpen state to false on close', () => {
+    //   wrapper = mount(
+    //     <AssetsTable
+    //       {...defaultProps}
+    //     />,
+    //   );
+
+    //   wrapper.setState({ modalOpen: true });
+
+    //   const modal = wrapper.find('[role="dialog"]');
+    //   const closeButton = modal.find('button').filterWhere(button => button.matchesElement(<button>Cancel</button>));
+    //   expect(closeButton).toHaveLength(1);
+
+    //   closeButton.at(0).simulate('click');
+
+    //   expect(wrapper.state('modalOpen')).toEqual(false);
+
+    //   // filterWhere(button => button.matchesElement(<button>Yes, delete.</button>));
+    // });
+  });
+  describe('onDeleteClick', () => {
+    let trashButtons;
+
+    beforeEach(() => {
+      wrapper = mount(
+        <AssetsTable
+          {...defaultProps}
+        />,
+      );
+
+      trashButtons = wrapper.find('button').filterWhere(button => button.hasClass('fa-trash'));
+
+    });
+    it('sets modalOpen to true', () => {
+      trashButtons.at(0).simulate('click');
+      expect(wrapper.state('modalOpen')).toEqual(true);
+    });
+    it('sets assetToDelete correctly', () => {
+      const trashButtonAriaLabel = `Delete ${defaultProps.assetsList[0].display_name}`;
+      expect(trashButtons.at(0).prop('aria-label')).toEqual(trashButtonAriaLabel);
+
+      trashButtons.at(0).simulate('click');
+      expect(wrapper.state('assetToDelete')).toEqual(defaultProps.assetsList[0]);
+    });
+    it('sets elementToFocusOnModalClose correctly', () => {
+      trashButtons.at(0).simulate('click');
+
+      expect(trashButtons.at(0).matchesElement(wrapper.state('elementToFocusOnModalClose'))).toEqual(true);
+    });
+  });
+  describe('focus', () => {
+    it('moves from modal to trashcan on modal close', () => {
+      wrapper = mount(
+        <AssetsTable
+          {...defaultProps}
+        />,
+      );
+
+      const deleteButtons = wrapper.find('button');
+      const trashButtons = deleteButtons.filterWhere(button => button.hasClass('fa-trash'));
+
+      const modal = wrapper.find('[role="dialog"]');
+      const closeButton = modal.find('button').filterWhere(button => button.matchesElement(<button>Cancel</button>));
+
+      trashButtons.at(0).simulate('click');
+      closeButton.at(0).simulate('click');
+
+      // console.log(wrapper.state('elementToFocusOnModalClose'));
+
+      expect(trashButtons.at(0).matchesElement(document.activeElement)).toEqual(true);
+      expect(trashButtons.at(0).matchesElement(document.activeElement)).toEqual(true);
+    });
+    it('moves from trashcan button to modal on trashcan button click', () => {
+
+    });
   });
 });
 
