@@ -1,12 +1,5 @@
 import * as clientApi from '../../api/client';
-
-export const assetActions = {
-  REQUEST_ASSETS_SUCCESS: 'REQUEST_ASSETS_SUCCESS',
-  FILTER_UPDATED: 'FILTER_UPDATED',
-  SORT_UPDATE: 'SORT_UPDATED',
-  DELETE_ASSET_SUCCESS: 'DELETE_ASSET_SUCCESS',
-  ASSET_XHR_FAILURE: 'ASSET_XHR_FAILURE',
-};
+import { assetActions } from '../constants/actionTypes';
 
 export const requestAssetsSuccess = response => ({
   type: assetActions.REQUEST_ASSETS_SUCCESS,
@@ -39,15 +32,16 @@ export const sortUpdate = (sort, direction) => ({
   data: { sort, direction },
 });
 
-export const deleteAssetSuccess = assetId => ({
+
+export const deleteAssetSuccess = (assetId, response) => ({
   type: assetActions.DELETE_ASSET_SUCCESS,
   assetId,
+  response,
 });
 
-export const assetXHRFailure = (response, text) => ({
+export const assetXHRFailure = response => ({
   type: assetActions.ASSET_XHR_FAILURE,
   response,
-  text,
 });
 
 export const deleteAsset = (assetsParameters, assetId) =>
@@ -55,8 +49,13 @@ export const deleteAsset = (assetsParameters, assetId) =>
     clientApi.requestDeleteAsset(assetsParameters.courseId, assetId)
       .then((response) => {
         if (response.ok) {
-          dispatch(deleteAssetSuccess(assetId));
+          dispatch(deleteAssetSuccess(assetId, response));
         } else {
-          dispatch(assetXHRFailure(response, 'File could not be deleted.'));
+          dispatch(assetXHRFailure(response));
         }
       });
+
+export const clearAssetsStatus = () =>
+  dispatch =>
+    dispatch({ type: assetActions.CLEAR_ASSETS_STATUS });
+

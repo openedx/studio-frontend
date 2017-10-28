@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 
-import { assetActions } from '../actions/assets';
+import { assetActions } from '../constants/actionTypes';
 
 const initialState = {
   courseId: 'course-v1:edX+DemoX+Demo_Course',
@@ -24,10 +24,17 @@ const list = (state = [], action) => {
 
 const status = (state = {}, action) => {
   switch (action.type) {
+    case assetActions.CLEAR_ASSETS_STATUS:
+      return {};
+    case assetActions.DELETE_ASSET_SUCCESS:
+      return {
+        response: action.response,
+        type: action.type,
+      };
     case assetActions.ASSET_XHR_FAILURE:
       return {
         response: action.response,
-        text: action.text,
+        type: action.type,
       };
     default:
       return state;
