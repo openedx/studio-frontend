@@ -15,12 +15,12 @@ export const getAssets = assetsParameters =>
       direction: assetsParameters.direction,
     })
       .then(response => response.json())
-      .then(json => {
+      .then((json) => {
         // console.log(`json: `);
         // console.log(json);
         dispatch(requestAssetsSuccess(json));
-      }
-    );
+      },
+      );
 
 export const filterUpdate = (filterKey, filterValue) => ({
   type: assetActions.FILTER_UPDATED,

@@ -49,8 +49,7 @@ export class AssetsTable extends React.Component {
       },
     };
 
-      statusAlertRef: {},
-    };
+    statusAlertRef: {};
 
     this.onDeleteClick = this.onDeleteClick.bind(this);
     this.deleteAsset = this.deleteAsset.bind(this);
@@ -82,17 +81,20 @@ export class AssetsTable extends React.Component {
         sortedColumn: 'none',
         columnKey: newDirection,
       });
-
-  componentDidMount() {
-    this.addSupplementalTableElements();
-  }
-
-  componentDidUpdate(prevProps) {
-    if (prevProps.assetsList.length !== this.props.assetsList.length) {
-      this.addSupplementalTableElements();
     }
     this.props.updateSort(columnKey, newDirection);
   }
+
+  // componentDidMount() {
+  //   this.addSupplementalTableElements();
+  // }
+
+  // componentDidUpdate(prevProps) {
+  //   if (prevProps.assetsList.length !== this.props.assetsList.length) {
+  //     this.addSupplementalTableElements();
+  //   }
+  //   this.props.updateSort(columnKey, newDirection);
+  // }
 
   onDeleteClick(assetId) {
     const assetToDelete = this.props.assetsList.find(asset => (asset.id === assetId));
@@ -104,13 +106,8 @@ export class AssetsTable extends React.Component {
     });
   }
 
-  closeModal() {
-    this.setState({ modalOpen: false });
-    this.state.elementToFocusOnModalClose.focus();
-  }
-
-  addDeleteButton(assetsList) {
-    const newAssetsList = assetsList.map((asset) => {
+  // addDeleteButton(assetsList) {
+  //   const newAssetsList = assetsList.map((asset) => {
 
   getNextFocusElementOnDelete(assetToDelete) {
     const { assetsStatus } = this.props;
@@ -129,6 +126,11 @@ export class AssetsTable extends React.Component {
     }
 
     return this.trashcanRefs[focusAsset.id];
+  }
+
+  closeModal() {
+    this.setState({ modalOpen: false });
+    this.state.elementToFocusOnModalClose.focus();
   }
 
   addSupplementalTableElements() {
@@ -251,7 +253,7 @@ export class AssetsTable extends React.Component {
             ...this.columns[columnKey],
             onSort: () => this.onSortClick(columnKey),
           }))}
-          data={this.addDeleteButton(this.props.assetsList)}
+          data={this.addSupplementalTableElements(this.props.assetsList)}
           tableSortable
           defaultSortedColumn="date_added"
           defaultSortDirection="desc"

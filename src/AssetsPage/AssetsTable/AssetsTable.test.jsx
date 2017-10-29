@@ -1,5 +1,5 @@
 import React from 'react';
-import { mount, shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import { AssetsTable } from './index';
 
 import { assetActions } from '../../data/constants/actionTypes';
@@ -135,7 +135,8 @@ describe('<AssetsTable />', () => {
         sortButtons.at(testValues.buttonIndexToClick).simulate('click');
 
         expect(updateSortSpy).toHaveBeenCalledTimes(1);
-        expect(updateSortSpy).toHaveBeenLastCalledWith(testValues.onSortColumnParameter, testValues.onSortDirectionParameter);
+        expect(updateSortSpy).toHaveBeenLastCalledWith(testValues.onSortColumnParameter,
+          testValues.onSortDirectionParameter);
       });
     });
 
@@ -154,7 +155,10 @@ describe('<AssetsTable />', () => {
     //     />,
     //   );
 
-    //   const sortButtons = wrapper.find('button').filterWhere(button => (button.find('span > span .fa-sort').exists() || button.find('span > span .fa-sort-desc').exists() || button.find('span > span .fa-sort-asc').exists()));
+    //   const sortButtons = wrapper.find('button').filterWhere(button =>
+    // (button.find('span > span .fa-sort').exists() ||
+    // button.find('span > span .fa-sort-desc').exists() ||
+    // button.find('span > span .fa-sort-asc').exists()));
     //   expect(sortButtons).toHaveLength(3);
 
     //   sortButtons.at(2).simulate('click');
@@ -177,17 +181,20 @@ describe('<AssetsTable />', () => {
     //     />,
     //   );
 
-    //   const sortButtons = wrapper.find('button').filterWhere(button => (button.find('span > span .fa-sort').exists() || button.find('span > span .fa-sort-desc').exists() || button.find('span > span .fa-sort-asc').exists()));
+    //   const sortButtons = wrapper.find('button').filterWhere(button =>
+    // (button.find('span > span .fa-sort').exists() || button.find('span > span .fa-sort-desc').exists() || button.find('span > span .fa-sort-asc').exists()));
     //   expect(sortButtons).toHaveLength(3);
 
-    //   expect(sortButtons.at(2).filterWhere(button => (button.text().includes('Date Added')))).toHaveLength(1);
+    //   expect(sortButtons.at(2).filterWhere(button =>
+    // (button.text().includes('Date Added')))).toHaveLength(1);
 
     //   sortButtons.at(2).simulate('click');
 
     //   expect(updateSortSpy).toHaveBeenCalledTimes(1);
     //   expect(updateSortSpy).toHaveBeenLastCalledWith('date_added', 'desc');
     // });
-    // it('onSortClick calls onSort function appropriately for descending click on different column', () => {
+    // it('onSortClick calls onSort function appropriately for descending
+    // click on different column', () => {
     //   const sortableAssetsParameters = {
     //     ...defaultProps.assetsParameters,
     //     sort: 'date_added',
@@ -202,7 +209,10 @@ describe('<AssetsTable />', () => {
     //     />,
     //   );
 
-    //   const sortButtons = wrapper.find('button').filterWhere(button => (button.find('span > span .fa-sort').exists() || button.find('span > span .fa-sort-desc').exists() || button.find('span > span .fa-sort-asc').exists()));
+    //   const sortButtons = wrapper.find('button').filterWhere(button =>
+    // (button.find('span > span .fa-sort').exists() ||
+    // button.find('span > span .fa-sort-desc').exists() ||
+    // button.find('span > span .fa-sort-asc').exists()));
     //   expect(sortButtons).toHaveLength(3);
 
     //   sortButtons.at(0).simulate('click');
@@ -231,7 +241,8 @@ describe('<AssetsTable />', () => {
       // expect(deleteButtons).toHaveLength(3);
 
       // const deleteButton = deleteButtons.filterWhere(button => (button.props('display')));
-      // const deleteButton = deleteButtons.filterWhere(button => button.matchesElement(<button>Yes, delete.</button>));
+      // const deleteButton = deleteButtons.filterWhere(button =>
+      // button.matchesElement(<button>Yes, delete.</button>));
 
       // expect(deleteButton).toHaveLength(1);
       // console.log(deleteButton.at(0).html());
@@ -252,7 +263,8 @@ describe('<AssetsTable />', () => {
       const buttons = wrapper.find('button');
       // expect(deleteButtons).toHaveLength(3);
 
-      // const deleteButton = deleteButtons.filterWhere(button => button.matchesElement(<button>Yes, delete.</button>));
+      // const deleteButton = deleteButtons.filterWhere(button =>
+      // button.matchesElement(<button>Yes, delete.</button>));
       const trashButtons = buttons.filterWhere(button => button.hasClass('fa-trash'));
 
       expect(trashButtons).toHaveLength(3);
@@ -261,7 +273,6 @@ describe('<AssetsTable />', () => {
 
       expect(modal.hasClass('modal-open')).toEqual(true);
       expect(wrapper.state('modalOpen')).toEqual(true);
-
     });
   });
   describe('deleteAsset', () => {
@@ -279,7 +290,8 @@ describe('<AssetsTable />', () => {
 
       const trashButtons = deleteButtons.filterWhere(button => button.hasClass('fa-trash'));
 
-      const deleteButton = deleteButtons.filterWhere(button => button.matchesElement(<button>Yes, delete.</button>));
+      const deleteButton = deleteButtons.filterWhere(button =>
+        button.matchesElement(<button>Yes, delete.</button>));
 
 
       trashButtons.at(0).simulate('click');
@@ -287,10 +299,10 @@ describe('<AssetsTable />', () => {
       deleteButton.at(0).simulate('click');
 
       expect(deleteAssetSpy).toHaveBeenCalledTimes(1);
-      expect(deleteAssetSpy).toHaveBeenCalledWith(defaultProps.assetsParameters, defaultProps.assetsList[0].id);
+      expect(deleteAssetSpy).toHaveBeenCalledWith(defaultProps.assetsParameters,
+        defaultProps.assetsList[0].id);
 
-      //this.props.assetsParameters, this.state.assetToDelete.id
-
+      // this.props.assetsParameters, this.state.assetToDelete.id
     });
     it('closes on deleteAsset call', () => {
       wrapper = mount(
@@ -304,7 +316,8 @@ describe('<AssetsTable />', () => {
       const trashButtons = deleteButtons.filterWhere(button => button.hasClass('fa-trash'));
       const modal = wrapper.find('[role="dialog"]');
 
-      const deleteButton = deleteButtons.filterWhere(button => button.matchesElement(<button>Yes, delete.</button>));
+      const deleteButton = deleteButtons.filterWhere(button =>
+        button.matchesElement(<button>Yes, delete.</button>));
 
       trashButtons.at(0).simulate('click');
 
@@ -323,7 +336,8 @@ describe('<AssetsTable />', () => {
     //   wrapper.setState({ modalOpen: true });
 
     //   const modal = wrapper.find('[role="dialog"]');
-    //   const closeButton = modal.find('button').filterWhere(button => button.matchesElement(<button>Cancel</button>));
+    //   const closeButton = modal.find('button').filterWhere(
+    // button => button.matchesElement(<button>Cancel</button>));
     //   expect(closeButton).toHaveLength(1);
 
     //   closeButton.at(0).simulate('click');
@@ -344,7 +358,6 @@ describe('<AssetsTable />', () => {
       );
 
       trashButtons = wrapper.find('button').filterWhere(button => button.hasClass('fa-trash'));
-
     });
     it('sets modalOpen to true', () => {
       trashButtons.at(0).simulate('click');
