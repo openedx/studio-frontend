@@ -119,7 +119,7 @@ export class AssetsTable extends React.Component {
         if (rowToDelete > 0) {
           rowToDelete -= 1;
         }
-        focusAsset = this.state.displayAssetsList.find(asset => asset.row_key === (rowToDelete));
+        focusAsset = this.props.assetsList.find(asset => asset.row_key === (rowToDelete));
         break;
       default:
         break;
