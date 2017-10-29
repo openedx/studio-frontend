@@ -21,11 +21,12 @@ class AssetsPage extends React.Component {
 
   componentDidUpdate(prevProps) {
     // if (prevProps.assetsParameters.assetTypes !== this.props.assetsParameters.assetTypes) {
-    if (prevProps.assetsParameters!== this.props.assetsParameters) {
+    if (prevProps.assetsParameters !== this.props.assetsParameters) {
       // if filters changed, update the assetsList
       // TODO: consider using the reselect library for this
       this.props.getAssets(this.props.assetsParameters);
-      // do I do the fetching of assets provided a sort change here? a prop change in assetsParameters?
+      // do I do the fetching of assets provided a sort change here?
+      // a prop change in assetsParameters?
     }
   }
 

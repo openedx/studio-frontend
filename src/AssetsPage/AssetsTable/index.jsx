@@ -49,7 +49,7 @@ export class AssetsTable extends React.Component {
       },
     };
 
-    statusAlertRef: {};
+    this.statusAlertRef = {};
 
     this.onDeleteClick = this.onDeleteClick.bind(this);
     this.deleteAsset = this.deleteAsset.bind(this);

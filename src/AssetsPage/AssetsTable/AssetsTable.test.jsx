@@ -182,7 +182,9 @@ describe('<AssetsTable />', () => {
     //   );
 
     //   const sortButtons = wrapper.find('button').filterWhere(button =>
-    // (button.find('span > span .fa-sort').exists() || button.find('span > span .fa-sort-desc').exists() || button.find('span > span .fa-sort-asc').exists()));
+    // (button.find('span > span .fa-sort').exists() ||
+    // button.find('span > span .fa-sort-desc').exists()
+    // || button.find('span > span .fa-sort-asc').exists()));
     //   expect(sortButtons).toHaveLength(3);
 
     //   expect(sortButtons.at(2).filterWhere(button =>
