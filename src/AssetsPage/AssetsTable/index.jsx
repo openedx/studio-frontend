@@ -166,13 +166,13 @@ export class AssetsTable extends React.Component {
 
   deleteAsset() {
     this.props.deleteAsset(this.props.assetsParameters, this.state.assetToDelete.id);
-    this.setState({ modalOpen: false });
-
 
     this.setState({
       elementToFocusOnModalClose: this.statusAlertRef,
+      modalOpen: false,
       statusAlertOpen: true,
     });
+
     this.state.elementToFocusOnModalClose.focus();
   }
 
