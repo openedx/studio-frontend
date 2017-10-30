@@ -49,6 +49,7 @@ export class AssetsTable extends React.Component {
       },
     };
 
+    this.trashcanRefs = {};
     this.statusAlertRef = {};
 
     this.onDeleteClick = this.onDeleteClick.bind(this);
@@ -57,9 +58,6 @@ export class AssetsTable extends React.Component {
     this.closeModal = this.closeModal.bind(this);
     this.closeStatusAlert = this.closeStatusAlert.bind(this);
     this.renderStatusAlert = this.renderStatusAlert.bind(this);
-
-
-    this.trashcanRefs = {};
   }
 
   onSortClick(columnKey) {
@@ -85,17 +83,6 @@ export class AssetsTable extends React.Component {
     this.props.updateSort(columnKey, newDirection);
   }
 
-  // componentDidMount() {
-  //   this.addSupplementalTableElements();
-  // }
-
-  // componentDidUpdate(prevProps) {
-  //   if (prevProps.assetsList.length !== this.props.assetsList.length) {
-  //     this.addSupplementalTableElements();
-  //   }
-  //   this.props.updateSort(columnKey, newDirection);
-  // }
-
   onDeleteClick(assetId) {
     const assetToDelete = this.props.assetsList.find(asset => (asset.id === assetId));
 
@@ -106,13 +93,14 @@ export class AssetsTable extends React.Component {
     });
   }
 
-  // addDeleteButton(assetsList) {
-  //   const newAssetsList = assetsList.map((asset) => {
-
   getNextFocusElementOnDelete(assetToDelete) {
     const { assetsStatus } = this.props;
-    let rowToDelete = assetToDelete.row_key;
+    // let rowToDelete = assetToDelete.row_key;
+    let rowToDelete = 0;
     let focusAsset = assetToDelete;
+
+    console.log('assetToDelete: ', assetToDelete);
+    console.log('rowToDelete:', rowToDelete);
 
     switch (assetsStatus.type) {
       case assetActions.DELETE_ASSET_SUCCESS:
@@ -125,6 +113,8 @@ export class AssetsTable extends React.Component {
         break;
     }
 
+    console.log('asset to focus on id', focusAsset.id);
+    console.log('trashcanref', this.trashcanRefs);
     return this.trashcanRefs[focusAsset.id];
   }
 
@@ -134,6 +124,7 @@ export class AssetsTable extends React.Component {
   }
 
   addSupplementalTableElements() {
+    console.log('I have added table elements!');
     const newAssetsList = this.props.assetsList.map((asset, index) => {
       const currentAsset = Object.assign({}, asset);
       const deleteButton = (<Button
@@ -160,13 +151,16 @@ export class AssetsTable extends React.Component {
     this.setState({
       statusAlertOpen: false,
     });
+    console.log('assetToDelete', this.state.assetToDelete);
+    console.log('nextFocusElementOnDelete', this.getNextFocusElementOnDelete(this.state.assetToDelete));
     this.getNextFocusElementOnDelete(this.state.assetToDelete).focus();
     this.props.clearAssetsStatus();
   }
 
   deleteAsset() {
+    console.log('aaa');
     this.props.deleteAsset(this.props.assetsParameters, this.state.assetToDelete.id);
-
+    console.log('bbb');
     this.setState({
       elementToFocusOnModalClose: this.statusAlertRef,
       modalOpen: false,

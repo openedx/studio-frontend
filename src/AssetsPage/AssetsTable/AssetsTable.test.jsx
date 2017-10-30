@@ -161,7 +161,7 @@ describe('<AssetsTable />', () => {
       expect(modal.hasClass('modal-open')).toEqual(false);
       expect(wrapper.state('modalOpen')).toEqual(false);
     });
-    it('opens when trash button clicked', () => {
+    it('opens when trash button clicked; modalOpen state is true', () => {
       wrapper = mount(
         <AssetsTable
           {...defaultProps}
@@ -177,6 +177,25 @@ describe('<AssetsTable />', () => {
 
       expect(modal.hasClass('modal-open')).toEqual(true);
       expect(wrapper.state('modalOpen')).toEqual(true);
+    });
+    it('closes when Cancel button clicked; modalOpen state is false', () => {
+      wrapper = mount(
+        <AssetsTable
+          {...defaultProps}
+        />,
+      );
+
+      const trashButtons = wrapper.find('button').filterWhere(button => button.hasClass('fa-trash'));
+      trashButtons.at(0).simulate('click');
+
+      const modal = wrapper.find('[role="dialog"]');
+      const closeButton = modal.find('button').filterWhere(
+        button => button.matchesElement(<button>Cancel</button>));
+      expect(closeButton).toHaveLength(1);
+
+      closeButton.at(0).simulate('click');
+
+      expect(wrapper.state('modalOpen')).toEqual(false);
     });
   });
   describe('deleteAsset', () => {
@@ -226,26 +245,6 @@ describe('<AssetsTable />', () => {
       expect(modal.hasClass('modal-open')).toEqual(false);
       expect(wrapper.state('modalOpen')).toEqual(false);
     });
-    // it('sets modalOpen state to false on close', () => {
-    //   wrapper = mount(
-    //     <AssetsTable
-    //       {...defaultProps}
-    //     />,
-    //   );
-
-    //   wrapper.setState({ modalOpen: true });
-
-    //   const modal = wrapper.find('[role="dialog"]');
-    //   const closeButton = modal.find('button').filterWhere(
-    // button => button.matchesElement(<button>Cancel</button>));
-    //   expect(closeButton).toHaveLength(1);
-
-    //   closeButton.at(0).simulate('click');
-
-    //   expect(wrapper.state('modalOpen')).toEqual(false);
-
-    //   // filterWhere(button => button.matchesElement(<button>Yes, delete.</button>));
-    // });
   });
   describe('onDeleteClick', () => {
     let trashButtons;
@@ -281,11 +280,25 @@ describe('<AssetsTable />', () => {
     let deleteButtons;
     let modal;
     let trashButtons;
+    let mockDeleteAsset;
+
+    // const deleteAsset = (assetsParameters, assetId) => {
+        //this.props.assetsList.filter(asset => asset.id !== assetId);
+        // this.props.assetsList.filter(asset => (asset.id !== assetId));
+      // props.assetsList.filter(asset => (asset.id !== assetId));
+    // };
 
     beforeEach(() => {
+      mockDeleteAsset = jest.fn((x, y) => {
+        console.log('it is me!');
+        // this.props.assetList.filter(asset => asset.id !== y);
+        wrapper.setProps({ assetsList: defaultProps.assetsList.filter(asset => asset.id !== 'cat.jpg') });
+      });
+
       wrapper = mount(
         <AssetsTable
           {...defaultProps}
+          deleteAsset={mockDeleteAsset}
         />,
       );
 
@@ -307,10 +320,14 @@ describe('<AssetsTable />', () => {
     });
 
     it('moves from modal to status alert on asset delete', () => {
+      // const deletedAssetId = defaultProps.assetsList[0].id;
+      // console.log(deletedAssetId);
+
       const deleteButton = deleteButtons.filterWhere(button =>
         button.matchesElement(<button>Yes, delete.</button>));
 
       const statusAlert = wrapper.find('StatusAlert');
+      const closeStatusAlertButton = statusAlert.find('button').filterWhere(button => button.matchesElement(<button><span>&times;</span></button>));
 
       trashButtons.at(0).simulate('click');
 
@@ -318,8 +335,103 @@ describe('<AssetsTable />', () => {
 
       deleteButton.at(0).simulate('click');
 
-      expect(wrapper.state('statusAlertOpen')).toEqual(true);
-      expect(statusAlert.find('div').first().prop('hidden')).toEqual(false);
+      expect(closeStatusAlertButton.at(0).matchesElement(document.activeElement)).toEqual(true);
+    });
+    it('moves to correct asset trashcan icon after first asset deleted', () => {
+      // const mockDeleteAsset = jest.fn((x, y) => {
+      //   console.log('it is me!');
+      //   this.props.assetList.filter(asset => asset.id !== y);
+      // });
+        // wrapper.setProps({ assetsList: defaultProps.assetsList.filter(asset => asset.id !== 'cat.jpg') }),
+      // );
+
+      // wrapper = mount(
+      //   <AssetsTable
+      //     {...defaultProps}
+      //     // deleteAsset={mockDeleteAsset}
+      //     // deleteAsset={() => mockDeleteAsset()}
+      //   />,
+      // );
+
+      // wrapper.deleteAsset = mockDeleteAsset;
+
+      // expect(wrapper.prop('deleteAsset')).toEqual(mockDeleteAsset);
+
+
+      // console.log(mockDeleteAsset(1,2));
+
+      const deleteButton = deleteButtons.filterWhere(button =>
+        button.matchesElement(<button>Yes, delete.</button>));
+
+      const nextFocusElement = trashButtons.at(1);
+
+      const statusAlert = wrapper.find('StatusAlert');
+      const closeStatusAlertButton = statusAlert.find('button').filterWhere(button => button.matchesElement(<button><span>&times;</span></button>));
+
+
+      // const deleteAsset = (assetsParameters, assetId) => {
+      //   //this.props.assetsList.filter(asset => asset.id !== assetId);
+      //   // this.props.assetsList.filter(asset => (asset.id !== assetId));
+      //   wrapper.prop('assetsList').filter(asset => (asset.id !== assetId));
+      // };
+
+      // wrapper.setProps({ deleteAsset: () => { deleteAsset({}, 'cat.jpg')} });
+      // wrapper.update();
+
+      // console.log(trashButtons.at(0).html());
+
+      // const callback = () => {
+      //   console.log(wrapper.prop('assetsList'));
+      //   wrapper.setProps({ assetsList: defaultProps.assetsList.filter(asset => asset.id !== 'cat.jpg') });
+      //   wrapper.update();
+      //   console.log(wrapper.prop('assetsList'));
+      // };
+
+      // const mockDeleteAsset = jest.fn()
+      //   .mockImplementationOnce(
+      //     this.props.assetList.filter(asset => asset.id !== this.state.assetToDelete.id),
+      //   );
+
+      console.log(wrapper.prop('assetsList'));
+
+      trashButtons.at(0).simulate('click');
+
+      // console.log(trashButtons.at(0).html());
+
+      // wrapper.setProps({ assetsList: defaultProps.assetsList.filter(asset => asset.id !== 'cat.jpg') });
+      console.log("I'm deleting an asset!");
+      deleteButton.at(0).simulate('click');
+      expect(mockDeleteAsset).toHaveBeenCalledTimes(1);
+      console.log(wrapper.prop('assetsList'));
+      wrapper.update();
+      console.log(wrapper.prop('assetsList'));
+      closeStatusAlertButton.at(0).simulate('click');
+
+      console.log(wrapper.prop('assetsList'));
+
+
+      // const deletedAssetId = defaultProps.assetsList[0].id;
+
+      // wrapper.setProps({ assetsList: wrapper.prop('assetsList').filter(
+      //   asset => asset.id !== deletedAssetId) },
+      // );
+      //how do I simulate new assetslist prop?
+      // const newAssetsList = defaultProps.assetsList.slice().filter(asset => asset.id !== 'cat.jpg');
+      // console.log(newAssetsList);
+      // wrapper.setProps({ assetsList: newAssetsList });
+
+      // trashButtons.forEach((button) =>
+      //   console.log(button.html()));
+
+
+      console.log(trashButtons.at(0).html());
+      console.log(trashButtons.at(1).html());
+      expect(trashButtons.at(0).matchesElement(document.activeElement)).toEqual(true);
+      expect(trashButtons.at(1).matchesElement(document.activeElement)).toEqual(true);
+      expect(nextFocusElement.matchesElement(document.activeElement)).toEqual(true);
+    });
+    it('moves to correct asset trashcan icon after nth asset deleted', () => {
+
     });
   });
 });

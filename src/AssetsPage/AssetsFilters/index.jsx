@@ -29,7 +29,7 @@ const ASSET_TYPES = [
   },
 ];
 
-const AssetsFilters = ({ assetsParameters, updateFilter }) => (
+export const AssetsFilters = ({ assetsParameters, updateFilter }) => (
   <ul className={styles['filter-set']}>
     {ASSET_TYPES.map(type => (
       <li key={type.key}>
