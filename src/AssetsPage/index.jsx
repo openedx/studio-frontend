@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import WrappedAssetsTable from './AssetsTable';
-import AssetsFilters from './AssetsFilters';
+import WrappedAssetsFilters from './AssetsFilters';
 
 import { getAssets } from '../data/actions/assets';
 import styles from './styles.scss';
@@ -20,13 +20,9 @@ class AssetsPage extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    // if (prevProps.assetsParameters.assetTypes !== this.props.assetsParameters.assetTypes) {
     if (prevProps.assetsParameters !== this.props.assetsParameters) {
-      // if filters changed, update the assetsList
       // TODO: consider using the reselect library for this
       this.props.getAssets(this.props.assetsParameters);
-      // do I do the fetching of assets provided a sort change here?
-      // a prop change in assetsParameters?
     }
   }
 
@@ -40,7 +36,7 @@ class AssetsPage extends React.Component {
     return (
       <div className={styles.assets}>
         <h2>Files & Uploads</h2>
-        <AssetsFilters />
+        <WrappedAssetsFilters />
         <WrappedAssetsTable />
       </div>
     );
@@ -48,7 +44,6 @@ class AssetsPage extends React.Component {
 }
 
 AssetsPage.propTypes = {
-  // assetsList: PropTypes.arrayOf(PropTypes.object).isRequired,
   assetsParameters: PropTypes.objectOf(
     PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool, PropTypes.object]),
   ).isRequired,
