@@ -10,12 +10,6 @@ const assetAttributesToDatabaseAttributes = {
   date_added: 'uploadDate',
 };
 
-// const assetParametersToAPIParameters = {
-//   pageSize: 'page_size',
-//   page: 'page',
-
-// }
-
 export function pingStudioHome() {
   return fetch(
     endpoints.home, {
@@ -53,8 +47,7 @@ export function requestAssets(courseId, params) {
   };
 
   const requestString = Object.keys(parameters).reduce((memo, key) => { if (parameters[key]) { memo.push(`${key}=${parameters[key]}`); } return memo; }, []).join('&');
-  // console.log(requestString);
-  // console.log(`${endpoints.assets}/${courseId}/?${requestString}`);
+
   return fetch(
     `${endpoints.assets}/${courseId}/?${requestString}`, {
       credentials: 'same-origin',
