@@ -143,7 +143,6 @@ describe('<AssetsTable />', () => {
       });
     });
   });
-
   describe('modal', () => {
     let modal;
 
@@ -156,30 +155,13 @@ describe('<AssetsTable />', () => {
       modal = wrapper.find('[role="dialog"]');
     });
     it('renders', () => {
-      // const modal = wrapper.find('[role="dialog"]');
       expect(modal).toHaveLength(1);
     });
     it('is closed by default', () => {
-      // wrapper = mount(
-      //   <AssetsTable
-      //     {...defaultProps}
-      //   />,
-      // );
-
-      // const modal = wrapper.find('[role="dialog"]');
-
       expect(modal.hasClass('modal-open')).toEqual(false);
       expect(wrapper.state('modalOpen')).toEqual(false);
     });
     it('opens when trash button clicked; modalOpen state is true', () => {
-      // wrapper = mount(
-      //   <AssetsTable
-      //     {...defaultProps}
-      //   />,
-      // );
-
-      // const modal = wrapper.find('[role="dialog"]');
-
       const trashButtons = wrapper.find('button').filterWhere(button => button.hasClass('fa-trash'));
       expect(trashButtons).toHaveLength(defaultProps.assetsList.length);
 
@@ -189,16 +171,9 @@ describe('<AssetsTable />', () => {
       expect(wrapper.state('modalOpen')).toEqual(true);
     });
     it('closes when Cancel button clicked; modalOpen state is false', () => {
-      // wrapper = mount(
-      //   <AssetsTable
-      //     {...defaultProps}
-      //   />,
-      // );
-
       const trashButtons = wrapper.find('button').filterWhere(button => button.hasClass('fa-trash'));
       trashButtons.at(0).simulate('click');
 
-      // const modal = wrapper.find('[role="dialog"]');
       const closeButton = modal.find('button').filterWhere(
         button => button.matchesElement(<button>Cancel</button>));
       expect(closeButton).toHaveLength(1);
