@@ -105,7 +105,6 @@ export class AssetsTable extends React.Component {
     return this.trashcanRefs[focusAsset.id];
   }
 
-
   addSupplementalTableElements() {
     const newAssetsList = this.props.assetsList.map((asset, index) => {
       const currentAsset = Object.assign({}, asset);
