@@ -18,6 +18,8 @@ export class AssetsTable extends React.Component {
       modalOpen: false,
       statusAlertOpen: false,
       assetToDelete: {},
+      deletedAsset: {},
+      deletedAssetIndex: null,
       elementToFocusOnModalClose: {},
       columnSortState: {
         display_name: 'none',
@@ -60,6 +62,10 @@ export class AssetsTable extends React.Component {
     this.renderStatusAlert = this.renderStatusAlert.bind(this);
   }
 
+  // componentDidUpdate -> runs after render;
+  // use it for focus
+  // check if set to null
+
   onSortClick(columnKey) {
     const sortedColumn = this.props.assetsParameters.sort;
     const sortedDirection = this.props.assetsParameters.direction;
@@ -83,48 +89,39 @@ export class AssetsTable extends React.Component {
     this.props.updateSort(columnKey, newDirection);
   }
 
-  onDeleteClick(assetId) {
-    const assetToDelete = this.props.assetsList.find(asset => (asset.id === assetId));
+  onDeleteClick(index) {
+    const assetToDelete = this.props.assetsList[index];
 
     this.setState({
-      modalOpen: true,
       assetToDelete,
-      elementToFocusOnModalClose: this.trashcanRefs[assetId],
+      deletedAssetIndex: index,
+      elementToFocusOnModalClose: this.trashcanRefs[assetToDelete.id],
+      modalOpen: true,
     });
   }
 
-  getNextFocusElementOnDelete(assetToDelete) {
+  getNextFocusElementOnDelete() {
     const { assetsStatus } = this.props;
-    // let rowToDelete = assetToDelete.row_key;
-    let rowToDelete = 0;
-    let focusAsset = assetToDelete;
 
-    console.log('assetToDelete: ', assetToDelete);
-    console.log('rowToDelete:', rowToDelete);
+    let deletedIndex = this.state.deletedAssetIndex;
+    let focusAsset = this.state.deletedAsset;
 
     switch (assetsStatus.type) {
       case assetActions.DELETE_ASSET_SUCCESS:
-        if (rowToDelete > 0) {
-          rowToDelete -= 1;
+        if (deletedIndex > 0) {
+          deletedIndex -= 1;
         }
-        focusAsset = this.props.assetsList.find(asset => asset.row_key === (rowToDelete));
+        focusAsset = this.props.assetsList[deletedIndex];
         break;
       default:
         break;
     }
 
-    console.log('asset to focus on id', focusAsset.id);
-    console.log('trashcanref', this.trashcanRefs);
     return this.trashcanRefs[focusAsset.id];
   }
 
-  closeModal() {
-    this.setState({ modalOpen: false });
-    this.state.elementToFocusOnModalClose.focus();
-  }
 
   addSupplementalTableElements() {
-    console.log('I have added table elements!');
     const newAssetsList = this.props.assetsList.map((asset, index) => {
       const currentAsset = Object.assign({}, asset);
       const deleteButton = (<Button
@@ -132,7 +129,7 @@ export class AssetsTable extends React.Component {
         display={''}
         buttonType={'light'}
         aria-label={`Delete ${currentAsset.display_name}`}
-        onClick={() => { this.onDeleteClick(currentAsset.id); }}
+        onClick={() => { this.onDeleteClick(index); }}
         inputRef={(ref) => { this.trashcanRefs[currentAsset.id] = ref; }}
       />);
 
@@ -143,25 +140,39 @@ export class AssetsTable extends React.Component {
       currentAsset.row_key = index;
       return currentAsset;
     });
-
     return newAssetsList;
   }
 
-  closeStatusAlert() {
+  closeModal() {
+    this.state.elementToFocusOnModalClose.focus();
+
     this.setState({
+      assetToDelete: {},
+      deletedAssetIndex: null,
+      elementToFocusOnModalClose: {},
+      modalOpen: false,
+    });
+  }
+
+  closeStatusAlert() {
+    this.getNextFocusElementOnDelete().focus();
+    this.props.clearAssetsStatus();
+
+    this.setState({
+      deletedAsset: {},
+      deletedAssetIndex: null,
       statusAlertOpen: false,
     });
-    console.log('assetToDelete', this.state.assetToDelete);
-    console.log('nextFocusElementOnDelete', this.getNextFocusElementOnDelete(this.state.assetToDelete));
-    this.getNextFocusElementOnDelete(this.state.assetToDelete).focus();
-    this.props.clearAssetsStatus();
   }
 
   deleteAsset() {
-    console.log('aaa');
+    const deletedAsset = { ...this.state.assetToDelete };
+
     this.props.deleteAsset(this.props.assetsParameters, this.state.assetToDelete.id);
-    console.log('bbb');
+
     this.setState({
+      assetToDelete: {},
+      deletedAsset,
       elementToFocusOnModalClose: this.statusAlertRef,
       modalOpen: false,
       statusAlertOpen: true,
@@ -202,7 +213,7 @@ export class AssetsTable extends React.Component {
 
   renderStatusAlert() {
     const { assetsStatus } = this.props;
-    const deleteAssetName = this.state.assetToDelete.display_name;
+    const deleteAssetName = this.state.deletedAsset.display_name;
     let alertDialog = `Deleting ${deleteAssetName}`;
     let alertType = 'info';
 
