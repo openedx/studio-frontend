@@ -21,11 +21,6 @@ export class AssetsTable extends React.Component {
       deletedAsset: {},
       deletedAssetIndex: null,
       elementToFocusOnModalClose: {},
-      columnSortState: {
-        display_name: 'none',
-        content_type: 'none',
-        date_added: 'desc',
-      },
     };
 
     this.columns = {
@@ -74,18 +69,8 @@ export class AssetsTable extends React.Component {
 
     if (sortedColumn === columnKey) {
       newDirection = sortedDirection === 'desc' ? 'asc' : 'desc';
-
-      this.setState({
-        ...this.state.columnSortState,
-        columnKey: newDirection,
-      });
-    } else {
-      this.setState({
-        ...this.state.columnSortState,
-        sortedColumn: 'none',
-        columnKey: newDirection,
-      });
     }
+
     this.props.updateSort(columnKey, newDirection);
   }
 
