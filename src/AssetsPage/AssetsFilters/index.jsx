@@ -16,12 +16,12 @@ const ASSET_TYPES = [
     displayName: 'Code',
   },
   {
-    key: 'Images',
-    displayName: 'Images',
-  },
-  {
     key: 'Documents',
     displayName: 'Documents',
+  },
+  {
+    key: 'Images',
+    displayName: 'Images',
   },
   {
     key: 'OTHER',

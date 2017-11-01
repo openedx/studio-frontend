@@ -118,10 +118,8 @@ export class AssetsTable extends React.Component {
       />);
 
       // TODO: create lockButton
-
       currentAsset.delete_asset = deleteButton;
       // TODO: currentAsset.lock_asset = lockButton;
-      currentAsset.row_key = index;
       return currentAsset;
     });
     return newAssetsList;

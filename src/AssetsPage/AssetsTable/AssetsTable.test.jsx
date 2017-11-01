@@ -4,7 +4,7 @@ import { AssetsTable } from './index';
 
 import { assetActions } from '../../data/constants/actionTypes';
 
-const setAssetToDelete = (asset, wrapper) => {
+const setDeletedAsset = (asset, wrapper) => {
   wrapper.setState({ deletedAsset: asset });
 };
 
@@ -53,7 +53,7 @@ describe('<AssetsTable />', () => {
         />,
       );
     });
-    it(' correct number of assets', () => {
+    it('correct number of assets', () => {
       // + 1 because it includes row item for headings
       expect(wrapper.find('tr')).toHaveLength(defaultProps.assetsList.length + 1);
     });
@@ -163,7 +163,6 @@ describe('<AssetsTable />', () => {
     });
     it('opens when trash button clicked; modalOpen state is true', () => {
       const trashButtons = wrapper.find('button').filterWhere(button => button.hasClass('fa-trash'));
-      expect(trashButtons).toHaveLength(defaultProps.assetsList.length);
 
       trashButtons.at(0).simulate('click');
 
@@ -178,7 +177,7 @@ describe('<AssetsTable />', () => {
         button => button.matchesElement(<button>Cancel</button>));
       expect(closeButton).toHaveLength(1);
 
-      closeButton.at(0).simulate('click');
+      closeButton.simulate('click');
 
       expect(wrapper.state('modalOpen')).toEqual(false);
     });
@@ -200,7 +199,7 @@ describe('<AssetsTable />', () => {
         button.matchesElement(<button>Yes, delete.</button>));
 
       trashButtons.at(0).simulate('click');
-      deleteButton.at(0).simulate('click');
+      deleteButton.simulate('click');
 
       expect(deleteAssetSpy).toHaveBeenCalledTimes(1);
       expect(deleteAssetSpy).toHaveBeenCalledWith(
@@ -225,7 +224,7 @@ describe('<AssetsTable />', () => {
 
       trashButtons.at(0).simulate('click');
 
-      deleteButton.at(0).simulate('click');
+      deleteButton.simulate('click');
 
       expect(modal.hasClass('modal-open')).toEqual(false);
       expect(wrapper.state('modalOpen')).toEqual(false);
@@ -284,9 +283,9 @@ describe('<AssetsTable />', () => {
     it('moves from modal to trashcan on modal close', () => {
       trashButtons.at(0).simulate('click');
 
-      expect(closeButton.at(0).matchesElement(document.activeElement)).toEqual(true);
+      expect(closeButton.matchesElement(document.activeElement)).toEqual(true);
 
-      closeButton.at(0).simulate('click');
+      closeButton.simulate('click');
 
       expect(trashButtons.at(0).matchesElement(document.activeElement)).toEqual(true);
     });
@@ -300,11 +299,11 @@ describe('<AssetsTable />', () => {
 
       trashButtons.at(0).simulate('click');
 
-      expect(closeButton.at(0).matchesElement(document.activeElement)).toEqual(true);
+      expect(closeButton.matchesElement(document.activeElement)).toEqual(true);
 
-      deleteButton.at(0).simulate('click');
+      deleteButton.simulate('click');
 
-      expect(closeStatusAlertButton.at(0).matchesElement(document.activeElement)).toEqual(true);
+      expect(closeStatusAlertButton.matchesElement(document.activeElement)).toEqual(true);
     });
     it('moves to correct asset trashcan icon after first asset deleted', () => {
       const assetToDeleteId = defaultProps.assetsList[0].id;
@@ -323,10 +322,10 @@ describe('<AssetsTable />', () => {
 
       trashButtons.at(0).simulate('click');
 
-      deleteButton.at(0).simulate('click');
+      deleteButton.simulate('click');
       expect(mockDeleteAsset).toHaveBeenCalledTimes(1);
 
-      closeStatusAlertButton.at(0).simulate('click');
+      closeStatusAlertButton.simulate('click');
 
       expect(mockDeleteAsset).toHaveBeenCalledTimes(1);
       expect(mockDeleteAsset).toHaveBeenCalledWith(defaultProps.assetsParameters, assetToDeleteId);
@@ -349,9 +348,9 @@ describe('<AssetsTable />', () => {
 
       trashButtons.at(2).simulate('click');
 
-      deleteButton.at(0).simulate('click');
+      deleteButton.simulate('click');
       expect(mockDeleteAsset).toHaveBeenCalledTimes(1);
-      closeStatusAlertButton.at(0).simulate('click');
+      closeStatusAlertButton.simulate('click');
 
       expect(mockDeleteAsset).toHaveBeenCalledTimes(1);
       expect(mockDeleteAsset).toHaveBeenCalledWith(defaultProps.assetsParameters, assetToDeleteId);
@@ -452,7 +451,7 @@ describe('it displays alert properly', () => {
 
     const statusAlert = wrapper.find('StatusAlert');
     wrapper.setState({ statusAlertOpen: true });
-    setAssetToDelete(wrapper.props().assetsList[0], wrapper);
+    setDeletedAsset(wrapper.props().assetsList[0], wrapper);
     statusAlert.find('button').at(0).simulate('keyDown', { key: 'Enter' });
     expect(wrapper.state().statusAlertOpen).toEqual(false);
     expect(statusAlert.find('div').first().prop('hidden')).toEqual(true);
@@ -470,7 +469,7 @@ describe('it displays alert properly', () => {
 
     const statusAlert = wrapper.find('StatusAlert');
     wrapper.setState({ statusAlertOpen: true });
-    setAssetToDelete(wrapper.props().assetsList[0], wrapper);
+    setDeletedAsset(wrapper.props().assetsList[0], wrapper);
     statusAlert.find('button').at(0).simulate('keyDown', { key: 'Enter' });
     expect(wrapper.props().assetsStatus).toEqual({});
   });
@@ -484,7 +483,7 @@ describe('it displays alert properly', () => {
     const statusAlertDialog = wrapper.find('.alert-dialog');
     const fileName = 'testFile';
 
-    setAssetToDelete({ display_name: fileName }, wrapper);
+    setDeletedAsset({ display_name: fileName }, wrapper);
     expect(statusAlertDialog.text()).toContain(fileName);
   });
 });

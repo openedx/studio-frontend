@@ -3,8 +3,11 @@ import Cookies from 'js-cookie';
 
 import endpoints from './endpoints';
 
-// terrible name, but it'll do for the moment
-const assetAttributesToDatabaseAttributes = {
+/*
+API returns snake-cased attribute names, but API expects names that match database attribute names,
+which are inconsistently cased
+*/
+const assetAPIAttributesToDatabaseAttributes = {
   display_name: 'displayname',
   content_type: 'contentType',
   date_added: 'uploadDate',
@@ -26,11 +29,7 @@ function assetTypesFromState(assetTypes) {
 }
 
 function getDatabaseAttributesFromAssetAttributes(sort) {
-  return assetAttributesToDatabaseAttributes[sort];
-}
-
-function objectIsNonEmpty(object) {
-  return Object.keys(object).length > 0;
+  return assetAPIAttributesToDatabaseAttributes[sort];
 }
 
 export function requestAssets(courseId, params) {
@@ -40,14 +39,13 @@ export function requestAssets(courseId, params) {
   const parameters = {
     ...params,
     sort: sortType,
-    asset_type: (objectIsNonEmpty(assetTypesToFilter) ? assetTypesToFilter : undefined),
+    asset_type: assetTypesToFilter.length > 0 ? assetTypesToFilter : undefined,
     assetTypes: undefined,
     page_size: params.pageSize,
     pageSize: undefined,
   };
 
   const requestString = Object.keys(parameters).reduce((memo, key) => { if (parameters[key]) { memo.push(`${key}=${parameters[key]}`); } return memo; }, []).join('&');
-
   return fetch(
     `${endpoints.assets}/${courseId}/?${requestString}`, {
       credentials: 'same-origin',
