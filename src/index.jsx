@@ -1,3 +1,4 @@
+import 'babel-polyfill'; // general ES2015 polyfill (e.g. promise)
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
