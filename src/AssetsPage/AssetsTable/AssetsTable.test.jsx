@@ -4,16 +4,6 @@ import { AssetsTable } from './index';
 
 import { assetActions } from '../../data/constants/actionTypes';
 
-const setDeletedAsset = (asset, wrapper) => {
-  wrapper.setState({ deletedAsset: asset });
-};
-
-const clearStatus = (wrapper) => {
-  wrapper.setProps({ assetsStatus: {} });
-};
-
-let wrapper;
-
 const defaultProps = {
   assetsList: [
     {
@@ -44,6 +34,22 @@ const defaultProps = {
   updateSort: () => {},
 };
 
+const setDeletedAsset = (asset, wrapper) => {
+  wrapper.setState({ deletedAsset: asset });
+};
+
+const clearStatus = (wrapper) => {
+  wrapper.setProps({ assetsStatus: {} });
+};
+
+const getMockForDeleteAsset = (wrapper, assetToDeleteId) => (
+  jest.fn(() => {
+    wrapper.setProps({ assetsList: defaultProps.assetsList.filter(asset => asset.id !== assetToDeleteId), assetsStatus: { type: 'DELETE_ASSET_SUCCESS' } });
+  })
+);
+
+let wrapper;
+
 describe('<AssetsTable />', () => {
   describe('renders', () => {
     beforeEach(() => {
@@ -68,50 +74,54 @@ describe('<AssetsTable />', () => {
       updateSortSpy = jest.fn();
     });
 
-    const sortableAssetProps = [
+    const testData = [
       {
-        sort: 'date_added',
-        direction: 'desc',
+        sortProps: {
+          sort: 'date_added',
+          direction: 'desc',
+        },
+        expectedValues: {
+          buttonIndexToClick: 2,
+          buttonToClickText: 'Date Added',
+          onSortColumnParameter: 'date_added',
+          onSortDirectionParameter: 'asc',
+        },
       },
       {
-        sort: 'date_added',
-        direction: 'asc',
+        sortProps: {
+          sort: 'date_added',
+          direction: 'asc',
+        },
+        expectedValues: {
+          buttonIndexToClick: 2,
+          buttonToClickText: 'Date Added',
+          onSortColumnParameter: 'date_added',
+          onSortDirectionParameter: 'desc',
+        },
       },
       {
-        sort: 'date_added',
-        direction: 'desc',
+        sortProps: {
+          sort: 'date_added',
+          direction: 'desc',
+        },
+        expectedValues: {
+          buttonIndexToClick: 0,
+          buttonToClickText: 'Name',
+          onSortColumnParameter: 'display_name',
+          onSortDirectionParameter: 'desc',
+        },
       },
     ];
 
-    const assertValues = [
-      {
-        buttonIndexToClick: 2,
-        buttonToClickText: 'Date Added',
-        onSortColumnParameter: 'date_added',
-        onSortDirectionParameter: 'asc',
-      },
-      {
-        buttonIndexToClick: 2,
-        buttonToClickText: 'Date Added',
-        onSortColumnParameter: 'date_added',
-        onSortDirectionParameter: 'desc',
-      },
-      {
-        buttonIndexToClick: 0,
-        buttonToClickText: 'Name',
-        onSortColumnParameter: 'display_name',
-        onSortDirectionParameter: 'desc',
-      },
-    ];
+    testData.forEach((test) => {
+      const sortProps = test.sortProps;
+      const expectedValues = test.expectedValues;
 
-    sortableAssetProps.forEach((sortableAssetProp, index) => {
-      it(`calls onSort function with ${sortableAssetProp.direction} click on ${sortableAssetProp.sort === 'date_added' ? 'same' : 'different'} column`, () => {
+      it(`calls onSort function with ${sortProps.direction} click on ${sortProps.sort === 'date_added' ? 'same' : 'different'} column`, () => {
         const sortableAssetParameters = {
           ...defaultProps.assetsParameters,
-          ...sortableAssetProp,
+          ...sortProps,
         };
-
-        const testValues = assertValues[index];
 
         wrapper = mount(
           <AssetsTable
@@ -129,16 +139,16 @@ describe('<AssetsTable />', () => {
 
         expect(sortButtons).toHaveLength(3);
 
-        expect(sortButtons.at(testValues.buttonIndexToClick).filterWhere(button => (
-          button.text().includes(testValues.buttonToClickText)
+        expect(sortButtons.at(expectedValues.buttonIndexToClick).filterWhere(button => (
+          button.text().includes(expectedValues.buttonToClickText)
         ))).toHaveLength(1);
 
-        sortButtons.at(testValues.buttonIndexToClick).simulate('click');
+        sortButtons.at(expectedValues.buttonIndexToClick).simulate('click');
 
         expect(updateSortSpy).toHaveBeenCalledTimes(1);
         expect(updateSortSpy).toHaveBeenLastCalledWith(
-          testValues.onSortColumnParameter,
-          testValues.onSortDirectionParameter,
+          expectedValues.onSortColumnParameter,
+          expectedValues.onSortDirectionParameter,
         );
       });
     });
@@ -193,10 +203,8 @@ describe('<AssetsTable />', () => {
         />,
       );
 
-      const deleteButtons = wrapper.find('button');
-      const trashButtons = deleteButtons.filterWhere(button => button.hasClass('fa-trash'));
-      const deleteButton = deleteButtons.filterWhere(button =>
-        button.matchesElement(<button>Yes, delete.</button>));
+      const trashButtons = wrapper.find('button').filterWhere(button => button.hasClass('fa-trash'));
+      const deleteButton = wrapper.find('[role="dialog"] button').filterWhere(button => button.hasClass('btn-primary') && button.matchesElement(<button>Yes, delete.</button>));
 
       trashButtons.at(0).simulate('click');
       deleteButton.simulate('click');
@@ -214,19 +222,13 @@ describe('<AssetsTable />', () => {
         />,
       );
 
-      const deleteButtons = wrapper.find('button');
-
-      const trashButtons = deleteButtons.filterWhere(button => button.hasClass('fa-trash'));
-      const modal = wrapper.find('[role="dialog"]');
-
-      const deleteButton = deleteButtons.filterWhere(button =>
-        button.matchesElement(<button>Yes, delete.</button>));
+      const trashButtons = wrapper.find('button').filterWhere(button => button.hasClass('fa-trash'));
+      const deleteButton = wrapper.find('[role="dialog"] button').filterWhere(button => button.hasClass('btn-primary') && button.matchesElement(<button>Yes, delete.</button>));
 
       trashButtons.at(0).simulate('click');
-
       deleteButton.simulate('click');
 
-      expect(modal.hasClass('modal-open')).toEqual(false);
+      expect(wrapper.find('[role="dialog"]').hasClass('modal-open')).toEqual(false);
       expect(wrapper.state('modalOpen')).toEqual(false);
     });
   });
@@ -261,7 +263,6 @@ describe('<AssetsTable />', () => {
   });
   describe('focus', () => {
     let closeButton;
-    let deleteButtons;
     let modal;
     let trashButtons;
     let mockDeleteAsset;
@@ -273,8 +274,7 @@ describe('<AssetsTable />', () => {
         />,
       );
 
-      deleteButtons = wrapper.find('button');
-      trashButtons = deleteButtons.find('button').filterWhere(button => button.hasClass('fa-trash'));
+      trashButtons = wrapper.find('button').filterWhere(button => button.hasClass('fa-trash'));
 
       modal = wrapper.find('[role="dialog"]');
       closeButton = modal.find('button').filterWhere(button => button.matchesElement(<button><span>&times;</span></button>));
@@ -291,8 +291,7 @@ describe('<AssetsTable />', () => {
     });
 
     it('moves from modal to status alert on asset delete', () => {
-      const deleteButton = deleteButtons.filterWhere(button =>
-        button.matchesElement(<button>Yes, delete.</button>));
+      const deleteButton = wrapper.find('[role="dialog"] button').filterWhere(button => button.hasClass('btn-primary') && button.matchesElement(<button>Yes, delete.</button>));
 
       const statusAlert = wrapper.find('StatusAlert');
       const closeStatusAlertButton = statusAlert.find('button').filterWhere(button => button.matchesElement(<button><span>&times;</span></button>));
@@ -305,56 +304,48 @@ describe('<AssetsTable />', () => {
 
       expect(closeStatusAlertButton.matchesElement(document.activeElement)).toEqual(true);
     });
-    it('moves to correct asset trashcan icon after first asset deleted', () => {
-      const assetToDeleteId = defaultProps.assetsList[0].id;
 
-      mockDeleteAsset = jest.fn(() => {
-        wrapper.setProps({ assetsList: defaultProps.assetsList.filter(asset => asset.id !== assetToDeleteId), assetsStatus: { type: 'DELETE_ASSET_SUCCESS' } });
+    const testData = [
+      {
+        assetToDeleteIndex: 0,
+        trashButtonIndex: 0,
+        newFocusIndex: 0,
+      },
+      {
+        assetToDeleteIndex: 2,
+        trashButtonIndex: 2,
+        newFocusIndex: 1,
+      },
+    ];
+
+    testData.forEach((test) => {
+      it(`moves to correct asset trashcan icon after asset ${test.assetToDeleteIndex} deleted`, () => {
+        const assetToDeleteId = defaultProps.assetsList[test.assetToDeleteIndex].id;
+
+        mockDeleteAsset = getMockForDeleteAsset(wrapper, assetToDeleteId);
+
+        wrapper.setProps({ deleteAsset: mockDeleteAsset });
+
+        const deleteButton = wrapper.find('[role="dialog"] button').filterWhere(button => button.hasClass('btn-primary') && button.matchesElement(<button>Yes, delete.</button>));
+
+        const statusAlert = wrapper.find('StatusAlert');
+        const closeStatusAlertButton = statusAlert.find('button').filterWhere(button => button.matchesElement(<button><span>&times;</span></button>));
+
+        trashButtons.at(test.trashButtonIndex).simulate('click');
+
+        deleteButton.simulate('click');
+        expect(mockDeleteAsset).toHaveBeenCalledTimes(1);
+
+        closeStatusAlertButton.simulate('click');
+
+        expect(mockDeleteAsset).toHaveBeenCalledTimes(1);
+        expect(mockDeleteAsset).toHaveBeenCalledWith(
+          defaultProps.assetsParameters,
+          assetToDeleteId,
+        );
+        expect(trashButtons.at(test.newFocusIndex).matchesElement(
+          document.activeElement)).toEqual(true);
       });
-
-      wrapper.setProps({ deleteAsset: mockDeleteAsset });
-
-      const deleteButton = deleteButtons.filterWhere(button =>
-        button.matchesElement(<button>Yes, delete.</button>));
-
-      const statusAlert = wrapper.find('StatusAlert');
-      const closeStatusAlertButton = statusAlert.find('button').filterWhere(button => button.matchesElement(<button><span>&times;</span></button>));
-
-      trashButtons.at(0).simulate('click');
-
-      deleteButton.simulate('click');
-      expect(mockDeleteAsset).toHaveBeenCalledTimes(1);
-
-      closeStatusAlertButton.simulate('click');
-
-      expect(mockDeleteAsset).toHaveBeenCalledTimes(1);
-      expect(mockDeleteAsset).toHaveBeenCalledWith(defaultProps.assetsParameters, assetToDeleteId);
-      expect(trashButtons.at(0).matchesElement(document.activeElement)).toEqual(true);
-    });
-    it('moves to correct asset trashcan icon after nth asset deleted', () => {
-      const assetToDeleteId = defaultProps.assetsList[2].id;
-
-      mockDeleteAsset = jest.fn(() => {
-        wrapper.setProps({ assetsList: defaultProps.assetsList.filter(asset => asset.id !== assetToDeleteId), assetsStatus: { type: 'DELETE_ASSET_SUCCESS' } });
-      });
-
-      wrapper.setProps({ deleteAsset: mockDeleteAsset });
-
-      const deleteButton = deleteButtons.filterWhere(button =>
-        button.matchesElement(<button>Yes, delete.</button>));
-
-      const statusAlert = wrapper.find('StatusAlert');
-      const closeStatusAlertButton = statusAlert.find('button').filterWhere(button => button.matchesElement(<button><span>&times;</span></button>));
-
-      trashButtons.at(2).simulate('click');
-
-      deleteButton.simulate('click');
-      expect(mockDeleteAsset).toHaveBeenCalledTimes(1);
-      closeStatusAlertButton.simulate('click');
-
-      expect(mockDeleteAsset).toHaveBeenCalledTimes(1);
-      expect(mockDeleteAsset).toHaveBeenCalledWith(defaultProps.assetsParameters, assetToDeleteId);
-      expect(trashButtons.at(1).matchesElement(document.activeElement)).toEqual(true);
     });
   });
 });

@@ -53,4 +53,3 @@ export const deleteAsset = (assetsParameters, assetId) =>
 export const clearAssetsStatus = () =>
   dispatch =>
     dispatch({ type: assetActions.CLEAR_ASSETS_STATUS });
-

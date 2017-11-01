@@ -57,10 +57,6 @@ export class AssetsTable extends React.Component {
     this.renderStatusAlert = this.renderStatusAlert.bind(this);
   }
 
-  // componentDidUpdate -> runs after render;
-  // use it for focus
-  // check if set to null
-
   onSortClick(columnKey) {
     const sortedColumn = this.props.assetsParameters.sort;
     const sortedDirection = this.props.assetsParameters.direction;
