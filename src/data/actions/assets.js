@@ -11,6 +11,8 @@ export const getAssets = assetsParameters =>
     clientApi.requestAssets(assetsParameters.courseId, {
       page: assetsParameters.page,
       assetTypes: assetsParameters.assetTypes,
+      sort: assetsParameters.sort,
+      direction: assetsParameters.direction,
     })
       .then(response => response.json())
       .then(json => dispatch(requestAssetsSuccess(json)));
@@ -19,6 +21,12 @@ export const filterUpdate = (filterKey, filterValue) => ({
   type: assetActions.FILTER_UPDATED,
   data: { [filterKey]: filterValue },
 });
+
+export const sortUpdate = (sort, direction) => ({
+  type: assetActions.SORT_UPDATE,
+  data: { sort, direction },
+});
+
 
 export const deleteAssetSuccess = (assetId, response) => ({
   type: assetActions.DELETE_ASSET_SUCCESS,

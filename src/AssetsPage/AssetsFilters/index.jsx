@@ -8,12 +8,20 @@ import styles from './styles.scss';
 
 const ASSET_TYPES = [
   {
-    key: 'Images',
-    displayName: 'Images',
+    key: 'Audio',
+    displayName: 'Audio',
+  },
+  {
+    key: 'Code',
+    displayName: 'Code',
   },
   {
     key: 'Documents',
     displayName: 'Documents',
+  },
+  {
+    key: 'Images',
+    displayName: 'Images',
   },
   {
     key: 'OTHER',
@@ -21,7 +29,7 @@ const ASSET_TYPES = [
   },
 ];
 
-const AssetsFilters = ({ assetsParameters, updateFilter }) => (
+export const AssetsFilters = ({ assetsParameters, updateFilter }) => (
   <ul className={styles['filter-set']}>
     {ASSET_TYPES.map(type => (
       <li key={type.key}>

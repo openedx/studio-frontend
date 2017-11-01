@@ -18,12 +18,13 @@ describe('API client requestAssets', () => {
     requestAssets(COURSE_ID, {
       page: 2,
       pageSize: 10,
-      sort: 'asc',
+      sort: 'content_type',
+      direction: 'asc',
       assetTypes: { Documents: true, Images: false },
     });
 
     const actualUrl = fetchMock.lastUrl();
-    ['page=2', 'page_size=10', 'sort=asc', 'asset_type=Documents'].forEach((expectedQueryArg) => {
+    ['page=2', 'page_size=10', 'sort=contentType', 'direction=asc', 'asset_type=Documents'].forEach((expectedQueryArg) => {
       expect(actualUrl).toEqual(expect.stringContaining(expectedQueryArg));
     });
   });

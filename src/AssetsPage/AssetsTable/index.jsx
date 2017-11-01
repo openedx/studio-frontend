@@ -9,19 +9,45 @@ import { connect } from 'react-redux';
 
 import FontAwesomeStyles from 'font-awesome/css/font-awesome.min.css';
 import { assetActions } from '../../data/constants/actionTypes';
-import { clearAssetsStatus, deleteAsset } from '../../data/actions/assets';
+import { clearAssetsStatus, deleteAsset, sortUpdate } from '../../data/actions/assets';
 
 export class AssetsTable extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      displayAssetsList: [],
       modalOpen: false,
       statusAlertOpen: false,
       assetToDelete: {},
+      deletedAsset: {},
+      deletedAssetIndex: null,
       elementToFocusOnModalClose: {},
-      statusAlertRef: {},
     };
+
+    this.columns = {
+      display_name: {
+        label: 'Name',
+        key: 'display_name',
+        columnSortable: true,
+      },
+      content_type: {
+        label: 'Type',
+        key: 'content_type',
+        columnSortable: true,
+      },
+      date_added: {
+        label: 'Date Added',
+        key: 'date_added',
+        columnSortable: true,
+      },
+      delete_asset: {
+        label: 'Delete Asset',
+        key: 'delete_asset',
+        columnSortable: false,
+      },
+    };
+
+    this.trashcanRefs = {};
+    this.statusAlertRef = {};
 
     this.onDeleteClick = this.onDeleteClick.bind(this);
     this.deleteAsset = this.deleteAsset.bind(this);
@@ -29,41 +55,44 @@ export class AssetsTable extends React.Component {
     this.closeModal = this.closeModal.bind(this);
     this.closeStatusAlert = this.closeStatusAlert.bind(this);
     this.renderStatusAlert = this.renderStatusAlert.bind(this);
-
-    this.trashcanRefs = {};
   }
 
-  componentDidMount() {
-    this.addSupplementalTableElements();
-  }
+  onSortClick(columnKey) {
+    const sortedColumn = this.props.assetsParameters.sort;
+    const sortedDirection = this.props.assetsParameters.direction;
 
-  componentDidUpdate(prevProps) {
-    if (prevProps.assetsList.length !== this.props.assetsList.length) {
-      this.addSupplementalTableElements();
+    let newDirection = 'desc';
+
+    if (sortedColumn === columnKey) {
+      newDirection = sortedDirection === 'desc' ? 'asc' : 'desc';
     }
+
+    this.props.updateSort(columnKey, newDirection);
   }
 
-  onDeleteClick(assetId) {
-    const assetToDelete = this.state.displayAssetsList.find(asset => (asset.id === assetId));
+  onDeleteClick(index) {
+    const assetToDelete = this.props.assetsList[index];
 
     this.setState({
-      modalOpen: true,
       assetToDelete,
-      elementToFocusOnModalClose: this.trashcanRefs[assetId],
+      deletedAssetIndex: index,
+      elementToFocusOnModalClose: this.trashcanRefs[assetToDelete.id],
+      modalOpen: true,
     });
   }
 
-  getNextFocusElementOnDelete(assetToDelete) {
+  getNextFocusElementOnDelete() {
     const { assetsStatus } = this.props;
-    let rowToDelete = assetToDelete.row_key;
-    let focusAsset = assetToDelete;
+
+    let deletedIndex = this.state.deletedAssetIndex;
+    let focusAsset = this.state.deletedAsset;
 
     switch (assetsStatus.type) {
       case assetActions.DELETE_ASSET_SUCCESS:
-        if (rowToDelete > 0) {
-          rowToDelete -= 1;
+        if (deletedIndex > 0) {
+          deletedIndex -= 1;
         }
-        focusAsset = this.state.displayAssetsList.find(asset => asset.row_key === (rowToDelete));
+        focusAsset = this.props.assetsList[deletedIndex];
         break;
       default:
         break;
@@ -80,44 +109,53 @@ export class AssetsTable extends React.Component {
         label={''}
         buttonType={'light'}
         aria-label={`Delete ${currentAsset.display_name}`}
-        onClick={() => { this.onDeleteClick(currentAsset.id); }}
+        onClick={() => { this.onDeleteClick(index); }}
         inputRef={(ref) => { this.trashcanRefs[currentAsset.id] = ref; }}
       />);
 
       // TODO: create lockButton
-
       currentAsset.delete_asset = deleteButton;
       // TODO: currentAsset.lock_asset = lockButton;
-      currentAsset.row_key = index;
       return currentAsset;
     });
-
-    this.setState({
-      displayAssetsList: newAssetsList,
-    });
+    return newAssetsList;
   }
 
   closeModal() {
-    this.setState({ modalOpen: false });
     this.state.elementToFocusOnModalClose.focus();
+
+    this.setState({
+      assetToDelete: {},
+      deletedAssetIndex: null,
+      elementToFocusOnModalClose: {},
+      modalOpen: false,
+    });
   }
 
   closeStatusAlert() {
+    this.getNextFocusElementOnDelete().focus();
+    this.props.clearAssetsStatus();
+
     this.setState({
+      deletedAsset: {},
+      deletedAssetIndex: null,
       statusAlertOpen: false,
     });
-    this.getNextFocusElementOnDelete(this.state.assetToDelete).focus();
-    this.props.clearAssetsStatus();
   }
 
   deleteAsset() {
+    const deletedAsset = { ...this.state.assetToDelete };
+
     this.props.deleteAsset(this.props.assetsParameters, this.state.assetToDelete.id);
-    this.setState({ modalOpen: false });
 
     this.setState({
+      assetToDelete: {},
+      deletedAsset,
       elementToFocusOnModalClose: this.statusAlertRef,
+      modalOpen: false,
       statusAlertOpen: true,
     });
+
     this.state.elementToFocusOnModalClose.focus();
   }
 
@@ -153,7 +191,7 @@ export class AssetsTable extends React.Component {
 
   renderStatusAlert() {
     const { assetsStatus } = this.props;
-    const deleteAssetName = this.state.assetToDelete.display_name;
+    const deleteAssetName = this.state.deletedAsset.display_name;
     let alertDialog = `Deleting ${deleteAssetName}`;
     let alertType = 'info';
 
@@ -194,25 +232,14 @@ export class AssetsTable extends React.Component {
       <div>
         {this.renderStatusAlert()}
         <Table
-          columns={[
-            {
-              label: 'Name',
-              key: 'display_name',
-            },
-            {
-              label: 'Type',
-              key: 'content_type',
-            },
-            {
-              label: 'Date Added',
-              key: 'date_added',
-            },
-            {
-              label: 'Delete Asset',
-              key: 'delete_asset',
-            },
-          ]}
-          data={this.state.displayAssetsList}
+          columns={Object.keys(this.columns).map(columnKey => ({
+            ...this.columns[columnKey],
+            onSort: () => this.onSortClick(columnKey),
+          }))}
+          data={this.addSupplementalTableElements(this.props.assetsList)}
+          tableSortable
+          defaultSortedColumn="date_added"
+          defaultSortDirection="desc"
         />
         {this.renderModal()}
       </div>
@@ -230,6 +257,7 @@ AssetsTable.propTypes = {
     type: PropTypes.string,
   }).isRequired,
   deleteAsset: PropTypes.func.isRequired,
+  updateSort: PropTypes.func.isRequired,
   clearAssetsStatus: PropTypes.func.isRequired,
 };
 
@@ -241,6 +269,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   deleteAsset: (assetsParameters, assetId) => dispatch(deleteAsset(assetsParameters, assetId)),
+  updateSort: (sortKey, sortDirection) => dispatch(sortUpdate(sortKey, sortDirection)),
   clearAssetsStatus: () => dispatch(clearAssetsStatus()),
 });
 

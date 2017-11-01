@@ -7,7 +7,8 @@ const initialState = {
   page: 0,
   pageSize: 50,
   assetTypes: {},
-  sort: 'sort',
+  sort: 'date_added',
+  direction: 'desc',
 };
 
 const list = (state = [], action) => {
@@ -40,19 +41,16 @@ const status = (state = {}, action) => {
   }
 };
 
-const types = (state = {}, action) => {
+const parameters = (state = initialState, action) => {
   switch (action.type) {
     case assetActions.FILTER_UPDATED:
+      return { ...state, assetTypes: { ...state.assetTypes, ...action.data } };
+    case assetActions.SORT_UPDATE:
       return { ...state, ...action.data };
     default:
       return state;
   }
 };
-
-const parameters = (state = initialState, action) => ({
-  ...state,
-  assetTypes: types(state.assetTypes, action),
-});
 
 const assets = combineReducers({
   list,

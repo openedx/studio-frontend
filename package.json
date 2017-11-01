@@ -12,7 +12,8 @@
   },
   "license": "AGPL-3.0",
   "dependencies": {
-    "@edx/paragon": "^1.0.0",
+    "@edx/paragon": "^1.1.0",
+    "classnames": "^2.2.5",
     "@edx/edx-bootstrap": "^0.4.0",
     "babel-polyfill": "^6.26.0",
     "classnames": "^2.2.5",
@@ -63,6 +64,9 @@
       "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/fileMock.js",
       "\\.(css|scss)$": "identity-obj-proxy"
     },
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx}"
+    ],
     "coveragePathIgnorePatterns": [
       "/node_modules/"
     ],

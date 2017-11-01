@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import WrappedAssetsTable from './AssetsTable';
-import AssetsFilters from './AssetsFilters';
+import WrappedAssetsFilters from './AssetsFilters';
 
 import { getAssets } from '../data/actions/assets';
 import styles from './styles.scss';
@@ -20,8 +20,7 @@ class AssetsPage extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.assetsParameters.assetTypes !== this.props.assetsParameters.assetTypes) {
-      // if filters changed, update the assetsList
+    if (prevProps.assetsParameters !== this.props.assetsParameters) {
       // TODO: consider using the reselect library for this
       this.props.getAssets(this.props.assetsParameters);
     }
@@ -37,17 +36,14 @@ class AssetsPage extends React.Component {
     return (
       <div className={styles.assets}>
         <h2>Files & Uploads</h2>
-        <AssetsFilters />
-        <WrappedAssetsTable
-          assetsList={this.props.assetsList}
-        />
+        <WrappedAssetsFilters />
+        <WrappedAssetsTable />
       </div>
     );
   }
 }
 
 AssetsPage.propTypes = {
-  assetsList: PropTypes.arrayOf(PropTypes.object).isRequired,
   assetsParameters: PropTypes.objectOf(
     PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool, PropTypes.object]),
   ).isRequired,
@@ -56,7 +52,6 @@ AssetsPage.propTypes = {
 
 const WrappedAssetsPage = connect(
   state => ({
-    assetsList: state.assets.list,
     assetsParameters: state.assets.parameters,
   }), dispatch => ({
     getAssets: assetsParameters => dispatch(getAssets(assetsParameters)),
