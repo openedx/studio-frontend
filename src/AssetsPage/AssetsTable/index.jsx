@@ -125,7 +125,7 @@ export class AssetsTable extends React.Component {
 
       // should we just hide the entire column?
       if (currentAsset.thumbnail) {
-        currentAsset.image_preview = (<img src={`http://localhost:18010${currentAsset.thumbnail}`} alt="" />);
+        currentAsset.image_preview = (<img src={`${this.props.courseDetails.base_url}${currentAsset.thumbnail}`} alt="" />);
       } else {
         currentAsset.image_preview = (<span aria-hidden>Preview not available</span>);
       }
@@ -287,6 +287,7 @@ AssetsTable.propTypes = {
     org: PropTypes.string,
     id: PropTypes.string,
     revision: PropTypes.string,
+    base_url: PropTypes.string,
   }).isRequired,
   deleteAsset: PropTypes.func.isRequired,
   updateSort: PropTypes.func.isRequired,
