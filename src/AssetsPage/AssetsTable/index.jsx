@@ -146,7 +146,7 @@ export class AssetsTable extends React.Component {
   deleteAsset() {
     const deletedAsset = { ...this.state.assetToDelete };
 
-    this.props.deleteAsset(this.props.assetsParameters, this.state.assetToDelete.id);
+    this.props.deleteAsset(this.state.assetToDelete.id, this.props.courseDetails);
 
     this.setState({
       assetToDelete: {},
@@ -226,24 +226,32 @@ export class AssetsTable extends React.Component {
   }
 
   render() {
-    return (!this.props.assetsList.length) ? (
-      <span>Loading....</span>
-    ) : (
-      <div>
-        {this.renderStatusAlert()}
-        <Table
-          columns={Object.keys(this.columns).map(columnKey => ({
-            ...this.columns[columnKey],
-            onSort: () => this.onSortClick(columnKey),
-          }))}
-          data={this.addSupplementalTableElements(this.props.assetsList)}
-          tableSortable
-          defaultSortedColumn="date_added"
-          defaultSortDirection="desc"
-        />
-        {this.renderModal()}
-      </div>
-    );
+    let renderOutput;
+    // TODO: Add UI for when there is nothing in the list and we have a status returned from the API
+    // TODO: http://fhtwd0.axshare.com/#g=1&p=files-and-uploads-empty
+    // Only show Loading when the list is empty AND the status from the APIs are empty
+    if (this.props.assetsList.length === 0 && Object.keys(this.props.assetsStatus).length === 0) {
+      renderOutput = (<span>Loading....</span>);
+    } else {
+      renderOutput = (
+        <div>
+          {this.renderStatusAlert()}
+          <Table
+            columns={Object.keys(this.columns).map(columnKey => ({
+              ...this.columns[columnKey],
+              onSort: () => this.onSortClick(columnKey),
+            }))}
+            data={this.addSupplementalTableElements(this.props.assetsList)}
+            tableSortable
+            defaultSortedColumn="date_added"
+            defaultSortDirection="desc"
+          />
+          {this.renderModal()}
+        </div>
+      );
+    }
+
+    return renderOutput;
   }
 }
 
@@ -256,6 +264,16 @@ AssetsTable.propTypes = {
     response: PropTypes.object,
     type: PropTypes.string,
   }).isRequired,
+  courseDetails: PropTypes.shape({
+    lang: PropTypes.string,
+    url_name: PropTypes.string,
+    name: PropTypes.string,
+    display_course_number: PropTypes.string,
+    num: PropTypes.string,
+    org: PropTypes.string,
+    id: PropTypes.string,
+    revision: PropTypes.string,
+  }).isRequired,
   deleteAsset: PropTypes.func.isRequired,
   updateSort: PropTypes.func.isRequired,
   clearAssetsStatus: PropTypes.func.isRequired,
@@ -265,12 +283,13 @@ const mapStateToProps = state => ({
   assetsList: state.assets.list,
   assetsParameters: state.assets.parameters,
   assetsStatus: state.assets.status,
+  courseDetails: state.courseDetails,
 });
 
 const mapDispatchToProps = dispatch => ({
-  deleteAsset: (assetsParameters, assetId) => dispatch(deleteAsset(assetsParameters, assetId)),
-  updateSort: (sortKey, sortDirection) => dispatch(sortUpdate(sortKey, sortDirection)),
   clearAssetsStatus: () => dispatch(clearAssetsStatus()),
+  deleteAsset: (assetId, courseDetails) => dispatch(deleteAsset(assetId, courseDetails)),
+  updateSort: (sortKey, sortDirection) => dispatch(sortUpdate(sortKey, sortDirection)),
 });
 
 const WrappedAssetsTable = connect(

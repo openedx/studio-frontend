@@ -29,6 +29,16 @@ const defaultProps = {
     pageSize: '50',
   },
   assetsStatus: {},
+  courseDetails: {
+    lang: 'en',
+    url_name: 'course',
+    name: 'edX Demonstration Course',
+    display_course_number: '',
+    num: 'DemoX',
+    org: 'edX',
+    id: 'course-v1:edX+DemoX+Demo_Course',
+    revision: '',
+  },
   clearAssetsStatus: () => {},
   deleteAsset: () => {},
   updateSort: () => {},
@@ -65,6 +75,39 @@ describe('<AssetsTable />', () => {
     });
     it('correct number of trashcan buttons', () => {
       expect(wrapper.find('button').filterWhere(button => button.hasClass('fa-trash'))).toHaveLength(defaultProps.assetsList.length);
+    });
+    it('Loading when waiting for response', () => {
+      const emptyProps = {
+        assetsList: [],
+        assetsParameters: {
+          page: 0,
+          pageSize: 50,
+          assetTypes: {},
+          sort: 'sort',
+        },
+        assetsStatus: {},
+        courseDetails: {},
+        deleteAsset: () => {},
+        clearAssetsStatus: () => {},
+        updateSort: () => {},
+      };
+      wrapper = mount(
+        <AssetsTable
+          {...emptyProps}
+        />,
+      );
+      expect(wrapper.html()).toEqual('<span>Loading....</span>');
+    });
+    it('empty table on API Error', () => {
+      wrapper.setProps({
+        assetsStatus: {
+          response: {},
+          type: assetActions.ASSET_XHR_FAILURE,
+        },
+        assetsList: [],
+      });
+      // Table heading only
+      expect(wrapper.find('tr')).toHaveLength(1);
     });
   });
   describe('onSortClick', () => {
@@ -211,8 +254,8 @@ describe('<AssetsTable />', () => {
 
       expect(deleteAssetSpy).toHaveBeenCalledTimes(1);
       expect(deleteAssetSpy).toHaveBeenCalledWith(
-        defaultProps.assetsParameters,
         defaultProps.assetsList[0].id,
+        defaultProps.courseDetails,
       );
     });
     it('closes on deleteAsset call', () => {
@@ -340,8 +383,8 @@ describe('<AssetsTable />', () => {
 
         expect(mockDeleteAsset).toHaveBeenCalledTimes(1);
         expect(mockDeleteAsset).toHaveBeenCalledWith(
-          defaultProps.assetsParameters,
           assetToDeleteId,
+          defaultProps.courseDetails,
         );
         expect(trashButtons.at(test.newFocusIndex).matchesElement(
           document.activeElement)).toEqual(true);
@@ -350,7 +393,7 @@ describe('<AssetsTable />', () => {
   });
 });
 
-describe('it displays alert properly', () => {
+describe('displays status alert properly', () => {
   it('renders info alert', () => {
     wrapper = mount(
       <AssetsTable
