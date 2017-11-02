@@ -124,6 +124,8 @@ export class AssetsTable extends React.Component {
       // TODO: currentAsset.lock_asset = lockButton;
 
       if (currentAsset.thumbnail) {
+        // we will have to add capability to actually have the alt tag be the image description accompanying the image; we should also give a visual indicator
+        // of when the image description is missing to the course team and an ability to add a description at that point
         currentAsset.image_preview = (<img src={`${this.props.courseDetails.base_url}${currentAsset.thumbnail}`} alt="Description not available" />);
       } else {
         currentAsset.image_preview = (<img src={undefined} alt="Preview not available" />);
