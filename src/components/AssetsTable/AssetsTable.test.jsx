@@ -6,6 +6,7 @@ import { assetActions } from '../../data/constants/actionTypes';
 import { assetLoading } from '../../data/constants/loadingTypes';
 
 const thumbnail = '/animal';
+const copyUrl = 'animal';
 
 const defaultProps = {
   assetsList: [
@@ -14,24 +15,32 @@ const defaultProps = {
       id: 'cat.jpg',
       thumbnail,
       locked: false,
+      url: copyUrl,
+      external_url: copyUrl,
     },
     {
       display_name: 'dog.png',
       id: 'dog.png',
       thumbnail,
       locked: true,
+      url: null,
+      external_url: null,
     },
     {
       display_name: 'bird.json',
       id: 'bird.json',
       thumbnail: null,
       locked: false,
+      url: null,
+      external_url: copyUrl,
     },
     {
       display_name: 'fish.doc',
       id: 'fish.doc',
       thumbnail: null,
       locked: false,
+      url: copyUrl,
+      external_url: null,
     },
   ],
   assetsParameters: {
@@ -76,6 +85,10 @@ const defaultColumns = [
     columnSortable: true,
   },
   {
+    label: 'Copy URLs',
+    columnSortable: false,
+  },
+  {
     label: 'Delete Asset',
     columnSortable: false,
     hideHeader: true,
@@ -113,6 +126,8 @@ const getMockForTogglingLockAsset = (wrapper, assetToToggle) => (
 );
 
 const numberOfImages = defaultProps.assetsList.filter(asset => asset.thumbnail).length;
+const numberOfStudioButtons = defaultProps.assetsList.filter(asset => asset.url).length;
+const numberOfWebButtons = defaultProps.assetsList.filter(asset => asset.external_url).length;
 
 let wrapper;
 
@@ -132,15 +147,22 @@ describe('<AssetsTable />', () => {
     it('with responsive class', () => {
       expect(wrapper.find('table').hasClass('table-responsive')).toEqual(true);
     });
-    it('correct number, sortable status, and hidden status of headings', () => {
+    it('correct number of headings', () => {
       expect(wrapper.find('th')).toHaveLength(defaultColumns.length);
+    });
+    it('correct sortable status of headings', () => {
       expect(
         wrapper.find('th').filterWhere(heading => heading.hasClass('sortable')),
       ).toHaveLength(
         defaultColumns.filter(column => column.columnSortable).length,
       );
+    });
+    it('correct hidden status of headings', () => {
+      // non-sortable, non-hidden columns (e.g. Copy URLs) may just have text in the heading,
+      // in which case they have no children, so we have an explicit check that the heading
+      // has a child
       expect(
-        wrapper.find('th').filterWhere(heading => heading.childAt(0).html() === '<span class="sr-only"></span>'),
+        wrapper.find('th').filterWhere(heading => heading.childAt(0).exists() && heading.childAt(0).html() === '<span class="sr-only"></span>'),
       ).toHaveLength(
         defaultColumns.filter(column => column.hideHeader).length,
       );
@@ -171,6 +193,19 @@ describe('<AssetsTable />', () => {
           expect(row.containsMatchingElement(<td>Preview not available</td>)).toEqual(true);
         }
       });
+    });
+    it('correct number of copy buttons', () => {
+      expect(wrapper.find('tr td CopyButton')).toHaveLength(numberOfStudioButtons + numberOfWebButtons);
+    });
+    it('correct number of Studio copy buttons', () => {
+      expect(wrapper.find('tr td CopyButton')
+        .filterWhere(copyButton => copyButton.text().trim() === 'Studio'))
+        .toHaveLength(numberOfStudioButtons);
+    });
+    it('correct number of Web copy buttons', () => {
+      expect(wrapper.find('tr td CopyButton')
+        .filterWhere(copyButton => copyButton.text().trim() === 'Web'))
+        .toHaveLength(numberOfWebButtons);
     });
     it('Loading when waiting for response', () => {
       const emptyProps = {
@@ -482,6 +517,10 @@ describe('<AssetsTable />', () => {
           assetToDeleteId,
           defaultProps.courseDetails,
         );
+
+        // This gets the new trashcans after the asset delete.
+        trashButtons = wrapper.find('button').filterWhere(button => button.hasClass('fa-trash'));
+
         expect(trashButtons.at(test.newFocusIndex).matchesElement(
           document.activeElement)).toEqual(true);
       });

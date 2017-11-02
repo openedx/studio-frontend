@@ -11,6 +11,7 @@ import FontAwesomeStyles from 'font-awesome/css/font-awesome.min.css';
 import { assetActions } from '../../data/constants/actionTypes';
 import { assetLoading } from '../../data/constants/loadingTypes';
 import { clearAssetsStatus, deleteAsset, sortUpdate, toggleLockAsset } from '../../data/actions/assets';
+import CopyButton from '../CopyButton';
 
 export class AssetsTable extends React.Component {
   constructor(props) {
@@ -22,6 +23,7 @@ export class AssetsTable extends React.Component {
       deletedAsset: {},
       deletedAssetIndex: null,
       elementToFocusOnModalClose: {},
+      copyButtonIsClicked: false,
     };
 
     this.columns = {
@@ -46,6 +48,11 @@ export class AssetsTable extends React.Component {
         key: 'date_added',
         columnSortable: true,
       },
+      urls: {
+        label: 'Copy URLs',
+        key: 'urls',
+        columnSortable: false,
+      },
       delete_asset: {
         label: 'Delete Asset',
         key: 'delete_asset',
@@ -69,6 +76,7 @@ export class AssetsTable extends React.Component {
     this.closeModal = this.closeModal.bind(this);
     this.closeStatusAlert = this.closeStatusAlert.bind(this);
     this.renderStatusAlert = this.renderStatusAlert.bind(this);
+    this.handleCopyButtonEvent = this.handleCopyButtonEvent.bind(this);
   }
 
   onSortClick(columnKey) {
@@ -101,6 +109,12 @@ export class AssetsTable extends React.Component {
     this.props.toggleLockAsset(clickedAsset, this.props.courseDetails);
   }
 
+  onCopyButtonClick(isClicked) {
+    this.setState({
+      copyButtonIsClicked: isClicked,
+    });
+  }
+
   getImageThumbnail(thumbnail) {
     const baseUrl = this.props.courseDetails.base_url || '';
     return thumbnail ? (<img src={`${baseUrl}${thumbnail}`} alt="Description not available" />) : 'Preview not available';
@@ -119,7 +133,6 @@ export class AssetsTable extends React.Component {
     return (<Button
       label={(<span className={classNames(...classes)} />)}
       data-asset-id={asset.id}
-      buttonType={'light'}
       aria-label={`${lockState} ${asset.display_name}`}
       onClick={this.onLockClick}
     />);
@@ -149,7 +162,6 @@ export class AssetsTable extends React.Component {
     const classes = [FontAwesomeStyles.fa, FontAwesomeStyles['fa-spinner'], FontAwesomeStyles['fa-spin']];
     return (<Button
       label={(<span className={classNames(...classes)} />)}
-      buttonType={'light'}
       aria-label={`Updating lock status for ${asset.display_name}`}
     />);
   }
@@ -184,13 +196,48 @@ export class AssetsTable extends React.Component {
     };
   }
 
+  getCopyUrlButtons(assetDisplayName, studioUrl, webUrl) {
+    return (
+      <span>
+        {studioUrl && this.getCopyUrlButton(assetDisplayName, studioUrl, 'Studio')}
+        {webUrl && this.getCopyUrlButton(assetDisplayName, webUrl, 'Web')}
+      </span>
+    );
+  }
+
+  getCopyUrlButton(assetDisplayName, url, label) {
+    const buttonLabel = (
+      <span>
+        <span className={classNames(FontAwesomeStyles.fa, FontAwesomeStyles['fa-files-o'])} aria-hidden />
+        {label}
+      </span>
+    );
+
+    const onCopyLabel = (<span>Copied!</span>);
+
+    return (<CopyButton
+      label={buttonLabel}
+      textToCopy={url}
+      onEvent={this.handleCopyButtonEvent}
+      ariaLabel={`${assetDisplayName} copy ${label} URL`}
+      onCopyLabel={onCopyLabel}
+    />);
+  }
+
+  handleCopyButtonEvent(buttonIsClicked) {
+    this.setState({
+      copyButtonIsClicked: buttonIsClicked,
+    });
+  }
+
   addSupplementalTableElements() {
     const newAssetsList = this.props.assetsList.map((asset, index) => {
       const currentAsset = Object.assign({}, asset);
+
       const deleteButton = (<Button
+        key={currentAsset.id}
         className={[FontAwesomeStyles.fa, FontAwesomeStyles['fa-trash']]}
         label={''}
-        buttonType={'light'}
         aria-label={`Delete ${currentAsset.display_name}`}
         onClick={() => { this.onDeleteClick(index); }}
         inputRef={(ref) => { this.trashcanRefs[currentAsset.id] = ref; }}
@@ -210,6 +257,12 @@ export class AssetsTable extends React.Component {
         add a description at that point
       */
       currentAsset.image_preview = this.getImageThumbnail(currentAsset.thumbnail);
+
+      currentAsset.urls = this.getCopyUrlButtons(
+        currentAsset.display_name,
+        currentAsset.url,
+        currentAsset.external_url,
+      );
 
       return currentAsset;
     });
@@ -250,7 +303,6 @@ export class AssetsTable extends React.Component {
       modalOpen: false,
       statusAlertOpen: true,
     });
-
     this.state.elementToFocusOnModalClose.focus();
   }
 
@@ -337,10 +389,10 @@ export class AssetsTable extends React.Component {
             defaultSortDirection="desc"
           />
           {this.renderModal()}
+          <span className="sr" aria-live="assertive" id="copy-status"> {this.state.copyButtonIsClicked ? 'Copied' : ''} </span>
         </div>
       );
     }
-
     return renderOutput;
   }
 }
