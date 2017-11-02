@@ -123,11 +123,10 @@ export class AssetsTable extends React.Component {
       currentAsset.delete_asset = deleteButton;
       // TODO: currentAsset.lock_asset = lockButton;
 
-      // should we just hide the entire column?
       if (currentAsset.thumbnail) {
-        currentAsset.image_preview = (<img src={`${this.props.courseDetails.base_url}${currentAsset.thumbnail}`} alt="" />);
+        currentAsset.image_preview = (<img src={`${this.props.courseDetails.base_url}${currentAsset.thumbnail}`} alt="Description not available" />);
       } else {
-        currentAsset.image_preview = (<span aria-hidden>Preview not available</span>);
+        currentAsset.image_preview = (<img src={undefined} alt="Preview not available" />);
       }
 
       return currentAsset;
