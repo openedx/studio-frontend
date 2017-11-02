@@ -24,6 +24,11 @@ export class AssetsTable extends React.Component {
     };
 
     this.columns = {
+      image_preview: {
+        label: 'Image Preview',
+        key: 'image_preview',
+        columnSortable: false,
+      },
       display_name: {
         label: 'Name',
         key: 'display_name',
@@ -117,6 +122,14 @@ export class AssetsTable extends React.Component {
       // TODO: create lockButton
       currentAsset.delete_asset = deleteButton;
       // TODO: currentAsset.lock_asset = lockButton;
+
+      // should we just hide the entire column?
+      if (currentAsset.thumbnail) {
+        currentAsset.image_preview = (<img src={`http://localhost:18010${currentAsset.thumbnail}`} alt="" />);
+      } else {
+        currentAsset.image_preview = (<span aria-hidden>Preview not available</span>);
+      }
+
       return currentAsset;
     });
     return newAssetsList;
