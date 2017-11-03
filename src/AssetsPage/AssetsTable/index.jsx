@@ -108,7 +108,7 @@ export class AssetsTable extends React.Component {
   }
 
   getImageThumbnail(thumbnail) {
-    return thumbnail ? (<img src={`${this.props.courseDetails.base_url}${thumbnail}`} alt="Description not available" />) : (<img src={undefined} alt="Preview not available" />);
+    return thumbnail ? (<img src={`${this.props.courseDetails.base_url}${thumbnail}`} alt="Description not available" />) : 'Preview not available';
   }
 
   addSupplementalTableElements() {

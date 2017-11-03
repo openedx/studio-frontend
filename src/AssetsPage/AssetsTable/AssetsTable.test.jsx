@@ -85,6 +85,8 @@ const getMockForDeleteAsset = (wrapper, assetToDeleteId) => (
   })
 );
 
+const numberOfImages = defaultProps.assetsList.filter(asset => asset.thumbnail).length;
+
 let wrapper;
 
 describe('<AssetsTable />', () => {
@@ -118,12 +120,12 @@ describe('<AssetsTable />', () => {
     });
     it('correct number of images', () => {
       const images = wrapper.find('tr img');
-      expect(images).toHaveLength(defaultProps.assetsList.length);
+      expect(images).toHaveLength(numberOfImages);
     });
     it('correct type of images', () => {
       const rows = wrapper.find('tr').filterWhere(row => row.find('td').exists());
 
-      expect(wrapper.find('td img')).toHaveLength(defaultProps.assetsList.length);
+      expect(wrapper.find('td img')).toHaveLength(numberOfImages);
 
       const baseUrl = defaultProps.courseDetails.base_url;
 
@@ -136,7 +138,7 @@ describe('<AssetsTable />', () => {
         if (rowThumbnail) {
           expect(row.find(`img[src="${baseUrl}${rowThumbnail}"][alt="Description not available"]`)).toHaveLength(1);
         } else {
-          expect(row.find('img[alt="Preview not available"]')).toHaveLength(1);
+          expect(row.containsMatchingElement(<td>Preview not available</td>)).toEqual(true);
         }
       });
     });
