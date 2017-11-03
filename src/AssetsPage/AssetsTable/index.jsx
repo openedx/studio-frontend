@@ -127,7 +127,6 @@ export class AssetsTable extends React.Component {
       currentAsset.delete_asset = deleteButton;
       // TODO: currentAsset.lock_asset = lockButton;
 
-
       /*
         TODO: we will have to add functionality to actually have the alt tag be the
         image description accompanying the image; we should also give a visual indicator
