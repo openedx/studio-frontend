@@ -4,23 +4,29 @@ import { AssetsTable } from './index';
 
 import { assetActions } from '../../data/constants/actionTypes';
 
+const thumbnail = '/animal';
+
 const defaultProps = {
   assetsList: [
     {
       display_name: 'cat.jpg',
       id: 'cat.jpg',
+      thumbnail,
     },
     {
       display_name: 'dog.png',
       id: 'dog.png',
+      thumbnail,
     },
     {
       display_name: 'bird.json',
       id: 'bird.json',
+      thumbnail: null,
     },
     {
       display_name: 'fish.doc',
       id: 'fish.doc',
+      thumbnail: null,
     },
   ],
   assetsParameters: {
@@ -38,6 +44,7 @@ const defaultProps = {
     org: 'edX',
     id: 'course-v1:edX+DemoX+Demo_Course',
     revision: '',
+    base_url: 'sfe',
   },
   clearAssetsStatus: () => {},
   deleteAsset: () => {},
@@ -107,7 +114,31 @@ describe('<AssetsTable />', () => {
       );
     });
     it('correct number of trashcan buttons', () => {
-      expect(wrapper.find('button').filterWhere(button => button.hasClass('fa-trash'))).toHaveLength(defaultProps.assetsList.length);
+      expect(wrapper.find('tr button').filterWhere(button => button.hasClass('fa-trash'))).toHaveLength(defaultProps.assetsList.length);
+    });
+    it('correct number of images', () => {
+      const images = wrapper.find('tr img');
+      expect(images).toHaveLength(defaultProps.assetsList.length);
+    });
+    it('correct type of images', () => {
+      const rows = wrapper.find('tr').filterWhere(row => row.find('td').exists());
+
+      expect(wrapper.find('td img')).toHaveLength(defaultProps.assetsList.length);
+
+      const baseUrl = defaultProps.courseDetails.base_url;
+
+      rows.forEach((row, index) => {
+        expect(row.containsMatchingElement(<td>{defaultProps.assetsList[index].display_name}</td>))
+          .toEqual(true);
+
+        const rowThumbnail = defaultProps.assetsList[index].thumbnail;
+
+        if (rowThumbnail) {
+          expect(row.find(`img[src="${baseUrl}${rowThumbnail}"][alt="Description not available"]`)).toHaveLength(1);
+        } else {
+          expect(row.find('img[alt="Preview not available"]')).toHaveLength(1);
+        }
+      });
     });
     it('Loading when waiting for response', () => {
       const emptyProps = {
