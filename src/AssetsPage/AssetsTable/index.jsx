@@ -28,6 +28,7 @@ export class AssetsTable extends React.Component {
         label: 'Image Preview',
         key: 'image_preview',
         columnSortable: false,
+        hideHeader: true,
       },
       display_name: {
         label: 'Name',
