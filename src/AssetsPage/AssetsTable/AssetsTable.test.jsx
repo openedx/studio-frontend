@@ -44,6 +44,26 @@ const defaultProps = {
   updateSort: () => {},
 };
 
+const defaultColumns = [
+  {
+    label: 'Name',
+    columnSortable: true,
+  },
+  {
+    label: 'Type',
+    columnSortable: true,
+  },
+  {
+    label: 'Date Added',
+    columnSortable: true,
+  },
+  {
+    label: 'Delete Asset',
+    columnSortable: false,
+    hideHeader: true,
+  },
+];
+
 const setDeletedAsset = (asset, wrapper) => {
   wrapper.setState({ deletedAsset: asset });
 };
@@ -72,6 +92,19 @@ describe('<AssetsTable />', () => {
     it('correct number of assets', () => {
       // + 1 because it includes row item for headings
       expect(wrapper.find('tr')).toHaveLength(defaultProps.assetsList.length + 1);
+    });
+    it('correct number, sortable status, and hidden status of headings', () => {
+      expect(wrapper.find('th')).toHaveLength(defaultColumns.length);
+      expect(
+        wrapper.find('th').filterWhere(heading => heading.hasClass('sortable')),
+      ).toHaveLength(
+        defaultColumns.filter(column => column.columnSortable).length,
+      );
+      expect(
+        wrapper.find('th').filterWhere(heading => heading.childAt(0).html() === '<span class="sr-only"></span>'),
+      ).toHaveLength(
+        defaultColumns.filter(column => column.hideHeader).length,
+      );
     });
     it('correct number of trashcan buttons', () => {
       expect(wrapper.find('button').filterWhere(button => button.hasClass('fa-trash'))).toHaveLength(defaultProps.assetsList.length);

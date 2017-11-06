@@ -43,6 +43,7 @@ export class AssetsTable extends React.Component {
         label: 'Delete Asset',
         key: 'delete_asset',
         columnSortable: false,
+        hideHeader: true,
       },
     };
 
