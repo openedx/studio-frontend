@@ -53,6 +53,11 @@ const defaultProps = {
 
 const defaultColumns = [
   {
+    label: 'Image Preview',
+    columnSortable: false,
+    hideHeader: true,
+  },
+  {
     label: 'Name',
     columnSortable: true,
   },
