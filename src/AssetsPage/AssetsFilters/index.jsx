@@ -4,7 +4,7 @@ import CheckBox from '@edx/paragon/src/CheckBox';
 import { connect } from 'react-redux';
 
 import { filterUpdate } from '../../data/actions/assets';
-import styles from './styles.scss';
+import styles from './AssetsFilters.scss';
 
 const ASSET_TYPES = [
   {

@@ -258,6 +258,7 @@ export class AssetsTable extends React.Component {
         <div>
           {this.renderStatusAlert()}
           <Table
+            className={['table-responsive']}
             columns={Object.keys(this.columns).map(columnKey => ({
               ...this.columns[columnKey],
               onSort: () => this.onSortClick(columnKey),
