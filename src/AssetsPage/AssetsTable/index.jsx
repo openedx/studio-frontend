@@ -24,6 +24,12 @@ export class AssetsTable extends React.Component {
     };
 
     this.columns = {
+      image_preview: {
+        label: 'Image Preview',
+        key: 'image_preview',
+        columnSortable: false,
+        hideHeader: true,
+      },
       display_name: {
         label: 'Name',
         key: 'display_name',
@@ -102,6 +108,11 @@ export class AssetsTable extends React.Component {
     return this.trashcanRefs[focusAsset.id];
   }
 
+  getImageThumbnail(thumbnail) {
+    const baseUrl = this.props.courseDetails.base_url ? this.props.courseDetails.base_url : '';
+    return thumbnail ? (<img src={`${baseUrl}${thumbnail}`} alt="Description not available" />) : 'Preview not available';
+  }
+
   addSupplementalTableElements() {
     const newAssetsList = this.props.assetsList.map((asset, index) => {
       const currentAsset = Object.assign({}, asset);
@@ -117,6 +128,15 @@ export class AssetsTable extends React.Component {
       // TODO: create lockButton
       currentAsset.delete_asset = deleteButton;
       // TODO: currentAsset.lock_asset = lockButton;
+
+      /*
+        TODO: we will have to add functionality to actually have the alt tag be the
+        image description accompanying the image; we should also give a visual indicator
+        of when the image description is missing to the course team and an ability to
+        add a description at that point
+      */
+      currentAsset.image_preview = this.getImageThumbnail(currentAsset.thumbnail);
+
       return currentAsset;
     });
     return newAssetsList;
@@ -274,6 +294,7 @@ AssetsTable.propTypes = {
     org: PropTypes.string,
     id: PropTypes.string,
     revision: PropTypes.string,
+    base_url: PropTypes.string,
   }).isRequired,
   deleteAsset: PropTypes.func.isRequired,
   updateSort: PropTypes.func.isRequired,
