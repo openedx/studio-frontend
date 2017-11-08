@@ -176,7 +176,7 @@ describe('<AssetsTable />', () => {
       wrapper.setProps({
         assetsStatus: {
           response: {},
-          type: assetActions.ASSET_XHR_FAILURE,
+          type: assetActions.DELETE_ASSET_FAILURE,
         },
         assetsList: [],
       });
@@ -511,7 +511,7 @@ describe('displays status alert properly', () => {
     wrapper.setProps({
       assetsStatus: {
         response: {},
-        type: assetActions.ASSET_XHR_FAILURE,
+        type: assetActions.DELETE_ASSET_FAILURE,
       },
     });
     const statusAlert = wrapper.find('StatusAlert');

@@ -9,7 +9,8 @@ import { connect } from 'react-redux';
 
 import FontAwesomeStyles from 'font-awesome/css/font-awesome.min.css';
 import { assetActions } from '../../data/constants/actionTypes';
-import { clearAssetsStatus, deleteAsset, sortUpdate } from '../../data/actions/assets';
+import { assetLoading } from '../../data/constants/loadingTypes';
+import { clearAssetsStatus, deleteAsset, sortUpdate, toggleLockAsset } from '../../data/actions/assets';
 
 export class AssetsTable extends React.Component {
   constructor(props) {
@@ -51,6 +52,12 @@ export class AssetsTable extends React.Component {
         columnSortable: false,
         hideHeader: true,
       },
+      lock_asset: {
+        label: 'Lock Asset',
+        key: 'lock_asset',
+        columnSortable: false,
+        hideHeader: true,
+      },
     };
 
     this.trashcanRefs = {};
@@ -88,6 +95,33 @@ export class AssetsTable extends React.Component {
     });
   }
 
+  onLockClick(asset) {
+    this.props.toggleLockAsset(asset, this.props.courseDetails);
+  }
+
+  getImageThumbnail(thumbnail) {
+    const baseUrl = this.props.courseDetails.base_url ? this.props.courseDetails.base_url : '';
+    return thumbnail ? (<img src={`${baseUrl}${thumbnail}`} alt="Description not available" />) : 'Preview not available';
+  }
+
+  getLockButton(asset) {
+    const classes = [FontAwesomeStyles.fa];
+    let lockState;
+    if (asset.locked) {
+      lockState = 'Locked';
+      classes.push(FontAwesomeStyles['fa-lock']);
+    } else {
+      lockState = 'Unlocked';
+      classes.push(FontAwesomeStyles['fa-unlock']);
+    }
+    return (<Button
+      label={(<span className={classNames(...classes)} />)}
+      buttonType={'light'}
+      aria-label={`${lockState} ${asset.display_name}`}
+      onClick={() => { this.onLockClick(asset); }}
+    />);
+  }
+
   getNextFocusElementOnDelete() {
     const { assetsStatus } = this.props;
 
@@ -108,9 +142,43 @@ export class AssetsTable extends React.Component {
     return this.trashcanRefs[focusAsset.id];
   }
 
-  getImageThumbnail(thumbnail) {
-    const baseUrl = this.props.courseDetails.base_url ? this.props.courseDetails.base_url : '';
-    return thumbnail ? (<img src={`${baseUrl}${thumbnail}`} alt="Description not available" />) : 'Preview not available';
+  getUpdatingLockButton(asset) {
+    const classes = [FontAwesomeStyles.fa, FontAwesomeStyles['fa-spinner'], FontAwesomeStyles['fa-spin']];
+    return (<Button
+      label={(<span className={classNames(...classes)} />)}
+      buttonType={'light'}
+      aria-label={`Updating lock status for ${asset.display_name}`}
+    />);
+  }
+
+  getLockFailedStatusFields(assetsStatus) {
+    return {
+      alertDialog: `Failed to toggle lock for ${assetsStatus.asset.name}`,
+      alertType: 'danger',
+    };
+  }
+
+  getDeleteStatusFields(assetsStatus) {
+    const assetName = this.state.deletedAsset.display_name;
+    let alertDialog;
+    let alertType;
+
+    switch (assetsStatus.type) {
+      case assetActions.DELETE_ASSET_FAILURE:
+        alertDialog = `Unable to delete ${assetName}.`;
+        alertType = 'danger';
+        break;
+      case assetActions.DELETE_ASSET_SUCCESS:
+        alertDialog = `${assetName} has been deleted.`;
+        alertType = 'success';
+        break;
+      default:
+        break;
+    }
+    return {
+      alertDialog,
+      alertType,
+    };
   }
 
   addSupplementalTableElements() {
@@ -124,10 +192,12 @@ export class AssetsTable extends React.Component {
         onClick={() => { this.onDeleteClick(index); }}
         inputRef={(ref) => { this.trashcanRefs[currentAsset.id] = ref; }}
       />);
+      const isLoadingLock = asset.loadingFields && asset.loadingFields.includes(assetLoading.LOCK);
 
-      // TODO: create lockButton
       currentAsset.delete_asset = deleteButton;
-      // TODO: currentAsset.lock_asset = lockButton;
+
+      currentAsset.lock_asset = isLoadingLock ?
+        this.getUpdatingLockButton(currentAsset) : this.getLockButton(currentAsset);
 
       /*
         TODO: we will have to add functionality to actually have the alt tag be the
@@ -212,28 +282,22 @@ export class AssetsTable extends React.Component {
 
   renderStatusAlert() {
     const { assetsStatus } = this.props;
-    const deleteAssetName = this.state.deletedAsset.display_name;
-    let alertDialog = `Deleting ${deleteAssetName}`;
-    let alertType = 'info';
-
-    switch (assetsStatus.type) {
-      case assetActions.ASSET_XHR_FAILURE:
-        alertDialog = `Unable to delete ${deleteAssetName}.`;
-        alertType = 'danger';
-        break;
-      case assetActions.DELETE_ASSET_SUCCESS:
-        alertDialog = `${deleteAssetName} has been deleted.`;
-        alertType = 'success';
-        break;
-      default:
-        break;
+    const deleteActions = [assetActions.DELETE_ASSET_FAILURE, assetActions.DELETE_ASSET_SUCCESS];
+    let status = {
+      alertDialog: 'Processing',
+      alertType: 'info',
+    };
+    if (assetsStatus.type === assetActions.TOGGLING_LOCK_ASSET_FAILURE) {
+      status = this.getLockFailedStatusFields(assetsStatus);
+    } else if (deleteActions.includes(assetsStatus.type)) {
+      status = this.getDeleteStatusFields(assetsStatus);
     }
 
     const statusAlert = (
       <StatusAlert
-        alertType={alertType}
+        alertType={status.alertType}
+        dialog={status.alertDialog}
         open={this.state.statusAlertOpen}
-        dialog={alertDialog}
         onClose={this.closeStatusAlert}
         ref={(input) => { this.statusAlertRef = input; }}
       />
@@ -300,6 +364,7 @@ AssetsTable.propTypes = {
   deleteAsset: PropTypes.func.isRequired,
   updateSort: PropTypes.func.isRequired,
   clearAssetsStatus: PropTypes.func.isRequired,
+  toggleLockAsset: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -313,6 +378,7 @@ const mapDispatchToProps = dispatch => ({
   clearAssetsStatus: () => dispatch(clearAssetsStatus()),
   deleteAsset: (assetId, courseDetails) => dispatch(deleteAsset(assetId, courseDetails)),
   updateSort: (sortKey, sortDirection) => dispatch(sortUpdate(sortKey, sortDirection)),
+  toggleLockAsset: (asset, courseDetails) => dispatch(toggleLockAsset(asset, courseDetails)),
 });
 
 const WrappedAssetsTable = connect(

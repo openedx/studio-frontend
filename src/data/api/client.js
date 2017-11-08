@@ -69,3 +69,17 @@ export function requestDeleteAsset(courseId, assetId) {
     },
   );
 }
+
+export function requestToggleLockAsset(courseId, asset) {
+  return fetch(
+    `${endpoints.assets}/${courseId}/${asset.id}`, {
+      credentials: 'same-origin',
+      method: 'put',
+      body: JSON.stringify({ locked: !asset.locked }),
+      headers: {
+        Accept: 'application/json',
+        'X-CSRFToken': Cookies.get('csrftoken'),
+      },
+    },
+  );
+}
