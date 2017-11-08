@@ -5,7 +5,8 @@ import WrappedAssetsTable from './AssetsTable';
 import WrappedAssetsFilters from './AssetsFilters';
 
 import { getAssets } from '../data/actions/assets';
-import styles from './styles.scss';
+import edxBootstrap from '../SFE.scss';
+import styles from './AssetsPage.scss';
 
 class AssetsPage extends React.Component {
   constructor(props) {
@@ -38,8 +39,16 @@ class AssetsPage extends React.Component {
     return (
       <div className={styles.assets}>
         <h2>Files & Uploads</h2>
-        <WrappedAssetsFilters />
-        <WrappedAssetsTable />
+        <div className={edxBootstrap.container}>
+          <div className={edxBootstrap.row}>
+            <div className={edxBootstrap.col}>
+              <WrappedAssetsFilters />
+            </div>
+            <div className={edxBootstrap['col-10']}>
+              <WrappedAssetsTable />
+            </div>
+          </div>
+        </div>
       </div>
     );
   }

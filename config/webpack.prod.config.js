@@ -32,6 +32,7 @@ module.exports = Merge.smart(commonConfig, {
                 sourceMap: true,
                 modules: true,
                 minimize: true,
+                localIdentName: '[name]__[local]',
               },
             },
             {

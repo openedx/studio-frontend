@@ -107,6 +107,9 @@ describe('<AssetsTable />', () => {
       // + 1 because it includes row item for headings
       expect(wrapper.find('tr')).toHaveLength(defaultProps.assetsList.length + 1);
     });
+    it('with responsive class', () => {
+      expect(wrapper.find('table').hasClass('table-responsive')).toEqual(true);
+    });
     it('correct number, sortable status, and hidden status of headings', () => {
       expect(wrapper.find('th')).toHaveLength(defaultColumns.length);
       expect(
