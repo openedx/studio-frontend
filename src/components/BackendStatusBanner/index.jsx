@@ -4,9 +4,9 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import Button from '@edx/paragon/src/Button';
 
-import styles from './styles.scss';
+import styles from './BackendStatusBanner.scss';
 import statusMap from './statusMap.json';
-import { pingStudio } from '../data/actions/pingStudio';
+import { pingStudio } from '../../data/actions/pingStudio';
 
 class BackendStatusBanner extends React.Component {
   constructor(props) {

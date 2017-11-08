@@ -1,11 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import WrappedAssetsTable from './AssetsTable';
-import WrappedAssetsFilters from './AssetsFilters';
+import WrappedAssetsTable from '../AssetsTable';
+import WrappedAssetsFilters from '../AssetsFilters';
 
-import { getAssets } from '../data/actions/assets';
-import edxBootstrap from '../SFE.scss';
+import { getAssets } from '../../data/actions/assets';
+import edxBootstrap from '../../SFE.scss';
 import styles from './AssetsPage.scss';
 
 class AssetsPage extends React.Component {

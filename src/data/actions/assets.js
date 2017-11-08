@@ -1,4 +1,4 @@
-import * as clientApi from '../../api/client';
+import * as clientApi from '../api/client';
 import { assetActions } from '../constants/actionTypes';
 
 export const requestAssetsSuccess = response => ({
