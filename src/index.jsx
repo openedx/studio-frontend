@@ -3,8 +3,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 
-import AssetsPage from './AssetsPage';
-import BackendStatusBanner from './BackendStatusBanner';
+import AssetsPage from './components/AssetsPage';
+import BackendStatusBanner from './components/BackendStatusBanner';
 import store from './data/store';
 
 const App = () => (

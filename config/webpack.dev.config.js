@@ -5,7 +5,7 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
-const apiEndpoints = require('../src/api/endpoints.js');
+const apiEndpoints = require('../src/data/api/endpoints.js');
 const commonConfig = require('./webpack.common.config.js');
 
 let targetUrl = 'localhost';

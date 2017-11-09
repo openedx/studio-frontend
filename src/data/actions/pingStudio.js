@@ -1,4 +1,4 @@
-import { pingStudioHome } from '../../api/client';
+import { pingStudioHome } from '../api/client';
 
 export const PING_RESPONSE = 'PING_RESPONSE';
 
