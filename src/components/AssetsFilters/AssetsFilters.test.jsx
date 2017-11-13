@@ -5,11 +5,7 @@ import { AssetsFilters } from './index';
 const mount = Enzyme.mount;
 
 const defaultProps = {
-  assetsParameters: {
-    courseId: 'test-course',
-    page: '0',
-    pageSize: '50',
-  },
+  assetsFilters: {},
   updateFilter: () => {},
 };
 

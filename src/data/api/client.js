@@ -3,16 +3,7 @@ import Cookies from 'js-cookie';
 import 'whatwg-fetch'; // fetch polyfill
 
 import endpoints from './endpoints';
-
-/*
-API returns snake-cased attribute names, but API expects names that match database attribute names,
-which are inconsistently cased
-*/
-const assetAPIAttributesToDatabaseAttributes = {
-  display_name: 'displayname',
-  content_type: 'contentType',
-  date_added: 'uploadDate',
-};
+import { getDatabaseAttributesFromAssetAttributes } from '../../utils/getAssetsAttributes';
 
 export function pingStudioHome() {
   return fetch(
@@ -27,10 +18,6 @@ export function pingStudioHome() {
 
 function assetTypesFromState(assetTypes) {
   return Object.keys(assetTypes).filter(key => assetTypes[key]);
-}
-
-function getDatabaseAttributesFromAssetAttributes(sort) {
-  return assetAPIAttributesToDatabaseAttributes[sort];
 }
 
 export function requestAssets(courseId, params) {

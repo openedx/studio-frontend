@@ -29,14 +29,14 @@ const ASSET_TYPES = [
   },
 ];
 
-export const AssetsFilters = ({ assetsParameters, updateFilter }) => (
+export const AssetsFilters = ({ assetsFilters, updateFilter }) => (
   <ul className={styles['filter-set']}>
     {ASSET_TYPES.map(type => (
       <li key={type.key}>
         <CheckBox
           name={type.key}
           label={type.displayName}
-          checked={assetsParameters[type.key]}
+          checked={assetsFilters[type.key]}
           onChange={checked => updateFilter(type.key, checked)}
         />
       </li>
@@ -45,15 +45,15 @@ export const AssetsFilters = ({ assetsParameters, updateFilter }) => (
 );
 
 AssetsFilters.propTypes = {
-  assetsParameters: PropTypes.objectOf(
-    PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool, PropTypes.object]),
-  ).isRequired,
+  assetsFilters: PropTypes.shape({
+    assetTypes: PropTypes.object,
+  }).isRequired,
   updateFilter: PropTypes.func.isRequired,
 };
 
 const WrappedAssetsFilters = connect(
   state => ({
-    assetsParameters: state.assets.parameters,
+    assetsFilters: state.metadata.filters,
   }), dispatch => ({
     updateFilter: (filterKey, filterValue) => dispatch(filterUpdate(filterKey, filterValue)),
   }),

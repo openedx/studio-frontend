@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import WrappedAssetsTable from '../AssetsTable';
 import WrappedAssetsFilters from '../AssetsFilters';
+import WrappedPagination from '../Pagination';
 
 import { getAssets } from '../../data/actions/assets';
 import edxBootstrap from '../../SFE.scss';
@@ -17,16 +18,11 @@ class AssetsPage extends React.Component {
   }
 
   componentDidMount() {
-    this.props.getAssets(this.props.assetsParameters, this.props.courseDetails);
+    this.props.getAssets(this.props.request, this.props.courseDetails);
   }
 
-  componentDidUpdate(prevProps) {
-    if (prevProps.assetsParameters !== this.props.assetsParameters ||
-      prevProps.courseDetails !== this.props.courseDetails) {
-      // if filters or course details are changed, update the assetsList
-      // TODO: consider using the reselect library for this
-      this.props.getAssets(this.props.assetsParameters, this.props.courseDetails);
-    }
+  componentDidUpdate() {
+    this.props.getAssets(this.props.request, this.props.courseDetails);
   }
 
   handleCheckBoxChange = (checked) => {
@@ -46,6 +42,7 @@ class AssetsPage extends React.Component {
             </div>
             <div className={edxBootstrap['col-10']}>
               <WrappedAssetsTable />
+              <WrappedPagination />
             </div>
           </div>
         </div>
@@ -55,9 +52,12 @@ class AssetsPage extends React.Component {
 }
 
 AssetsPage.propTypes = {
-  assetsParameters: PropTypes.objectOf(
-    PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool, PropTypes.object]),
-  ).isRequired,
+  request: PropTypes.shape({
+    sort: PropTypes.string,
+    direction: PropTypes.string,
+    assetTypes: PropTypes.object,
+    page: PropTypes.number,
+  }).isRequired,
   getAssets: PropTypes.func.isRequired,
   courseDetails: PropTypes.shape({
     lang: PropTypes.string,
@@ -71,14 +71,19 @@ AssetsPage.propTypes = {
   }).isRequired,
 };
 
+const mapStateToProps = state => ({
+  courseDetails: state.studioDetails.course,
+  request: state.request,
+});
+
+const mapDispatchToProps = dispatch => ({
+
+  getAssets: (request, courseDetails) => dispatch(getAssets(request, courseDetails)),
+});
+
 const WrappedAssetsPage = connect(
-  state => ({
-    assetsParameters: state.assets.parameters,
-    courseDetails: state.studioDetails.course,
-  }), dispatch => ({
-    getAssets: (assetsParameters, courseDetails) =>
-      dispatch(getAssets(assetsParameters, courseDetails)),
-  }),
+  mapStateToProps,
+  mapDispatchToProps,
 )(AssetsPage);
 
 export default WrappedAssetsPage;

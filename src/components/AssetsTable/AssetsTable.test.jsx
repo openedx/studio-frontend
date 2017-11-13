@@ -45,11 +45,7 @@ const defaultProps = {
       external_url: null,
     },
   ],
-  assetsParameters: {
-    courseId: 'test-course',
-    page: '0',
-    pageSize: '50',
-  },
+  assetsSortMetaData: {},
   assetsStatus: {},
   courseDetails: {
     lang: 'en',
@@ -212,12 +208,7 @@ describe('<AssetsTable />', () => {
     it('Loading when waiting for response', () => {
       const emptyProps = {
         assetsList: [],
-        assetsParameters: {
-          page: 0,
-          pageSize: 50,
-          assetTypes: {},
-          sort: 'sort',
-        },
+        assetsSortMetaData: {},
         assetsStatus: {},
         courseDetails: {},
         deleteAsset: () => {},
@@ -296,7 +287,7 @@ describe('<AssetsTable />', () => {
 
       it(`calls onSort function with ${sortProps.direction} click on ${sortProps.sort === 'date_added' ? 'same' : 'different'} column`, () => {
         const sortableAssetParameters = {
-          ...defaultProps.assetsParameters,
+          ...defaultProps.assetsSortMetaData,
           ...sortProps,
         };
 
@@ -304,7 +295,7 @@ describe('<AssetsTable />', () => {
           <AssetsTable
             {...defaultProps}
             updateSort={updateSortSpy}
-            assetsParameters={sortableAssetParameters}
+            assetsSortMetaData={sortableAssetParameters}
           />,
         );
 

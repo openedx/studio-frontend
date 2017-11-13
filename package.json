@@ -13,7 +13,7 @@
   "license": "AGPL-3.0",
   "dependencies": {
     "@edx/edx-bootstrap": "^0.4.0",
-    "@edx/paragon": "^1.4.8",
+    "@edx/paragon": "^1.4.10",
     "babel-polyfill": "^6.26.0",
     "classnames": "^2.2.5",
     "copy-to-clipboard": "^3.0.8",
@@ -23,10 +23,12 @@
     "prop-types": "^15.5.10",
     "react": "^16.1.0",
     "react-dom": "^16.1.0",
+    "react-paginate": "^5.0.0",
     "react-redux": "^5.0.6",
     "redux": "^3.7.2",
     "redux-devtools-extension": "^2.13.2",
     "redux-thunk": "^2.2.0",
+    "reselect": "^3.0.1",
     "whatwg-fetch": "^2.0.3"
   },
   "devDependencies": {
