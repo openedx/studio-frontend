@@ -1,9 +1,18 @@
 import * as clientApi from '../api/client';
 import { assetActions } from '../constants/actionTypes';
 
+const compare = (attributes, obj1, obj2) => (
+  attributes.every(attribute => (obj1[attribute] === obj2[attribute]))
+);
+
+const isSameResponse = (request, lastRequest) => (
+  compare(['page', 'sort', 'direction'], request, lastRequest) &&
+  compare(['Audio', 'Code', 'Documents', 'Images', 'OTHER'], request.assetTypes, lastRequest.assetTypes)
+);
+
 export const requestAssetsSuccess = response => ({
   type: assetActions.REQUEST_ASSETS_SUCCESS,
-  data: response.assets,
+  data: response,
 });
 
 export const assetDeleteFailure = response => ({
@@ -11,13 +20,13 @@ export const assetDeleteFailure = response => ({
   response,
 });
 
-export const getAssets = (assetsParameters, courseDetails) =>
-  dispatch =>
+export const getAssets = (request, courseDetails) =>
+  (dispatch, getState) =>
     clientApi.requestAssets(courseDetails.id, {
-      page: assetsParameters.page,
-      assetTypes: assetsParameters.assetTypes,
-      sort: assetsParameters.sort,
-      direction: assetsParameters.direction,
+      page: request.page,
+      assetTypes: request.assetTypes,
+      sort: request.sort,
+      direction: request.direction,
     })
       .then((response) => {
         if (response.ok) {
@@ -25,7 +34,12 @@ export const getAssets = (assetsParameters, courseDetails) =>
         }
         throw new Error(response);
       })
-      .then(json => dispatch(requestAssetsSuccess(json)))
+      .then((json) => {
+        const lastRequest = getState().request;
+        if (isSameResponse(request, lastRequest)) {
+          dispatch(requestAssetsSuccess(json));
+        }
+      })
       .catch((error) => {
         dispatch(assetDeleteFailure(error));
       });
@@ -38,6 +52,11 @@ export const filterUpdate = (filterKey, filterValue) => ({
 export const sortUpdate = (sort, direction) => ({
   type: assetActions.SORT_UPDATE,
   data: { sort, direction },
+});
+
+export const pageUpdate = page => ({
+  type: assetActions.PAGE_UPDATE,
+  data: { page },
 });
 
 export const deleteAssetSuccess = (assetId, response) => ({

@@ -80,8 +80,8 @@ export class AssetsTable extends React.Component {
   }
 
   onSortClick(columnKey) {
-    const sortedColumn = this.props.assetsParameters.sort;
-    const sortedDirection = this.props.assetsParameters.direction;
+    const sortedColumn = this.props.assetsSortMetaData.sort;
+    const sortedDirection = this.props.assetsSortMetaData.direction;
 
     let newDirection = 'desc';
 
@@ -399,9 +399,10 @@ export class AssetsTable extends React.Component {
 
 AssetsTable.propTypes = {
   assetsList: PropTypes.arrayOf(PropTypes.object).isRequired,
-  assetsParameters: PropTypes.objectOf(
-    PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool, PropTypes.object]),
-  ).isRequired,
+  assetsSortMetaData: PropTypes.shape({
+    sort: PropTypes.string,
+    direction: PropTypes.string,
+  }).isRequired,
   assetsStatus: PropTypes.shape({
     response: PropTypes.object,
     type: PropTypes.string,
@@ -424,9 +425,9 @@ AssetsTable.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  assetsList: state.assets.list,
-  assetsParameters: state.assets.parameters,
-  assetsStatus: state.assets.status,
+  assetsList: state.assets,
+  assetsSortMetaData: state.metadata.sort,
+  assetsStatus: state.metadata.status,
   courseDetails: state.studioDetails.course,
 });
 

@@ -4,31 +4,84 @@ import { assetActions } from '../constants/actionTypes';
 import { assetLoading } from '../constants/loadingTypes';
 
 import { addLoadingField, removeLoadingField, toggleLockAsset } from './utils';
+import { getAssetAPIAttributeFromDatabaseAttribute } from '../../utils/getAssetsAttributes';
 
-const initialState = {
+const filtersInitial = {
+  assetTypes: {},
+};
+
+const paginationInitial = {
+  start: 0,
+  end: 0,
   page: 0,
   pageSize: 50,
-  assetTypes: {},
+  totalCount: 0,
+};
+
+const sortInitial = {
   sort: 'date_added',
   direction: 'desc',
 };
 
-const list = (state = [], action) => {
-  let assets;
+const requestInitial = {
+  ...filtersInitial,
+  ...paginationInitial,
+  ...sortInitial,
+};
+
+
+const filters = (state = filtersInitial, action) => {
   switch (action.type) {
     case assetActions.REQUEST_ASSETS_SUCCESS:
-      return action.data;
+      return { ...state, assetTypes: { ...state.assetTypes, ...action.data } };
+    default:
+      return state;
+  }
+};
+
+export const assets = (state = [], action) => {
+  let assetsList;
+  switch (action.type) {
+    case assetActions.REQUEST_ASSETS_SUCCESS:
+      return action.data.assets;
     case assetActions.DELETE_ASSET_SUCCESS:
       return state.filter(asset => asset.id !== action.assetId);
     case assetActions.TOGGLE_LOCK_ASSET_SUCCESS:
-      assets = removeLoadingField(state, action.asset.id, assetLoading.LOCK);
-      return toggleLockAsset(assets, action.asset.id);
+      assetsList = removeLoadingField(state, action.asset.id, assetLoading.LOCK);
+      return toggleLockAsset(assetsList, action.asset.id);
     case assetActions.TOGGLING_LOCK_ASSET_FAILURE:
       return removeLoadingField(state, action.assetId, assetLoading.LOCK);
     case assetActions.TOGGLING_LOCK_ASSET_SUCCESS:
       return addLoadingField(state, action.asset.id, assetLoading.LOCK);
     case assetActions.DELETE_ASSET_FAILURE:
       return [];
+    default:
+      return state;
+  }
+};
+
+const pagination = (state = paginationInitial, action) => {
+  switch (action.type) {
+    case assetActions.REQUEST_ASSETS_SUCCESS:
+      return {
+        start: action.data.start,
+        end: action.data.end,
+        page: action.data.page,
+        pageSize: action.data.pageSize,
+        totalCount: action.data.totalCount,
+      };
+    default:
+      return state;
+  }
+};
+
+const sort = (state = sortInitial, action) => {
+  switch (action.type) {
+    case assetActions.REQUEST_ASSETS_SUCCESS:
+      return {
+        sort: getAssetAPIAttributeFromDatabaseAttribute(action.data.sort),
+        direction: action.data.direction,
+      };
     default:
       return state;
   }
@@ -59,21 +112,32 @@ const status = (state = {}, action) => {
   }
 };
 
-const parameters = (state = initialState, action) => {
+export const request = (state = requestInitial, action) => {
   switch (action.type) {
-    case assetActions.FILTER_UPDATED:
-      return { ...state, assetTypes: { ...state.assetTypes, ...action.data } };
     case assetActions.SORT_UPDATE:
-      return { ...state, ...action.data };
+      return {
+        ...state,
+        sort: action.data.sort,
+        direction: action.data.direction,
+      };
+    case assetActions.PAGE_UPDATE:
+      return {
+        ...state,
+        page: action.data.page,
+      };
+    case assetActions.FILTER_UPDATED:
+      return {
+        ...state,
+        assetTypes: { ...state.assetTypes, ...action.data },
+      };
     default:
       return state;
   }
 };
 
-const assets = combineReducers({
-  list,
+export const metadata = combineReducers({
+  filters,
+  pagination,
+  sort,
   status,
-  parameters,
 });
-
-export default assets;

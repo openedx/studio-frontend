@@ -1,0 +1,25 @@
+@import '../../SFE.scss';
+@import "~bootstrap/scss/utilities/_screenreaders.scss";
+
+.pagination {
+    justify-content: center;
+    align-items: center;
+}
+
+.page-item {
+    min-width: 50px;
+    text-align: center;
+}
+
+.disabled {
+  color: $pagination-disabled-color;
+  pointer-events: none;
+  background-color: $pagination-disabled-bg;
+  border-color: $pagination-disabled-border-color;
+}
+
+.disabled {
+  .page-link {
+    @extend .disabled
+  }
+}
