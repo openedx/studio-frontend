@@ -1,8 +1,9 @@
 import fetchMock from 'fetch-mock';
 
-import { requestAssets, requestDeleteAsset } from './client';
+import { requestAssets, requestDeleteAsset, requestToggleLockAsset } from './client';
 
 const COURSE_ID = 'my-course-id';
+const ASSET_ID = 'asset-id';
 
 describe('API client requestAssets', () => {
   beforeEach(() => {
@@ -39,8 +40,6 @@ describe('API client requestAssets', () => {
 });
 
 describe('API client requestDeleteAsset', () => {
-  const ASSET_ID = 'asset-id';
-
   beforeEach(() => {
     const assetEndpointRegex = new RegExp(`/assets/${COURSE_ID}/${ASSET_ID}/`);
     fetchMock.mock(assetEndpointRegex, 200);
@@ -52,6 +51,23 @@ describe('API client requestDeleteAsset', () => {
 
   it('is called', () => {
     requestDeleteAsset(COURSE_ID, ASSET_ID);
+    expect(fetchMock.called()).toBe(true);
+  });
+});
+
+describe('API client requestToggleLockAsset', () => {
+  beforeEach(() => {
+    const assetEndpointRegex = new RegExp(`/assets/${COURSE_ID}/${ASSET_ID}/`);
+    fetchMock.mock(assetEndpointRegex, 200);
+  });
+
+  afterEach(() => {
+    fetchMock.reset();
+  });
+
+  it('is called', () => {
+    requestToggleLockAsset(COURSE_ID, { id: ASSET_ID, locked: false });
+    expect(fetchMock.lastOptions().body).toEqual(JSON.stringify({ locked: true }));
     expect(fetchMock.called()).toBe(true);
   });
 });

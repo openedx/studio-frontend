@@ -192,7 +192,8 @@ export class AssetsTable extends React.Component {
         onClick={() => { this.onDeleteClick(index); }}
         inputRef={(ref) => { this.trashcanRefs[currentAsset.id] = ref; }}
       />);
-      const isLoadingLock = asset.loadingFields && asset.loadingFields.includes(assetLoading.LOCK);
+      const isLoadingLock = currentAsset.loadingFields &&
+        currentAsset.loadingFields.includes(assetLoading.LOCK);
 
       currentAsset.delete_asset = deleteButton;
 
