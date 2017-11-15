@@ -97,8 +97,8 @@ export class AssetsTable extends React.Component {
 
   onLockClick = (e) => {
     const assetId = e.currentTarget.getAttribute('data-asset-id');
-    const asset = this.props.assetsList.find((asset) => (asset.id === assetId));
-    this.props.toggleLockAsset(asset, this.props.courseDetails);
+    const clickedAsset = this.props.assetsList.find(asset => (asset.id === assetId));
+    this.props.toggleLockAsset(clickedAsset, this.props.courseDetails);
   }
 
   getImageThumbnail(thumbnail) {
@@ -117,7 +117,7 @@ export class AssetsTable extends React.Component {
       classes.push(FontAwesomeStyles['fa-unlock']);
     }
     return (<Button
-      label={(<span className={classNames(...classes)}/>)}
+      label={(<span className={classNames(...classes)} />)}
       data-asset-id={asset.id}
       buttonType={'light'}
       aria-label={`${lockState} ${asset.display_name}`}

@@ -57,7 +57,7 @@ export const deleteAsset = (assetId, courseDetails) =>
         }
       });
 
-export const togglingLockAsset = (asset) => ({
+export const togglingLockAsset = asset => ({
   type: assetActions.TOGGLING_LOCK_ASSET_SUCCESS,
   asset,
 });

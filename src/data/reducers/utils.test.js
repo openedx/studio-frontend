@@ -6,7 +6,7 @@ describe('Reducer Utils', () => {
     { id: 'lynx', locked: false },
     { id: 'chinchilla', locked: true },
   ];
-  const deepCopyAssets = () => (assets.map(asset => ({...asset})));
+  const deepCopyAssets = () => (assets.map(asset => ({ ...asset })));
 
   describe('toggleLockAsset', () => {
     it('toggles asset lock', () => {
@@ -27,8 +27,9 @@ describe('Reducer Utils', () => {
   describe('addLoadingField', () => {
     it('removes existing field', () => {
       const expectedAssets = deepCopyAssets();
+      expectedAssets[0].loadingFields = [];
       const loadingAssets = addLoadingField(assets, 'lynx', assetLoading.LOCK);
-      expect(removeLoadingField(assets, 'lynx', assetLoading.LOCK)).toEqual(expectedAssets);
+      expect(removeLoadingField(loadingAssets, 'lynx', assetLoading.LOCK)).toEqual(expectedAssets);
     });
 
     it('no-op when field not present', () => {
