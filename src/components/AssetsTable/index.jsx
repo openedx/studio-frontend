@@ -95,12 +95,14 @@ export class AssetsTable extends React.Component {
     });
   }
 
-  onLockClick(asset) {
+  onLockClick = (e) => {
+    const assetId = e.currentTarget.getAttribute('data-asset-id');
+    const asset = this.props.assetsList.find((asset) => (asset.id === assetId));
     this.props.toggleLockAsset(asset, this.props.courseDetails);
   }
 
   getImageThumbnail(thumbnail) {
-    const baseUrl = this.props.courseDetails.base_url ? this.props.courseDetails.base_url : '';
+    const baseUrl = this.props.courseDetails.base_url || '';
     return thumbnail ? (<img src={`${baseUrl}${thumbnail}`} alt="Description not available" />) : 'Preview not available';
   }
 
@@ -115,10 +117,11 @@ export class AssetsTable extends React.Component {
       classes.push(FontAwesomeStyles['fa-unlock']);
     }
     return (<Button
-      label={(<span className={classNames(...classes)} />)}
+      label={(<span className={classNames(...classes)}/>)}
+      data-asset-id={asset.id}
       buttonType={'light'}
       aria-label={`${lockState} ${asset.display_name}`}
-      onClick={() => { this.onLockClick(asset); }}
+      onClick={this.onLockClick}
     />);
   }
 
@@ -142,7 +145,7 @@ export class AssetsTable extends React.Component {
     return this.trashcanRefs[focusAsset.id];
   }
 
-  getUpdatingLockButton(asset) {
+  getLoadingLockButton(asset) {
     const classes = [FontAwesomeStyles.fa, FontAwesomeStyles['fa-spinner'], FontAwesomeStyles['fa-spin']];
     return (<Button
       label={(<span className={classNames(...classes)} />)}
@@ -198,7 +201,7 @@ export class AssetsTable extends React.Component {
       currentAsset.delete_asset = deleteButton;
 
       currentAsset.lock_asset = isLoadingLock ?
-        this.getUpdatingLockButton(currentAsset) : this.getLockButton(currentAsset);
+        this.getLoadingLockButton(currentAsset) : this.getLockButton(currentAsset);
 
       /*
         TODO: we will have to add functionality to actually have the alt tag be the

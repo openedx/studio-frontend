@@ -3,6 +3,8 @@ import { combineReducers } from 'redux';
 import { assetActions } from '../constants/actionTypes';
 import { assetLoading } from '../constants/loadingTypes';
 
+import { addLoadingField, removeLoadingField, toggleLockAsset } from './utils';
+
 const initialState = {
   page: 0,
   pageSize: 50,
@@ -10,30 +12,6 @@ const initialState = {
   sort: 'date_added',
   direction: 'desc',
 };
-
-const toggleLockAsset = (assets, assetId) => assets.map(asset => (
-  asset.id === assetId ? { ...asset, locked: !asset.locked } : asset));
-
-const removeLoadingField = (assets, assetId, loadingField) => assets.map((asset) => {
-  if (asset.id === assetId) {
-    const loadingFields = asset.loadingFields ?
-      asset.loadingFields.filter(field => field !== loadingField) : asset.loadingFields;
-    return {
-      ...asset,
-      loadingFields,
-    };
-  }
-  return asset;
-});
-
-const addLoadingField = (assets, assetId, loadingField) => assets.map((asset) => {
-  if (asset.id === assetId) {
-    const loadingFields = asset.loadingFields ?
-      [...asset.loadingFields, loadingField] : [loadingField];
-    return { ...asset, loadingFields };
-  }
-  return asset;
-});
 
 const list = (state = [], action) => {
   let assets;

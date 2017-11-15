@@ -57,10 +57,9 @@ export const deleteAsset = (assetId, courseDetails) =>
         }
       });
 
-export const togglingLockAsset = (asset, response) => ({
+export const togglingLockAsset = (asset) => ({
   type: assetActions.TOGGLING_LOCK_ASSET_SUCCESS,
   asset,
-  response,
 });
 
 export const toggleLockAssetSuccess = asset => ({
@@ -80,7 +79,7 @@ export const toggleLockAsset = (asset, courseDetails) =>
     clientApi.requestToggleLockAsset(courseDetails.id, asset)
       .then((response) => {
         if (response.ok) {
-          dispatch(toggleLockAssetSuccess(asset, response));
+          dispatch(toggleLockAssetSuccess(asset));
         } else {
           dispatch(toggleLockAssetFailure(asset, response));
         }
