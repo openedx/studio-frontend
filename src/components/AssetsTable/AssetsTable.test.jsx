@@ -3,6 +3,7 @@ import { mount } from 'enzyme';
 import { AssetsTable } from './index';
 
 import { assetActions } from '../../data/constants/actionTypes';
+import { assetLoading } from '../../data/constants/loadingTypes';
 
 const thumbnail = '/animal';
 
@@ -12,21 +13,25 @@ const defaultProps = {
       display_name: 'cat.jpg',
       id: 'cat.jpg',
       thumbnail,
+      locked: false,
     },
     {
       display_name: 'dog.png',
       id: 'dog.png',
       thumbnail,
+      locked: true,
     },
     {
       display_name: 'bird.json',
       id: 'bird.json',
       thumbnail: null,
+      locked: false,
     },
     {
       display_name: 'fish.doc',
       id: 'fish.doc',
       thumbnail: null,
+      locked: false,
     },
   ],
   assetsParameters: {
@@ -49,6 +54,7 @@ const defaultProps = {
   clearAssetsStatus: () => {},
   deleteAsset: () => {},
   updateSort: () => {},
+  toggleLockAsset: () => {},
 };
 
 const defaultColumns = [
@@ -74,6 +80,11 @@ const defaultColumns = [
     columnSortable: false,
     hideHeader: true,
   },
+  {
+    label: 'Lock Asset',
+    columnSortable: false,
+    hideHeader: true,
+  },
 ];
 
 const setDeletedAsset = (asset, wrapper) => {
@@ -87,6 +98,17 @@ const clearStatus = (wrapper) => {
 const getMockForDeleteAsset = (wrapper, assetToDeleteId) => (
   jest.fn(() => {
     wrapper.setProps({ assetsList: defaultProps.assetsList.filter(asset => asset.id !== assetToDeleteId), assetsStatus: { type: 'DELETE_ASSET_SUCCESS' } });
+  })
+);
+
+const getMockForTogglingLockAsset = (wrapper, assetToToggle) => (
+  jest.fn(() => {
+    wrapper.setProps({ assetsList: defaultProps.assetsList.map((asset) => {
+      if (asset.id === assetToToggle) {
+        return { ...asset, loadingFields: [assetLoading.LOCK] };
+      }
+      return asset;
+    }) });
   })
 );
 
@@ -164,6 +186,7 @@ describe('<AssetsTable />', () => {
         deleteAsset: () => {},
         clearAssetsStatus: () => {},
         updateSort: () => {},
+        toggleLockAsset: () => {},
       };
       wrapper = mount(
         <AssetsTable
@@ -176,7 +199,7 @@ describe('<AssetsTable />', () => {
       wrapper.setProps({
         assetsStatus: {
           response: {},
-          type: assetActions.ASSET_XHR_FAILURE,
+          type: assetActions.DELETE_ASSET_FAILURE,
         },
         assetsList: [],
       });
@@ -290,7 +313,6 @@ describe('<AssetsTable />', () => {
     });
     it('opens when trash button clicked; modalOpen state is true', () => {
       const trashButtons = wrapper.find('button').filterWhere(button => button.hasClass('fa-trash'));
-
       trashButtons.at(0).simulate('click');
 
       expect(modal.hasClass('modal-open')).toEqual(true);
@@ -467,6 +489,68 @@ describe('<AssetsTable />', () => {
   });
 });
 
+describe('Lock asset', () => {
+  const getLockedButtons = () => wrapper.find('button > .fa-lock').parent();
+  const getUnlockedButtons = () => wrapper.find('button > .fa-unlock').parent();
+  beforeEach(() => {
+    wrapper = mount(
+      <AssetsTable
+        {...defaultProps}
+      />,
+    );
+  });
+  it('renders icons and buttons', () => {
+    const lockedButtons = getLockedButtons();
+    expect(lockedButtons).toHaveLength(1);
+
+    const unlockedButtons = getUnlockedButtons();
+    expect(unlockedButtons).toHaveLength(3);
+  });
+  it('can toggle state', () => {
+    const assetToToggle = 'dog.png';
+    const mockToggle = getMockForTogglingLockAsset(wrapper, assetToToggle);
+    const lockedButtons = getLockedButtons();
+    wrapper.setProps({ toggleLockAsset: mockToggle });
+
+    // initial state should be locked
+    expect(lockedButtons).toHaveLength(1);
+
+    // clicking will set the spinner
+    lockedButtons.simulate('click');
+    expect(mockToggle).toHaveBeenCalledTimes(1);
+    expect(lockedButtons.childAt(0).hasClass('fa-spinner')).toBe(true);
+
+    // returning the new locked state w/o loading will update the button
+    expect(getUnlockedButtons()).toHaveLength(3);
+    wrapper.setProps({
+      assetsList: defaultProps.assetsList.map((asset) => {
+        if (asset.id === assetToToggle) {
+          return {
+            ...asset,
+            loadingFields: [],
+            locked: false,
+          };
+        }
+        return asset;
+      }),
+    });
+    expect(getUnlockedButtons()).toHaveLength(4);
+    expect(getLockedButtons()).toHaveLength(0);
+  });
+  it('displays locking errors', () => {
+    wrapper.setProps({
+      assetsStatus: {
+        response: {},
+        type: assetActions.TOGGLING_LOCK_ASSET_FAILURE,
+        asset: { name: 'marmoset.png' },
+      },
+    });
+    const statusAlert = wrapper.find('StatusAlert');
+    expect(statusAlert.prop('alertType')).toEqual('danger');
+    expect(statusAlert.find('.alert-dialog').text()).toEqual('Failed to toggle lock for marmoset.png');
+  });
+});
+
 describe('displays status alert properly', () => {
   it('renders info alert', () => {
     wrapper = mount(
@@ -511,7 +595,7 @@ describe('displays status alert properly', () => {
     wrapper.setProps({
       assetsStatus: {
         response: {},
-        type: assetActions.ASSET_XHR_FAILURE,
+        type: assetActions.DELETE_ASSET_FAILURE,
       },
     });
     const statusAlert = wrapper.find('StatusAlert');
@@ -582,7 +666,7 @@ describe('displays status alert properly', () => {
     expect(wrapper.props().assetsStatus).toEqual({});
   });
 
-  it('uses the display_name for asset delete message', () => {
+  it('displays processing message for asset delete', () => {
     wrapper = mount(
       <AssetsTable
         {...defaultProps}
@@ -592,6 +676,6 @@ describe('displays status alert properly', () => {
     const fileName = 'testFile';
 
     setDeletedAsset({ display_name: fileName }, wrapper);
-    expect(statusAlertDialog.text()).toContain(fileName);
+    expect(statusAlertDialog.text()).toContain('Processing');
   });
 });

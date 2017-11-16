@@ -6,8 +6,8 @@ export const requestAssetsSuccess = response => ({
   data: response.assets,
 });
 
-export const assetXHRFailure = response => ({
-  type: assetActions.ASSET_XHR_FAILURE,
+export const assetDeleteFailure = response => ({
+  type: assetActions.DELETE_ASSET_FAILURE,
   response,
 });
 
@@ -27,7 +27,7 @@ export const getAssets = (assetsParameters, courseDetails) =>
       })
       .then(json => dispatch(requestAssetsSuccess(json)))
       .catch((error) => {
-        dispatch(assetXHRFailure(error));
+        dispatch(assetDeleteFailure(error));
       });
 
 export const filterUpdate = (filterKey, filterValue) => ({
@@ -39,7 +39,6 @@ export const sortUpdate = (sort, direction) => ({
   type: assetActions.SORT_UPDATE,
   data: { sort, direction },
 });
-
 
 export const deleteAssetSuccess = (assetId, response) => ({
   type: assetActions.DELETE_ASSET_SUCCESS,
@@ -54,9 +53,38 @@ export const deleteAsset = (assetId, courseDetails) =>
         if (response.ok) {
           dispatch(deleteAssetSuccess(assetId, response));
         } else {
-          dispatch(assetXHRFailure(response));
+          dispatch(assetDeleteFailure(response));
         }
       });
+
+export const togglingLockAsset = asset => ({
+  type: assetActions.TOGGLING_LOCK_ASSET_SUCCESS,
+  asset,
+});
+
+export const toggleLockAssetSuccess = asset => ({
+  type: assetActions.TOGGLE_LOCK_ASSET_SUCCESS,
+  asset,
+});
+
+export const toggleLockAssetFailure = (asset, response) => ({
+  type: assetActions.TOGGLING_LOCK_ASSET_FAILURE,
+  asset,
+  response,
+});
+
+export const toggleLockAsset = (asset, courseDetails) =>
+  (dispatch) => {
+    dispatch(togglingLockAsset(asset));
+    clientApi.requestToggleLockAsset(courseDetails.id, asset)
+      .then((response) => {
+        if (response.ok) {
+          dispatch(toggleLockAssetSuccess(asset));
+        } else {
+          dispatch(toggleLockAssetFailure(asset, response));
+        }
+      });
+  };
 
 export const clearAssetsStatus = () =>
   dispatch =>

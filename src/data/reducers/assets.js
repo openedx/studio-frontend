@@ -1,6 +1,9 @@
 import { combineReducers } from 'redux';
 
 import { assetActions } from '../constants/actionTypes';
+import { assetLoading } from '../constants/loadingTypes';
+
+import { addLoadingField, removeLoadingField, toggleLockAsset } from './utils';
 
 const initialState = {
   page: 0,
@@ -11,12 +14,20 @@ const initialState = {
 };
 
 const list = (state = [], action) => {
+  let assets;
   switch (action.type) {
     case assetActions.REQUEST_ASSETS_SUCCESS:
       return action.data;
     case assetActions.DELETE_ASSET_SUCCESS:
       return state.filter(asset => asset.id !== action.assetId);
-    case assetActions.ASSET_XHR_FAILURE:
+    case assetActions.TOGGLE_LOCK_ASSET_SUCCESS:
+      assets = removeLoadingField(state, action.asset.id, assetLoading.LOCK);
+      return toggleLockAsset(assets, action.asset.id);
+    case assetActions.TOGGLING_LOCK_ASSET_FAILURE:
+      return removeLoadingField(state, action.assetId, assetLoading.LOCK);
+    case assetActions.TOGGLING_LOCK_ASSET_SUCCESS:
+      return addLoadingField(state, action.asset.id, assetLoading.LOCK);
+    case assetActions.DELETE_ASSET_FAILURE:
       return [];
     default:
       return state;
@@ -32,8 +43,14 @@ const status = (state = {}, action) => {
         response: action.response,
         type: action.type,
       };
-    case assetActions.ASSET_XHR_FAILURE:
+    case assetActions.DELETE_ASSET_FAILURE:
       return {
+        response: action.response,
+        type: action.type,
+      };
+    case assetActions.TOGGLING_LOCK_ASSET_FAILURE:
+      return {
+        asset: action.asset,
         response: action.response,
         type: action.type,
       };
