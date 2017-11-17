@@ -1,9 +1,14 @@
 import React from 'react';
-import { mount } from 'enzyme';
+import Enzyme from 'enzyme';
+import Adapter from 'enzyme-adapter-react-16';
 import { AssetsTable } from './index';
 
 import { assetActions } from '../../data/constants/actionTypes';
 import { assetLoading } from '../../data/constants/loadingTypes';
+
+Enzyme.configure({ adapter: new Adapter() });
+
+const { mount, shallow } = Enzyme;
 
 const thumbnail = '/animal';
 const copyUrl = 'animal';
@@ -350,6 +355,7 @@ describe('<AssetsTable />', () => {
       const trashButtons = wrapper.find('button').filterWhere(button => button.hasClass('fa-trash'));
       trashButtons.at(0).simulate('click');
 
+      modal = wrapper.find('[role="dialog"]');
       expect(modal.hasClass('modal-open')).toEqual(true);
       expect(wrapper.state('modalOpen')).toEqual(true);
     });
