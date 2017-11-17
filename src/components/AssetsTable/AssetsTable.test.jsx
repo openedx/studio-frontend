@@ -8,7 +8,7 @@ import { assetLoading } from '../../data/constants/loadingTypes';
 
 Enzyme.configure({ adapter: new Adapter() });
 
-const { mount, shallow } = Enzyme;
+const { mount } = Enzyme;
 
 const thumbnail = '/animal';
 const copyUrl = 'animal';

@@ -1,6 +1,11 @@
 import React from 'react';
-import { mount } from 'enzyme';
+import Enzyme from 'enzyme';
+import Adapter from 'enzyme-adapter-react-16';
 import CopyButton from './index';
+
+Enzyme.configure({ adapter: new Adapter() });
+
+const { mount } = Enzyme;
 
 const defaultProps = {
   label: 'I am a copy button!',
@@ -31,13 +36,16 @@ describe('<CopyButton />', () => {
     it('label with correct default onCopy text on click', () => {
       expect(button).toHaveLength(1);
       button.at(0).simulate('click');
+      button = wrapper.find('button');
 
       expect(button.matchesElement(<button>{defaultProps.onCopyLabel}</button>))
         .toEqual(true);
     });
     it('label with correct text onBlur', () => {
       button.at(0).simulate('click');
+      button = wrapper.find('button');
       button.at(0).simulate('blur');
+      button = wrapper.find('button');
 
       expect(button.matchesElement(<button>{defaultProps.label}</button>))
         .toEqual(true);
@@ -49,11 +57,15 @@ describe('<CopyButton />', () => {
     });
     it('state changes on click', () => {
       button.at(0).simulate('click');
+      button = wrapper.find('button');
+
       expect(wrapper.state('wasClicked')).toEqual(true);
     });
     it('state changes onBlur', () => {
       button.at(0).simulate('click');
+      button = wrapper.find('button');
       button.at(0).simulate('blur');
+      button = wrapper.find('button');
 
       expect(wrapper.state('wasClicked')).toEqual(false);
     });
