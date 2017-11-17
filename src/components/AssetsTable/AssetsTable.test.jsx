@@ -656,9 +656,10 @@ describe('displays status alert properly', () => {
         {...defaultProps}
       />,
     );
-    const statusAlert = wrapper.find('StatusAlert');
+    let statusAlert = wrapper.find('StatusAlert');
 
     wrapper.setState({ statusAlertOpen: true });
+    statusAlert = wrapper.find('StatusAlert');
     expect(statusAlert.find('div').first().prop('hidden')).toEqual(false);
   });
 
@@ -668,11 +669,14 @@ describe('displays status alert properly', () => {
         {...defaultProps}
       />,
     );
-    const statusAlert = wrapper.find('StatusAlert');
+    let statusAlert = wrapper.find('StatusAlert');
 
     wrapper.setState({ statusAlertOpen: true });
+    statusAlert = wrapper.find('StatusAlert');
     expect(statusAlert.find('div').first().prop('hidden')).toEqual(false);
+
     wrapper.setState({ statusAlertOpen: false });
+    statusAlert = wrapper.find('StatusAlert');
     expect(statusAlert.find('div').first().prop('hidden')).toEqual(true);
   });
 
