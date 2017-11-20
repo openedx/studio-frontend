@@ -76,7 +76,7 @@ export class AssetsTable extends React.Component {
     this.closeModal = this.closeModal.bind(this);
     this.closeStatusAlert = this.closeStatusAlert.bind(this);
     this.renderStatusAlert = this.renderStatusAlert.bind(this);
-    this.handleCopyButtonEvent = this.handleCopyButtonEvent.bind(this);
+    this.onCopyButtonClick = this.onCopyButtonClick.bind(this);
   }
 
   onSortClick(columnKey) {
@@ -218,7 +218,7 @@ export class AssetsTable extends React.Component {
     return (<CopyButton
       label={buttonLabel}
       textToCopy={url}
-      onEvent={this.handleCopyButtonEvent}
+      onCopyButtonClick={this.onCopyButtonClick}
       ariaLabel={`${assetDisplayName} copy ${label} URL`}
       onCopyLabel={onCopyLabel}
     />);
