@@ -439,7 +439,6 @@ describe('<AssetsTable />', () => {
       trashButtons.at(0).simulate('click');
 
       expect(trashButtons.at(0).html()).toEqual(wrapper.state('elementToFocusOnModalClose').outerHTML);
-      // expect(trashButtons.at(0).matchesElement(wrapper.state('elementToFocusOnModalClose'))).toEqual(true);
     });
   });
   describe('focus', () => {
@@ -465,12 +464,10 @@ describe('<AssetsTable />', () => {
       trashButtons.at(0).simulate('click');
 
       expect(closeButton.html()).toEqual(document.activeElement.outerHTML);
-      // expect(closeButton.matchesElement(document.activeElement)).toEqual(true);
 
       closeButton.simulate('click');
 
       expect(trashButtons.at(0).html()).toEqual(document.activeElement.outerHTML);
-      // expect(trashButtons.at(0).matchesElement(document.activeElement)).toEqual(true);
     });
 
     it('moves from modal to status alert on asset delete', () => {
@@ -482,12 +479,10 @@ describe('<AssetsTable />', () => {
       trashButtons.at(0).simulate('click');
 
       expect(closeButton.html()).toEqual(document.activeElement.outerHTML);
-      // expect(closeButton.matchesElement(document.activeElement)).toEqual(true);
 
       deleteButton.simulate('click');
 
       expect(closeStatusAlertButton.html()).toEqual(document.activeElement.outerHTML);
-      // expect(closeStatusAlertButton.matchesElement(document.activeElement)).toEqual(true);
     });
 
     const testData = [
@@ -532,17 +527,17 @@ describe('<AssetsTable />', () => {
         // This gets the new trashcans after the asset delete.
         trashButtons = wrapper.find('button').filterWhere(button => button.hasClass('fa-trash'));
 
-        expect(trashButtons.at(test.newFocusIndex).html()).toEqual(document.activeElement.outerHTML);
-        // expect(trashButtons.at(test.newFocusIndex).matchesElement(
-        //   document.activeElement)).toEqual(true);
+        expect(trashButtons.at(test.newFocusIndex).html())
+          .toEqual(document.activeElement.outerHTML);
       });
     });
   });
 });
 
 describe('Lock asset', () => {
-  const getLockedButtons = () => wrapper.find('button > .fa-lock').parent();
-  const getUnlockedButtons = () => wrapper.find('button > .fa-unlock').parent();
+  const getLockedButtons = () => wrapper.find('button > .fa-lock');
+  const getUnlockedButtons = () => wrapper.find('button > .fa-unlock');
+  const getLockingButtons = () => wrapper.find('button > .fa-spinner');
   beforeEach(() => {
     wrapper = mount(
       <AssetsTable
@@ -568,8 +563,9 @@ describe('Lock asset', () => {
 
     // clicking will set the spinner
     lockedButtons.simulate('click');
+    const lockingButtons = getLockingButtons();
     expect(mockToggle).toHaveBeenCalledTimes(1);
-    expect(lockedButtons.childAt(0).hasClass('fa-spinner')).toBe(true);
+    expect(lockingButtons.at(0).hasClass('fa-spinner')).toEqual(true);
 
     // returning the new locked state w/o loading will update the button
     expect(getUnlockedButtons()).toHaveLength(3);
