@@ -1,12 +1,9 @@
 import React from 'react';
 import Enzyme from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
 import { AssetsTable } from './index';
 
 import { assetActions } from '../../data/constants/actionTypes';
 import { assetLoading } from '../../data/constants/loadingTypes';
-
-Enzyme.configure({ adapter: new Adapter() });
 
 const { mount } = Enzyme;
 
