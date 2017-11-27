@@ -1,9 +1,11 @@
 import React from 'react';
-import { mount } from 'enzyme';
+import Enzyme from 'enzyme';
 import { AssetsTable } from './index';
 
 import { assetActions } from '../../data/constants/actionTypes';
 import { assetLoading } from '../../data/constants/loadingTypes';
+
+const { mount } = Enzyme;
 
 const thumbnail = '/animal';
 const copyUrl = 'animal';
@@ -350,6 +352,7 @@ describe('<AssetsTable />', () => {
       const trashButtons = wrapper.find('button').filterWhere(button => button.hasClass('fa-trash'));
       trashButtons.at(0).simulate('click');
 
+      modal = wrapper.find('[role="dialog"]');
       expect(modal.hasClass('modal-open')).toEqual(true);
       expect(wrapper.state('modalOpen')).toEqual(true);
     });
@@ -432,7 +435,7 @@ describe('<AssetsTable />', () => {
     it('sets elementToFocusOnModalClose correctly', () => {
       trashButtons.at(0).simulate('click');
 
-      expect(trashButtons.at(0).matchesElement(wrapper.state('elementToFocusOnModalClose'))).toEqual(true);
+      expect(trashButtons.at(0).html()).toEqual(wrapper.state('elementToFocusOnModalClose').outerHTML);
     });
   });
   describe('focus', () => {
@@ -457,11 +460,11 @@ describe('<AssetsTable />', () => {
     it('moves from modal to trashcan on modal close', () => {
       trashButtons.at(0).simulate('click');
 
-      expect(closeButton.matchesElement(document.activeElement)).toEqual(true);
+      expect(closeButton.html()).toEqual(document.activeElement.outerHTML);
 
       closeButton.simulate('click');
 
-      expect(trashButtons.at(0).matchesElement(document.activeElement)).toEqual(true);
+      expect(trashButtons.at(0).html()).toEqual(document.activeElement.outerHTML);
     });
 
     it('moves from modal to status alert on asset delete', () => {
@@ -472,11 +475,11 @@ describe('<AssetsTable />', () => {
 
       trashButtons.at(0).simulate('click');
 
-      expect(closeButton.matchesElement(document.activeElement)).toEqual(true);
+      expect(closeButton.html()).toEqual(document.activeElement.outerHTML);
 
       deleteButton.simulate('click');
 
-      expect(closeStatusAlertButton.matchesElement(document.activeElement)).toEqual(true);
+      expect(closeStatusAlertButton.html()).toEqual(document.activeElement.outerHTML);
     });
 
     const testData = [
@@ -521,16 +524,17 @@ describe('<AssetsTable />', () => {
         // This gets the new trashcans after the asset delete.
         trashButtons = wrapper.find('button').filterWhere(button => button.hasClass('fa-trash'));
 
-        expect(trashButtons.at(test.newFocusIndex).matchesElement(
-          document.activeElement)).toEqual(true);
+        expect(trashButtons.at(test.newFocusIndex).html())
+          .toEqual(document.activeElement.outerHTML);
       });
     });
   });
 });
 
 describe('Lock asset', () => {
-  const getLockedButtons = () => wrapper.find('button > .fa-lock').parent();
-  const getUnlockedButtons = () => wrapper.find('button > .fa-unlock').parent();
+  const getLockedButtons = () => wrapper.find('button > .fa-lock');
+  const getUnlockedButtons = () => wrapper.find('button > .fa-unlock');
+  const getLockingButtons = () => wrapper.find('button > .fa-spinner');
   beforeEach(() => {
     wrapper = mount(
       <AssetsTable
@@ -556,8 +560,9 @@ describe('Lock asset', () => {
 
     // clicking will set the spinner
     lockedButtons.simulate('click');
+    const lockingButtons = getLockingButtons();
     expect(mockToggle).toHaveBeenCalledTimes(1);
-    expect(lockedButtons.childAt(0).hasClass('fa-spinner')).toBe(true);
+    expect(lockingButtons.at(0).hasClass('fa-spinner')).toEqual(true);
 
     // returning the new locked state w/o loading will update the button
     expect(getUnlockedButtons()).toHaveLength(3);
@@ -650,9 +655,10 @@ describe('displays status alert properly', () => {
         {...defaultProps}
       />,
     );
-    const statusAlert = wrapper.find('StatusAlert');
+    let statusAlert = wrapper.find('StatusAlert');
 
     wrapper.setState({ statusAlertOpen: true });
+    statusAlert = wrapper.find('StatusAlert');
     expect(statusAlert.find('div').first().prop('hidden')).toEqual(false);
   });
 
@@ -662,11 +668,14 @@ describe('displays status alert properly', () => {
         {...defaultProps}
       />,
     );
-    const statusAlert = wrapper.find('StatusAlert');
+    let statusAlert = wrapper.find('StatusAlert');
 
     wrapper.setState({ statusAlertOpen: true });
+    statusAlert = wrapper.find('StatusAlert');
     expect(statusAlert.find('div').first().prop('hidden')).toEqual(false);
+
     wrapper.setState({ statusAlertOpen: false });
+    statusAlert = wrapper.find('StatusAlert');
     expect(statusAlert.find('div').first().prop('hidden')).toEqual(true);
   });
 

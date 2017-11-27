@@ -1,6 +1,8 @@
 import React from 'react';
-import { mount } from 'enzyme';
+import Enzyme from 'enzyme';
 import { AssetsFilters } from './index';
+
+const mount = Enzyme.mount;
 
 const defaultProps = {
   assetsParameters: {
@@ -10,7 +12,6 @@ const defaultProps = {
   },
   updateFilter: () => {},
 };
-
 
 let wrapper;
 
