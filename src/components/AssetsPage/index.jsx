@@ -74,7 +74,7 @@ AssetsPage.propTypes = {
 const WrappedAssetsPage = connect(
   state => ({
     assetsParameters: state.assets.parameters,
-    courseDetails: state.courseDetails,
+    courseDetails: state.studioDetails.course,
   }), dispatch => ({
     getAssets: (assetsParameters, courseDetails) =>
       dispatch(getAssets(assetsParameters, courseDetails)),

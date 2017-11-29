@@ -16,12 +16,20 @@ targetUrl = `http://${targetUrl}:18010`;
 
 module.exports = Merge.smart(commonConfig, {
   devtool: 'cheap-module-eval-source-map',
-  entry: [
-    // enable react's custom hot dev client so we get errors reported
-    // in the browser
-    require.resolve('react-dev-utils/webpackHotDevClient'),
-    path.resolve(__dirname, '../src/index.jsx'),
-  ],
+  entry: {
+    assets: [
+      // enable react's custom hot dev client so we get errors reported
+      // in the browser
+      require.resolve('react-dev-utils/webpackHotDevClient'),
+      path.resolve(__dirname, '../src/index.jsx'),
+    ],
+    accessibilityPolicy: [
+      // enable react's custom hot dev client so we get errors reported
+      // in the browser
+      require.resolve('react-dev-utils/webpackHotDevClient'),
+      path.resolve(__dirname, '../src/accessibilityIndex.jsx'),
+    ],
+  },
   module: {
     rules: [
       {
@@ -68,6 +76,14 @@ module.exports = Merge.smart(commonConfig, {
   plugins: [
     new HtmlWebpackPlugin({
       inject: true,
+      chunks: ['assets'],
+      filename: 'assets.html',
+      template: path.resolve(__dirname, '../public/index.html'),
+    }),
+    new HtmlWebpackPlugin({
+      inject: true,
+      chunks: ['accessibilityPolicy'],
+      filename: 'accessibilityPolicy.html',
       template: path.resolve(__dirname, '../public/index.html'),
     }),
     new webpack.HotModuleReplacementPlugin(),
