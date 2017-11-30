@@ -4,12 +4,12 @@ import assets from './assets';
 import connectionStatus from './connectionStatus';
 
 /* eslint-disable no-undef */
-const courseDetails = () => courseContext;
+const studioDetails = () => studioContext;
 
 const rootReducer = combineReducers({
   assets,
   connectionStatus,
-  courseDetails,
+  studioDetails,
 });
 
 export default rootReducer;

@@ -1,6 +1,6 @@
 {
   "name": "@edx/studio-frontend",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "The frontend for the Open edX platform",
   "repository": "edx/studio-frontend",
   "scripts": {
@@ -76,7 +76,7 @@
       "/node_modules/(?!(@edx/paragon)/).*/"
     ],
     "globals": {
-      "courseContext": {}
+      "studioContext": {}
     }
   }
 }

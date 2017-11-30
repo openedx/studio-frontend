@@ -427,7 +427,7 @@ const mapStateToProps = state => ({
   assetsList: state.assets.list,
   assetsParameters: state.assets.parameters,
   assetsStatus: state.assets.status,
-  courseDetails: state.courseDetails,
+  courseDetails: state.studioDetails.course,
 });
 
 const mapDispatchToProps = dispatch => ({
