@@ -30,6 +30,12 @@ $ docker build -t mroytman/studio-frontend:latest .
 
 Webpack will serve pages in development mode at http://localhost:18011.
 
+The following pages are served in the development:
+| Page                 | URL                                              |
+|----------------------|--------------------------------------------------|
+| Assets               | http://localhost:18011/assets.html               |
+| Accessibility Policy | http://localhost:18011/accessibilityPolicy.html  |
+
 Notes:
 
 The development server will run regardless of whether devstack is running along side it. If devstack is not running, requests to the studio API will fail. You can start up the devstack at any time by following the instructions in the devstack repository, and the development server will then be able to communicate with the studio container. API requests will return the following statuses, given your current setup:
