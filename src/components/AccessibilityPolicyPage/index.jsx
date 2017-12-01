@@ -2,7 +2,11 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
+import AccessibilityBody from '../AccessibilityBody';
+
+import edxBootstrap from '../../SFE.scss';
 // import styles from './AccessibilityPolicyPage.scss';
+
 
 export class AccessibilityPolicyPage extends React.Component {
   constructor(props) {
@@ -14,13 +18,19 @@ export class AccessibilityPolicyPage extends React.Component {
 
   render() {
     return (
-      <div>
-        ACCESSIBILITY POLICY PAGE
-        <div>
-          Hold for policy text
-        </div>
-        <div>
-          Hold for submission form
+      <div className={edxBootstrap.container}>
+        <div className={edxBootstrap.row}>
+          <div className={edxBootstrap.col}>
+            <AccessibilityBody
+              communityAccessibilityLink="https://www.edx.org/accessibility"
+              phoneNumber="TODO: FILL THIS IN"
+              email="accessibility@edx.org"
+            />
+            <h1>Accessibility Feedback</h1>
+            <div>
+              Hold for submission form
+            </div>
+          </div>
         </div>
       </div>
     );
