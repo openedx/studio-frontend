@@ -33,7 +33,7 @@ const AccessibilityBody = (props) => {
         <li>EdX will assist you promptly and thoroughly so that you are able to create content on the CMS within your time constraints.  Such efforts may include, but are not limited to:
           <ol className={styles['alphabetical-list']}>
             <li>Purchasing a third-party tool or software for use on an individual basis to assist your use of Studio;</li>
-            <li>Engaging a trained independent contractor to provide real-time visual, verbal and physical assistance;</li>
+            <li>Engaging a trained independent contractor to provide real-time visual, verbal and physical assistance; or</li>
             <li>Developing new code to implement a technical fix.</li>
           </ol>
         </li>
