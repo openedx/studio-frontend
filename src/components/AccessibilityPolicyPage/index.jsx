@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 // import styles from './AccessibilityPolicyPage.scss';
+import AccessibilityBody from '../AccessibilityBody';
+
 
 export class AccessibilityPolicyPage extends React.Component {
   constructor(props) {
@@ -15,10 +17,12 @@ export class AccessibilityPolicyPage extends React.Component {
   render() {
     return (
       <div>
-        ACCESSIBILITY POLICY PAGE
-        <div>
-          Hold for policy text
-        </div>
+        <AccessibilityBody
+          communityAccessibilityLink="https://www.edx.org/accessibility"
+          phoneNumber="TODO: FILL THIS IN"
+          email="accessibility@edx.org"
+        />
+        <h1>Accessibility Feedback</h1>
         <div>
           Hold for submission form
         </div>
