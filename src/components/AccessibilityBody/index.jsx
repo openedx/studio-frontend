@@ -4,10 +4,8 @@ import PropTypes from 'prop-types';
 const AccessibilityBody = (props) => {
   const mailto = `mailto:${props.email}`;
   const emailElement = (<a href={mailto}>{props.email}</a>);
-
-  const communityAccessibilitySite = `${props.communityAccessibilityLink}`;
   const communityAccessibilityElement = (
-    <a href={communityAccessibilitySite}>Website Accessibility Policy</a>
+    <a href={props.communityAccessibilityLink}>Website Accessibility Policy</a>
   );
 
   /* eslint-disable max-len */
