@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import styles from './AccessibilityBody.scss';
+
 const AccessibilityBody = (props) => {
   const mailto = `mailto:${props.email}`;
   const emailElement = (<a href={mailto}>{props.email}</a>);
@@ -20,15 +22,21 @@ const AccessibilityBody = (props) => {
       </p>
       <ol>
         <li>Notify us by email addressed to {emailElement}.  In order for edX to fully and promptly assess and respond to your request, please provide the following information:</li>
-        <ul>
+        <ol className={styles['alphabetical-list']}>
           <li>Your name and email address;</li>
           <li>The edX member institution that you are affiliated with;</li>
           <li>A brief description of the challenge or barrier to access that you are experiencing; and</li>
           <li>How soon you need access and for how long (e.g., a planned course start date or in connection with a course-related deadline such as a final essay).</li>
-        </ul>
+        </ol>
         <li>Within 48 business hours of receiving your request, the edX Support Team will respond to confirm receipt and forward your request to the edX Partner Manager for your institution and the edX Website Accessibility Coordinator.</li>
         <li>With guidance from the Website Accessibility Coordinator, edX will contact you within 5 business days to discuss your request and gather additional information from you to identify a solution.</li>
-        <li>EdX will assist you promptly and thoroughly so that you are able to create content on the CMS within your time constraints.  Such efforts may include, but are not limited to: (a) purchasing a third-party tool or software for use on an individual basis to assist your use of Studio, (b) engaging a trained independent contractor to provide real-time visual, verbal and physical assistance, or (c) developing new code to implement a technical fix.</li>
+        <li>EdX will assist you promptly and thoroughly so that you are able to create content on the CMS within your time constraints.  Such efforts may include, but are not limited to:
+          <ol className={styles['alphabetical-list']}>
+            <li>Purchasing a third-party tool or software for use on an individual basis to assist your use of Studio;</li>
+            <li>Engaging a trained independent contractor to provide real-time visual, verbal and physical assistance; or</li>
+            <li>Developing new code to implement a technical fix.</li>
+          </ol>
+        </li>
       </ol>
       <p>
         We will communicate with you about your preferences and needs in determining the appropriate solution, although the ultimate decision will be ours, provided that the solution is effective and timely.  The factors we will consider in choosing an accessibility solution are: effectiveness; timeliness (relative to your deadlines); ease of implementation; and ease of use for you.  We will notify you of the decision and explain the basis for our decision within 10 business days of discussing with you.
