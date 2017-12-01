@@ -25,8 +25,8 @@ describe('<AccessibilityPolicyPage />', () => {
         />,
       );
     });
-    it('correct number of containing divs', () => { // this will change
-      expect(wrapper.find('div')).toHaveLength(3);
+    it('contains the policy body', () => { // this will change
+      expect(wrapper.text()).toContain('Studio Accessibility Policy');
     });
   });
 });
