@@ -1,6 +1,6 @@
 {
   "name": "@edx/studio-frontend",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "The frontend for the Open edX platform",
   "repository": "edx/studio-frontend",
   "scripts": {
@@ -61,7 +61,10 @@
     "webpack-merge": "^4.1.0"
   },
   "jest": {
-    "setupFiles": ["./shim.js", "./setupTests.js"],
+    "setupFiles": [
+      "./shim.js",
+      "./setupTests.js"
+    ],
     "moduleNameMapper": {
       "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/fileMock.js",
       "\\.(css|scss)$": "identity-obj-proxy"
