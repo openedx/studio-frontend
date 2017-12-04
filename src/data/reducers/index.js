@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux';
 
+import accessibility from './accessibility';
 import assets from './assets';
 import connectionStatus from './connectionStatus';
 
@@ -7,6 +8,7 @@ import connectionStatus from './connectionStatus';
 const studioDetails = () => studioContext;
 
 const rootReducer = combineReducers({
+  accessibility,
   assets,
   connectionStatus,
   studioDetails,

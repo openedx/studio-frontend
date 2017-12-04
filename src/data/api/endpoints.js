@@ -2,4 +2,5 @@
 module.exports = {
   assets: '/assets',
   home: '/home',
+  zendesk: '/zendesk_proxy/v0',
 };
