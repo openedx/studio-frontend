@@ -26,7 +26,7 @@ describe('<AccessibilityPolicyPage />', () => {
       );
     });
     it('contains the policy body', () => { // this will change
-      expect(wrapper.text()).toContain('Studio Accessibility Policy');
+      expect(wrapper.text()).toContain('Individualized Accessibility Process for Course Creators');
     });
   });
 });
