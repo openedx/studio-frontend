@@ -13,7 +13,7 @@ const AccessibilityBody = (props) => {
   /* eslint-disable max-len */
   return (
     <div>
-      <h1>Studio Accessibility Policy</h1>
+      <h1>Individualized Accessibility Process for Course Creators</h1>
       <p>
         At edX, we seek to understand and respect the unique needs and perspectives of the edX global community.  We value every course team and are committed to being a leader in expanding access to all, including course team creators and authors with disabilities.  To that end, we have adopted a {communityAccessibilityElement} and this process to ensure that course team creators and authors with disabilities are able to develop and post content on our platform via Studio.
       </p>
