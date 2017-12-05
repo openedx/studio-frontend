@@ -31,6 +31,7 @@ $ docker build -t mroytman/studio-frontend:latest .
 Webpack will serve pages in development mode at http://localhost:18011.
 
 The following pages are served in the development:
+
 | Page                 | URL                                              |
 |----------------------|--------------------------------------------------|
 | Assets               | http://localhost:18011/assets.html               |
