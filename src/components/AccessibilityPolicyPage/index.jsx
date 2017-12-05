@@ -23,7 +23,7 @@ export class AccessibilityPolicyPage extends React.Component {
           <div className={edxBootstrap.col}>
             <AccessibilityBody
               communityAccessibilityLink="https://www.edx.org/accessibility"
-              phoneNumber="TODO: FILL THIS IN"
+              phoneNumber="+1 617-258-6577"
               email="accessibility@edx.org"
             />
             <h1>Accessibility Feedback</h1>
