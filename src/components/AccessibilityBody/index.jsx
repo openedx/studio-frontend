@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import edxBootstrap from '../../SFE.scss';
 import styles from './AccessibilityBody.scss';
 
 const AccessibilityBody = (props) => {
@@ -13,14 +14,14 @@ const AccessibilityBody = (props) => {
   /* eslint-disable max-len */
   return (
     <div>
-      <h1>Individualized Accessibility Process for Course Creators</h1>
+      <h1 className={edxBootstrap['page-header']}>Individualized Accessibility Process for Course Creators</h1>
       <p>
         At edX, we seek to understand and respect the unique needs and perspectives of the edX global community.  We value every course team and are committed to being a leader in expanding access to all, including course team creators and authors with disabilities.  To that end, we have adopted a {communityAccessibilityElement} and this process to ensure that course team creators and authors with disabilities are able to develop and post content on our platform via Studio.
       </p>
       <p>
         Course team creators and authors who, because of their disabilities, need assistance to use Studio should take the following steps:
       </p>
-      <ol>
+      <ol className={styles['numerical-list']}>
         <li>Notify us by email addressed to {emailElement}.  In order for edX to fully and promptly assess and respond to your request, please provide the following information:</li>
         <ol className={styles['alphabetical-list']}>
           <li>Your name and email address;</li>
