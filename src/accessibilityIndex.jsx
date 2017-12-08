@@ -3,13 +3,17 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 
-import WrappedAccessibilityPolicyPage from './components/AccessibilityPolicyPage';
+import AccessibilityPolicyPage from './components/AccessibilityPolicyPage';
 import store from './data/store';
 
 const AccessibilityApp = () => (
   <Provider store={store}>
     <div>
-      <WrappedAccessibilityPolicyPage />
+      <AccessibilityPolicyPage
+        communityAccessibilityLink="https://www.edx.org/accessibility"
+        phoneNumber="+1 617-258-6577"
+        email="accessibility@edx.org"
+      />
     </div>
   </Provider>
 );

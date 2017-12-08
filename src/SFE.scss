@@ -3,7 +3,7 @@
 
 /* The page-header class exists in bootstrap 3.3 but not in our alpha version currently */
 .page-header {
-	padding-bottom: $spacer * 0.5;
+  padding-bottom: $spacer * 0.5;
   margin: ($spacer * 2) 0 $spacer;
   border-bottom: 1px solid #eee;
 }

@@ -83,3 +83,26 @@ export function requestToggleLockAsset(courseId, asset) {
     },
   );
 }
+
+export function postAccessibilityForm(formEmail, formFullName, formMessage) {
+  return fetch(
+    `${endpoints.zendesk}`, {
+      credentials: 'same-origin',
+      method: 'post',
+      body: JSON.stringify({
+        name: formFullName,
+        tags: ['studio_a11y'],
+        email: {
+          from: formEmail,
+          subject: 'Studio Accessibility Request',
+          message: formMessage,
+        },
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        'X-CSRFToken': Cookies.get('csrftoken'),
+      },
+    },
+  );
+}

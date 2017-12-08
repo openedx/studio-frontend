@@ -1,6 +1,7 @@
 import fetchMock from 'fetch-mock';
 
-import { requestAssets, requestDeleteAsset, requestToggleLockAsset } from './client';
+import endpoints from './endpoints';
+import { requestAssets, requestDeleteAsset, requestToggleLockAsset, postAccessibilityForm } from './client';
 
 const COURSE_ID = 'my-course-id';
 const ASSET_ID = 'asset-id';
@@ -68,6 +69,35 @@ describe('API client requestToggleLockAsset', () => {
   it('is called', () => {
     requestToggleLockAsset(COURSE_ID, { id: ASSET_ID, locked: false });
     expect(fetchMock.lastOptions().body).toEqual(JSON.stringify({ locked: true }));
+    expect(fetchMock.called()).toBe(true);
+  });
+});
+
+describe('Accessibility Zendesk Client API', () => {
+  const email = 'staff@example.com';
+  const fullName = 'Staff Submitter';
+  const feedbackMessage = 'Feedback';
+
+  beforeEach(() => {
+    const zendeskEndpoint = endpoints.zendesk;
+    fetchMock.mock(zendeskEndpoint, 200);
+  });
+
+  afterEach(() => {
+    fetchMock.reset();
+  });
+
+  it('is called', () => {
+    postAccessibilityForm(email, fullName, feedbackMessage);
+    expect(fetchMock.lastOptions().body).toEqual(JSON.stringify({
+      name: fullName,
+      tags: ['studio_a11y'],
+      email: {
+        from: email,
+        subject: 'Studio Accessibility Request',
+        message: feedbackMessage,
+      },
+    }));
     expect(fetchMock.called()).toBe(true);
   });
 });
