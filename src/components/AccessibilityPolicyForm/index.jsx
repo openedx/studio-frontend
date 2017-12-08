@@ -78,7 +78,7 @@ export class AccessibilityPolicyForm extends React.Component {
         alertType: 'danger',
         alertDialog: (
           <div>
-            <div>Please fill in all required fields.</div>
+            <div>Make sure to fill in all fields.</div>
             <br />
             <div>
               <ul className={styles['bullet-list']}>
@@ -153,7 +153,7 @@ export class AccessibilityPolicyForm extends React.Component {
     if (!emailRegEx.test(email)) {
       feedback = {
         isValid: false,
-        validationMessage: 'Valid email required.',
+        validationMessage: 'Enter a valid email address.',
       };
     }
     return feedback;
@@ -164,7 +164,7 @@ export class AccessibilityPolicyForm extends React.Component {
     if (!fullName) {
       feedback = {
         isValid: false,
-        validationMessage: 'Full name required.',
+        validationMessage: 'Enter a name.',
       };
     }
     return feedback;
@@ -175,7 +175,7 @@ export class AccessibilityPolicyForm extends React.Component {
     if (!message) {
       feedback = {
         isValid: false,
-        validationMessage: 'Message required.',
+        validationMessage: 'Enter a message.',
       };
     }
     return feedback;
@@ -224,10 +224,10 @@ export class AccessibilityPolicyForm extends React.Component {
         <h1 id="a11y-feedback" className={styles['page-header']}>Studio Accessibility Feedback</h1>
         {this.renderStatusAlert()}
         <section className={styles['form-section']} role="group" aria-labelledby="a11y-feedback">
-          <p>All fields required.</p>
+          <p>All fields are required.</p>
           <InputText
             name="email"
-            label="Your Email"
+            label="Email Address"
             id="email"
             type="email"
             onChange={this.handleEmailChange}
@@ -239,7 +239,7 @@ export class AccessibilityPolicyForm extends React.Component {
           />
           <InputText
             name="fullName"
-            label="Full Name"
+            label="Name"
             id="fullName"
             onChange={this.handleFullNameChange}
             value={this.state.submitterFullName}

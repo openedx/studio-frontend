@@ -19,9 +19,9 @@ const formInputs = {
 };
 
 const validationMessages = {
-  email: 'Valid email required.',
-  fullName: 'Full name required.',
-  message: 'Message required.',
+  email: 'Enter a valid email address.',
+  fullName: 'Enter a name.',
+  message: 'Enter a message.',
 };
 
 const clearStatus = (wrapper) => {
@@ -99,7 +99,7 @@ describe('<AccessibilityPolicyForm />', () => {
       const statusAlert = wrapper.find('StatusAlert');
       expect(statusAlert.find('div').first().prop('hidden')).toEqual(false);
       expect(statusAlert.find('div').first().hasClass('alert-danger')).toEqual(true);
-      expect(statusAlert.text()).toContain(`Please fill in all required fields.${validationMessages.email}${validationMessages.fullName}${validationMessages.message}`);
+      expect(statusAlert.text()).toContain(`Make sure to fill in all fields.${validationMessages.email}${validationMessages.fullName}${validationMessages.message}`);
     });
 
     it('shows correct success message', () => {
