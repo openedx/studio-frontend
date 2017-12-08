@@ -38,6 +38,13 @@ export class AccessibilityPolicyForm extends React.Component {
     this.renderStatusAlert = this.renderStatusAlert.bind(this);
   }
 
+  componentWillReceiveProps(nextProps) {
+    const { accessibilityStatus } = nextProps;
+    if (accessibilityStatus.type === accessibilityActions.ACCESSIBILITY_FORM_SUBMIT_SUCCESS) {
+      this.clearInputs();
+    }
+  }
+
   onSubmitClick() {
     this.props.clearAccessibilityStatus();
 
@@ -60,7 +67,6 @@ export class AccessibilityPolicyForm extends React.Component {
     this.statusAlertRef.focus();
 
     if (isValidContent) {
-      this.clearInputs();
       this.props.submitAccessibilityForm(submitterEmail, submitterFullName, submitterMessage);
     }
   }
@@ -182,13 +188,11 @@ export class AccessibilityPolicyForm extends React.Component {
   }
 
   clearInputs() {
-    // TODO: Add this functionality back in once Paragon handles clearing correctly
-    // current Paragon's asInput is overwriting the value field of our inputs
-    // this.setState({ // current this will clear on every valid submit (success/fail) - correct?
-    //   submitterEmail: '',
-    //   submitterFullName: '',
-    //   submitterMessage: '',
-    // });
+    this.setState({
+      submitterEmail: '',
+      submitterFullName: '',
+      submitterMessage: '',
+    });
   }
 
   closeStatusAlert() {

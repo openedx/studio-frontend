@@ -146,12 +146,16 @@ describe('<AccessibilityPolicyForm />', () => {
       expect(statusAlert.text()).toContain(`We are currently experiencing high volume. Try again later today or send an email message to ${wrapper.props().accessibilityEmail}`);
     });
 
-    it('clears inputs on valid submit', () => {
+    it('clears inputs on successful submit', () => {
       const formSection = wrapper.find('section');
       const emailInput = wrapper.find('input#email');
       const fullNameInput = wrapper.find('input#fullName');
       const messageInput = wrapper.find('textarea#message');
 
+      wrapper.setProps({
+        clearAccessibilityStatus: () => clearStatus(wrapper),
+        submitAccessibilityForm: () => getMockForZendeskSuccess(wrapper),
+      });
       wrapper.setState({
         submitterEmail: formInputs.email,
         submitterFullName: formInputs.fullName,
@@ -164,6 +168,30 @@ describe('<AccessibilityPolicyForm />', () => {
       expect(emailInput.instance().value).toEqual('');
       expect(fullNameInput.instance().value).toEqual('');
       expect(messageInput.instance().value).toEqual('');
+    });
+
+    it('does not clear inputs on failed submit', () => {
+      const formSection = wrapper.find('section');
+      const emailInput = wrapper.find('input#email');
+      const fullNameInput = wrapper.find('input#fullName');
+      const messageInput = wrapper.find('textarea#message');
+
+      wrapper.setProps({
+        clearAccessibilityStatus: () => clearStatus(wrapper),
+        submitAccessibilityForm: () => getMockForZendeskRateLimit(wrapper),
+      });
+      wrapper.setState({
+        submitterEmail: formInputs.email,
+        submitterFullName: formInputs.fullName,
+        submitterMessage: formInputs.message,
+      });
+
+      const submitButton = formSection.find('button');
+      submitButton.simulate('click');
+
+      expect(emailInput.instance().value).toEqual(formInputs.email);
+      expect(fullNameInput.instance().value).toEqual(formInputs.fullName);
+      expect(messageInput.instance().value).toEqual(formInputs.message);
     });
 
     it('clears accessibilityStatus as expected', () => {
