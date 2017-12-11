@@ -13,8 +13,9 @@ To install and run locally:
 ```
 $ git clone git@github.com:edx/studio-frontend.git
 $ cd studio-frontend
-$ docker-compose -f docker-compose.yml up studio-frontend
+$ make up
 ```
+You can append ```-detached``` to the ```make up``` command to run Docker in the background.
 
 To install a new node package in the repo (assumes container is running):
 ```
@@ -25,7 +26,7 @@ $ git add package.json
 ```
 To make changes to the Docker image locally, modify the Dockerfile as needed and run:
 ```
-$ docker build -t mroytman/studio-frontend:latest .
+$ docker build -t edxops/studio-frontend:latest .
 ```
 
 Webpack will serve pages in development mode at http://localhost:18011.
@@ -52,18 +53,9 @@ The development server will run regardless of whether devstack is running along 
 
 Currently, the process for releasing a new version of our package is as follows:
 
-1. Make your changes in a PR and get them into master, as usual. Do not bump the version in package.json!
-2. After merging your changes, `git checkout master && git pull`. Ensure your current directory is cleaned, with no outstanding commits or files.
-3. Be a member of the correct edX and npm orgs, and be logged in. All of @edx/educator-dahlia should be set up, and others shouldn't need to be publishing this package.
-4. `make publish`. This will:
-  - verify that you're on a clean master branch
-  - bump the version in package.json, as a commit on your local master branch
-    - note that this will be a patch version bump by default; for other release types modify the `npm version patch` sub-command under the `publish` make target.
-  - tag that commit as a Github release tag
-  - `git checkout` to a new branch
-  - run our publish script to build everything and send it up to npm, and
-  - push all git changes up to the remote.
-5. Go view your newly created PR, and merge it. Also consider modifying the release tag with more descriptive release notes.
-6. If needed, send an email to release-notifications@edx.org. Summarize your change and link to:
-    - the github release
-    - the npm package
+1. Make your changes in a pull request. Bump the version in package.json according to [semver](https://semver.org/) as part of the pull request.
+2. Merge your pull request.
+3. Publish a [GitHub release](https://github.com/edx/studio-frontend/releases). Make sure to prefix the version number with `v`, as in `v2.3.4`.
+3. `git checkout master` and `git pull`. Ensure your current directory is cleaned, with no outstanding commits or files. As an extra precaution, you can `rm -rf node node_modules` and `npm install` prior to publishing.
+4. Be a member of the correct edX and npm orgs, and be logged in. All of @edx/educator-dahlia should be set up, and others shouldn't need to be publishing this package.
+5. Run `npm publish`.

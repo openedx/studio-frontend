@@ -22,7 +22,7 @@ up: ## bring up studio-frontend container
 
 up-detached: ## bring up studio-frontend container in detached mode
 	docker-compose $(COMPOSE_FILE_EXTRA_ARG) up -d studio-frontend
-	
+
 logs: ## show logs for studio-frontend container
 	docker-compose logs -f studio-frontend
 
@@ -60,15 +60,6 @@ devstack.update: ## use this if you don't want to fire up the dedicated asset wa
 
 asset-page-flag: ## insert a waffle flag into local docker devstack
 	docker exec -t edx.devstack.studio bash -c 'source /edx/app/edxapp/edxapp_env && cd /edx/app/edxapp/edx-platform && echo "from cms.djangoapps.contentstore.config.models import NewAssetsPageFlag; NewAssetsPageFlag.objects.all().delete(); NewAssetsPageFlag.objects.create(enabled=True, enabled_for_all_courses=True);" | ./manage.py lms --settings=devstack_docker shell && echo "NewAssetsPageFlag inserted!"'
-
-publish: publish-patch ## default is a path release
-
-publish-%: ## don't use this, it's broken. Do the following manually (from your host machine unless specified):
-	# npm version [patch | minor | major]
-	# git checkout dahlia/<version>
-	# (do this in you docker container, it actually builds things) npm publish --access public
-	# git push --set-upstream origin dahlia/<version>
-	# git push --tags
 
 validate-devstack-folders:
 	export TEMP_FILE=$$(date +%s) && touch $$TEMP_FILE && docker exec -t edx.devstack.studio bash -c 'if [[ $$(ls /edx/src/sfe_parent/studio-frontend/$$TEMP_FILE) ]]; then echo "Folder structure looks good"; else echo "Your folders are FUBAR, talk to Eric (who should really come up with an automatic way of repairing this situation)"; exit 1; fi' && rm -rf $$TEMP_FILE
