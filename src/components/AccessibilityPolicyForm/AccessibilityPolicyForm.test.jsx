@@ -143,7 +143,7 @@ describe('<AccessibilityPolicyForm />', () => {
       const statusAlertType = statusAlert.prop('alertType');
       expect(statusAlertType).toEqual('danger');
       expect(statusAlert.find('div').first().hasClass('alert-danger')).toEqual(true);
-      expect(statusAlert.text()).toContain(`We are currently experiencing high volume. Try again later today or send an email message to ${wrapper.props().accessibilityEmail}`);
+      expect(statusAlert.text()).toContain(`We are currently experiencing high volume. Try again later today or send an email message to ${wrapper.props().accessibilityEmail}.`);
     });
 
     it('clears inputs on successful submit', () => {

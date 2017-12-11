@@ -108,7 +108,7 @@ export class AccessibilityPolicyForm extends React.Component {
         alertDialog: (
           <div>
             We are currently experiencing high volume. Try again later today or
-             send an email message to <a href={`mailto:${accessibilityEmail}`}>{accessibilityEmail}</a>
+             send an email message to <a href={`mailto:${accessibilityEmail}`}>{accessibilityEmail}</a>.
           </div>
         ),
       };
@@ -225,7 +225,7 @@ export class AccessibilityPolicyForm extends React.Component {
   render() {
     return (
       <div>
-        <h1 id="a11y-feedback" className={styles['page-header']}>Studio Accessibility Feedback</h1>
+        <h2 id="a11y-feedback" className={styles['page-header']}>Studio Accessibility Feedback</h2>
         {this.renderStatusAlert()}
         <section className={styles['form-section']} role="group" aria-labelledby="a11y-feedback">
           <p>All fields are required.</p>
