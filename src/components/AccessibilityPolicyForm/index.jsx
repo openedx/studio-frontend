@@ -1,6 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import isEmail from 'isemail';
+
 import Button from '@edx/paragon/src/Button';
 import InputText from '@edx/paragon/src/InputText';
 import StatusAlert from '@edx/paragon/src/StatusAlert';
@@ -151,17 +153,14 @@ export class AccessibilityPolicyForm extends React.Component {
 
   validateEmail(email) {
     let feedback = { isValid: true };
-    /* eslint-disable max-len */
-    /* eslint-disable no-useless-escape */
-    // TODO: Investigate using https://www.npmjs.com/package/isemail instead of regex
-    const emailRegEx = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    /* eslint-enable max-len */
-    if (!emailRegEx.test(email)) {
+
+    if (!isEmail.validate(email)) {
       feedback = {
         isValid: false,
         validationMessage: 'Enter a valid email address.',
       };
     }
+
     return feedback;
   }
 
