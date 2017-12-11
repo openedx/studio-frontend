@@ -14,7 +14,7 @@ const AccessibilityBody = (props) => {
   /* eslint-disable max-len */
   return (
     <div>
-      <h1 className={edxBootstrap['page-header']}>Individualized Accessibility Process for Course Creators</h1>
+      <h2 className={edxBootstrap['page-header']}>Individualized Accessibility Process for Course Creators</h2>
       <p>
         At edX, we seek to understand and respect the unique needs and perspectives of the edX global community.  We value every course team and are committed to being a leader in expanding access to all, including course team creators and authors with disabilities.  To that end, we have adopted a {communityAccessibilityElement} and this process to ensure that course team creators and authors with disabilities are able to develop and post content on our platform via Studio.
       </p>
@@ -22,13 +22,14 @@ const AccessibilityBody = (props) => {
         Course team creators and authors who, because of their disabilities, need assistance to use Studio should take the following steps:
       </p>
       <ol className={styles['numerical-list']}>
-        <li>Notify us by email addressed to {emailElement}.  In order for edX to fully and promptly assess and respond to your request, please provide the following information:</li>
-        <ol className={styles['alphabetical-list']}>
-          <li>Your name and email address;</li>
-          <li>The edX member institution that you are affiliated with;</li>
-          <li>A brief description of the challenge or barrier to access that you are experiencing; and</li>
-          <li>How soon you need access and for how long (e.g., a planned course start date or in connection with a course-related deadline such as a final essay).</li>
-        </ol>
+        <li>Notify us by email addressed to {emailElement}.  In order for edX to fully and promptly assess and respond to your request, please provide the following information:
+          <ol className={styles['alphabetical-list']}>
+            <li>Your name and email address;</li>
+            <li>The edX member institution that you are affiliated with;</li>
+            <li>A brief description of the challenge or barrier to access that you are experiencing; and</li>
+            <li>How soon you need access and for how long (e.g., a planned course start date or in connection with a course-related deadline such as a final essay).</li>
+          </ol>
+        </li>
         <li>Within 48 business hours of receiving your request, the edX Support Team will respond to confirm receipt and forward your request to the edX Partner Manager for your institution and the edX Website Accessibility Coordinator.</li>
         <li>With guidance from the Website Accessibility Coordinator, edX will contact you within 5 business days to discuss your request and gather additional information from you to identify a solution.</li>
         <li>EdX will assist you promptly and thoroughly so that you are able to create content on the CMS within your time constraints.  Such efforts may include, but are not limited to:
