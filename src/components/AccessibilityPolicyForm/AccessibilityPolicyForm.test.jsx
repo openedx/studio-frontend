@@ -1,9 +1,13 @@
 import React from 'react';
 import Enzyme from 'enzyme';
-import { AccessibilityPolicyForm } from './index';
+import { Provider } from 'react-redux';
+import configureStore from 'redux-mock-store';
+
+import WrappedAccessibilityPolicyForm, { AccessibilityPolicyForm } from './index';
 import { accessibilityActions } from '../../data/constants/actionTypes';
 
 const mount = Enzyme.mount;
+const mockStore = configureStore();
 
 const defaultProps = {
   accessibilityStatus: {},
@@ -45,61 +49,94 @@ const getMockForZendeskRateLimit = (wrapper) => {
 };
 
 let wrapper;
+let store;
 
 describe('<AccessibilityPolicyForm />', () => {
+  describe('maps', () => {
+    let formComponent;
+    beforeEach(() => {
+      store = mockStore({
+        accessibility: {
+          status: {},
+        },
+      });
+      store.dispatch = jest.fn();
+      wrapper = mount(
+        <Provider store={store}>
+          <WrappedAccessibilityPolicyForm
+            accessibilityEmail="accessibilityTest@test.com"
+          />
+        </Provider>,
+      );
+
+      formComponent = wrapper.find('AccessibilityPolicyForm');
+    });
+
+    it('state to props correctly', () => {
+      expect(formComponent.props()).toEqual(expect.objectContaining({
+        accessibilityStatus: {},
+        accessibilityEmail: 'accessibilityTest@test.com',
+        clearAccessibilityStatus: expect.any(Function),
+        submitAccessibilityForm: expect.any(Function),
+      }));
+    });
+
+    it('dispatch to clearAccessibilityStatus correctly', () => {
+      const clearAccessibilityStatusAction = {
+        type: 'CLEAR_ACCESSIBILITY_STATUS',
+      };
+
+      formComponent.props().clearAccessibilityStatus();
+      expect(store.dispatch).toHaveBeenCalledTimes(1);
+      expect(store.dispatch).toHaveBeenCalledWith(clearAccessibilityStatusAction);
+    });
+
+    it('dispatch to submitAccessibilityForm correctly', () => {
+      formComponent.props().submitAccessibilityForm(formInputs.email,
+        formInputs.fullName, formInputs.message);
+      expect(store.dispatch).toHaveBeenCalledTimes(1);
+      // TODO: determine best way to validate async functions here
+    });
+  });
+
   describe('renders', () => {
+    let formSection;
+    let statusAlert;
     beforeEach(() => {
       wrapper = mount(
         <AccessibilityPolicyForm
           {...defaultProps}
         />,
       );
+      formSection = wrapper.find('section');
+      statusAlert = wrapper.find('StatusAlert');
     });
 
     it('correct number of form fields', () => {
-      const formSection = wrapper.find('section');
       expect(formSection.find('input')).toHaveLength(2);
       expect(formSection.find('textarea')).toHaveLength(1);
       expect(formSection.find('button')).toHaveLength(1);
     });
 
     it('hides StatusAlert on initial load', () => {
-      const statusAlert = wrapper.find('StatusAlert');
+      expect(wrapper.state('isStatusAlertOpen')).toEqual(false);
       expect(statusAlert.find('div').first().prop('hidden')).toEqual(true);
     });
+  });
 
-    it('adds validation checking on each input field', () => {
-      const emailInput = wrapper.find('input#email');
-      emailInput.simulate('blur');
-
-      const emailError = wrapper.find('div#error-email');
-      expect(emailError.exists()).toEqual(true);
-      expect(emailError.text()).toEqual(validationMessages.email);
-
-      const fullNameInput = wrapper.find('input#fullName');
-      fullNameInput.simulate('blur');
-
-      const fullNameError = wrapper.find('div#error-fullName');
-      expect(fullNameError.exists()).toEqual(true);
-      expect(fullNameError.text()).toEqual(validationMessages.fullName);
-
-      const messageInput = wrapper.find('textarea#message');
-      messageInput.simulate('blur');
-
-      const messageError = wrapper.find('div#error-message');
-      expect(messageError.exists()).toEqual(true);
-      expect(messageError.text()).toEqual(validationMessages.message);
-    });
-
-    it('shows validation errors when trying to submit with empty fields', () => {
-      const formSection = wrapper.find('section');
-      const submitButton = formSection.find('button');
-      submitButton.simulate('click');
-
-      const statusAlert = wrapper.find('StatusAlert');
-      expect(statusAlert.find('div').first().prop('hidden')).toEqual(false);
-      expect(statusAlert.find('div').first().hasClass('alert-danger')).toEqual(true);
-      expect(statusAlert.text()).toContain(`Make sure to fill in all fields.${validationMessages.email}${validationMessages.fullName}${validationMessages.message}`);
+  describe('statusAlert', () => {
+    let formSection;
+    let submitButton;
+    let statusAlert;
+    beforeEach(() => {
+      wrapper = mount(
+        <AccessibilityPolicyForm
+          {...defaultProps}
+        />,
+      );
+      formSection = wrapper.find('section');
+      submitButton = formSection.find('button');
+      statusAlert = wrapper.find('StatusAlert');
     });
 
     it('shows correct success message', () => {
@@ -112,13 +149,11 @@ describe('<AccessibilityPolicyForm />', () => {
         submitterFullName: 'test name',
         submitterMessage: 'feedback message',
       });
-
-      const formSection = wrapper.find('section');
-      const submitButton = formSection.find('button');
       submitButton.simulate('click');
 
-      const statusAlert = wrapper.find('StatusAlert');
+      statusAlert = wrapper.find('StatusAlert');
       const statusAlertType = statusAlert.prop('alertType');
+      expect(wrapper.state('isStatusAlertOpen')).toEqual(true);
       expect(statusAlertType).toEqual('success');
       expect(statusAlert.find('div').first().hasClass('alert-success')).toEqual(true);
       expect(statusAlert.text()).toContain('Thank you for contacting edX!Thank you for your feedback regarding the accessibility of Studio. We typically respond within one business day (Monday to Friday, 13:00 to 21:00 UTC).');
@@ -134,24 +169,160 @@ describe('<AccessibilityPolicyForm />', () => {
         submitterFullName: formInputs.fullName,
         submitterMessage: formInputs.message,
       });
-
-      const formSection = wrapper.find('section');
-      const submitButton = formSection.find('button');
       submitButton.simulate('click');
 
-      const statusAlert = wrapper.find('StatusAlert');
+      statusAlert = wrapper.find('StatusAlert');
       const statusAlertType = statusAlert.prop('alertType');
+      expect(wrapper.state('isStatusAlertOpen')).toEqual(true);
       expect(statusAlertType).toEqual('danger');
       expect(statusAlert.find('div').first().hasClass('alert-danger')).toEqual(true);
       expect(statusAlert.text()).toContain(`We are currently experiencing high volume. Try again later today or send an email message to ${wrapper.props().accessibilityEmail}.`);
     });
+  });
 
+  describe('input validation', () => {
+    let formSection;
+    let emailInput;
+    let fullNameInput;
+    let messageInput;
+    let submitButton;
+    let statusAlert;
+    let testValue;
+    beforeEach(() => {
+      wrapper = mount(
+        <AccessibilityPolicyForm
+          {...defaultProps}
+        />,
+      );
+
+      formSection = wrapper.find('section');
+      emailInput = wrapper.find('input#email');
+      fullNameInput = wrapper.find('input#fullName');
+      messageInput = wrapper.find('textarea#message');
+      submitButton = formSection.find('button');
+      statusAlert = wrapper.find('StatusAlert');
+      testValue = 'testValue';
+    });
+
+    it('updates state when email changes', () => {
+      emailInput.simulate('change', { target: { value: testValue } });
+      expect(wrapper.state('submitterEmail')).toEqual(testValue);
+
+      fullNameInput.simulate('change', { target: { value: testValue } });
+      expect(wrapper.state('submitterFullName')).toEqual(testValue);
+
+      messageInput.simulate('change', { target: { value: testValue } });
+      expect(wrapper.state('submitterMessage')).toEqual(testValue);
+    });
+
+    it('adds validation checking on each input field', () => {
+      emailInput.simulate('blur');
+      const emailError = wrapper.find('div#error-email');
+      expect(emailError.exists()).toEqual(true);
+      expect(emailError.text()).toEqual(validationMessages.email);
+
+      fullNameInput.simulate('blur');
+      const fullNameError = wrapper.find('div#error-fullName');
+      expect(fullNameError.exists()).toEqual(true);
+      expect(fullNameError.text()).toEqual(validationMessages.fullName);
+
+      messageInput.simulate('blur');
+      const messageError = wrapper.find('div#error-message');
+      expect(messageError.exists()).toEqual(true);
+      expect(messageError.text()).toEqual(validationMessages.message);
+    });
+
+    it('shows validation errors when trying to submit with all empty fields', () => {
+      submitButton.simulate('click');
+
+      statusAlert = wrapper.find('StatusAlert');
+      expect(wrapper.state('isStatusAlertOpen')).toEqual(true);
+      expect(statusAlert.find('div').first().prop('hidden')).toEqual(false);
+      expect(statusAlert.find('div').first().hasClass('alert-danger')).toEqual(true);
+      expect(statusAlert.text()).toContain(`Make sure to fill in all fields.${validationMessages.email}${validationMessages.fullName}${validationMessages.message}`);
+    });
+
+    it('shows validation errors when only email is empty', () => {
+      fullNameInput.simulate('change', { target: { value: testValue } });
+      messageInput.simulate('change', { target: { value: testValue } });
+      submitButton.simulate('click');
+
+      statusAlert = wrapper.find('StatusAlert');
+      expect(statusAlert.text()).toContain(`Make sure to fill in all fields.${validationMessages.email}`);
+    });
+
+    it('shows validation errors when only email is invalid but not empty', () => {
+      emailInput.simulate('change', { target: { value: testValue } });
+      fullNameInput.simulate('change', { target: { value: testValue } });
+      messageInput.simulate('change', { target: { value: testValue } });
+      submitButton.simulate('click');
+
+      statusAlert = wrapper.find('StatusAlert');
+      expect(statusAlert.text()).toContain(`Make sure to fill in all fields.${validationMessages.email}`);
+    });
+
+    it('shows validation errors when only fullName is empty', () => {
+      emailInput.simulate('change', { target: { value: `${testValue}@test.com` } });
+      messageInput.simulate('change', { target: { value: testValue } });
+      submitButton.simulate('click');
+
+      statusAlert = wrapper.find('StatusAlert');
+      expect(statusAlert.text()).toContain(`Make sure to fill in all fields.${validationMessages.fullName}`);
+    });
+
+    it('shows validation errors when only message is empty', () => {
+      emailInput.simulate('change', { target: { value: `${testValue}@test.com` } });
+      fullNameInput.simulate('change', { target: { value: testValue } });
+      submitButton.simulate('click');
+
+      statusAlert = wrapper.find('StatusAlert');
+      expect(statusAlert.text()).toContain(`Make sure to fill in all fields.${validationMessages.message}`);
+    });
+
+    it('shows validation errors for invalid fullName and message', () => {
+      emailInput.simulate('change', { target: { value: `${testValue}@test.com` } });
+      submitButton.simulate('click');
+
+      statusAlert = wrapper.find('StatusAlert');
+      expect(statusAlert.text()).toContain(`Make sure to fill in all fields.${validationMessages.fullName}${validationMessages.message}`);
+    });
+
+    it('shows validation errors for invalid email and message', () => {
+      fullNameInput.simulate('change', { target: { value: testValue } });
+      submitButton.simulate('click');
+
+      statusAlert = wrapper.find('StatusAlert');
+      expect(statusAlert.text()).toContain(`Make sure to fill in all fields.${validationMessages.email}${validationMessages.message}`);
+    });
+
+    it('shows validation errors for invalid email and fullName', () => {
+      messageInput.simulate('change', { target: { value: testValue } });
+      submitButton.simulate('click');
+
+      statusAlert = wrapper.find('StatusAlert');
+      expect(statusAlert.text()).toContain(`Make sure to fill in all fields.${validationMessages.email}${validationMessages.fullName}`);
+    });
+  });
+
+  describe('form clearing', () => {
+    let formSection;
+    let emailInput;
+    let fullNameInput;
+    let messageInput;
+    let submitButton;
+    beforeEach(() => {
+      wrapper = mount(
+        <AccessibilityPolicyForm
+          {...defaultProps}
+        />,
+      );
+      formSection = wrapper.find('section');
+      emailInput = wrapper.find('input#email');
+      fullNameInput = wrapper.find('input#fullName');
+      messageInput = wrapper.find('textarea#message');
+      submitButton = formSection.find('button');
+    });
     it('clears inputs on successful submit', () => {
-      const formSection = wrapper.find('section');
-      const emailInput = wrapper.find('input#email');
-      const fullNameInput = wrapper.find('input#fullName');
-      const messageInput = wrapper.find('textarea#message');
-
       wrapper.setProps({
         clearAccessibilityStatus: () => clearStatus(wrapper),
         submitAccessibilityForm: () => getMockForZendeskSuccess(wrapper),
@@ -161,8 +332,6 @@ describe('<AccessibilityPolicyForm />', () => {
         submitterFullName: formInputs.fullName,
         submitterMessage: formInputs.message,
       });
-
-      const submitButton = formSection.find('button');
       submitButton.simulate('click');
 
       expect(emailInput.instance().value).toEqual('');
@@ -171,11 +340,6 @@ describe('<AccessibilityPolicyForm />', () => {
     });
 
     it('does not clear inputs on failed submit', () => {
-      const formSection = wrapper.find('section');
-      const emailInput = wrapper.find('input#email');
-      const fullNameInput = wrapper.find('input#fullName');
-      const messageInput = wrapper.find('textarea#message');
-
       wrapper.setProps({
         clearAccessibilityStatus: () => clearStatus(wrapper),
         submitAccessibilityForm: () => getMockForZendeskRateLimit(wrapper),
@@ -185,8 +349,6 @@ describe('<AccessibilityPolicyForm />', () => {
         submitterFullName: formInputs.fullName,
         submitterMessage: formInputs.message,
       });
-
-      const submitButton = formSection.find('button');
       submitButton.simulate('click');
 
       expect(emailInput.instance().value).toEqual(formInputs.email);
@@ -201,11 +363,55 @@ describe('<AccessibilityPolicyForm />', () => {
         },
         clearAccessibilityStatus: () => clearStatus(wrapper),
       });
-
-      const formSection = wrapper.find('section');
-      const submitButton = formSection.find('button');
       submitButton.simulate('click');
       expect(wrapper.props().accessibilityStatus).toEqual({});
+    });
+  });
+
+  describe('focuses', () => {
+    let formSection;
+    let emailInput;
+    let submitButton;
+    let statusAlert;
+    beforeEach(() => {
+      wrapper = mount(
+        <AccessibilityPolicyForm
+          {...defaultProps}
+        />,
+      );
+
+      formSection = wrapper.find('section');
+      submitButton = formSection.find('button');
+      statusAlert = wrapper.find('StatusAlert');
+      emailInput = wrapper.find('input#email');
+    });
+
+    it('focuses correctly on StatusAlert open', () => {
+      wrapper.setProps({
+        clearAccessibilityStatus: () => clearStatus(wrapper),
+        submitAccessibilityForm: () => getMockForZendeskRateLimit(wrapper),
+      });
+      submitButton.simulate('click');
+
+      statusAlert = wrapper.find('StatusAlert');
+      const statusAlertDismissButton = statusAlert.find('button');
+      expect(wrapper.state('isStatusAlertOpen')).toEqual(true);
+      expect(statusAlertDismissButton.html()).toEqual(document.activeElement.outerHTML);
+    });
+
+    it('focuses correctly on StatusAlert close', () => {
+      wrapper.setProps({
+        clearAccessibilityStatus: () => clearStatus(wrapper),
+        submitAccessibilityForm: () => getMockForZendeskRateLimit(wrapper),
+      });
+      submitButton.simulate('click');
+
+      statusAlert = wrapper.find('StatusAlert');
+      const statusAlertDismissButton = statusAlert.find('button');
+      statusAlertDismissButton.simulate('click');
+      expect(wrapper.state('isStatusAlertOpen')).toEqual(false);
+      emailInput = wrapper.find('input#email');
+      expect(emailInput.html()).toEqual(document.activeElement.outerHTML);
     });
   });
 });

@@ -35,6 +35,6 @@ export const submitAccessibilityForm = (formEmail, formFullName, formMessage) =>
         // TODO: properly catch any error and possibly send back for appropriate logging
       });
 
-export const clearAccessibilityStatus = () =>
-  dispatch =>
-    dispatch({ type: accessibilityActions.CLEAR_ACCESSIBILITY_STATUS });
+export const clearAccessibilityStatus = () => ({
+  type: accessibilityActions.CLEAR_ACCESSIBILITY_STATUS,
+});
