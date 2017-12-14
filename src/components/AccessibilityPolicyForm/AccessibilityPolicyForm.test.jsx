@@ -28,6 +28,8 @@ const validationMessages = {
   message: 'Enter a message.',
 };
 
+const dangerIconDescription = 'Error: ';
+
 const clearStatus = (wrapper) => {
   wrapper.setProps({ accessibilityStatus: {} });
 };
@@ -219,17 +221,17 @@ describe('<AccessibilityPolicyForm />', () => {
       emailInput.simulate('blur');
       const emailError = wrapper.find('div#error-email');
       expect(emailError.exists()).toEqual(true);
-      expect(emailError.text()).toEqual(validationMessages.email);
+      expect(emailError.text()).toEqual(dangerIconDescription + validationMessages.email);
 
       fullNameInput.simulate('blur');
       const fullNameError = wrapper.find('div#error-fullName');
       expect(fullNameError.exists()).toEqual(true);
-      expect(fullNameError.text()).toEqual(validationMessages.fullName);
+      expect(fullNameError.text()).toEqual(dangerIconDescription + validationMessages.fullName);
 
       messageInput.simulate('blur');
       const messageError = wrapper.find('div#error-message');
       expect(messageError.exists()).toEqual(true);
-      expect(messageError.text()).toEqual(validationMessages.message);
+      expect(messageError.text()).toEqual(dangerIconDescription + validationMessages.message);
     });
 
     it('shows validation errors when trying to submit with all empty fields', () => {
