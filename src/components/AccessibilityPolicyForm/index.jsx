@@ -160,6 +160,7 @@ export class AccessibilityPolicyForm extends React.Component {
       feedback = {
         isValid: false,
         validationMessage: 'Enter a valid email address.',
+        dangerIconDescription: 'Error: ',
       };
     }
     return feedback;
@@ -171,6 +172,7 @@ export class AccessibilityPolicyForm extends React.Component {
       feedback = {
         isValid: false,
         validationMessage: 'Enter a name.',
+        dangerIconDescription: 'Error: ',
       };
     }
     return feedback;
@@ -182,6 +184,7 @@ export class AccessibilityPolicyForm extends React.Component {
       feedback = {
         isValid: false,
         validationMessage: 'Enter a message.',
+        dangerIconDescription: 'Error: ',
       };
     }
     return feedback;
