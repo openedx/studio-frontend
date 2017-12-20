@@ -71,6 +71,22 @@ export function requestToggleLockAsset(courseId, asset) {
   );
 }
 
+export function postUploadAsset(courseId, file) {
+  const data = new FormData();
+  data.append('file', file);
+  return fetch(
+    `${endpoints.assets}/${courseId}/`, {
+      credentials: 'same-origin',
+      method: 'post',
+      body: data,
+      headers: {
+        Accept: 'application/json',
+        'X-CSRFToken': Cookies.get('csrftoken'),
+      },
+    },
+  );
+}
+
 export function postAccessibilityForm(formEmail, formFullName, formMessage) {
   return fetch(
     `${endpoints.zendesk}`, {

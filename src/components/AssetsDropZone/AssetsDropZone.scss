@@ -1,0 +1,38 @@
+@import '../../SFE.scss';
+
+.center-text {
+  text-align: center;
+}
+
+.drop-zone {
+  outline: $dark dashed 1px;
+  padding: $spacer;
+
+  button {
+    @extend .btn;
+    @extend .btn-outline-primary;
+    white-space: normal;
+    margin-bottom: $spacer;
+  }
+
+  h2 {
+    @extend .center-text;
+    font-weight: $font-weight-bold;
+    font-size: $font-size-lg;
+  }
+
+  p {
+    font-size: $font-size-sm;
+    margin-bottom: $spacer * 0.5;
+  }
+}
+
+.drop-active {
+  outline: $dark dashed 2px;
+  background-color: rgba($primary, 0.2);
+}
+
+p.upload-icon {
+  text-align: center;
+  font-size: $font-size-lg * 2;
+}

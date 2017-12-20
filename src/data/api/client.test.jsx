@@ -1,7 +1,13 @@
 import fetchMock from 'fetch-mock';
 
 import endpoints from './endpoints';
-import { requestAssets, requestDeleteAsset, requestToggleLockAsset, postAccessibilityForm } from './client';
+import {
+  requestAssets,
+  requestDeleteAsset,
+  requestToggleLockAsset,
+  postUploadAsset,
+  postAccessibilityForm,
+} from './client';
 
 const COURSE_ID = 'my-course-id';
 const ASSET_ID = 'asset-id';
@@ -69,6 +75,23 @@ describe('API client requestToggleLockAsset', () => {
   it('is called', () => {
     requestToggleLockAsset(COURSE_ID, { id: ASSET_ID, locked: false });
     expect(fetchMock.lastOptions().body).toEqual(JSON.stringify({ locked: true }));
+    expect(fetchMock.called()).toBe(true);
+  });
+});
+
+describe('API client postUploadAsset', () => {
+  beforeEach(() => {
+    const assetEndpointRegex = new RegExp(`/assets/${COURSE_ID}/`);
+    fetchMock.mock(assetEndpointRegex, 200);
+  });
+
+  afterEach(() => {
+    fetchMock.reset();
+  });
+
+  it('is called', () => {
+    postUploadAsset(COURSE_ID, 'quail.png');
+    expect(fetchMock.lastOptions().body.get('file')).toBe('quail.png');
     expect(fetchMock.called()).toBe(true);
   });
 });
