@@ -230,8 +230,8 @@ export class AccessibilityPolicyForm extends React.Component {
       <div>
         <h2 id="a11y-feedback" className={styles['page-header']}>Studio Accessibility Feedback</h2>
         {this.renderStatusAlert()}
-        <section className={styles['form-section']} role="group" aria-labelledby="a11y-feedback">
-          <p>All fields are required.</p>
+        <section className={styles['form-section']} role="group" aria-labelledby="a11y-feedback fields-required">
+          <p id="fields-required">All fields are required.</p>
           <InputText
             name="email"
             label="Email Address"
