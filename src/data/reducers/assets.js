@@ -6,11 +6,11 @@ import { assetLoading } from '../constants/loadingTypes';
 import { addLoadingField, removeLoadingField, toggleLockAsset } from './utils';
 import { getAssetAPIAttributeFromDatabaseAttribute } from '../../utils/getAssetsAttributes';
 
-const filtersInitial = {
+export const filtersInitial = {
   assetTypes: {},
 };
 
-const paginationInitial = {
+export const paginationInitial = {
   start: 0,
   end: 0,
   page: 0,
@@ -18,19 +18,19 @@ const paginationInitial = {
   totalCount: 0,
 };
 
-const sortInitial = {
+export const sortInitial = {
   sort: 'date_added',
   direction: 'desc',
 };
 
-const requestInitial = {
+export const requestInitial = {
   ...filtersInitial,
   ...paginationInitial,
   ...sortInitial,
 };
 
 
-const filters = (state = filtersInitial, action) => {
+export const filters = (state = filtersInitial, action) => {
   switch (action.type) {
     case assetActions.REQUEST_ASSETS_SUCCESS:
       return { ...state, assetTypes: { ...state.assetTypes, ...action.data } };
@@ -60,7 +60,7 @@ export const assets = (state = [], action) => {
   }
 };
 
-const pagination = (state = paginationInitial, action) => {
+export const pagination = (state = paginationInitial, action) => {
   switch (action.type) {
     case assetActions.REQUEST_ASSETS_SUCCESS:
       return {
@@ -75,7 +75,7 @@ const pagination = (state = paginationInitial, action) => {
   }
 };
 
-const sort = (state = sortInitial, action) => {
+export const sort = (state = sortInitial, action) => {
   switch (action.type) {
     case assetActions.REQUEST_ASSETS_SUCCESS:
       return {
@@ -87,8 +87,18 @@ const sort = (state = sortInitial, action) => {
   }
 };
 
-const status = (state = {}, action) => {
+export const status = (state = {}, action) => {
   switch (action.type) {
+    case assetActions.REQUEST_ASSETS_SUCCESS:
+      return {
+        response: action.response,
+        type: action.type,
+      };
+    case assetActions.REQUEST_ASSETS_FAILURE:
+      return {
+        response: action.response,
+        type: action.type,
+      };
     case assetActions.CLEAR_ASSETS_STATUS:
       return {};
     case assetActions.DELETE_ASSET_SUCCESS:

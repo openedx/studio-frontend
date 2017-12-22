@@ -3,7 +3,7 @@ import fetchMock from 'fetch-mock';
 import thunk from 'redux-thunk';
 
 import endpoints from '../api/endpoints';
-import { submitAccessibilityForm, clearAccessibilityStatus } from './accessibility';
+import * as actionCreators from './accessibility';
 import { accessibilityActions } from '../../data/constants/actionTypes';
 
 const initialState = {
@@ -16,19 +16,50 @@ const middlewares = [thunk];
 const mockStore = configureStore(middlewares);
 let store;
 
-describe('Accessibility Action Creator', () => {
+describe('Accessibility Action Creators', () => {
+  beforeEach(() => {
+    store = mockStore(initialState);
+  });
+
   afterEach(() => {
     fetchMock.reset();
     fetchMock.restore();
   });
+  it('returns expected state from submitAccessibilityFormSuccess', () => {
+    const response = {
+      status: 200,
+    };
 
+    const expectedAction = {
+      statusCode: response.status,
+      type: accessibilityActions.ACCESSIBILITY_FORM_SUBMIT_SUCCESS,
+    };
+
+    expect(store.dispatch(
+      actionCreators.submitAccessibilityFormSuccess(response))).toEqual(expectedAction);
+  });
+  it('returns expected state from submitAccessibilityFormRateLimitFailure', () => {
+    const response = {
+      status: 429,
+      detail: 'You have hit the rate limit!',
+    };
+
+    const expectedAction = {
+      statusCode: 429,
+      failureDetails: response.detail,
+      type: accessibilityActions.ACCESSIBILITY_FORM_SUBMIT_RATE_LIMIT_FAILURE,
+    };
+
+    expect(store.dispatch(
+      actionCreators.submitAccessibilityFormRateLimitFailure(response))).toEqual(expectedAction);
+  });
   it('returns expected state from success', () => {
     fetchMock.once(zendeskEndpoint, 201);
     const expectedActions = [
       { type: accessibilityActions.ACCESSIBILITY_FORM_SUBMIT_SUCCESS, statusCode: 201 },
     ];
-    store = mockStore(initialState);
-    return store.dispatch(submitAccessibilityForm()).then(() => {
+
+    return store.dispatch(actionCreators.submitAccessibilityForm()).then(() => {
       // return of async actions
       expect(store.getActions()).toEqual(expectedActions);
     });
@@ -44,8 +75,8 @@ describe('Accessibility Action Creator', () => {
       statusCode: 429,
       failureDetails: 'Request was throttled. Expected available in 175.0 seconds.',
     }];
-    store = mockStore(initialState);
-    return store.dispatch(submitAccessibilityForm()).then(() => {
+
+    return store.dispatch(actionCreators.submitAccessibilityForm()).then(() => {
       // return of async actions
       expect(store.getActions()).toEqual(expectedActions);
     });
@@ -53,7 +84,6 @@ describe('Accessibility Action Creator', () => {
 
   it('returns expected state from clearing status', () => {
     const expectedAction = { type: accessibilityActions.CLEAR_ACCESSIBILITY_STATUS };
-    store = mockStore(initialState);
-    expect(store.dispatch(clearAccessibilityStatus())).toEqual(expectedAction);
+    expect(store.dispatch(actionCreators.clearAccessibilityStatus())).toEqual(expectedAction);
   });
 });
