@@ -8,6 +8,7 @@ import classNames from 'classnames';
 import { connect } from 'react-redux';
 
 import FontAwesomeStyles from 'font-awesome/css/font-awesome.min.css';
+import styles from './AssetsTable.scss';
 import { assetActions } from '../../data/constants/actionTypes';
 import { assetLoading } from '../../data/constants/loadingTypes';
 import { clearAssetsStatus, deleteAsset, sortUpdate, toggleLockAsset } from '../../data/actions/assets';
@@ -316,7 +317,7 @@ export class AssetsTable extends React.Component {
         onClose={this.closeModal}
         buttons={[
           <Button
-            label="Yes, delete."
+            label="Permanently delete"
             buttonType="primary"
             onClick={this.deleteAsset}
           />,
@@ -328,10 +329,37 @@ export class AssetsTable extends React.Component {
   renderModalBody() {
     return (
       <div>
-        <span className={classNames(FontAwesomeStyles.fa, FontAwesomeStyles['fa-exclamation-triangle'])} aria-hidden="true" />
-        Are you sure you wish to delete this item?
-        This cannot be reversed! Any content that links/refers to this item will no longer work
-        (e.g. images and/or links may break).
+        <div className={styles['container-fluid']}>
+          <div className={styles.row}>
+            <div className={styles['col-md-10']}>
+              <div>
+                <p>Deleting <b>{this.state.assetToDelete.display_name}</b> cannot be undone.</p>
+                <p>
+                  Any links or references to this file will no longer work. <a
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    href="http://edx.readthedocs.io/projects/edx-partner-course-staff/en/latest/course_assets/course_files.html"
+                  >
+                    Learn more.
+                  </a>
+                </p>
+              </div>
+            </div>
+            <div className={styles.col}>
+              <span
+                className={
+                  classNames(
+                    FontAwesomeStyles.fa,
+                    FontAwesomeStyles['fa-exclamation-triangle'],
+                    FontAwesomeStyles['fa-3x'],
+                    styles['text-warning'],
+                  )
+                }
+                aria-hidden="true"
+              />
+            </div>
+          </div>
+        </div>
       </div>
     );
   }

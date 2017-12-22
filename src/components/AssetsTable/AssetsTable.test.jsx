@@ -372,7 +372,7 @@ describe('<AssetsTable />', () => {
       );
 
       const trashButtons = wrapper.find('button').filterWhere(button => button.hasClass('fa-trash'));
-      const deleteButton = wrapper.find('[role="dialog"] button').filterWhere(button => button.hasClass('btn-primary') && button.matchesElement(<button>Yes, delete.</button>));
+      const deleteButton = wrapper.find('[role="dialog"] button').filterWhere(button => button.hasClass('btn-primary') && button.matchesElement(<button>Permanently delete</button>));
 
       trashButtons.at(0).simulate('click');
       deleteButton.simulate('click');
@@ -391,7 +391,7 @@ describe('<AssetsTable />', () => {
       );
 
       const trashButtons = wrapper.find('button').filterWhere(button => button.hasClass('fa-trash'));
-      const deleteButton = wrapper.find('[role="dialog"] button').filterWhere(button => button.hasClass('btn-primary') && button.matchesElement(<button>Yes, delete.</button>));
+      const deleteButton = wrapper.find('[role="dialog"] button').filterWhere(button => button.hasClass('btn-primary') && button.matchesElement(<button>Permanently delete</button>));
 
       trashButtons.at(0).simulate('click');
       deleteButton.simulate('click');
@@ -459,7 +459,7 @@ describe('<AssetsTable />', () => {
     });
 
     it('moves from modal to status alert on asset delete', () => {
-      const deleteButton = wrapper.find('[role="dialog"] button').filterWhere(button => button.hasClass('btn-primary') && button.matchesElement(<button>Yes, delete.</button>));
+      const deleteButton = wrapper.find('[role="dialog"] button').filterWhere(button => button.hasClass('btn-primary') && button.matchesElement(<button>Permanently delete</button>));
 
       const statusAlert = wrapper.find('StatusAlert');
       const closeStatusAlertButton = statusAlert.find('button').filterWhere(button => button.matchesElement(<button><span>&times;</span></button>));
@@ -494,7 +494,7 @@ describe('<AssetsTable />', () => {
 
         wrapper.setProps({ deleteAsset: mockDeleteAsset });
 
-        const deleteButton = wrapper.find('[role="dialog"] button').filterWhere(button => button.hasClass('btn-primary') && button.matchesElement(<button>Yes, delete.</button>));
+        const deleteButton = wrapper.find('[role="dialog"] button').filterWhere(button => button.hasClass('btn-primary') && button.matchesElement(<button>Permanently delete</button>));
 
         const statusAlert = wrapper.find('StatusAlert');
         const closeStatusAlertButton = statusAlert.find('button').filterWhere(button => button.matchesElement(<button><span>&times;</span></button>));
