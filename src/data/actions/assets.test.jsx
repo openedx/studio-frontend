@@ -4,29 +4,32 @@ import thunk from 'redux-thunk';
 
 import endpoints from '../api/endpoints';
 import * as actionCreators from './assets';
+import { requestInitial } from '../reducers/assets';
 import { assetActions } from '../../data/constants/actionTypes';
 
 const initialState = {
-  request: {
-    assetTypes: {},
-    start: 0,
-    end: 0,
-    page: 0,
-    pageSize: 50,
-    totalCount: 0,
-    sort: 'date_added',
-    direction: 'desc',
-  },
+  request: { ...requestInitial },
 };
+
+const courseDetails = {
+  id: 'edX',
+};
+
+const assetId = 'asset';
 
 const assetsEndpoint = endpoints.assets;
 const middlewares = [thunk];
 const mockStore = configureStore(middlewares);
 let store;
 
-describe('Assets Action Creator', () => {
+describe('Assets Action Creators', () => {
   beforeEach(() => {
     store = mockStore(initialState);
+  });
+
+  afterEach(() => {
+    fetchMock.reset();
+    fetchMock.restore();
   });
 
   it('returns expected state from requestAssetsSuccess', () => {
@@ -34,27 +37,56 @@ describe('Assets Action Creator', () => {
     expect(store.dispatch(actionCreators.requestAssetsSuccess('response'))).toEqual(expectedAction);
   });
   it('returns expected state from assetDeleteFailure', () => {
-    const expectedAction = { response: 'response', type: assetActions.DELETE_ASSET_FAILURE };
-    expect(store.dispatch(actionCreators.assetDeleteFailure('response'))).toEqual(expectedAction);
+    const expectedAction = { assetId, type: assetActions.DELETE_ASSET_FAILURE };
+    expect(store.dispatch(actionCreators.deleteAssetFailure(assetId))).toEqual(expectedAction);
   });
   it('returns expected state from getAssets success', () => {
-    const request = {
-      page: 0,
-      assetTypes: {},
-      sort: 'date_added',
-      direction: 'desc',
-    };
-
+    const request = requestInitial;
     const response = request;
-
-    const courseDetails = {
-      id: 'edX',
-    };
 
     fetchMock.once(`begin:${assetsEndpoint}`, response);
     const expectedActions = [
       { type: assetActions.REQUEST_ASSETS_SUCCESS, data: response },
     ];
+
+    return store.dispatch(actionCreators.getAssets(request, courseDetails)).then(() => {
+      // return of async actions
+      expect(store.getActions()).toEqual(expectedActions);
+    });
+  });
+  it('returns expected state from getAssets failure', () => {
+    const request = requestInitial;
+
+    const response = {
+      status: 400,
+      body: request,
+    };
+
+    const errorResponse = new Error(response);
+
+    fetchMock.once(`begin:${assetsEndpoint}`, response);
+    const expectedActions = [
+      { type: assetActions.REQUEST_ASSETS_FAILURE, data: errorResponse },
+    ];
+
+    store = mockStore(initialState);
+    return store.dispatch(actionCreators.getAssets(request, courseDetails)).then(() => {
+      // return of async actions
+      expect(store.getActions()).toEqual(expectedActions);
+    });
+  });
+  it('returns expected state from getAssets if response metadata does not match request', () => {
+    const request = {
+      ...requestInitial,
+      direction: 'asc',
+    };
+
+    const response = request;
+
+    fetchMock.once(`begin:${assetsEndpoint}`, response);
+
+    // if the response is not the same as the request, we expect nothing
+    const expectedActions = [];
 
     return store.dispatch(actionCreators.getAssets(request, courseDetails)).then(() => {
       // return of async actions
@@ -73,9 +105,38 @@ describe('Assets Action Creator', () => {
     const expectedAction = { data: { page: 0 }, type: assetActions.PAGE_UPDATE };
     expect(store.dispatch(actionCreators.pageUpdate(0))).toEqual(expectedAction);
   });
-  it('returns expected state from deleteAssetSuccess', () => {
-    const expectedAction = { assetId: 'assetId', response: 'response', type: assetActions.DELETE_ASSET_SUCCESS };
-    expect(store.dispatch(actionCreators.deleteAssetSuccess('assetId', 'response'))).toEqual(expectedAction);
+  it('returns expected state from deleteAsset success', () => {
+    const response = {
+      status: 204,
+      body: {},
+    };
+
+    fetchMock.once(`begin:${assetsEndpoint}`, response);
+
+    const expectedActions = [
+      { type: assetActions.DELETE_ASSET_SUCCESS, assetId },
+    ];
+
+    return store.dispatch(actionCreators.deleteAsset(assetId, courseDetails)).then(() => {
+      // return of async actions
+      expect(store.getActions()).toEqual(expectedActions);
+    });
+  });
+  it('returns expected state from deleteAsset failure', () => {
+    const response = {
+      status: 400,
+    };
+
+    fetchMock.once(`begin:${assetsEndpoint}`, response);
+
+    const expectedActions = [
+      { type: assetActions.DELETE_ASSET_FAILURE, assetId },
+    ];
+
+    return store.dispatch(actionCreators.deleteAsset(assetId, courseDetails)).then(() => {
+      // return of async actions
+      expect(store.getActions()).toEqual(expectedActions);
+    });
   });
   it('returns expected state from togglingLockAsset', () => {
     const expectedAction = { asset: 'asset', type: assetActions.TOGGLING_LOCK_ASSET_SUCCESS };

@@ -15,9 +15,9 @@ export const requestAssetsSuccess = response => ({
   data: response,
 });
 
-export const assetDeleteFailure = response => ({
-  type: assetActions.DELETE_ASSET_FAILURE,
-  response,
+export const requestAssetsFailure = response => ({
+  type: assetActions.REQUEST_ASSETS_FAILURE,
+  data: response,
 });
 
 export const getAssets = (request, courseDetails) =>
@@ -41,7 +41,7 @@ export const getAssets = (request, courseDetails) =>
         }
       })
       .catch((error) => {
-        dispatch(assetDeleteFailure(error));
+        dispatch(requestAssetsFailure(error));
       });
 
 export const filterUpdate = (filterKey, filterValue) => ({
@@ -59,20 +59,27 @@ export const pageUpdate = page => ({
   data: { page },
 });
 
-export const deleteAssetSuccess = (assetId, response) => ({
+export const deleteAssetSuccess = assetId => ({
   type: assetActions.DELETE_ASSET_SUCCESS,
   assetId,
-  response,
 });
+
+export const deleteAssetFailure = assetId => ({
+  type: assetActions.DELETE_ASSET_FAILURE,
+  assetId,
+});
+
 
 export const deleteAsset = (assetId, courseDetails) =>
   dispatch =>
     clientApi.requestDeleteAsset(courseDetails.id, assetId)
+    // since the API returns 204 on success and 404 on failure, neither of which have
+    // content, we don't json-ify the response
       .then((response) => {
         if (response.ok) {
-          dispatch(deleteAssetSuccess(assetId, response));
+          dispatch(deleteAssetSuccess(assetId));
         } else {
-          dispatch(assetDeleteFailure(response));
+          dispatch(deleteAssetFailure(assetId));
         }
       });
 
@@ -95,19 +102,19 @@ export const toggleLockAssetFailure = (asset, response) => ({
 export const toggleLockAsset = (asset, courseDetails) =>
   (dispatch) => {
     dispatch(togglingLockAsset(asset));
-    clientApi.requestToggleLockAsset(courseDetails.id, asset)
+    return clientApi.requestToggleLockAsset(courseDetails.id, asset)
       .then((response) => {
-        if (response.ok) {
-          dispatch(toggleLockAssetSuccess(asset));
-        } else {
-          dispatch(toggleLockAssetFailure(asset, response));
+        if (!response.ok) {
+          throw new Error(response);
         }
+      })
+      .then(() => {
+        dispatch(toggleLockAssetSuccess(asset));
+      })
+      .catch((error) => {
+        dispatch(toggleLockAssetFailure(asset, error));
       });
   };
-
-export const clearAssetsStatus = () =>
-  dispatch =>
-    dispatch({ type: assetActions.CLEAR_ASSETS_STATUS });
 
 export const uploadingAssets = count => ({
   type: assetActions.UPLOADING_ASSETS,
