@@ -338,7 +338,7 @@ export class AssetsTable extends React.Component {
                   Any links or references to this file will no longer work. <a
                     target="_blank"
                     rel="noopener noreferrer"
-                    href="http://edx.readthedocs.io/projects/edx-partner-course-staff/en/latest/course_assets/course_files.html"
+                    href={this.props.courseFilesDocs}
                   >
                     Learn more.
                   </a>
@@ -446,6 +446,7 @@ AssetsTable.propTypes = {
     revision: PropTypes.string,
     base_url: PropTypes.string,
   }).isRequired,
+  courseFilesDocs: PropTypes.string.isRequired,
   deleteAsset: PropTypes.func.isRequired,
   updateSort: PropTypes.func.isRequired,
   clearAssetsStatus: PropTypes.func.isRequired,
@@ -457,6 +458,7 @@ const mapStateToProps = state => ({
   assetsSortMetaData: state.metadata.sort,
   assetsStatus: state.metadata.status,
   courseDetails: state.studioDetails.course,
+  courseFilesDocs: state.studioDetails.help_tokens.files,
 });
 
 const mapDispatchToProps = dispatch => ({
