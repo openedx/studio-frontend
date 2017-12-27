@@ -1,6 +1,6 @@
 {
   "name": "@edx/studio-frontend",
-  "version": "0.6.7",
+  "version": "0.6.8",
   "description": "The frontend for the Open edX platform",
   "repository": "edx/studio-frontend",
   "scripts": {
