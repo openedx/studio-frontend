@@ -108,3 +108,52 @@ export const toggleLockAsset = (asset, courseDetails) =>
 export const clearAssetsStatus = () =>
   dispatch =>
     dispatch({ type: assetActions.CLEAR_ASSETS_STATUS });
+
+export const uploadingAssets = count => ({
+  type: assetActions.UPLOADING_ASSETS,
+  count,
+});
+
+export const uploadAssetSuccess = (asset, response) => ({
+  type: assetActions.UPLOAD_ASSET_SUCCESS,
+  asset,
+  response,
+});
+
+export const uploadAssetFailure = (file, response) => ({
+  type: assetActions.UPLOAD_ASSET_FAILURE,
+  file,
+  response,
+});
+
+export const uploadAssets = (files, courseDetails) =>
+  (dispatch, getState) => {
+    dispatch(uploadingAssets(files.length));
+    files.forEach((file) => {
+      clientApi.postUploadAsset(courseDetails.id, file)
+        .then((response) => {
+          if (response.ok) {
+            response.json().then((data) => {
+              dispatch(uploadAssetSuccess(data.asset, response));
+              dispatch(getAssets(getState().request, courseDetails));
+            });
+          } else {
+            dispatch(uploadAssetFailure(file, response));
+          }
+        });
+    });
+  };
+
+export const uploadExceedMaxCount = maxFileCount =>
+  dispatch =>
+    dispatch({
+      type: assetActions.UPLOAD_EXCEED_MAX_COUNT_ERROR,
+      maxFileCount,
+    });
+
+export const uploadExceedMaxSize = maxFileSizeMB =>
+  dispatch =>
+    dispatch({
+      type: assetActions.UPLOAD_EXCEED_MAX_SIZE_ERROR,
+      maxFileSizeMB,
+    });

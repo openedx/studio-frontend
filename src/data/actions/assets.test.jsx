@@ -89,4 +89,24 @@ describe('Assets Action Creator', () => {
     const expectedAction = { asset: 'asset', response: 'response', type: assetActions.TOGGLING_LOCK_ASSET_FAILURE };
     expect(store.dispatch(actionCreators.toggleLockAssetFailure('asset', 'response'))).toEqual(expectedAction);
   });
+  it('returns expected state from uploadExceedMaxSize', () => {
+    const expectedAction = { maxFileSizeMB: 23, type: assetActions.UPLOAD_EXCEED_MAX_SIZE_ERROR };
+    expect(store.dispatch(actionCreators.uploadExceedMaxSize(23))).toEqual(expectedAction);
+  });
+  it('returns expected state from uploadExceedMaxCount', () => {
+    const expectedAction = { maxFileCount: 1, type: assetActions.UPLOAD_EXCEED_MAX_COUNT_ERROR };
+    expect(store.dispatch(actionCreators.uploadExceedMaxCount(1))).toEqual(expectedAction);
+  });
+  it('returns expected state from uploadAssetFailure', () => {
+    const expectedAction = { file: 'file', response: 'response', type: assetActions.UPLOAD_ASSET_FAILURE };
+    expect(store.dispatch(actionCreators.uploadAssetFailure('file', 'response'))).toEqual(expectedAction);
+  });
+  it('returns expected state from uploadAssetSuccess', () => {
+    const expectedAction = { asset: 'asset', response: 'response', type: assetActions.UPLOAD_ASSET_SUCCESS };
+    expect(store.dispatch(actionCreators.uploadAssetSuccess('asset', 'response'))).toEqual(expectedAction);
+  });
+  it('returns expected state from uploadingAssets', () => {
+    const expectedAction = { count: 99, type: assetActions.UPLOADING_ASSETS };
+    expect(store.dispatch(actionCreators.uploadingAssets(99, 'response'))).toEqual(expectedAction);
+  });
 });

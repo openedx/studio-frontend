@@ -19,7 +19,6 @@ export class AssetsTable extends React.Component {
     super(props);
     this.state = {
       modalOpen: false,
-      statusAlertOpen: false,
       assetToDelete: {},
       deletedAsset: {},
       deletedAssetIndex: null,
@@ -197,6 +196,38 @@ export class AssetsTable extends React.Component {
     };
   }
 
+  getUploadStatusFields(assetsStatus) {
+    switch (assetsStatus.type) {
+      case assetActions.UPLOAD_ASSET_SUCCESS:
+        return {
+          alertType: 'success',
+          alertDialog: `${assetsStatus.loadedCount} files successfully uploaded.`,
+        };
+      case assetActions.UPLOADING_ASSETS:
+        return {
+          alertType: 'info',
+          alertDialog: `${assetsStatus.count} files uploading.`,
+        };
+      case assetActions.UPLOAD_EXCEED_MAX_COUNT_ERROR:
+        return {
+          alertType: 'danger',
+          alertDialog: `The maximum number of files for an upload is ${assetsStatus.maxFileCount}. No files were not uploaded.`,
+        };
+      case assetActions.UPLOAD_EXCEED_MAX_SIZE_ERROR:
+        return {
+          alertType: 'danger',
+          alertDialog: `The maximum size for an upload is ${assetsStatus.maxFileSizeMB} MB. No files were not uploaded.`,
+        };
+      case assetActions.UPLOAD_ASSET_FAILURE:
+        return {
+          alertType: 'danger',
+          alertDialog: `Error uploading ${assetsStatus.file.name}. Try again.`,
+        };
+      default:
+        return {};
+    }
+  }
+
   getCopyUrlButtons(assetDisplayName, studioUrl, webUrl) {
     return (
       <span>
@@ -281,14 +312,18 @@ export class AssetsTable extends React.Component {
     });
   }
 
-  closeStatusAlert() {
+  closeDeleteStatus = () => {
     this.getNextFocusElementOnDelete().focus();
+    this.closeStatusAlert();
+  }
+
+  closeStatusAlert() {
     this.props.clearAssetsStatus();
 
+    // clear out all status related state
     this.setState({
       deletedAsset: {},
       deletedAssetIndex: null,
-      statusAlertOpen: false,
     });
   }
 
@@ -302,7 +337,6 @@ export class AssetsTable extends React.Component {
       deletedAsset,
       elementToFocusOnModalClose: this.statusAlertRef,
       modalOpen: false,
-      statusAlertOpen: true,
     });
     this.state.elementToFocusOnModalClose.focus();
   }
@@ -364,25 +398,45 @@ export class AssetsTable extends React.Component {
     );
   }
 
+  /**
+   * Rendering an empty status alert keeps the alert in the DOM initially and
+   * enables screen readers to listen for changes.
+   */
+  renderEmptyStatusAlert() {
+    return (
+      <div>
+        <StatusAlert
+          dialog=""
+          open={false}
+          dismissible={false}
+        />
+      </div>
+    );
+  }
+
   renderStatusAlert() {
     const { assetsStatus } = this.props;
     const deleteActions = [assetActions.DELETE_ASSET_FAILURE, assetActions.DELETE_ASSET_SUCCESS];
-    let status = {
-      alertDialog: 'Processing',
-      alertType: 'info',
-    };
+    const uploadActions = [assetActions.UPLOAD_ASSET_SUCCESS,
+      assetActions.UPLOAD_EXCEED_MAX_COUNT_ERROR, assetActions.UPLOAD_EXCEED_MAX_SIZE_ERROR,
+      assetActions.UPLOAD_ASSET_FAILURE, assetActions.UPLOADING_ASSETS];
+    let status = {};
+    let onClose = this.closeStatusAlert;
     if (assetsStatus.type === assetActions.TOGGLING_LOCK_ASSET_FAILURE) {
       status = this.getLockFailedStatusFields(assetsStatus);
     } else if (deleteActions.includes(assetsStatus.type)) {
       status = this.getDeleteStatusFields(assetsStatus);
+      onClose = this.closeDeleteStatus;
+    } else if (uploadActions.includes(assetsStatus.type)) {
+      status = this.getUploadStatusFields(assetsStatus);
     }
 
     const statusAlert = (
       <StatusAlert
         alertType={status.alertType}
         dialog={status.alertDialog}
-        open={this.state.statusAlertOpen}
-        onClose={this.closeStatusAlert}
+        open
+        onClose={onClose}
         ref={(input) => { this.statusAlertRef = input; }}
       />
     );
@@ -402,9 +456,11 @@ export class AssetsTable extends React.Component {
     if (this.props.assetsList.length === 0 && Object.keys(this.props.assetsStatus).length === 0) {
       renderOutput = (<span>Loading....</span>);
     } else {
+      const statusAlert = 'type' in this.props.assetsStatus ?
+        this.renderStatusAlert() : this.renderEmptyStatusAlert();
       renderOutput = (
         <div>
-          {this.renderStatusAlert()}
+          {statusAlert}
           <Table
             className={['table-responsive']}
             columns={Object.keys(this.columns).map(columnKey => ({
@@ -459,6 +515,7 @@ const mapStateToProps = state => ({
   assetsStatus: state.metadata.status,
   courseDetails: state.studioDetails.course,
   courseFilesDocs: state.studioDetails.help_tokens.files,
+  upload: state.assets.upload,
 });
 
 const mapDispatchToProps = dispatch => ({
