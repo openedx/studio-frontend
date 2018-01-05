@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import WrappedAssetsDropZone from '../AssetsDropZone';
 import WrappedAssetsTable from '../AssetsTable';
 import WrappedAssetsFilters from '../AssetsFilters';
 import WrappedPagination from '../Pagination';
@@ -38,6 +39,9 @@ class AssetsPage extends React.Component {
         <div className={edxBootstrap.container}>
           <div className={edxBootstrap.row}>
             <div className={edxBootstrap.col}>
+              <WrappedAssetsDropZone
+                maxFileSizeMB={this.props.uploadSettings.max_file_size_in_mbs}
+              />
               <WrappedAssetsFilters />
             </div>
             <div className={edxBootstrap['col-10']}>
@@ -69,15 +73,18 @@ AssetsPage.propTypes = {
     id: PropTypes.string,
     revision: PropTypes.string,
   }).isRequired,
+  uploadSettings: PropTypes.shape({
+    max_file_size_in_mbs: PropTypes.number,
+  }).isRequired,
 };
 
 const mapStateToProps = state => ({
   courseDetails: state.studioDetails.course,
+  uploadSettings: state.studioDetails.upload_settings,
   request: state.request,
 });
 
 const mapDispatchToProps = dispatch => ({
-
   getAssets: (request, courseDetails) => dispatch(getAssets(request, courseDetails)),
 });
 

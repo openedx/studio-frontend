@@ -4,11 +4,11 @@ import Table from '@edx/paragon/src/Table';
 import Button from '@edx/paragon/src/Button';
 import Modal from '@edx/paragon/src/Modal';
 import StatusAlert from '@edx/paragon/src/StatusAlert';
+import Variant from '@edx/paragon/src/utils/constants';
 import classNames from 'classnames';
 import { connect } from 'react-redux';
 
 import FontAwesomeStyles from 'font-awesome/css/font-awesome.min.css';
-import styles from './AssetsTable.scss';
 import { assetActions } from '../../data/constants/actionTypes';
 import { assetLoading } from '../../data/constants/loadingTypes';
 import { clearAssetsStatus, deleteAsset, sortUpdate, toggleLockAsset } from '../../data/actions/assets';
@@ -19,7 +19,6 @@ export class AssetsTable extends React.Component {
     super(props);
     this.state = {
       modalOpen: false,
-      statusAlertOpen: false,
       assetToDelete: {},
       deletedAsset: {},
       deletedAssetIndex: null,
@@ -197,6 +196,38 @@ export class AssetsTable extends React.Component {
     };
   }
 
+  getUploadStatusFields(assetsStatus) {
+    switch (assetsStatus.type) {
+      case assetActions.UPLOAD_ASSET_SUCCESS:
+        return {
+          alertType: 'success',
+          alertDialog: `${assetsStatus.loadedCount} files successfully uploaded.`,
+        };
+      case assetActions.UPLOADING_ASSETS:
+        return {
+          alertType: 'info',
+          alertDialog: `${assetsStatus.count} files uploading.`,
+        };
+      case assetActions.UPLOAD_EXCEED_MAX_COUNT_ERROR:
+        return {
+          alertType: 'danger',
+          alertDialog: `The maximum number of files for an upload is ${assetsStatus.maxFileCount}. No files were not uploaded.`,
+        };
+      case assetActions.UPLOAD_EXCEED_MAX_SIZE_ERROR:
+        return {
+          alertType: 'danger',
+          alertDialog: `The maximum size for an upload is ${assetsStatus.maxFileSizeMB} MB. No files were not uploaded.`,
+        };
+      case assetActions.UPLOAD_ASSET_FAILURE:
+        return {
+          alertType: 'danger',
+          alertDialog: `Error uploading ${assetsStatus.file.name}. Try again.`,
+        };
+      default:
+        return {};
+    }
+  }
+
   getCopyUrlButtons(assetDisplayName, studioUrl, webUrl) {
     return (
       <span>
@@ -281,14 +312,18 @@ export class AssetsTable extends React.Component {
     });
   }
 
-  closeStatusAlert() {
+  closeDeleteStatus = () => {
     this.getNextFocusElementOnDelete().focus();
+    this.closeStatusAlert();
+  }
+
+  closeStatusAlert() {
     this.props.clearAssetsStatus();
 
+    // clear out all status related state
     this.setState({
       deletedAsset: {},
       deletedAssetIndex: null,
-      statusAlertOpen: false,
     });
   }
 
@@ -302,7 +337,6 @@ export class AssetsTable extends React.Component {
       deletedAsset,
       elementToFocusOnModalClose: this.statusAlertRef,
       modalOpen: false,
-      statusAlertOpen: true,
     });
     this.state.elementToFocusOnModalClose.focus();
   }
@@ -322,6 +356,7 @@ export class AssetsTable extends React.Component {
             onClick={this.deleteAsset}
           />,
         ]}
+        variant={{ status: Variant.status.WARNING }}
       />
     );
   }
@@ -329,37 +364,32 @@ export class AssetsTable extends React.Component {
   renderModalBody() {
     return (
       <div>
-        <div className={styles['container-fluid']}>
-          <div className={styles.row}>
-            <div className={styles['col-md-10']}>
-              <div>
-                <p>Deleting <b>{this.state.assetToDelete.display_name}</b> cannot be undone.</p>
-                <p>
-                  Any links or references to this file will no longer work. <a
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    href="http://edx.readthedocs.io/projects/edx-partner-course-staff/en/latest/course_assets/course_files.html"
-                  >
-                    Learn more.
-                  </a>
-                </p>
-              </div>
-            </div>
-            <div className={styles.col}>
-              <span
-                className={
-                  classNames(
-                    FontAwesomeStyles.fa,
-                    FontAwesomeStyles['fa-exclamation-triangle'],
-                    FontAwesomeStyles['fa-3x'],
-                    styles['text-warning'],
-                  )
-                }
-                aria-hidden="true"
-              />
-            </div>
-          </div>
-        </div>
+        <p>Deleting <b>{this.state.assetToDelete.display_name}</b> cannot be undone.</p>
+        <p>
+          Any links or references to this file will no longer work. <a
+            target="_blank"
+            rel="noopener noreferrer"
+            href={this.props.courseFilesDocs}
+          >
+            Learn more.
+          </a>
+        </p>
+      </div>
+    );
+  }
+
+  /**
+   * Rendering an empty status alert keeps the alert in the DOM initially and
+   * enables screen readers to listen for changes.
+   */
+  renderEmptyStatusAlert() {
+    return (
+      <div>
+        <StatusAlert
+          dialog=""
+          open={false}
+          dismissible={false}
+        />
       </div>
     );
   }
@@ -367,22 +397,26 @@ export class AssetsTable extends React.Component {
   renderStatusAlert() {
     const { assetsStatus } = this.props;
     const deleteActions = [assetActions.DELETE_ASSET_FAILURE, assetActions.DELETE_ASSET_SUCCESS];
-    let status = {
-      alertDialog: 'Processing',
-      alertType: 'info',
-    };
+    const uploadActions = [assetActions.UPLOAD_ASSET_SUCCESS,
+      assetActions.UPLOAD_EXCEED_MAX_COUNT_ERROR, assetActions.UPLOAD_EXCEED_MAX_SIZE_ERROR,
+      assetActions.UPLOAD_ASSET_FAILURE, assetActions.UPLOADING_ASSETS];
+    let status = {};
+    let onClose = this.closeStatusAlert;
     if (assetsStatus.type === assetActions.TOGGLING_LOCK_ASSET_FAILURE) {
       status = this.getLockFailedStatusFields(assetsStatus);
     } else if (deleteActions.includes(assetsStatus.type)) {
       status = this.getDeleteStatusFields(assetsStatus);
+      onClose = this.closeDeleteStatus;
+    } else if (uploadActions.includes(assetsStatus.type)) {
+      status = this.getUploadStatusFields(assetsStatus);
     }
 
     const statusAlert = (
       <StatusAlert
         alertType={status.alertType}
         dialog={status.alertDialog}
-        open={this.state.statusAlertOpen}
-        onClose={this.closeStatusAlert}
+        open
+        onClose={onClose}
         ref={(input) => { this.statusAlertRef = input; }}
       />
     );
@@ -402,9 +436,11 @@ export class AssetsTable extends React.Component {
     if (this.props.assetsList.length === 0 && Object.keys(this.props.assetsStatus).length === 0) {
       renderOutput = (<span>Loading....</span>);
     } else {
+      const statusAlert = 'type' in this.props.assetsStatus ?
+        this.renderStatusAlert() : this.renderEmptyStatusAlert();
       renderOutput = (
         <div>
-          {this.renderStatusAlert()}
+          {statusAlert}
           <Table
             className={['table-responsive']}
             columns={Object.keys(this.columns).map(columnKey => ({
@@ -446,6 +482,7 @@ AssetsTable.propTypes = {
     revision: PropTypes.string,
     base_url: PropTypes.string,
   }).isRequired,
+  courseFilesDocs: PropTypes.string.isRequired,
   deleteAsset: PropTypes.func.isRequired,
   updateSort: PropTypes.func.isRequired,
   clearAssetsStatus: PropTypes.func.isRequired,
@@ -457,6 +494,8 @@ const mapStateToProps = state => ({
   assetsSortMetaData: state.metadata.sort,
   assetsStatus: state.metadata.status,
   courseDetails: state.studioDetails.course,
+  courseFilesDocs: state.studioDetails.help_tokens.files,
+  upload: state.assets.upload,
 });
 
 const mapDispatchToProps = dispatch => ({

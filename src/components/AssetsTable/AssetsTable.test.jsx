@@ -58,6 +58,7 @@ const defaultProps = {
     revision: '',
     base_url: 'sfe',
   },
+  courseFilesDocs: 'testUrl',
   clearAssetsStatus: () => {},
   deleteAsset: () => {},
   updateSort: () => {},
@@ -97,10 +98,6 @@ const defaultColumns = [
     hideHeader: true,
   },
 ];
-
-const setDeletedAsset = (asset, wrapper) => {
-  wrapper.setState({ deletedAsset: asset });
-};
 
 const clearStatus = (wrapper) => {
   wrapper.setProps({ assetsStatus: {} });
@@ -211,6 +208,7 @@ describe('<AssetsTable />', () => {
         assetsSortMetaData: {},
         assetsStatus: {},
         courseDetails: {},
+        courseFilesDocs: '',
         deleteAsset: () => {},
         clearAssetsStatus: () => {},
         updateSort: () => {},
@@ -460,16 +458,14 @@ describe('<AssetsTable />', () => {
 
     it('moves from modal to status alert on asset delete', () => {
       const deleteButton = wrapper.find('[role="dialog"] button').filterWhere(button => button.hasClass('btn-primary') && button.matchesElement(<button>Permanently delete</button>));
-
-      const statusAlert = wrapper.find('StatusAlert');
-      const closeStatusAlertButton = statusAlert.find('button').filterWhere(button => button.matchesElement(<button><span>&times;</span></button>));
-
       trashButtons.at(0).simulate('click');
-
       expect(closeButton.html()).toEqual(document.activeElement.outerHTML);
 
+      mockDeleteAsset = getMockForDeleteAsset(wrapper, 0);
+      wrapper.setProps({ deleteAsset: mockDeleteAsset });
       deleteButton.simulate('click');
-
+      const statusAlert = wrapper.find('StatusAlert');
+      const closeStatusAlertButton = statusAlert.find('button').filterWhere(button => button.matchesElement(<button><span>&times;</span></button>));
       expect(closeStatusAlertButton.html()).toEqual(document.activeElement.outerHTML);
     });
 
@@ -496,14 +492,16 @@ describe('<AssetsTable />', () => {
 
         const deleteButton = wrapper.find('[role="dialog"] button').filterWhere(button => button.hasClass('btn-primary') && button.matchesElement(<button>Permanently delete</button>));
 
-        const statusAlert = wrapper.find('StatusAlert');
-        const closeStatusAlertButton = statusAlert.find('button').filterWhere(button => button.matchesElement(<button><span>&times;</span></button>));
-
         trashButtons.at(test.trashButtonIndex).simulate('click');
 
         deleteButton.simulate('click');
         expect(mockDeleteAsset).toHaveBeenCalledTimes(1);
 
+        const statusAlert = wrapper.find('StatusAlert');
+        const closeStatusAlertButton = statusAlert.find('button').filterWhere(button => button.matchesElement(<button><span>&times;</span></button>));
+        wrapper.setProps({
+          clearAssetsStatus: () => clearStatus(wrapper),
+        });
         closeStatusAlertButton.simulate('click');
 
         expect(mockDeleteAsset).toHaveBeenCalledTimes(1);
@@ -587,19 +585,6 @@ describe('Lock asset', () => {
 });
 
 describe('displays status alert properly', () => {
-  it('renders info alert', () => {
-    wrapper = mount(
-      <AssetsTable
-        {...defaultProps}
-      />,
-    );
-    const statusAlert = wrapper.find('StatusAlert');
-    const statusAlertType = statusAlert.prop('alertType');
-
-    expect(statusAlertType).toEqual('info');
-    expect(statusAlert.find('div').first().hasClass('alert-info')).toEqual(true);
-  });
-
   it('renders success alert on success', () => {
     wrapper = mount(
       <AssetsTable
@@ -640,7 +625,7 @@ describe('displays status alert properly', () => {
     expect(statusAlert.find('div').first().hasClass('alert-danger')).toEqual(true);
   });
 
-  it('shows the alert on open', () => {
+  it('hides the alert when state cleared', () => {
     wrapper = mount(
       <AssetsTable
         {...defaultProps}
@@ -648,29 +633,15 @@ describe('displays status alert properly', () => {
     );
     let statusAlert = wrapper.find('StatusAlert');
 
-    wrapper.setState({ statusAlertOpen: true });
     statusAlert = wrapper.find('StatusAlert');
-    expect(statusAlert.find('div').first().prop('hidden')).toEqual(false);
+    expect(statusAlert).toBeDefined();
+
+    wrapper.setState({ assetsStatus: {} });
+    statusAlert = wrapper.find('StatusAlert');
+    expect(statusAlert.find('.alert-dialog').text()).toEqual('');
   });
 
-  it('hides the alert on close', () => {
-    wrapper = mount(
-      <AssetsTable
-        {...defaultProps}
-      />,
-    );
-    let statusAlert = wrapper.find('StatusAlert');
-
-    wrapper.setState({ statusAlertOpen: true });
-    statusAlert = wrapper.find('StatusAlert');
-    expect(statusAlert.find('div').first().prop('hidden')).toEqual(false);
-
-    wrapper.setState({ statusAlertOpen: false });
-    statusAlert = wrapper.find('StatusAlert');
-    expect(statusAlert.find('div').first().prop('hidden')).toEqual(true);
-  });
-
-  it('closes the alert on keyDown', () => {
+  it('clears uploading assets on keyDown', () => {
     wrapper = mount(
       <AssetsTable
         {...defaultProps}
@@ -679,42 +650,91 @@ describe('displays status alert properly', () => {
     wrapper.setProps({
       clearAssetsStatus: () => clearStatus(wrapper),
     });
+    wrapper.setProps({ assetsStatus: { type: assetActions.UPLOADING_ASSETS, count: 77 } });
 
-    const statusAlert = wrapper.find('StatusAlert');
-    wrapper.setState({ statusAlertOpen: true });
-    setDeletedAsset(wrapper.props().assetsList[0], wrapper);
-    statusAlert.find('button').at(0).simulate('keyDown', { key: 'Enter' });
-    expect(wrapper.state().statusAlertOpen).toEqual(false);
-    expect(statusAlert.find('div').first().prop('hidden')).toEqual(true);
-  });
+    let statusAlert = wrapper.find('StatusAlert');
+    expect(statusAlert.find('.alert-dialog').text()).toEqual('77 files uploading.');
 
-  it('clears assetsStatus correctly', () => {
-    wrapper = mount(
-      <AssetsTable
-        {...defaultProps}
-      />,
-    );
-    wrapper.setProps({
-      clearAssetsStatus: () => clearStatus(wrapper),
-    });
-
-    const statusAlert = wrapper.find('StatusAlert');
-    wrapper.setState({ statusAlertOpen: true });
-    setDeletedAsset(wrapper.props().assetsList[0], wrapper);
     statusAlert.find('button').at(0).simulate('keyDown', { key: 'Enter' });
     expect(wrapper.props().assetsStatus).toEqual({});
-  });
 
-  it('displays processing message for asset delete', () => {
+    statusAlert = wrapper.find('StatusAlert');
+    expect(statusAlert.find('.alert-dialog').text()).toEqual('');
+  });
+});
+
+describe('Upload statuses', () => {
+  beforeEach(() => {
     wrapper = mount(
       <AssetsTable
         {...defaultProps}
       />,
     );
-    const statusAlertDialog = wrapper.find('.alert-dialog');
-    const fileName = 'testFile';
+  });
 
-    setDeletedAsset({ display_name: fileName }, wrapper);
-    expect(statusAlertDialog.text()).toContain('Processing');
+  it('renders uploading', () => {
+    wrapper.setProps({
+      assetsStatus: {
+        type: assetActions.UPLOADING_ASSETS,
+        count: 885,
+      },
+    });
+    const statusAlert = wrapper.find('StatusAlert');
+    expect(statusAlert.find('.alert-dialog').text()).toEqual('885 files uploading.');
+  });
+
+  it('renders upload success', () => {
+    wrapper.setProps({
+      assetsStatus: {
+        type: assetActions.UPLOAD_ASSET_SUCCESS,
+        loadedCount: 5,
+      },
+    });
+    const statusAlert = wrapper.find('StatusAlert');
+    expect(statusAlert.find('.alert-dialog').text()).toEqual('5 files successfully uploaded.');
+  });
+
+  it('renders upload success', () => {
+    wrapper.setProps({
+      assetsStatus: {
+        type: assetActions.UPLOAD_EXCEED_MAX_COUNT_ERROR,
+        maxFileCount: 110,
+      },
+    });
+    const statusAlert = wrapper.find('StatusAlert');
+    expect(statusAlert.find('.alert-dialog').text()).toEqual('The maximum number of files for an upload is 110. No files were not uploaded.');
+  });
+
+  it('renders upload exceeds maximum file count', () => {
+    wrapper.setProps({
+      assetsStatus: {
+        type: assetActions.UPLOAD_EXCEED_MAX_COUNT_ERROR,
+        maxFileCount: 110,
+      },
+    });
+    const statusAlert = wrapper.find('StatusAlert');
+    expect(statusAlert.find('.alert-dialog').text()).toEqual('The maximum number of files for an upload is 110. No files were not uploaded.');
+  });
+
+  it('renders upload exceeds maximum file size', () => {
+    wrapper.setProps({
+      assetsStatus: {
+        type: assetActions.UPLOAD_EXCEED_MAX_SIZE_ERROR,
+        maxFileSizeMB: 9,
+      },
+    });
+    const statusAlert = wrapper.find('StatusAlert');
+    expect(statusAlert.find('.alert-dialog').text()).toEqual('The maximum size for an upload is 9 MB. No files were not uploaded.');
+  });
+
+  it('renders upload failed', () => {
+    wrapper.setProps({
+      assetsStatus: {
+        type: assetActions.UPLOAD_ASSET_FAILURE,
+        file: { name: 'quail.png' },
+      },
+    });
+    const statusAlert = wrapper.find('StatusAlert');
+    expect(statusAlert.find('.alert-dialog').text()).toEqual('Error uploading quail.png. Try again.');
   });
 });
