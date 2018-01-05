@@ -61,7 +61,7 @@ export default class CopyButton extends React.Component {
 
     return (
       <Button
-        className={[styles['copy-button']]}
+        className={[...this.props.className, styles['copy-button']]}
         aria-label={this.props.ariaLabel}
         label={label}
         inputRef={this.setButtonRef}
@@ -80,9 +80,11 @@ CopyButton.propTypes = {
   onCopyLabel: PropTypes.oneOfType([PropTypes.string, PropTypes.element]).isRequired,
   textToCopy: PropTypes.string.isRequired,
   onCopyButtonClick: PropTypes.func,
+  className: PropTypes.arrayOf(PropTypes.string),
 };
 
 CopyButton.defaultProps = {
   onCopyButtonClick: () => {},
   ariaLabel: 'Copy',
+  className: [],
 };

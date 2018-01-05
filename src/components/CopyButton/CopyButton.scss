@@ -1,4 +1,7 @@
+@import '../../SFE.scss';
+
 .copy-button {
+    @extend .button-primary-outline;
     width: 100px;
-    margin: 1px;
+    vertical-align: top;
 }
