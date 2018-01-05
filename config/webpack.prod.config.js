@@ -39,7 +39,7 @@ module.exports = Merge.smart(commonConfig, {
               loader: 'sass-loader',
               options: {
                 sourceMap: true,
-                data: '@import "bootstrap/scss/bootstrap-reboot";',
+                data: '@import "@edx/edx-bootstrap/sass/_legacy-reset";',
                 includePaths: [
                   path.join(__dirname, '../node_modules'),
                 ],

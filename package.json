@@ -1,6 +1,6 @@
 {
   "name": "@edx/studio-frontend",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "description": "The frontend for the Open edX platform",
   "repository": "edx/studio-frontend",
   "scripts": {
@@ -12,7 +12,7 @@
   },
   "license": "AGPL-3.0",
   "dependencies": {
-    "@edx/edx-bootstrap": "^0.4.0",
+    "@edx/edx-bootstrap": "^0.4.3",
     "@edx/paragon": "^1.6.0",
     "babel-polyfill": "^6.26.0",
     "classnames": "^2.2.5",
