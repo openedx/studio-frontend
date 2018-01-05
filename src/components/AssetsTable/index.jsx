@@ -4,11 +4,11 @@ import Table from '@edx/paragon/src/Table';
 import Button from '@edx/paragon/src/Button';
 import Modal from '@edx/paragon/src/Modal';
 import StatusAlert from '@edx/paragon/src/StatusAlert';
+import Variant from '@edx/paragon/src/utils/constants';
 import classNames from 'classnames';
 import { connect } from 'react-redux';
 
 import FontAwesomeStyles from 'font-awesome/css/font-awesome.min.css';
-import styles from './AssetsTable.scss';
 import { assetActions } from '../../data/constants/actionTypes';
 import { assetLoading } from '../../data/constants/loadingTypes';
 import { clearAssetsStatus, deleteAsset, sortUpdate, toggleLockAsset } from '../../data/actions/assets';
@@ -356,6 +356,7 @@ export class AssetsTable extends React.Component {
             onClick={this.deleteAsset}
           />,
         ]}
+        variant={{ status: Variant.status.WARNING }}
       />
     );
   }
@@ -363,37 +364,16 @@ export class AssetsTable extends React.Component {
   renderModalBody() {
     return (
       <div>
-        <div className={styles['container-fluid']}>
-          <div className={styles.row}>
-            <div className={styles['col-md-10']}>
-              <div>
-                <p>Deleting <b>{this.state.assetToDelete.display_name}</b> cannot be undone.</p>
-                <p>
-                  Any links or references to this file will no longer work. <a
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    href={this.props.courseFilesDocs}
-                  >
-                    Learn more.
-                  </a>
-                </p>
-              </div>
-            </div>
-            <div className={styles.col}>
-              <span
-                className={
-                  classNames(
-                    FontAwesomeStyles.fa,
-                    FontAwesomeStyles['fa-exclamation-triangle'],
-                    FontAwesomeStyles['fa-3x'],
-                    styles['text-warning'],
-                  )
-                }
-                aria-hidden="true"
-              />
-            </div>
-          </div>
-        </div>
+        <p>Deleting <b>{this.state.assetToDelete.display_name}</b> cannot be undone.</p>
+        <p>
+          Any links or references to this file will no longer work. <a
+            target="_blank"
+            rel="noopener noreferrer"
+            href={this.props.courseFilesDocs}
+          >
+            Learn more.
+          </a>
+        </p>
       </div>
     );
   }
