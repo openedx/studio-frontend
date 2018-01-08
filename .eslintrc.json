@@ -8,7 +8,8 @@
         "devDependencies": [
           "config/*.js",
           "**/*.test.jsx",
-          "setupTests.js"
+          "setupTests.js",
+          "src/utils/i18n/enzymeHelper.jsx"
         ]
       }
     ],

@@ -1,5 +1,4 @@
 import React from 'react';
-import Enzyme from 'enzyme';
 import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
 
@@ -7,8 +6,8 @@ import { StatusAlert } from '@edx/paragon';
 
 import WrappedAccessibilityPolicyForm, { AccessibilityPolicyForm } from './index';
 import { accessibilityActions } from '../../data/constants/actionTypes';
+import { mountWithIntl } from '../../utils/i18n/enzymeHelper';
 
-const mount = Enzyme.mount;
 const mockStore = configureStore();
 
 const defaultProps = {
@@ -30,7 +29,7 @@ const validationMessages = {
   message: 'Enter a message.',
 };
 
-const dangerIconDescription = 'Error: ';
+const dangerIconDescription = 'Error';
 
 const clearStatus = (wrapper) => {
   wrapper.setProps({ accessibilityStatus: {} });
@@ -65,7 +64,7 @@ describe('<AccessibilityPolicyForm />', () => {
         },
       });
       store.dispatch = jest.fn();
-      wrapper = mount(
+      wrapper = mountWithIntl(
         <Provider store={store}>
           <WrappedAccessibilityPolicyForm
             accessibilityEmail="accessibilityTest@test.com"
@@ -107,7 +106,7 @@ describe('<AccessibilityPolicyForm />', () => {
     let formSection;
     let statusAlert;
     beforeEach(() => {
-      wrapper = mount(
+      wrapper = mountWithIntl(
         <AccessibilityPolicyForm
           {...defaultProps}
         />,
@@ -133,7 +132,7 @@ describe('<AccessibilityPolicyForm />', () => {
     let submitButton;
     let statusAlert;
     beforeEach(() => {
-      wrapper = mount(
+      wrapper = mountWithIntl(
         <AccessibilityPolicyForm
           {...defaultProps}
         />,
@@ -159,7 +158,7 @@ describe('<AccessibilityPolicyForm />', () => {
       expect(wrapper.state('isStatusAlertOpen')).toEqual(true);
       expect(statusAlertType).toEqual('success');
       expect(statusAlert.find('div').first().hasClass('alert-success')).toEqual(true);
-      expect(statusAlert.text()).toContain('Thank you for contacting edX!Thank you for your feedback regarding the accessibility of Studio. We typically respond within one business day (Monday to Friday, 13:00 to 21:00 UTC).');
+      expect(statusAlert.find('div').first().text()).toContain('×Thank you for contacting edX!Thank you for your feedback regarding the accessibility of Studio. We typically respond within one business day (Monday to Friday, 1:00 PM UTC to 9:00 PM UTC).');
     });
 
     it('shows correct rate limiting message', () => {
@@ -192,7 +191,7 @@ describe('<AccessibilityPolicyForm />', () => {
     let statusAlert;
     let testValue;
     beforeEach(() => {
-      wrapper = mount(
+      wrapper = mountWithIntl(
         <AccessibilityPolicyForm
           {...defaultProps}
         />,
@@ -314,7 +313,7 @@ describe('<AccessibilityPolicyForm />', () => {
     let messageInput;
     let submitButton;
     beforeEach(() => {
-      wrapper = mount(
+      wrapper = mountWithIntl(
         <AccessibilityPolicyForm
           {...defaultProps}
         />,
@@ -377,7 +376,7 @@ describe('<AccessibilityPolicyForm />', () => {
     let submitButton;
     let statusAlert;
     beforeEach(() => {
-      wrapper = mount(
+      wrapper = mountWithIntl(
         <AccessibilityPolicyForm
           {...defaultProps}
         />,

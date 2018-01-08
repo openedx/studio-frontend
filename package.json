@@ -1,10 +1,12 @@
 {
   "name": "@edx/studio-frontend",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "The frontend for the Open edX platform",
   "repository": "edx/studio-frontend",
   "scripts": {
     "build": "NODE_ENV=production BABEL_ENV=production $(npm bin)/webpack --config=config/webpack.prod.config.js",
+    "i18n_extract": "BABEL_ENV=i18n $(npm bin)/babel src --quiet > /dev/null",
+    "i18n_manage": "node scripts/translationRunner.js",
     "lint": "eslint --ext .js --ext .jsx .",
     "prepublishOnly": "npm run build",
     "start": "NODE_ENV=development BABEL_ENV=development $(npm bin)/webpack-dev-server --config=config/webpack.dev.config.js --hot --inline --progress",
@@ -13,7 +15,7 @@
   "license": "AGPL-3.0",
   "dependencies": {
     "@edx/edx-bootstrap": "^0.4.3",
-    "@edx/paragon": "^2.0.0",
+    "@edx/paragon": "^2.0.1",
     "babel-polyfill": "^6.26.0",
     "classnames": "^2.2.5",
     "copy-to-clipboard": "^3.0.8",
@@ -23,8 +25,10 @@
     "prop-types": "^15.5.10",
     "react": "^16.2.0",
     "react-dom": "^16.1.0",
-    "react-dropzone": "^4.2.3",
+    "react-intl": "^2.4.0",
+    "react-intl-translations-manager": "^5.0.1",
     "react-paginate": "^5.0.0",
+    "react-dropzone": "^4.2.3",
     "react-redux": "^5.0.6",
     "redux": "^3.7.2",
     "redux-devtools-extension": "^2.13.2",
@@ -38,9 +42,10 @@
     "babel-eslint": "^7.2.3",
     "babel-jest": "^21.2.0",
     "babel-loader": "^7.1.2",
+    "babel-plugin-react-intl": "^2.3.1",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
-    "babel-preset-env": "^1.6.0",
+    "babel-preset-env": "^1.6.1",
     "babel-preset-react": "^6.24.1",
     "codecov": "^2.3.0",
     "css-loader": "^0.28.5",
@@ -80,7 +85,10 @@
       "src/**/*.{js,jsx}"
     ],
     "coveragePathIgnorePatterns": [
-      "/node_modules/"
+      "/node_modules/",
+      "/src/accessibilityIndex.jsx",
+      "/src/index.jsx",
+      "/src/components/BackendStatusBanner/"
     ],
     "transformIgnorePatterns": [
       "/node_modules/(?!(@edx/paragon)/).*/"

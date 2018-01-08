@@ -1,13 +1,12 @@
 import React from 'react';
-import Enzyme from 'enzyme';
 
 import { CheckBoxGroup } from '@edx/paragon';
 
 import { AssetsFilters, mapDispatchToProps } from './index';
 import { assetActions } from '../../data/constants/actionTypes';
 import { filtersInitial } from './../../data/reducers/assets';
+import { mountWithIntl } from '../../utils/i18n/enzymeHelper';
 
-const mount = Enzyme.mount;
 
 const defaultProps = {
   assetsFilters: { ...filtersInitial },
@@ -21,7 +20,7 @@ let wrapper;
 describe('<AssetsFilters />', () => {
   describe('renders', () => {
     beforeEach(() => {
-      wrapper = mount(
+      wrapper = mountWithIntl(
         <AssetsFilters
           {...defaultProps}
         />,

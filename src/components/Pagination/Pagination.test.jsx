@@ -1,8 +1,7 @@
 import React from 'react';
-import Enzyme from 'enzyme';
 import { Pagination, mapDispatchToProps } from './index';
+import { mountWithIntl } from '../../utils/i18n/enzymeHelper';
 
-const { mount } = Enzyme;
 
 const defaultProps = {
   assetsListMetaData: {
@@ -23,7 +22,7 @@ describe('<Pagination />', () => {
   let pageLinks;
 
   beforeEach(() => {
-    wrapper = mount(
+    wrapper = mountWithIntl(
       <Pagination
         {...defaultProps}
       />,
@@ -96,12 +95,12 @@ describe('<Pagination />', () => {
 
     it('has disabled break link', () => {
       expect(breakLink).toHaveLength(1);
-      expect(breakLink.text()).toEqual('... button disabled');
+      expect(breakLink.text()).toEqual('...button is disabled');
     });
     it('has sr-only text on disabled break link', () => {
       const breakScreenReader = breakLink.find('.sr-only');
       expect(breakScreenReader).toHaveLength(1);
-      expect(breakScreenReader.text()).toEqual(' button disabled');
+      expect(breakScreenReader.text()).toEqual('button is disabled');
     });
   });
   describe('previous link', () => {
@@ -120,12 +119,12 @@ describe('<Pagination />', () => {
     });
     it('is disabled when page is first page', () => {
       expect(previousLink).toHaveLength(1);
-      expect(previousLink.text()).toEqual('previous button disabled');
+      expect(previousLink.text()).toEqual('previousbutton is disabled');
     });
     it('has sr-only text', () => {
       const breakScreenReader = previousLink.find('.sr-only');
       expect(breakScreenReader).toHaveLength(1);
-      expect(breakScreenReader.text()).toEqual(' button disabled');
+      expect(breakScreenReader.text()).toEqual('button is disabled');
     });
   });
   describe('next link has sr-only text when disabled', () => {
@@ -146,12 +145,12 @@ describe('<Pagination />', () => {
     });
     it('is disabled when page is last page', () => {
       expect(nextLink).toHaveLength(1);
-      expect(nextLink.text()).toEqual('next button disabled');
+      expect(nextLink.text()).toEqual('nextbutton is disabled');
     });
     it('has sr-only text when disabled', () => {
       const breakScreenReader = nextLink.find('.sr-only');
       expect(breakScreenReader).toHaveLength(1);
-      expect(breakScreenReader.text()).toEqual(' button disabled');
+      expect(breakScreenReader.text()).toEqual('button is disabled');
     });
   });
 });

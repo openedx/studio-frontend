@@ -1,0 +1,82 @@
+[
+  {
+    "id": "accessibilityPolicyFormEmailLabel",
+    "description": "Label for the email form field",
+    "defaultMessage": "Email Address"
+  },
+  {
+    "id": "accessibilityPolicyFormError",
+    "description": "Error message for screen-reader text",
+    "defaultMessage": "Error"
+  },
+  {
+    "id": "accessibilityPolicyFormErrorHighVolume",
+    "description": "Error message when site is experiencing high volume that will include an email link",
+    "defaultMessage": "We are currently experiencing high volume. Try again later today or send an email message to {emailLink}."
+  },
+  {
+    "id": "accessibilityPolicyFormErrorMissingFields",
+    "description": "Error message to instruct user to fill in all fields",
+    "defaultMessage": "Make sure to fill in all fields."
+  },
+  {
+    "id": "accessibilityPolicyFormFieldsRequired",
+    "description": "Instructions at the top of the form telling the user to fill in all fields",
+    "defaultMessage": "All fields are required."
+  },
+  {
+    "id": "accessibilityPolicyFormHeader",
+    "description": "The heading for the form",
+    "defaultMessage": "Studio Accessibility Feedback"
+  },
+  {
+    "id": "accessibilityPolicyFormMessageLabel",
+    "description": "Label for the message form field",
+    "defaultMessage": "Message"
+  },
+  {
+    "id": "accessibilityPolicyFormNameLabel",
+    "description": "Label for the name form field",
+    "defaultMessage": "Name"
+  },
+  {
+    "id": "accessibilityPolicyFormSubmitAria",
+    "description": "Detailed aria-label for the submit button",
+    "defaultMessage": "Submit Accessibility Feedback Form"
+  },
+  {
+    "id": "accessibilityPolicyFormSubmitLabel",
+    "description": "General label for the submit button",
+    "defaultMessage": "Submit"
+  },
+  {
+    "id": "accessibilityPolicyFormSubmittingFeedbackLabel",
+    "description": "Loading message while form feedback is being submitted",
+    "defaultMessage": "Submitting feedback"
+  },
+  {
+    "id": "accessibilityPolicyFormSuccess",
+    "description": "Simple thank you message when form submission is successful",
+    "defaultMessage": "Thank you for contacting edX!"
+  },
+  {
+    "id": "accessibilityPolicyFormSuccessDetails",
+    "description": "Detailed thank you message when form submission is successful",
+    "defaultMessage": "Thank you for your feedback regarding the accessibility of Studio. We typically respond within one business day ({day_start} to {day_end}, {time_start} to {time_end})."
+  },
+  {
+    "id": "accessibilityPolicyFormValidEmail",
+    "description": "Error message for when an invalid email is entered into the form",
+    "defaultMessage": "Enter a valid email address."
+  },
+  {
+    "id": "accessibilityPolicyFormValidMessage",
+    "description": "Error message an invalid message is entered into the form",
+    "defaultMessage": "Enter a message."
+  },
+  {
+    "id": "accessibilityPolicyFormValidName",
+    "description": "Error message an invalid name is entered into the form",
+    "defaultMessage": "Enter a name."
+  }
+]

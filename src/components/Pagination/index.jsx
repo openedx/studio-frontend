@@ -5,7 +5,8 @@ import ReactPaginate from 'react-paginate';
 
 import classNames from 'classnames';
 import paginationStyles from './Pagination.scss';
-
+import messages from './displayMessages';
+import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
 import { pageUpdate } from '../../data/actions/assets';
 
 export class Pagination extends React.Component {
@@ -20,27 +21,29 @@ export class Pagination extends React.Component {
 
   getDisabledScreenReaderText() {
     return (
-      <span className={paginationStyles['sr-only']}> button disabled</span>
+      <WrappedMessage message={messages.paginationButtonDisabled}>
+        { displayText => <span className={paginationStyles['sr-only']}>{displayText}</span> }
+      </WrappedMessage>
     );
   }
 
   getPreviousLabel(totalPages) {
     return (
-      <span>
-      previous
+      <React.Fragment>
+        <WrappedMessage message={messages.paginationPrevious} />
         {(this.props.assetsListMetaData.page === 0 && totalPages >= 0) &&
           this.getDisabledScreenReaderText()}
-      </span>
+      </React.Fragment>
     );
   }
 
   getNextLabel(totalPages) {
     return (
-      <span>
-      next
+      <React.Fragment>
+        <WrappedMessage message={messages.paginationNext} />
         {(this.props.assetsListMetaData.page === totalPages - 1 &&
           totalPages > 0) && this.getDisabledScreenReaderText()}
-      </span>
+      </React.Fragment>
     );
   }
 

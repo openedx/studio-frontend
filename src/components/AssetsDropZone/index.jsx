@@ -8,7 +8,9 @@ import { Button } from '@edx/paragon';
 import FontAwesomeStyles from 'font-awesome/css/font-awesome.min.css';
 
 import { uploadAssets, uploadExceedMaxSize, uploadExceedMaxCount } from '../../data/actions/assets';
+import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
 
+import messages from './displayMessages';
 import styles from './AssetsDropZone.scss';
 
 
@@ -53,19 +55,25 @@ export class AssetsDropZone extends React.Component {
               className={classNames(FontAwesomeStyles.fa, FontAwesomeStyles['fa-cloud-upload'])}
             />
           </p>
-          <h2>
-            Drag and Drop
-          </h2>
+          <WrappedMessage message={messages.assetsDropZoneHeader} tagName="h2" />
           <div className={styles['center-text']}>
-            <Button
-              className={['btn', 'btn-outline-primary']}
-              label="Browse your computer"
-              onClick={this.handleClick}
-            />
+            <WrappedMessage message={messages.assetsDropZoneBrowseLabel} >
+              { displayText => (
+                <Button
+                  className={['btn', 'btn-outline-primary']}
+                  label={displayText}
+                  onClick={this.handleClick}
+                />
+              )}
+            </WrappedMessage>
           </div>
-          <p>
-            {`Maximum file size: ${this.props.maxFileSizeMB} MB`}
-          </p>
+          <WrappedMessage
+            tagName="p"
+            message={messages.assetsDropZoneMaxFileSizeLabel}
+            values={{
+              maxFileSizeMB: this.props.maxFileSizeMB,
+            }}
+          />
         </Dropzone>
       </div>
     );
