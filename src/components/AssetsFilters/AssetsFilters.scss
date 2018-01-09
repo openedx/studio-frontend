@@ -1,4 +1,9 @@
-ul.filter-set {
-  list-style: none;
-  padding-left: $spacer;
+@import "~bootstrap/scss/utilities/_spacing.scss";
+
+.filter-heading {
+  @extend .pt-3;
+}
+
+.filter-set {
+  padding-left: $spacer * 2;
 }

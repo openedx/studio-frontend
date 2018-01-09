@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import CheckBoxGroup from '@edx/paragon/src/CheckBoxGroup';
 import CheckBox from '@edx/paragon/src/CheckBox';
 import { connect } from 'react-redux';
 
@@ -30,18 +31,23 @@ const ASSET_TYPES = [
 ];
 
 export const AssetsFilters = ({ assetsFilters, updateFilter }) => (
-  <ul className={styles['filter-set']}>
-    {ASSET_TYPES.map(type => (
-      <li key={type.key}>
-        <CheckBox
-          name={type.key}
-          label={type.displayName}
-          checked={assetsFilters[type.key]}
-          onChange={checked => updateFilter(type.key, checked)}
-        />
-      </li>
-    ))}
-  </ul>
+  <div role="group" aria-labelledby="filter-label">
+    <h4 id="filter-label" className={styles['filter-heading']}>Filter by File Type</h4>
+    <div className={styles['filter-set']}>
+      <CheckBoxGroup>
+        {ASSET_TYPES.map(type => (
+          <CheckBox
+            key={type.key}
+            id={type.key}
+            name={type.key}
+            label={type.displayName}
+            checked={assetsFilters[type.key]}
+            onChange={checked => updateFilter(type.key, checked)}
+          />
+        ))}
+      </CheckBoxGroup>
+    </div>
+  </div>
 );
 
 AssetsFilters.propTypes = {
