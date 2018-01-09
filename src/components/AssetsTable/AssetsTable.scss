@@ -1,1 +1,17 @@
 @import '../../SFE.scss';
+
+// pad the studio button so that it's not crowded by the web-copy button
+.studio-copy-button {
+  margin-right: $spacer;
+  margin-bottom: $spacer;
+}
+
+.copy-icon {
+  padding-right: $spacer * 0.25;
+}
+
+.no-image-preview {
+  @extend .p-3;
+  background-color: theme-color('lightest');
+  color: theme-color('disabled');
+}

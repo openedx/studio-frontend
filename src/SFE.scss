@@ -7,3 +7,8 @@
   margin: ($spacer * 2) 0 $spacer;
   border-bottom: 1px solid #eee;
 }
+
+.button-primary-outline {
+  @extend .btn;
+  @extend .btn-outline-primary;
+}

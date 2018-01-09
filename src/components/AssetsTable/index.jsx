@@ -9,6 +9,7 @@ import classNames from 'classnames';
 import { connect } from 'react-redux';
 
 import FontAwesomeStyles from 'font-awesome/css/font-awesome.min.css';
+import styles from './AssetsTable.scss';
 import { assetActions } from '../../data/constants/actionTypes';
 import { assetLoading } from '../../data/constants/loadingTypes';
 import { clearAssetsStatus, deleteAsset, sortUpdate, toggleLockAsset } from '../../data/actions/assets';
@@ -117,11 +118,14 @@ export class AssetsTable extends React.Component {
 
   getImageThumbnail(thumbnail) {
     const baseUrl = this.props.courseDetails.base_url || '';
-    return thumbnail ? (<img src={`${baseUrl}${thumbnail}`} alt="Description not available" />) : 'Preview not available';
+    if (thumbnail) {
+      return (<img src={`${baseUrl}${thumbnail}`} alt="Description not available" />);
+    }
+    return (<div className={styles['no-image-preview']}>Preview not available</div>);
   }
 
   getLockButton(asset) {
-    const classes = [FontAwesomeStyles.fa];
+    const classes = [FontAwesomeStyles.fa, styles['button-primary-outline']];
     let lockState;
     if (asset.locked) {
       lockState = 'Locked';
@@ -131,7 +135,8 @@ export class AssetsTable extends React.Component {
       classes.push(FontAwesomeStyles['fa-unlock']);
     }
     return (<Button
-      label={(<span className={classNames(...classes)} />)}
+      className={classes}
+      label={''}
       data-asset-id={asset.id}
       aria-label={`${lockState} ${asset.display_name}`}
       onClick={this.onLockClick}
@@ -159,9 +164,11 @@ export class AssetsTable extends React.Component {
   }
 
   getLoadingLockButton(asset) {
-    const classes = [FontAwesomeStyles.fa, FontAwesomeStyles['fa-spinner'], FontAwesomeStyles['fa-spin']];
+    // spinner classes are applied to the span to keep the whole button from spinning
+    const spinnerClasses = [FontAwesomeStyles.fa, FontAwesomeStyles['fa-spinner'], FontAwesomeStyles['fa-spin']];
     return (<Button
-      label={(<span className={classNames(...classes)} />)}
+      className={[styles['button-primary-outline']]}
+      label={(<span className={classNames(...spinnerClasses)} />)}
       aria-label={`Updating lock status for ${asset.display_name}`}
     />);
   }
@@ -231,16 +238,16 @@ export class AssetsTable extends React.Component {
   getCopyUrlButtons(assetDisplayName, studioUrl, webUrl) {
     return (
       <span>
-        {studioUrl && this.getCopyUrlButton(assetDisplayName, studioUrl, 'Studio')}
+        {studioUrl && this.getCopyUrlButton(assetDisplayName, studioUrl, 'Studio', [styles['studio-copy-button']])}
         {webUrl && this.getCopyUrlButton(assetDisplayName, webUrl, 'Web')}
       </span>
     );
   }
 
-  getCopyUrlButton(assetDisplayName, url, label) {
+  getCopyUrlButton(assetDisplayName, url, label, classes = []) {
     const buttonLabel = (
       <span>
-        <span className={classNames(FontAwesomeStyles.fa, FontAwesomeStyles['fa-files-o'])} aria-hidden />
+        <span className={classNames(FontAwesomeStyles.fa, FontAwesomeStyles['fa-files-o'], styles['copy-icon'])} aria-hidden />
         {label}
       </span>
     );
@@ -249,6 +256,7 @@ export class AssetsTable extends React.Component {
 
     return (<CopyButton
       label={buttonLabel}
+      className={classes}
       textToCopy={url}
       onCopyButtonClick={this.onCopyButtonClick}
       ariaLabel={`${assetDisplayName} copy ${label} URL`}
@@ -268,7 +276,7 @@ export class AssetsTable extends React.Component {
 
       const deleteButton = (<Button
         key={currentAsset.id}
-        className={[FontAwesomeStyles.fa, FontAwesomeStyles['fa-trash']]}
+        className={[FontAwesomeStyles.fa, FontAwesomeStyles['fa-trash'], styles['button-primary-outline']]}
         label={''}
         aria-label={`Delete ${currentAsset.display_name}`}
         onClick={() => { this.onDeleteClick(index); }}
