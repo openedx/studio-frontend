@@ -22,16 +22,28 @@ describe('Reducer Utils', () => {
       expectedAssets[1].loadingFields = [assetLoading.LOCK];
       expect(addLoadingField(assets, 'chinchilla', assetLoading.LOCK)).toEqual(expectedAssets);
     });
+    it('adds loading field to existing loading fields', () => {
+      const mockLoadingField = {
+        MOCK: 'MOCK',
+      };
+
+      const newAssets = deepCopyAssets();
+      newAssets[0].loadingFields = [assetLoading.LOCK];
+
+      const expectedAssets = deepCopyAssets();
+      expectedAssets[0].loadingFields = [assetLoading.LOCK, mockLoadingField];
+
+      expect(addLoadingField(newAssets, 'lynx', mockLoadingField)).toEqual(expectedAssets);
+    });
   });
 
-  describe('addLoadingField', () => {
+  describe('removeLoadingField', () => {
     it('removes existing field', () => {
       const expectedAssets = deepCopyAssets();
       expectedAssets[0].loadingFields = [];
       const loadingAssets = addLoadingField(assets, 'lynx', assetLoading.LOCK);
       expect(removeLoadingField(loadingAssets, 'lynx', assetLoading.LOCK)).toEqual(expectedAssets);
     });
-
     it('no-op when field not present', () => {
       const expectedAssets = deepCopyAssets();
       expect(removeLoadingField(assets, 'lynx', assetLoading.LOCK)).toEqual(expectedAssets);

@@ -231,6 +231,98 @@ describe('Assets Reducers', () => {
 
         expect(state).toEqual(action);
       });
+      it('returns correct status state on UPLOAD_ASSET_SUCCESS action without state.loadedCount', () => {
+        action = {
+          response: 'Success!',
+          type: assetActions.UPLOAD_ASSET_SUCCESS,
+        };
+
+        const loadedCount = 1;
+
+        state = reducers.status(defaultState, action);
+
+        expect(state).toEqual({ ...action, loadedCount });
+      });
+      it('returns correct status state on UPLOAD_ASSET_SUCCESS action with state.loadedCount', () => {
+        action = {
+          response: 'Success!',
+          type: assetActions.UPLOAD_ASSET_SUCCESS,
+        };
+
+        const loadedCount = 1;
+
+        state = reducers.status({ ...defaultState, loadedCount }, action);
+
+        expect(state).toEqual({ ...action, loadedCount: loadedCount + 1 });
+      });
+      it('returns correct status state on UPLOAD_ASSET_FAILURE action', () => {
+        action = {
+          asset: 'asset.txt',
+          response: 'Failure!',
+          type: assetActions.UPLOAD_ASSET_FAILURE,
+        };
+
+        state = reducers.status(defaultState, action);
+
+        expect(state).toEqual(action);
+      });
+      it('returns correct status state on UPLOAD_EXCEED_MAX_COUNT_ERROR action', () => {
+        action = {
+          maxFileCount: 1,
+          type: assetActions.UPLOAD_EXCEED_MAX_COUNT_ERROR,
+        };
+
+        state = reducers.status(defaultState, action);
+
+        expect(state).toEqual(action);
+      });
+      it('returns correct status state on UPLOAD_EXCEED_MAX_SIZE_ERROR action', () => {
+        action = {
+          maxFileSizeMB: 1,
+          type: assetActions.UPLOAD_EXCEED_MAX_SIZE_ERROR,
+        };
+
+        state = reducers.status(defaultState, action);
+
+        expect(state).toEqual(action);
+      });
+      it('returns correct status state on UPLOADING_ASSETS action', () => {
+        action = {
+          count: 1,
+          type: assetActions.UPLOADING_ASSETS,
+        };
+
+        state = reducers.status(defaultState, action);
+
+        expect(state).toEqual(action);
+      });
+      // case assetActions.UPLOAD_ASSET_SUCCESS:
+      //   return {
+      //     loadedCount: state.loadedCount ? state.loadedCount + 1 : 1,
+      //     response: action.response,
+      //     type: action.type,
+      //   };
+      // case assetActions.UPLOAD_ASSET_FAILURE:
+      //   return {
+      //     file: action.file,
+      //     response: action.response,
+      //     type: action.type,
+      //   };
+      // case assetActions.UPLOAD_EXCEED_MAX_COUNT_ERROR:
+      //   return {
+      //     maxFileCount: action.maxFileCount,
+      //     type: action.type,
+      //   };
+      // case assetActions.UPLOAD_EXCEED_MAX_SIZE_ERROR:
+      //   return {
+      //     maxFileSizeMB: action.maxFileSizeMB,
+      //     type: action.type,
+      //   };
+      // case assetActions.UPLOADING_ASSETS:
+      //   return {
+      //     count: action.count,
+      //     type: action.type,
+      //   };
     });
   });
   describe('request reducer', () => {

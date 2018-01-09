@@ -124,7 +124,7 @@ export const status = (state = {}, action) => {
       };
     case assetActions.UPLOAD_ASSET_FAILURE:
       return {
-        file: action.file,
+        asset: action.asset,
         response: action.response,
         type: action.type,
       };
