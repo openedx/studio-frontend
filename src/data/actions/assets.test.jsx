@@ -209,8 +209,8 @@ describe('Assets Action Creators', () => {
     expect(store.dispatch(actionCreators.uploadExceedMaxCount(1))).toEqual(expectedAction);
   });
   it('returns expected state from uploadAssetFailure', () => {
-    const expectedAction = { asset: 'file', response: 'response', type: assetActions.UPLOAD_ASSET_FAILURE };
-    expect(store.dispatch(actionCreators.uploadAssetFailure('file', 'response'))).toEqual(expectedAction);
+    const expectedAction = { asset: 'asset', response: 'response', type: assetActions.UPLOAD_ASSET_FAILURE };
+    expect(store.dispatch(actionCreators.uploadAssetFailure('asset', 'response'))).toEqual(expectedAction);
   });
   it('returns expected state from uploadAssetSuccess', () => {
     const expectedAction = { response: 'response', type: assetActions.UPLOAD_ASSET_SUCCESS };
@@ -231,23 +231,23 @@ describe('Assets Action Creators', () => {
     fetchMock.mock(`begin:${assetsEndpoint}`, getUploadResponse(true), { method: 'post' });
     fetchMock.mock(`begin:${assetsEndpoint}`, assetsResponse, { method: 'get' });
 
-    const files = ['a.txt', 'b.txt', 'c.txt'];
+    const assets = ['a.txt', 'b.txt', 'c.txt'];
 
     const expectedActions = [
-      { count: files.length, type: assetActions.UPLOADING_ASSETS },
+      { count: assets.length, type: assetActions.UPLOADING_ASSETS },
     ];
 
-    files.forEach((file) => {
-      expectedActions.push({ type: assetActions.UPLOAD_ASSET_SUCCESS, response: { asset: file } });
+    assets.forEach((asset) => {
+      expectedActions.push({ type: assetActions.UPLOAD_ASSET_SUCCESS, response: { asset } });
     });
 
-    files.forEach(() => {
+    assets.forEach(() => {
       expectedActions.push(
         { type: assetActions.REQUEST_ASSETS_SUCCESS, data: assetsResponse.body },
       );
     });
 
-    return store.dispatch(actionCreators.uploadAssets(files, courseDetails)).then(() => {
+    return store.dispatch(actionCreators.uploadAssets(assets, courseDetails)).then(() => {
       // return of async actions
       expect(store.getActions()).toEqual(expectedActions);
     });
@@ -260,19 +260,19 @@ describe('Assets Action Creators', () => {
 
     fetchMock.mock(`begin:${assetsEndpoint}`, getUploadResponse(false), { method: 'post' });
 
-    const files = ['a.txt', 'b.txt', 'c.txt'];
+    const assets = ['a.txt', 'b.txt', 'c.txt'];
 
     const expectedActions = [
-      { count: files.length, type: assetActions.UPLOADING_ASSETS },
+      { count: assets.length, type: assetActions.UPLOADING_ASSETS },
     ];
 
-    files.forEach((file) => {
+    assets.forEach((asset) => {
       expectedActions.push(
-        { type: assetActions.UPLOAD_ASSET_FAILURE, asset: file, response: assetsResponse.body },
+        { type: assetActions.UPLOAD_ASSET_FAILURE, asset, response: assetsResponse.body },
       );
     });
 
-    return store.dispatch(actionCreators.uploadAssets(files, courseDetails)).then(() => {
+    return store.dispatch(actionCreators.uploadAssets(assets, courseDetails)).then(() => {
       // return of async actions
       expect(store.getActions()).toEqual(expectedActions);
     });
