@@ -220,7 +220,6 @@ describe('Assets Action Creators', () => {
     const expectedAction = { count: 99, type: assetActions.UPLOADING_ASSETS };
     expect(store.dispatch(actionCreators.uploadingAssets(99, 'response'))).toEqual(expectedAction);
   });
-
   it('returns expected state from uploadAssets success', () => {
     const assetsResponse = {
       status: 200,
@@ -248,26 +247,18 @@ describe('Assets Action Creators', () => {
       );
     });
 
-    // console.log(store.dispatch(actionCreators.uploadAssets(files, courseDetails)).then(() => {
-    //   console.log(store.getActions());
-    // }));
-    // console.log(store.getActions());
     return store.dispatch(actionCreators.uploadAssets(files, courseDetails)).then(() => {
       // return of async actions
-
       expect(store.getActions()).toEqual(expectedActions);
     });
   });
   it('returns expected state from uploadAssets failure', () => {
-    // fetchMock.mock(`begin:${assetsEndpoint}`, response, { query: { body: 'gdfgdf' } });
-    // fetchMock..mock(`begin:${assetsEndpoint}`, getResponse, { method: 'post' })
     const assetsResponse = {
       status: 400,
       body: 400,
     };
 
     fetchMock.mock(`begin:${assetsEndpoint}`, getUploadResponse(false), { method: 'post' });
-    // fetchMock.mock(`begin:${assetsEndpoint}`, assetsResponse, { method: 'get' });
 
     const files = ['a.txt', 'b.txt', 'c.txt'];
 
@@ -281,13 +272,8 @@ describe('Assets Action Creators', () => {
       );
     });
 
-    // console.log(store.dispatch(actionCreators.uploadAssets(files, courseDetails)).then(() => {
-    //   console.log(store.getActions());
-    // }));
-    // console.log(store.getActions());
     return store.dispatch(actionCreators.uploadAssets(files, courseDetails)).then(() => {
       // return of async actions
-
       expect(store.getActions()).toEqual(expectedActions);
     });
   });

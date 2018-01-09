@@ -296,33 +296,6 @@ describe('Assets Reducers', () => {
 
         expect(state).toEqual(action);
       });
-      // case assetActions.UPLOAD_ASSET_SUCCESS:
-      //   return {
-      //     loadedCount: state.loadedCount ? state.loadedCount + 1 : 1,
-      //     response: action.response,
-      //     type: action.type,
-      //   };
-      // case assetActions.UPLOAD_ASSET_FAILURE:
-      //   return {
-      //     file: action.file,
-      //     response: action.response,
-      //     type: action.type,
-      //   };
-      // case assetActions.UPLOAD_EXCEED_MAX_COUNT_ERROR:
-      //   return {
-      //     maxFileCount: action.maxFileCount,
-      //     type: action.type,
-      //   };
-      // case assetActions.UPLOAD_EXCEED_MAX_SIZE_ERROR:
-      //   return {
-      //     maxFileSizeMB: action.maxFileSizeMB,
-      //     type: action.type,
-      //   };
-      // case assetActions.UPLOADING_ASSETS:
-      //   return {
-      //     count: action.count,
-      //     type: action.type,
-      //   };
     });
   });
   describe('request reducer', () => {
