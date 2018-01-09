@@ -9,6 +9,7 @@ import classNames from 'classnames';
 import { connect } from 'react-redux';
 
 import FontAwesomeStyles from 'font-awesome/css/font-awesome.min.css';
+import styles from './AssetsTable.scss';
 import { assetActions } from '../../data/constants/actionTypes';
 import { assetLoading } from '../../data/constants/loadingTypes';
 import { clearAssetsStatus, deleteAsset, sortUpdate, toggleLockAsset } from '../../data/actions/assets';

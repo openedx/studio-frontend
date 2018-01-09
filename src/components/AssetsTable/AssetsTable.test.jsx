@@ -185,7 +185,7 @@ describe('<AssetsTable />', () => {
         if (rowThumbnail) {
           expect(row.find(`img[src="${baseUrl}${rowThumbnail}"][alt="Description not available"]`)).toHaveLength(1);
         } else {
-          expect(row.containsMatchingElement(<td>Preview not available</td>)).toEqual(true);
+          expect(row.find('.no-image-preview')).toHaveLength(1);
         }
       });
     });
@@ -521,8 +521,8 @@ describe('<AssetsTable />', () => {
 });
 
 describe('Lock asset', () => {
-  const getLockedButtons = () => wrapper.find('button > .fa-lock');
-  const getUnlockedButtons = () => wrapper.find('button > .fa-unlock');
+  const getLockedButtons = () => wrapper.find('button .fa-lock');
+  const getUnlockedButtons = () => wrapper.find('button .fa-unlock');
   const getLockingButtons = () => wrapper.find('button > .fa-spinner');
   beforeEach(() => {
     wrapper = mount(
