@@ -120,9 +120,8 @@ export class AssetsTable extends React.Component {
     const baseUrl = this.props.courseDetails.base_url || '';
     if (thumbnail) {
       return (<img src={`${baseUrl}${thumbnail}`} alt="Description not available" />);
-    } else {
-      return (<div className={styles['no-image-preview']}>Preview not available</div>);
     }
+    return (<div className={styles['no-image-preview']}>Preview not available</div>);
   }
 
   getLockButton(asset) {
@@ -166,7 +165,7 @@ export class AssetsTable extends React.Component {
 
   getLoadingLockButton(asset) {
     // spinner classes are applied to the span to keep the whole button from spinning
-    const spinnerClasses = [FontAwesomeStyles.fa, FontAwesomeStyles['fa-spinner'], FontAwesomeStyles['fa-spin'],];
+    const spinnerClasses = [FontAwesomeStyles.fa, FontAwesomeStyles['fa-spinner'], FontAwesomeStyles['fa-spin']];
     return (<Button
       className={[styles['button-primary-outline']]}
       label={(<span className={classNames(...spinnerClasses)} />)}
@@ -245,7 +244,7 @@ export class AssetsTable extends React.Component {
     );
   }
 
-  getCopyUrlButton(assetDisplayName, url, label, classes=[]) {
+  getCopyUrlButton(assetDisplayName, url, label, classes = []) {
     const buttonLabel = (
       <span>
         <span className={classNames(FontAwesomeStyles.fa, FontAwesomeStyles['fa-files-o'], styles['copy-icon'])} aria-hidden />
