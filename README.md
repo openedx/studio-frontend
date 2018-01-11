@@ -59,3 +59,22 @@ Currently, the process for releasing a new version of our package is as follows:
 3. `git checkout master` and `git pull`. Ensure your current directory is cleaned, with no outstanding commits or files. As an extra precaution, you can `rm -rf node node_modules` and `npm install` prior to publishing.
 4. Be a member of the correct edX and npm orgs, and be logged in. All of @edx/educator-dahlia should be set up, and others shouldn't need to be publishing this package.
 5. Run `npm publish`.
+
+
+## Getting Help
+
+If you need assistance with this repository please see our documentation for [Getting Help](https://github.com/edx/edx-platform#getting-help) for more information.
+
+
+## Issue Tracker
+
+We use JIRA for our issue tracker, not GitHub Issues. Please see our documentation for [tracking issues](https://github.com/edx/edx-platform#issue-tracker) for more information on how to track issues that we will be able to respond to and track accurately. Thanks!
+
+## How to Contribute
+
+Contributions are very welcome, but for legal reasons, you must submit a signed [individual contributor's agreement](http://code.edx.org/individual-contributor-agreement.pdf) before we can accept your contribution. See our [CONTRIBUTING](https://github.com/edx/edx-platform/blob/master/CONTRIBUTING.rst) file for more information -- it also contains guidelines for how to maintain high code quality, which will make your contribution more likely to be accepted.
+
+
+## Reporting Security Issues
+
+Please do not report security issues in public. Please email security@edx.org.
