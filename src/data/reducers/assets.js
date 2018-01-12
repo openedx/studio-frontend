@@ -119,7 +119,6 @@ export const status = (state = {}, action) => {
       };
     case assetActions.UPLOAD_ASSET_SUCCESS:
       return {
-        loadedCount: state.loadedCount ? state.loadedCount + 1 : 1,
         response: action.response,
         type: action.type,
       };

@@ -19,12 +19,18 @@ export class AssetsTable extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      modalOpen: false,
       assetToDelete: {},
+      copyButtonIsClicked: false,
       deletedAsset: {},
       deletedAssetIndex: null,
       elementToFocusOnModalClose: {},
-      copyButtonIsClicked: false,
+      modalOpen: false,
+      statusAlertFields: {
+        alertDialog: '',
+        alertType: 'info',
+      },
+      statusAlertOpen: false,
+      uploadSuccessCount: 1,
     };
 
     this.columns = {
@@ -68,16 +74,25 @@ export class AssetsTable extends React.Component {
       },
     };
 
+    this.deleteActions = [assetActions.DELETE_ASSET_FAILURE, assetActions.DELETE_ASSET_SUCCESS];
+
     this.trashcanRefs = {};
     this.statusAlertRef = {};
 
-    this.onDeleteClick = this.onDeleteClick.bind(this);
-    this.deleteAsset = this.deleteAsset.bind(this);
     this.addSupplementalTableElements = this.addSupplementalTableElements.bind(this);
     this.closeModal = this.closeModal.bind(this);
     this.closeStatusAlert = this.closeStatusAlert.bind(this);
-    this.renderStatusAlert = this.renderStatusAlert.bind(this);
+    this.deleteAsset = this.deleteAsset.bind(this);
     this.onCopyButtonClick = this.onCopyButtonClick.bind(this);
+    this.onDeleteClick = this.onDeleteClick.bind(this);
+    this.renderStatusAlert = this.renderStatusAlert.bind(this);
+    this.updateUploadSuccessCount = this.updateUploadSuccessCount.bind(this);
+  }
+
+
+  componentWillReceiveProps(nextProps) {
+    const { assetsStatus } = nextProps;
+    this.updateStatusAlertFields(assetsStatus);
   }
 
   onSortClick(columnKey) {
@@ -173,68 +188,6 @@ export class AssetsTable extends React.Component {
     />);
   }
 
-  getLockFailedStatusFields(assetsStatus) {
-    return {
-      alertDialog: `Failed to toggle lock for ${assetsStatus.asset.name}`,
-      alertType: 'danger',
-    };
-  }
-
-  getDeleteStatusFields(assetsStatus) {
-    const assetName = this.state.deletedAsset.display_name;
-    let alertDialog;
-    let alertType;
-
-    switch (assetsStatus.type) {
-      case assetActions.DELETE_ASSET_FAILURE:
-        alertDialog = `Unable to delete ${assetName}.`;
-        alertType = 'danger';
-        break;
-      case assetActions.DELETE_ASSET_SUCCESS:
-        alertDialog = `${assetName} has been deleted.`;
-        alertType = 'success';
-        break;
-      default:
-        break;
-    }
-    return {
-      alertDialog,
-      alertType,
-    };
-  }
-
-  getUploadStatusFields(assetsStatus) {
-    switch (assetsStatus.type) {
-      case assetActions.UPLOAD_ASSET_SUCCESS:
-        return {
-          alertType: 'success',
-          alertDialog: `${assetsStatus.loadedCount} files successfully uploaded.`,
-        };
-      case assetActions.UPLOADING_ASSETS:
-        return {
-          alertType: 'info',
-          alertDialog: `${assetsStatus.count} files uploading.`,
-        };
-      case assetActions.UPLOAD_EXCEED_MAX_COUNT_ERROR:
-        return {
-          alertType: 'danger',
-          alertDialog: `The maximum number of files for an upload is ${assetsStatus.maxFileCount}. No files were not uploaded.`,
-        };
-      case assetActions.UPLOAD_EXCEED_MAX_SIZE_ERROR:
-        return {
-          alertType: 'danger',
-          alertDialog: `The maximum size for an upload is ${assetsStatus.maxFileSizeMB} MB. No files were not uploaded.`,
-        };
-      case assetActions.UPLOAD_ASSET_FAILURE:
-        return {
-          alertType: 'danger',
-          alertDialog: `Error uploading ${assetsStatus.file.name}. Try again.`,
-        };
-      default:
-        return {};
-    }
-  }
-
   getCopyUrlButtons(assetDisplayName, studioUrl, webUrl) {
     return (
       <span>
@@ -267,6 +220,67 @@ export class AssetsTable extends React.Component {
   handleCopyButtonEvent(buttonIsClicked) {
     this.setState({
       copyButtonIsClicked: buttonIsClicked,
+    });
+  }
+
+  updateStatusAlertFields(assetsStatus) {
+    const assetName = this.state.deletedAsset.display_name;
+    let alertDialog;
+    let alertType;
+
+    switch (assetsStatus.type) {
+      case assetActions.DELETE_ASSET_FAILURE:
+        alertDialog = `Unable to delete ${assetName}.`;
+        alertType = 'danger';
+        break;
+      case assetActions.DELETE_ASSET_SUCCESS:
+        alertDialog = `${assetName} has been deleted.`;
+        alertType = 'success';
+        break;
+      case assetActions.UPLOAD_ASSET_SUCCESS:
+        this.updateUploadSuccessCount();
+        alertDialog = `${this.state.uploadSuccessCount} files successfully uploaded.`;
+        alertType = 'success';
+        break;
+      case assetActions.UPLOADING_ASSETS:
+        this.closeStatusAlert();
+        alertDialog = `${assetsStatus.count} files uploading.`;
+        alertType = 'info';
+        break;
+      case assetActions.UPLOAD_EXCEED_MAX_COUNT_ERROR:
+        alertDialog = `The maximum number of files for an upload is ${assetsStatus.maxFileCount}. No files were uploaded.`;
+        alertType = 'danger';
+        break;
+      case assetActions.UPLOAD_EXCEED_MAX_SIZE_ERROR:
+        alertDialog = `The maximum size for an upload is ${assetsStatus.maxFileSizeMB} MB. No files were uploaded.`;
+        alertType = 'danger';
+        break;
+      case assetActions.UPLOAD_ASSET_FAILURE:
+        alertDialog = `Error uploading ${assetsStatus.file.name}. Try again.`;
+        alertType = 'danger';
+        break;
+      case assetActions.TOGGLING_LOCK_ASSET_FAILURE:
+        alertDialog = `Failed to toggle lock for ${assetsStatus.asset.name}.`;
+        alertType = 'danger';
+        break;
+      default:
+        return;
+    }
+
+    this.setState({
+      statusAlertOpen: true,
+      statusAlertFields: {
+        alertDialog,
+        alertType,
+      },
+    });
+    this.statusAlertRef.focus();
+  }
+
+  updateUploadSuccessCount() {
+    const uploadSuccessCount = this.state.uploadSuccessCount + 1;
+    this.setState({
+      uploadSuccessCount,
     });
   }
 
@@ -332,6 +346,12 @@ export class AssetsTable extends React.Component {
     this.setState({
       deletedAsset: {},
       deletedAssetIndex: null,
+      statusAlertOpen: false,
+      statusAlertFields: {
+        alertDialog: '',
+        alertType: 'info',
+      },
+      uploadSuccessCount: 1,
     });
   }
 
@@ -346,7 +366,6 @@ export class AssetsTable extends React.Component {
       elementToFocusOnModalClose: this.statusAlertRef,
       modalOpen: false,
     });
-    this.state.elementToFocusOnModalClose.focus();
   }
 
   renderModal() {
@@ -371,7 +390,7 @@ export class AssetsTable extends React.Component {
 
   renderModalBody() {
     return (
-      <div>
+      <React.Fragment>
         <p>Deleting <b>{this.state.assetToDelete.display_name}</b> cannot be undone.</p>
         <p>
           Any links or references to this file will no longer work. <a
@@ -382,90 +401,54 @@ export class AssetsTable extends React.Component {
             Learn more.
           </a>
         </p>
-      </div>
-    );
-  }
-
-  /**
-   * Rendering an empty status alert keeps the alert in the DOM initially and
-   * enables screen readers to listen for changes.
-   */
-  renderEmptyStatusAlert() {
-    return (
-      <div>
-        <StatusAlert
-          dialog=""
-          open={false}
-          dismissible={false}
-        />
-      </div>
+      </React.Fragment>
     );
   }
 
   renderStatusAlert() {
     const { assetsStatus } = this.props;
-    const deleteActions = [assetActions.DELETE_ASSET_FAILURE, assetActions.DELETE_ASSET_SUCCESS];
-    const uploadActions = [assetActions.UPLOAD_ASSET_SUCCESS,
-      assetActions.UPLOAD_EXCEED_MAX_COUNT_ERROR, assetActions.UPLOAD_EXCEED_MAX_SIZE_ERROR,
-      assetActions.UPLOAD_ASSET_FAILURE, assetActions.UPLOADING_ASSETS];
-    let status = {};
+
     let onClose = this.closeStatusAlert;
-    if (assetsStatus.type === assetActions.TOGGLING_LOCK_ASSET_FAILURE) {
-      status = this.getLockFailedStatusFields(assetsStatus);
-    } else if (deleteActions.includes(assetsStatus.type)) {
-      status = this.getDeleteStatusFields(assetsStatus);
+    if (this.deleteActions.includes(assetsStatus.type)) {
       onClose = this.closeDeleteStatus;
-    } else if (uploadActions.includes(assetsStatus.type)) {
-      status = this.getUploadStatusFields(assetsStatus);
     }
 
     const statusAlert = (
       <StatusAlert
-        alertType={status.alertType}
-        dialog={status.alertDialog}
-        open
+        alertType={this.state.statusAlertFields.alertType}
+        dialog={this.state.statusAlertFields.alertDialog}
+        open={this.state.statusAlertOpen}
         onClose={onClose}
         ref={(input) => { this.statusAlertRef = input; }}
       />
     );
 
     return (
-      <div>
+      <React.Fragment>
         {statusAlert}
-      </div>
+      </React.Fragment>
     );
   }
 
   render() {
-    let renderOutput;
-    // TODO: Add UI for when there is nothing in the list and we have a status returned from the API
-    // TODO: http://fhtwd0.axshare.com/#g=1&p=files-and-uploads-empty
-    // Only show Loading when the list is empty AND the status from the APIs are empty
-    if (this.props.assetsList.length === 0 && Object.keys(this.props.assetsStatus).length === 0) {
-      renderOutput = (<span>Loading....</span>);
-    } else {
-      const statusAlert = 'type' in this.props.assetsStatus ?
-        this.renderStatusAlert() : this.renderEmptyStatusAlert();
-      renderOutput = (
-        <div>
-          {statusAlert}
-          <Table
-            className={['table-responsive']}
-            columns={Object.keys(this.columns).map(columnKey => ({
-              ...this.columns[columnKey],
-              onSort: () => this.onSortClick(columnKey),
-            }))}
-            data={this.addSupplementalTableElements(this.props.assetsList)}
-            tableSortable
-            defaultSortedColumn="date_added"
-            defaultSortDirection="desc"
-          />
-          {this.renderModal()}
-          <span className="sr" aria-live="assertive" id="copy-status"> {this.state.copyButtonIsClicked ? 'Copied' : ''} </span>
-        </div>
-      );
-    }
-    return renderOutput;
+    return (
+      <React.Fragment>
+        {this.renderStatusAlert()}
+        <Table
+          className={['table-responsive']}
+          columns={Object.keys(this.columns).map(columnKey => ({
+            ...this.columns[columnKey],
+            onSort: () => this.onSortClick(columnKey),
+          }))}
+          data={this.addSupplementalTableElements(this.props.assetsList)}
+          tableSortable
+          defaultSortedColumn="date_added"
+          defaultSortDirection="desc"
+        />
+        {this.renderModal()}
+        <span className="sr" aria-live="assertive" id="copy-status"> {this.state.copyButtonIsClicked ? 'Copied' : ''} </span>
+      </React.Fragment>
+    );
   }
 }
 
