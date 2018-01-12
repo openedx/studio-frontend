@@ -138,6 +138,10 @@ describe('Assets Action Creators', () => {
       expect(store.getActions()).toEqual(expectedActions);
     });
   });
+  it('returns expected state from clearAssetsStatus', () => {
+    const expectedAction = { type: assetActions.CLEAR_ASSETS_STATUS };
+    expect(store.dispatch(actionCreators.clearAssetsStatus())).toEqual(expectedAction);
+  });
   it('returns expected state from togglingLockAsset', () => {
     const expectedAction = { asset: 'asset', type: assetActions.TOGGLING_LOCK_ASSET_SUCCESS };
     expect(store.dispatch(actionCreators.togglingLockAsset('asset'))).toEqual(expectedAction);

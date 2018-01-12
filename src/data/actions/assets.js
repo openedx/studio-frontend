@@ -69,7 +69,6 @@ export const deleteAssetFailure = assetId => ({
   assetId,
 });
 
-
 export const deleteAsset = (assetId, courseDetails) =>
   dispatch =>
     clientApi.requestDeleteAsset(courseDetails.id, assetId)
@@ -86,6 +85,10 @@ export const deleteAsset = (assetId, courseDetails) =>
 export const togglingLockAsset = asset => ({
   type: assetActions.TOGGLING_LOCK_ASSET_SUCCESS,
   asset,
+});
+
+export const clearAssetsStatus = () => ({
+  type: assetActions.CLEAR_ASSETS_STATUS,
 });
 
 export const toggleLockAssetSuccess = asset => ({
