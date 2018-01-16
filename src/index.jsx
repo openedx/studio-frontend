@@ -11,7 +11,6 @@ const App = () => (
   <Provider store={store}>
     <div>
       <BackendStatusBanner />
-      <h1>studio-frontend</h1>
       <AssetsPage />
     </div>
   </Provider>

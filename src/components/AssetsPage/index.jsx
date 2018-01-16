@@ -35,7 +35,6 @@ class AssetsPage extends React.Component {
   render() {
     return (
       <div className={styles.assets}>
-        <h2>Files & Uploads</h2>
         <div className={edxBootstrap.container}>
           <div className={edxBootstrap.row}>
             <div className={edxBootstrap.col}>
