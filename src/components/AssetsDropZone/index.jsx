@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import Dropzone from 'react-dropzone';
 import PropTypes from 'prop-types';
 
-import Button from '@edx/paragon/src/Button';
+import { Button } from '@edx/paragon';
 import FontAwesomeStyles from 'font-awesome/css/font-awesome.min.css';
 
 import { uploadAssets, uploadExceedMaxSize, uploadExceedMaxCount } from '../../data/actions/assets';

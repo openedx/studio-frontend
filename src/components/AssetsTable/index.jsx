@@ -1,10 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Table from '@edx/paragon/src/Table';
-import Button from '@edx/paragon/src/Button';
-import Modal from '@edx/paragon/src/Modal';
-import StatusAlert from '@edx/paragon/src/StatusAlert';
-import Variant from '@edx/paragon/src/utils/constants';
+import { Table, Button, Modal, StatusAlert, Variant } from '@edx/paragon';
 import classNames from 'classnames';
 import { connect } from 'react-redux';
 

@@ -1,10 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import Button from '@edx/paragon/src/Button';
-import InputText from '@edx/paragon/src/InputText';
-import StatusAlert from '@edx/paragon/src/StatusAlert';
-import TextArea from '@edx/paragon/src/TextArea';
+import { Button, InputText, StatusAlert, TextArea } from '@edx/paragon';
 
 import { clearAccessibilityStatus, submitAccessibilityForm } from '../../data/actions/accessibility';
 import { accessibilityActions } from '../../data/constants/actionTypes';

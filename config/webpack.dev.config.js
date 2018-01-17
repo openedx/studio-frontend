@@ -36,7 +36,6 @@ module.exports = Merge.smart(commonConfig, {
         test: /\.(js|jsx)$/,
         include: [
           path.resolve(__dirname, '../src'),
-          path.resolve(__dirname, '../node_modules/@edx/paragon'),
         ],
         loader: 'babel-loader',
         options: {
@@ -52,17 +51,16 @@ module.exports = Merge.smart(commonConfig, {
             options: {
               sourceMap: true,
               modules: true,
-              localIdentName: '[name]__[local]',
+              localIdentName: '[local]',
             },
           },
           {
             loader: 'sass-loader',
             options: {
               sourceMap: true,
-              // temporary workaround for importing edx-bootstrap
-              data: '@import "~@edx/edx-bootstrap/sass/edx/theme"; @import "bootstrap/scss/bootstrap-reboot";',
               includePaths: [
                 path.join(__dirname, '../node_modules'),
+                path.join(__dirname, '../src'),
               ],
             },
           },
@@ -87,7 +85,6 @@ module.exports = Merge.smart(commonConfig, {
       filename: 'accessibilityPolicy.html',
       template: path.resolve(__dirname, '../public/index.html'),
     }),
-    new webpack.HotModuleReplacementPlugin(),
   ],
   devServer: {
     host: '0.0.0.0',

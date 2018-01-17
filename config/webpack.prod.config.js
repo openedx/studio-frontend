@@ -17,7 +17,6 @@ module.exports = Merge.smart(commonConfig, {
         test: /\.(js|jsx)$/,
         include: [
           path.resolve(__dirname, '../src'),
-          path.resolve(__dirname, '../node_modules/@edx/paragon'),
         ],
         loader: 'babel-loader',
       },
@@ -39,9 +38,9 @@ module.exports = Merge.smart(commonConfig, {
               loader: 'sass-loader',
               options: {
                 sourceMap: true,
-                data: '@import "@edx/edx-bootstrap/sass/_legacy-reset";',
                 includePaths: [
                   path.join(__dirname, '../node_modules'),
+                  path.join(__dirname, '../src'),
                 ],
               },
             },
