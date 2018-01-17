@@ -3,7 +3,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 
-import AssetsPage from './components/AssetsPage';
+import WrappedAssetsPage from './components/AssetsPage';
 import BackendStatusBanner from './components/BackendStatusBanner';
 import store from './data/store';
 
@@ -11,7 +11,7 @@ const App = () => (
   <Provider store={store}>
     <div>
       <BackendStatusBanner />
-      <AssetsPage />
+      <WrappedAssetsPage />
     </div>
   </Provider>
 );
