@@ -1,10 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Table from '@edx/paragon/src/Table';
-import Button from '@edx/paragon/src/Button';
-import Modal from '@edx/paragon/src/Modal';
-import StatusAlert from '@edx/paragon/src/StatusAlert';
-import Variant from '@edx/paragon/src/utils/constants';
+import { Table, Button, Modal, StatusAlert, Variant } from '@edx/paragon';
 import classNames from 'classnames';
 import { connect } from 'react-redux';
 
@@ -138,7 +134,7 @@ export class AssetsTable extends React.Component {
   }
 
   getLockButton(asset) {
-    const classes = [FontAwesomeStyles.fa, styles['button-primary-outline']];
+    const classes = [FontAwesomeStyles.fa, 'btn-outline-primary'];
     let lockState;
     if (asset.locked) {
       lockState = 'Locked';
@@ -180,7 +176,7 @@ export class AssetsTable extends React.Component {
     // spinner classes are applied to the span to keep the whole button from spinning
     const spinnerClasses = [FontAwesomeStyles.fa, FontAwesomeStyles['fa-spinner'], FontAwesomeStyles['fa-spin']];
     return (<Button
-      className={[styles['button-primary-outline']]}
+      className={['btn-outline-primary']}
       label={(<span className={classNames(...spinnerClasses)} />)}
       aria-label={`Updating lock status for ${asset.display_name}`}
     />);
@@ -288,7 +284,7 @@ export class AssetsTable extends React.Component {
 
       const deleteButton = (<Button
         key={currentAsset.id}
-        className={[FontAwesomeStyles.fa, FontAwesomeStyles['fa-trash'], styles['button-primary-outline']]}
+        className={[FontAwesomeStyles.fa, FontAwesomeStyles['fa-trash'], 'btn-outline-primary']}
         label={''}
         aria-label={`Delete ${currentAsset.display_name}`}
         onClick={() => { this.onDeleteClick(index); }}

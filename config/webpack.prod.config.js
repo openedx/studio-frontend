@@ -17,7 +17,6 @@ module.exports = Merge.smart(commonConfig, {
         test: /\.(js|jsx)$/,
         include: [
           path.resolve(__dirname, '../src'),
-          path.resolve(__dirname, '../node_modules/@edx/paragon'),
         ],
         loader: 'babel-loader',
       },
@@ -32,16 +31,29 @@ module.exports = Merge.smart(commonConfig, {
                 sourceMap: true,
                 modules: true,
                 minimize: true,
-                localIdentName: '[name]__[local]',
+                localIdentName: '[local]',
+              },
+            },
+            {
+              loader: 'postcss-loader',
+              options: {
+                sourceMap: true,
+                ident: 'postcss',
+                plugins: () => [
+                  /* eslint-disable global-require */
+                  require('autoprefixer'),
+                  require('postcss-prepend-selector')({ selector: '.SFE ' }),
+                  /* eslint-enable global-require */
+                ],
               },
             },
             {
               loader: 'sass-loader',
               options: {
                 sourceMap: true,
-                data: '@import "@edx/edx-bootstrap/sass/_legacy-reset";',
                 includePaths: [
                   path.join(__dirname, '../node_modules'),
+                  path.join(__dirname, '../src'),
                 ],
               },
             },

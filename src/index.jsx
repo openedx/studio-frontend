@@ -9,7 +9,7 @@ import store from './data/store';
 
 const App = () => (
   <Provider store={store}>
-    <div>
+    <div className="SFE">
       <BackendStatusBanner />
       <WrappedAssetsPage />
     </div>

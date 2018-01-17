@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Button from '@edx/paragon/src/Button';
+import { Button } from '@edx/paragon';
 import copy from 'copy-to-clipboard';
 import styles from './CopyButton.scss';
 
@@ -61,7 +61,7 @@ export default class CopyButton extends React.Component {
 
     return (
       <Button
-        className={[...this.props.className, styles['copy-button']]}
+        className={[...this.props.className, styles['copy-button'], 'btn-outline-primary']}
         aria-label={this.props.ariaLabel}
         label={label}
         inputRef={this.setButtonRef}

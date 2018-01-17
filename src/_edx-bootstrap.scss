@@ -1,0 +1,9 @@
+/* This file defines the edx-bootstrap theme and Bootstrap variables and mixins. It should not define any global styles
+ * (those should go into SFE.scss). Because this file does not define styles, it is okay to import into every
+ * individual component's SCSS file. */
+
+@import '~@edx/edx-bootstrap/sass/edx/theme';
+@import '~bootstrap/scss/variables';
+@import '~bootstrap/scss/mixins';
+@import '~bootstrap/scss/utilities/spacing';
+@import '~bootstrap/scss/utilities/screenreaders';

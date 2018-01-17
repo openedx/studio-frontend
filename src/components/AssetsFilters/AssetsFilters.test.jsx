@@ -1,5 +1,8 @@
 import React from 'react';
 import Enzyme from 'enzyme';
+
+import { CheckBoxGroup } from '@edx/paragon';
+
 import { AssetsFilters, mapDispatchToProps } from './index';
 import { assetActions } from '../../data/constants/actionTypes';
 import { filtersInitial } from './../../data/reducers/assets';
@@ -25,7 +28,7 @@ describe('<AssetsFilters />', () => {
       );
     });
     it('correct number of filters', () => {
-      const checkBoxGroup = wrapper.find('CheckBoxGroup');
+      const checkBoxGroup = wrapper.find(CheckBoxGroup);
 
       expect(checkBoxGroup).toHaveLength(1);
       expect(checkBoxGroup.find('[type="checkbox"]')).toHaveLength(5);
@@ -36,7 +39,7 @@ describe('<AssetsFilters />', () => {
       expect(wrapper.find('div').at(1).hasClass('filter-set')).toEqual(true);
     });
     it('handles onChange callback correctly', () => {
-      const checkBoxGroup = wrapper.find('CheckBoxGroup');
+      const checkBoxGroup = wrapper.find(CheckBoxGroup);
       let checkBoxes = checkBoxGroup.find('[type="checkbox"]');
 
       checkBoxes.first().simulate('change', { target: { checked: true, type: 'checkbox' } });
@@ -86,7 +89,7 @@ describe('<AssetsFilters />', () => {
         updatePage: pageUpdateSpy,
       });
 
-      const checkBoxGroup = wrapper.find('CheckBoxGroup');
+      const checkBoxGroup = wrapper.find(CheckBoxGroup);
       const checkBoxes = checkBoxGroup.find('[type="checkbox"]');
       const checkBox = checkBoxes.first();
       checkBox.simulate('change', { target: { checked: true, type: 'checkbox' } });
