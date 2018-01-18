@@ -237,11 +237,9 @@ describe('Assets Reducers', () => {
           type: assetActions.UPLOAD_ASSET_SUCCESS,
         };
 
-        const loadedCount = 1;
-
         state = reducers.status(defaultState, action);
 
-        expect(state).toEqual({ ...action, loadedCount });
+        expect(state).toEqual(action);
       });
       it('returns correct status state on UPLOAD_ASSET_SUCCESS action with state.loadedCount', () => {
         action = {
@@ -249,11 +247,9 @@ describe('Assets Reducers', () => {
           type: assetActions.UPLOAD_ASSET_SUCCESS,
         };
 
-        const loadedCount = 1;
+        state = reducers.status({ ...defaultState }, action);
 
-        state = reducers.status({ ...defaultState, loadedCount }, action);
-
-        expect(state).toEqual({ ...action, loadedCount: loadedCount + 1 });
+        expect(state).toEqual(action);
       });
       it('returns correct status state on UPLOAD_ASSET_FAILURE action', () => {
         action = {
