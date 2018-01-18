@@ -52,6 +52,18 @@ module.exports = Merge.smart(commonConfig, {
               sourceMap: true,
               modules: true,
               localIdentName: '[local]',
+              importLoaders: 1,
+            },
+          },
+          {
+            loader: 'postcss-loader',
+            options: {
+              sourceMap: true,
+              ident: 'postcss',
+              plugins: () => [
+                require('postcss-initial')(),
+                require('postcss-prepend-selector')({ selector: '.SFE ' })
+              ],
             },
           },
           {

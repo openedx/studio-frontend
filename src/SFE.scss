@@ -1,3 +1,9 @@
+* {
+  all: initial;
+}
+
+@import 'chrome-default';
+
 @import 'config';
 @import '~bootstrap/scss/bootstrap';
 
