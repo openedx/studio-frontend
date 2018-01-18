@@ -135,12 +135,12 @@ export const uploadAssetFailure = (asset, response) => ({
   response,
 });
 
-export const uploadAssets = (files, courseDetails) =>
+export const uploadAssets = (assets, courseDetails) =>
   (dispatch, getState) => {
-    dispatch(uploadingAssets(files.length));
+    dispatch(uploadingAssets(assets.length));
     // gather all the promises into a single promise that can be returned
-    return Promise.all(files.map(file => (
-      clientApi.postUploadAsset(courseDetails.id, file)
+    return Promise.all(assets.map(asset => (
+      clientApi.postUploadAsset(courseDetails.id, asset)
         .then((response) => {
           if (response.ok) {
             return response.json().then((json) => {
@@ -150,7 +150,7 @@ export const uploadAssets = (files, courseDetails) =>
               return dispatch(getAssets(getState().request, courseDetails));
             });
           }
-          dispatch(uploadAssetFailure(file, response.status));
+          dispatch(uploadAssetFailure(asset, response.status));
           return undefined;
         })
     )));
