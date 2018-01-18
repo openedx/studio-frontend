@@ -202,25 +202,6 @@ describe('<AssetsTable />', () => {
         .filterWhere(copyButton => copyButton.text().trim() === 'Web'))
         .toHaveLength(numberOfWebButtons);
     });
-    it('Loading when waiting for response', () => {
-      const emptyProps = {
-        assetsList: [],
-        assetsSortMetaData: {},
-        assetsStatus: {},
-        courseDetails: {},
-        courseFilesDocs: '',
-        deleteAsset: () => {},
-        clearAssetsStatus: () => {},
-        updateSort: () => {},
-        toggleLockAsset: () => {},
-      };
-      wrapper = mount(
-        <AssetsTable
-          {...emptyProps}
-        />,
-      );
-      expect(wrapper.html()).toEqual('<span>Loading....</span>');
-    });
     it('empty table on API Error', () => {
       wrapper.setProps({
         assetsStatus: {
@@ -580,7 +561,7 @@ describe('Lock asset', () => {
     });
     const statusAlert = wrapper.find('StatusAlert');
     expect(statusAlert.prop('alertType')).toEqual('danger');
-    expect(statusAlert.find('.alert-dialog').text()).toEqual('Failed to toggle lock for marmoset.png');
+    expect(statusAlert.find('.alert-dialog').text()).toEqual('Failed to toggle lock for marmoset.png.');
   });
 });
 
@@ -684,12 +665,13 @@ describe('Upload statuses', () => {
   });
 
   it('renders upload success', () => {
+    wrapper.setState({ uploadSuccessCount: 5 });
     wrapper.setProps({
       assetsStatus: {
         type: assetActions.UPLOAD_ASSET_SUCCESS,
-        loadedCount: 5,
       },
     });
+
     const statusAlert = wrapper.find('StatusAlert');
     expect(statusAlert.find('.alert-dialog').text()).toEqual('5 files successfully uploaded.');
   });
@@ -702,7 +684,7 @@ describe('Upload statuses', () => {
       },
     });
     const statusAlert = wrapper.find('StatusAlert');
-    expect(statusAlert.find('.alert-dialog').text()).toEqual('The maximum number of files for an upload is 110. No files were not uploaded.');
+    expect(statusAlert.find('.alert-dialog').text()).toEqual('The maximum number of files for an upload is 110. No files were uploaded.');
   });
 
   it('renders upload exceeds maximum file count', () => {
@@ -713,7 +695,7 @@ describe('Upload statuses', () => {
       },
     });
     const statusAlert = wrapper.find('StatusAlert');
-    expect(statusAlert.find('.alert-dialog').text()).toEqual('The maximum number of files for an upload is 110. No files were not uploaded.');
+    expect(statusAlert.find('.alert-dialog').text()).toEqual('The maximum number of files for an upload is 110. No files were uploaded.');
   });
 
   it('renders upload exceeds maximum file size', () => {
@@ -724,7 +706,7 @@ describe('Upload statuses', () => {
       },
     });
     const statusAlert = wrapper.find('StatusAlert');
-    expect(statusAlert.find('.alert-dialog').text()).toEqual('The maximum size for an upload is 9 MB. No files were not uploaded.');
+    expect(statusAlert.find('.alert-dialog').text()).toEqual('The maximum size for an upload is 9 MB. No files were uploaded.');
   });
 
   it('renders upload failed', () => {
