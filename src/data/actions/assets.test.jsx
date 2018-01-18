@@ -152,6 +152,7 @@ describe('Assets Action Creators', () => {
   it('returns expected state from clearAssetsStatus', () => {
     const expectedAction = { type: assetActions.CLEAR_ASSETS_STATUS };
     expect(store.dispatch(actionCreators.clearAssetsStatus())).toEqual(expectedAction);
+  });
   it('returns expected state from toggleLockAsset success', () => {
     const response = {
       status: 200,
