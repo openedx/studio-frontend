@@ -446,7 +446,7 @@ export class AssetsTable extends React.Component {
           defaultSortDirection="desc"
         />
         {this.renderModal()}
-        <span className="sr" aria-live="assertive" id="copy-status"> {this.state.copyButtonIsClicked ? 'Copied' : ''} </span>
+        <span className={styles['sr-only']} aria-live="assertive" id="copy-status"> {this.state.copyButtonIsClicked ? 'Copied' : ''} </span>
       </React.Fragment>
     );
   }
