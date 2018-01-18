@@ -22,6 +22,17 @@ const middlewares = [thunk];
 const mockStore = configureStore(middlewares);
 let store;
 
+// currying a function that can be passed to fetch-mock to determine what
+// response should be based on whether or not upload succeeds or fails
+const getUploadResponse = isSuccess => (
+  (url, opts) => ({
+    status: isSuccess ? 200 : 400,
+    body: {
+      asset: opts.body.get('file'),
+    },
+  })
+);
+
 describe('Assets Action Creators', () => {
   beforeEach(() => {
     store = mockStore(initialState);
@@ -142,6 +153,42 @@ describe('Assets Action Creators', () => {
     const expectedAction = { type: assetActions.CLEAR_ASSETS_STATUS };
     expect(store.dispatch(actionCreators.clearAssetsStatus())).toEqual(expectedAction);
   });
+  it('returns expected state from toggleLockAsset success', () => {
+    const response = {
+      status: 200,
+    };
+
+    fetchMock.once(`begin:${assetsEndpoint}`, response);
+
+    const expectedActions = [
+      { type: assetActions.TOGGLING_LOCK_ASSET_SUCCESS, asset: assetId },
+      { type: assetActions.TOGGLE_LOCK_ASSET_SUCCESS, asset: assetId },
+    ];
+
+    return store.dispatch(actionCreators.toggleLockAsset(assetId, courseDetails)).then(() => {
+      // return of async actions
+      expect(store.getActions()).toEqual(expectedActions);
+    });
+  });
+  it('returns expected state from toggleLockAsset success', () => {
+    const response = {
+      status: 400,
+    };
+
+    const error = new Error(response);
+
+    fetchMock.once(`begin:${assetsEndpoint}`, response);
+
+    const expectedActions = [
+      { type: assetActions.TOGGLING_LOCK_ASSET_SUCCESS, asset: assetId },
+      { type: assetActions.TOGGLING_LOCK_ASSET_FAILURE, asset: assetId, response: error },
+    ];
+
+    return store.dispatch(actionCreators.toggleLockAsset(assetId, courseDetails)).then(() => {
+      // return of async actions
+      expect(store.getActions()).toEqual(expectedActions);
+    });
+  });
   it('returns expected state from togglingLockAsset', () => {
     const expectedAction = { asset: 'asset', type: assetActions.TOGGLING_LOCK_ASSET_SUCCESS };
     expect(store.dispatch(actionCreators.togglingLockAsset('asset'))).toEqual(expectedAction);
@@ -163,15 +210,72 @@ describe('Assets Action Creators', () => {
     expect(store.dispatch(actionCreators.uploadExceedMaxCount(1))).toEqual(expectedAction);
   });
   it('returns expected state from uploadAssetFailure', () => {
-    const expectedAction = { file: 'file', response: 'response', type: assetActions.UPLOAD_ASSET_FAILURE };
-    expect(store.dispatch(actionCreators.uploadAssetFailure('file', 'response'))).toEqual(expectedAction);
+    const expectedAction = { asset: 'asset', response: 'response', type: assetActions.UPLOAD_ASSET_FAILURE };
+    expect(store.dispatch(actionCreators.uploadAssetFailure('asset', 'response'))).toEqual(expectedAction);
   });
   it('returns expected state from uploadAssetSuccess', () => {
-    const expectedAction = { asset: 'asset', response: 'response', type: assetActions.UPLOAD_ASSET_SUCCESS };
-    expect(store.dispatch(actionCreators.uploadAssetSuccess('asset', 'response'))).toEqual(expectedAction);
+    const expectedAction = { response: 'response', type: assetActions.UPLOAD_ASSET_SUCCESS };
+    expect(store.dispatch(actionCreators.uploadAssetSuccess('response'))).toEqual(expectedAction);
   });
   it('returns expected state from uploadingAssets', () => {
     const expectedAction = { count: 99, type: assetActions.UPLOADING_ASSETS };
     expect(store.dispatch(actionCreators.uploadingAssets(99, 'response'))).toEqual(expectedAction);
+  });
+  it('returns expected state from uploadAssets success', () => {
+    const assetsResponse = {
+      status: 200,
+      body: {
+        assets: ['a.txt'],
+      },
+    };
+
+    fetchMock.mock(`begin:${assetsEndpoint}`, getUploadResponse(true), { method: 'post' });
+    fetchMock.mock(`begin:${assetsEndpoint}`, assetsResponse, { method: 'get' });
+
+    const assets = ['a.txt', 'b.txt', 'c.txt'];
+
+    const expectedActions = [
+      { count: assets.length, type: assetActions.UPLOADING_ASSETS },
+    ];
+
+    assets.forEach((asset) => {
+      expectedActions.push({ type: assetActions.UPLOAD_ASSET_SUCCESS, response: { asset } });
+    });
+
+    assets.forEach(() => {
+      expectedActions.push(
+        { type: assetActions.REQUEST_ASSETS_SUCCESS, data: assetsResponse.body },
+      );
+    });
+
+    return store.dispatch(actionCreators.uploadAssets(assets, courseDetails)).then(() => {
+      // return of async actions
+      expect(store.getActions()).toEqual(expectedActions);
+    });
+  });
+  it('returns expected state from uploadAssets failure', () => {
+    const assetsResponse = {
+      status: 400,
+      body: 400,
+    };
+
+    fetchMock.mock(`begin:${assetsEndpoint}`, getUploadResponse(false), { method: 'post' });
+
+    const assets = ['a.txt', 'b.txt', 'c.txt'];
+
+    const expectedActions = [
+      { count: assets.length, type: assetActions.UPLOADING_ASSETS },
+    ];
+
+    assets.forEach((asset) => {
+      expectedActions.push(
+        { type: assetActions.UPLOAD_ASSET_FAILURE, asset, response: assetsResponse.body },
+      );
+    });
+
+    return store.dispatch(actionCreators.uploadAssets(assets, courseDetails)).then(() => {
+      // return of async actions
+      expect(store.getActions()).toEqual(expectedActions);
+    });
   });
 });

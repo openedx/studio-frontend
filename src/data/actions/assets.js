@@ -72,8 +72,8 @@ export const deleteAssetFailure = assetId => ({
 export const deleteAsset = (assetId, courseDetails) =>
   dispatch =>
     clientApi.requestDeleteAsset(courseDetails.id, assetId)
-    // since the API returns 204 on success and 404 on failure, neither of which have
-    // content, we don't json-ify the response
+      // since the API returns 204 on success and 404 on failure, neither of which have
+      // content, we don't json-ify the response
       .then((response) => {
         if (response.ok) {
           dispatch(deleteAssetSuccess(assetId));
@@ -124,46 +124,44 @@ export const uploadingAssets = count => ({
   count,
 });
 
-export const uploadAssetSuccess = (asset, response) => ({
+export const uploadAssetSuccess = response => ({
   type: assetActions.UPLOAD_ASSET_SUCCESS,
+  response,
+});
+
+export const uploadAssetFailure = (asset, response) => ({
+  type: assetActions.UPLOAD_ASSET_FAILURE,
   asset,
   response,
 });
 
-export const uploadAssetFailure = (file, response) => ({
-  type: assetActions.UPLOAD_ASSET_FAILURE,
-  file,
-  response,
-});
-
-export const uploadAssets = (files, courseDetails) =>
+export const uploadAssets = (assets, courseDetails) =>
   (dispatch, getState) => {
-    dispatch(uploadingAssets(files.length));
-    files.forEach((file) => {
-      clientApi.postUploadAsset(courseDetails.id, file)
+    dispatch(uploadingAssets(assets.length));
+    // gather all the promises into a single promise that can be returned
+    return Promise.all(assets.map(asset => (
+      clientApi.postUploadAsset(courseDetails.id, asset)
         .then((response) => {
           if (response.ok) {
-            response.json().then((data) => {
-              dispatch(uploadAssetSuccess(data.asset, response));
-              dispatch(getAssets(getState().request, courseDetails));
+            return response.json().then((json) => {
+              dispatch(uploadAssetSuccess(json));
+              // dispatch(getAssets(..)) returns a promise, so we return it
+              // up to chain it
+              return dispatch(getAssets(getState().request, courseDetails));
             });
-          } else {
-            dispatch(uploadAssetFailure(file, response));
           }
-        });
-    });
+          dispatch(uploadAssetFailure(asset, response.status));
+          return undefined;
+        })
+    )));
   };
 
-export const uploadExceedMaxCount = maxFileCount =>
-  dispatch =>
-    dispatch({
-      type: assetActions.UPLOAD_EXCEED_MAX_COUNT_ERROR,
-      maxFileCount,
-    });
+export const uploadExceedMaxCount = maxFileCount => ({
+  type: assetActions.UPLOAD_EXCEED_MAX_COUNT_ERROR,
+  maxFileCount,
+});
 
-export const uploadExceedMaxSize = maxFileSizeMB =>
-  dispatch =>
-    dispatch({
-      type: assetActions.UPLOAD_EXCEED_MAX_SIZE_ERROR,
-      maxFileSizeMB,
-    });
+export const uploadExceedMaxSize = maxFileSizeMB => ({
+  type: assetActions.UPLOAD_EXCEED_MAX_SIZE_ERROR,
+  maxFileSizeMB,
+});

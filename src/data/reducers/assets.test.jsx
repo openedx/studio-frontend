@@ -231,6 +231,67 @@ describe('Assets Reducers', () => {
 
         expect(state).toEqual(action);
       });
+      it('returns correct status state on UPLOAD_ASSET_SUCCESS action without state.loadedCount', () => {
+        action = {
+          response: 'Success!',
+          type: assetActions.UPLOAD_ASSET_SUCCESS,
+        };
+
+        state = reducers.status(defaultState, action);
+
+        expect(state).toEqual(action);
+      });
+      it('returns correct status state on UPLOAD_ASSET_SUCCESS action with state.loadedCount', () => {
+        action = {
+          response: 'Success!',
+          type: assetActions.UPLOAD_ASSET_SUCCESS,
+        };
+
+        state = reducers.status({ ...defaultState }, action);
+
+        expect(state).toEqual(action);
+      });
+      it('returns correct status state on UPLOAD_ASSET_FAILURE action', () => {
+        action = {
+          asset: 'asset.txt',
+          response: 'Failure!',
+          type: assetActions.UPLOAD_ASSET_FAILURE,
+        };
+
+        state = reducers.status(defaultState, action);
+
+        expect(state).toEqual(action);
+      });
+      it('returns correct status state on UPLOAD_EXCEED_MAX_COUNT_ERROR action', () => {
+        action = {
+          maxFileCount: 1,
+          type: assetActions.UPLOAD_EXCEED_MAX_COUNT_ERROR,
+        };
+
+        state = reducers.status(defaultState, action);
+
+        expect(state).toEqual(action);
+      });
+      it('returns correct status state on UPLOAD_EXCEED_MAX_SIZE_ERROR action', () => {
+        action = {
+          maxFileSizeMB: 1,
+          type: assetActions.UPLOAD_EXCEED_MAX_SIZE_ERROR,
+        };
+
+        state = reducers.status(defaultState, action);
+
+        expect(state).toEqual(action);
+      });
+      it('returns correct status state on UPLOADING_ASSETS action', () => {
+        action = {
+          count: 1,
+          type: assetActions.UPLOADING_ASSETS,
+        };
+
+        state = reducers.status(defaultState, action);
+
+        expect(state).toEqual(action);
+      });
     });
   });
   describe('request reducer', () => {
