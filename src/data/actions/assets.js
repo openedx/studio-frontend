@@ -139,6 +139,7 @@ export const uploadAssets = (assets, courseDetails) =>
   (dispatch, getState) => {
     dispatch(uploadingAssets(assets.length));
     // gather all the promises into a single promise that can be returned
+    // eslint-disable-next-line compat/compat
     return Promise.all(assets.map(asset => (
       clientApi.postUploadAsset(courseDetails.id, asset)
         .then((response) => {

@@ -6,6 +6,7 @@ import endpoints from './endpoints';
 import { getDatabaseAttributesFromAssetAttributes } from '../../utils/getAssetsAttributes';
 
 export function pingStudioHome() {
+  // eslint-disable-next-line compat/compat
   return fetch(
     endpoints.home, {
       credentials: 'same-origin',
@@ -34,6 +35,7 @@ export function requestAssets(courseId, params) {
   };
 
   const requestString = Object.keys(parameters).reduce((memo, key) => { if (parameters[key]) { memo.push(`${key}=${parameters[key]}`); } return memo; }, []).join('&');
+  // eslint-disable-next-line compat/compat
   return fetch(
     `${endpoints.assets}/${courseId}/?${requestString}`, {
       credentials: 'same-origin',
@@ -45,6 +47,7 @@ export function requestAssets(courseId, params) {
 }
 
 export function requestDeleteAsset(courseId, assetId) {
+  // eslint-disable-next-line compat/compat
   return fetch(
     `${endpoints.assets}/${courseId}/${assetId}`, {
       credentials: 'same-origin',
@@ -58,6 +61,7 @@ export function requestDeleteAsset(courseId, assetId) {
 }
 
 export function requestToggleLockAsset(courseId, asset) {
+  // eslint-disable-next-line compat/compat
   return fetch(
     `${endpoints.assets}/${courseId}/${asset.id}`, {
       credentials: 'same-origin',
@@ -74,6 +78,7 @@ export function requestToggleLockAsset(courseId, asset) {
 export function postUploadAsset(courseId, file) {
   const data = new FormData();
   data.append('file', file);
+  // eslint-disable-next-line compat/compat
   return fetch(
     `${endpoints.assets}/${courseId}/`, {
       credentials: 'same-origin',
@@ -88,6 +93,7 @@ export function postUploadAsset(courseId, file) {
 }
 
 export function postAccessibilityForm(formEmail, formFullName, formMessage) {
+  // eslint-disable-next-line compat/compat
   return fetch(
     `${endpoints.zendesk}`, {
       credentials: 'same-origin',

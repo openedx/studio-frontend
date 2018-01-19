@@ -14,9 +14,12 @@
     ],
     "class-methods-use-this": [
       "off"
-    ]
+    ],
+    "compat/compat": "error"
   },
   "env": {
-    "jest": true
-  }
+    "jest": true,
+    "browser": true
+  },
+  "plugins": ["compat"]
 }
