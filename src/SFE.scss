@@ -1,11 +1,34 @@
 * {
   all: initial;
+  // allow all elements to inherit these values from the root .SFE "body" div
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  color: inherit;
+  text-align: left;
+  background-color: inherit;
 }
 
 @import 'chrome-default';
 
 @import 'config';
+
 @import '~bootstrap/scss/bootstrap';
+
+/* Since elements inside the SFE div can no longer inherit styles set on the <body>, we will apply the styles that
+ * the bootstrap reboot applies to the <body> on the .SFE div instead, which containing elements can inherit.
+ */
+.SFE {
+  font-family: $font-family-base;
+  font-size: $font-size-base;
+  font-weight: $font-weight-base;
+  line-height: $line-height-base;
+  color: $body-color;
+  text-align: left;
+  background-color: $body-bg;
+}
+
 
 /* The page-header class exists in bootstrap 3.3 but not in our alpha version currently */
 .page-header {
