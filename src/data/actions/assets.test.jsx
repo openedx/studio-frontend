@@ -44,11 +44,11 @@ describe('Assets Action Creators', () => {
   });
 
   it('returns expected state from requestAssetsSuccess', () => {
-    const expectedAction = { data: 'response', type: assetActions.REQUEST_ASSETS_SUCCESS };
+    const expectedAction = { data: 'response', type: assetActions.request.REQUEST_ASSETS_SUCCESS };
     expect(store.dispatch(actionCreators.requestAssetsSuccess('response'))).toEqual(expectedAction);
   });
   it('returns expected state from assetDeleteFailure', () => {
-    const expectedAction = { assetId, type: assetActions.DELETE_ASSET_FAILURE };
+    const expectedAction = { assetId, type: assetActions.delete.DELETE_ASSET_FAILURE };
     expect(store.dispatch(actionCreators.deleteAssetFailure(assetId))).toEqual(expectedAction);
   });
   it('returns expected state from getAssets success', () => {
@@ -57,7 +57,7 @@ describe('Assets Action Creators', () => {
 
     fetchMock.once(`begin:${assetsEndpoint}`, response);
     const expectedActions = [
-      { type: assetActions.REQUEST_ASSETS_SUCCESS, data: response },
+      { type: assetActions.request.REQUEST_ASSETS_SUCCESS, data: response },
     ];
 
     return store.dispatch(actionCreators.getAssets(request, courseDetails)).then(() => {
@@ -77,7 +77,7 @@ describe('Assets Action Creators', () => {
 
     fetchMock.once(`begin:${assetsEndpoint}`, response);
     const expectedActions = [
-      { type: assetActions.REQUEST_ASSETS_FAILURE, data: errorResponse },
+      { type: assetActions.request.REQUEST_ASSETS_FAILURE, data: errorResponse },
     ];
 
     store = mockStore(initialState);
@@ -105,15 +105,15 @@ describe('Assets Action Creators', () => {
     });
   });
   it('returns expected state from filterUpdate', () => {
-    const expectedAction = { data: { filter: true }, type: assetActions.FILTER_UPDATED };
+    const expectedAction = { data: { filter: true }, type: assetActions.filter.FILTER_UPDATED };
     expect(store.dispatch(actionCreators.filterUpdate('filter', true))).toEqual(expectedAction);
   });
   it('returns expected state from sortUpdate', () => {
-    const expectedAction = { data: { sort: 'edX', direction: 'desc' }, type: assetActions.SORT_UPDATE };
+    const expectedAction = { data: { sort: 'edX', direction: 'desc' }, type: assetActions.sort.SORT_UPDATE };
     expect(store.dispatch(actionCreators.sortUpdate('edX', 'desc'))).toEqual(expectedAction);
   });
   it('returns expected state from pageUpdate', () => {
-    const expectedAction = { data: { page: 0 }, type: assetActions.PAGE_UPDATE };
+    const expectedAction = { data: { page: 0 }, type: assetActions.paginate.PAGE_UPDATE };
     expect(store.dispatch(actionCreators.pageUpdate(0))).toEqual(expectedAction);
   });
   it('returns expected state from deleteAsset success', () => {
@@ -125,7 +125,7 @@ describe('Assets Action Creators', () => {
     fetchMock.once(`begin:${assetsEndpoint}`, response);
 
     const expectedActions = [
-      { type: assetActions.DELETE_ASSET_SUCCESS, assetId },
+      { type: assetActions.delete.DELETE_ASSET_SUCCESS, assetId },
     ];
 
     return store.dispatch(actionCreators.deleteAsset(assetId, courseDetails)).then(() => {
@@ -141,7 +141,7 @@ describe('Assets Action Creators', () => {
     fetchMock.once(`begin:${assetsEndpoint}`, response);
 
     const expectedActions = [
-      { type: assetActions.DELETE_ASSET_FAILURE, assetId },
+      { type: assetActions.delete.DELETE_ASSET_FAILURE, assetId },
     ];
 
     return store.dispatch(actionCreators.deleteAsset(assetId, courseDetails)).then(() => {
@@ -150,7 +150,7 @@ describe('Assets Action Creators', () => {
     });
   });
   it('returns expected state from clearAssetsStatus', () => {
-    const expectedAction = { type: assetActions.CLEAR_ASSETS_STATUS };
+    const expectedAction = { type: assetActions.clear.CLEAR_ASSETS_STATUS };
     expect(store.dispatch(actionCreators.clearAssetsStatus())).toEqual(expectedAction);
   });
   it('returns expected state from toggleLockAsset success', () => {
@@ -161,8 +161,8 @@ describe('Assets Action Creators', () => {
     fetchMock.once(`begin:${assetsEndpoint}`, response);
 
     const expectedActions = [
-      { type: assetActions.TOGGLING_LOCK_ASSET_SUCCESS, asset: assetId },
-      { type: assetActions.TOGGLE_LOCK_ASSET_SUCCESS, asset: assetId },
+      { type: assetActions.lock.TOGGLING_LOCK_ASSET_SUCCESS, asset: assetId },
+      { type: assetActions.lock.TOGGLE_LOCK_ASSET_SUCCESS, asset: assetId },
     ];
 
     return store.dispatch(actionCreators.toggleLockAsset(assetId, courseDetails)).then(() => {
@@ -180,8 +180,8 @@ describe('Assets Action Creators', () => {
     fetchMock.once(`begin:${assetsEndpoint}`, response);
 
     const expectedActions = [
-      { type: assetActions.TOGGLING_LOCK_ASSET_SUCCESS, asset: assetId },
-      { type: assetActions.TOGGLING_LOCK_ASSET_FAILURE, asset: assetId, response: error },
+      { type: assetActions.lock.TOGGLING_LOCK_ASSET_SUCCESS, asset: assetId },
+      { type: assetActions.lock.TOGGLING_LOCK_ASSET_FAILURE, asset: assetId, response: error },
     ];
 
     return store.dispatch(actionCreators.toggleLockAsset(assetId, courseDetails)).then(() => {
@@ -190,35 +190,41 @@ describe('Assets Action Creators', () => {
     });
   });
   it('returns expected state from togglingLockAsset', () => {
-    const expectedAction = { asset: 'asset', type: assetActions.TOGGLING_LOCK_ASSET_SUCCESS };
+    const expectedAction = { asset: 'asset', type: assetActions.lock.TOGGLING_LOCK_ASSET_SUCCESS };
     expect(store.dispatch(actionCreators.togglingLockAsset('asset'))).toEqual(expectedAction);
   });
   it('returns expected state from toggleLockAssetSuccess', () => {
-    const expectedAction = { asset: 'asset', type: assetActions.TOGGLE_LOCK_ASSET_SUCCESS };
+    const expectedAction = { asset: 'asset', type: assetActions.lock.TOGGLE_LOCK_ASSET_SUCCESS };
     expect(store.dispatch(actionCreators.toggleLockAssetSuccess('asset'))).toEqual(expectedAction);
   });
   it('returns expected state from toggleLockAssetFailure', () => {
-    const expectedAction = { asset: 'asset', response: 'response', type: assetActions.TOGGLING_LOCK_ASSET_FAILURE };
+    const expectedAction = { asset: 'asset', response: 'response', type: assetActions.lock.TOGGLING_LOCK_ASSET_FAILURE };
     expect(store.dispatch(actionCreators.toggleLockAssetFailure('asset', 'response'))).toEqual(expectedAction);
   });
   it('returns expected state from uploadExceedMaxSize', () => {
-    const expectedAction = { maxFileSizeMB: 23, type: assetActions.UPLOAD_EXCEED_MAX_SIZE_ERROR };
+    const expectedAction = {
+      maxFileSizeMB: 23,
+      type: assetActions.upload.UPLOAD_EXCEED_MAX_SIZE_ERROR,
+    };
     expect(store.dispatch(actionCreators.uploadExceedMaxSize(23))).toEqual(expectedAction);
   });
   it('returns expected state from uploadExceedMaxCount', () => {
-    const expectedAction = { maxFileCount: 1, type: assetActions.UPLOAD_EXCEED_MAX_COUNT_ERROR };
+    const expectedAction = {
+      maxFileCount: 1,
+      type: assetActions.upload.UPLOAD_EXCEED_MAX_COUNT_ERROR,
+    };
     expect(store.dispatch(actionCreators.uploadExceedMaxCount(1))).toEqual(expectedAction);
   });
   it('returns expected state from uploadAssetFailure', () => {
-    const expectedAction = { asset: 'asset', response: 'response', type: assetActions.UPLOAD_ASSET_FAILURE };
+    const expectedAction = { asset: 'asset', response: 'response', type: assetActions.upload.UPLOAD_ASSET_FAILURE };
     expect(store.dispatch(actionCreators.uploadAssetFailure('asset', 'response'))).toEqual(expectedAction);
   });
   it('returns expected state from uploadAssetSuccess', () => {
-    const expectedAction = { response: 'response', type: assetActions.UPLOAD_ASSET_SUCCESS };
+    const expectedAction = { response: 'response', type: assetActions.upload.UPLOAD_ASSET_SUCCESS };
     expect(store.dispatch(actionCreators.uploadAssetSuccess('response'))).toEqual(expectedAction);
   });
   it('returns expected state from uploadingAssets', () => {
-    const expectedAction = { count: 99, type: assetActions.UPLOADING_ASSETS };
+    const expectedAction = { count: 99, type: assetActions.upload.UPLOADING_ASSETS };
     expect(store.dispatch(actionCreators.uploadingAssets(99, 'response'))).toEqual(expectedAction);
   });
   it('returns expected state from uploadAssets success', () => {
@@ -235,16 +241,16 @@ describe('Assets Action Creators', () => {
     const assets = ['a.txt', 'b.txt', 'c.txt'];
 
     const expectedActions = [
-      { count: assets.length, type: assetActions.UPLOADING_ASSETS },
+      { count: assets.length, type: assetActions.upload.UPLOADING_ASSETS },
     ];
 
     assets.forEach((asset) => {
-      expectedActions.push({ type: assetActions.UPLOAD_ASSET_SUCCESS, response: { asset } });
+      expectedActions.push({ type: assetActions.upload.UPLOAD_ASSET_SUCCESS, response: { asset } });
     });
 
     assets.forEach(() => {
       expectedActions.push(
-        { type: assetActions.REQUEST_ASSETS_SUCCESS, data: assetsResponse.body },
+        { type: assetActions.request.REQUEST_ASSETS_SUCCESS, data: assetsResponse.body },
       );
     });
 
@@ -264,12 +270,12 @@ describe('Assets Action Creators', () => {
     const assets = ['a.txt', 'b.txt', 'c.txt'];
 
     const expectedActions = [
-      { count: assets.length, type: assetActions.UPLOADING_ASSETS },
+      { count: assets.length, type: assetActions.upload.UPLOADING_ASSETS },
     ];
 
     assets.forEach((asset) => {
       expectedActions.push(
-        { type: assetActions.UPLOAD_ASSET_FAILURE, asset, response: assetsResponse.body },
+        { type: assetActions.upload.UPLOAD_ASSET_FAILURE, asset, response: assetsResponse.body },
       );
     });
 

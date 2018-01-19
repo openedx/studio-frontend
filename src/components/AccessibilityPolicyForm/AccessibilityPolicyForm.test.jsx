@@ -37,7 +37,7 @@ const clearStatus = (wrapper) => {
 const getMockForZendeskSuccess = (wrapper) => {
   wrapper.setProps({
     accessibilityStatus: {
-      type: accessibilityActions.ACCESSIBILITY_FORM_SUBMIT_SUCCESS,
+      type: accessibilityActions.submit.ACCESSIBILITY_FORM_SUBMIT_SUCCESS,
     },
   });
 };
@@ -45,7 +45,7 @@ const getMockForZendeskSuccess = (wrapper) => {
 const getMockForZendeskRateLimit = (wrapper) => {
   wrapper.setProps({
     accessibilityStatus: {
-      type: accessibilityActions.ACCESSIBILITY_FORM_SUBMIT_RATE_LIMIT_FAILURE,
+      type: accessibilityActions.submit.ACCESSIBILITY_FORM_SUBMIT_RATE_LIMIT_FAILURE,
     },
   });
 };
@@ -152,7 +152,6 @@ describe('<AccessibilityPolicyForm />', () => {
         submitterMessage: 'feedback message',
       });
       submitButton.simulate('click');
-
       statusAlert = wrapper.find('StatusAlert');
       const statusAlertType = statusAlert.prop('alertType');
       expect(wrapper.state('isStatusAlertOpen')).toEqual(true);
@@ -361,7 +360,7 @@ describe('<AccessibilityPolicyForm />', () => {
     it('clears accessibilityStatus as expected', () => {
       wrapper.setProps({
         accessibilityStatus: {
-          type: accessibilityActions.ACCESSIBILITY_FORM_SUBMIT_SUCCESS,
+          type: accessibilityActions.submit.ACCESSIBILITY_FORM_SUBMIT_SUCCESS,
         },
         clearAccessibilityStatus: () => clearStatus(wrapper),
       });

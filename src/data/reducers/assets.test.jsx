@@ -13,7 +13,7 @@ describe('Assets Reducers', () => {
       defaultState = [];
 
       action = {
-        type: assetActions.REQUEST_ASSETS_SUCCESS,
+        type: assetActions.request.REQUEST_ASSETS_SUCCESS,
         data: {
           assets: [
             { id: 'asset1' },
@@ -37,7 +37,7 @@ describe('Assets Reducers', () => {
       };
 
       action = {
-        type: assetActions.DELETE_ASSET_SUCCESS,
+        type: assetActions.delete.DELETE_ASSET_SUCCESS,
         assetId: 'asset2',
       };
 
@@ -63,7 +63,7 @@ describe('Assets Reducers', () => {
 
       action = {
         asset: { id: 'asset2' },
-        type: assetActions.TOGGLE_LOCK_ASSET_SUCCESS,
+        type: assetActions.lock.TOGGLE_LOCK_ASSET_SUCCESS,
       };
 
       state = reducers.assets(defaultState.assets, action);
@@ -81,7 +81,7 @@ describe('Assets Reducers', () => {
 
       action = {
         assetId: 'asset2',
-        type: assetActions.TOGGLING_LOCK_ASSET_FAILURE,
+        type: assetActions.lock.TOGGLING_LOCK_ASSET_FAILURE,
       };
 
       // deep copy over the old state and change data appropriately to reflect new state
@@ -105,7 +105,7 @@ describe('Assets Reducers', () => {
         asset: {
           id: 'asset2',
         },
-        type: assetActions.TOGGLING_LOCK_ASSET_SUCCESS,
+        type: assetActions.lock.TOGGLING_LOCK_ASSET_SUCCESS,
       };
 
       const newState = defaultState.assets.map(asset => ({ ...asset }));
@@ -119,7 +119,7 @@ describe('Assets Reducers', () => {
       defaultState = [];
 
       action = {
-        type: assetActions.DELETE_ASSET_FAILURE,
+        type: assetActions.delete.DELETE_ASSET_FAILURE,
       };
 
       state = reducers.assets(defaultState, action);
@@ -138,7 +138,7 @@ describe('Assets Reducers', () => {
               edX: true,
             },
           },
-          type: assetActions.REQUEST_ASSETS_SUCCESS,
+          type: assetActions.request.REQUEST_ASSETS_SUCCESS,
         };
 
         state = reducers.filters(defaultState, action);
@@ -161,7 +161,7 @@ describe('Assets Reducers', () => {
             pageSize: 1,
             totalCount: 100,
           },
-          type: assetActions.REQUEST_ASSETS_SUCCESS,
+          type: assetActions.request.REQUEST_ASSETS_SUCCESS,
         };
 
         state = reducers.pagination(defaultState, action);
@@ -178,7 +178,7 @@ describe('Assets Reducers', () => {
             sort: 'content_type',
             direction: 'asc',
           },
-          type: assetActions.REQUEST_ASSETS_SUCCESS,
+          type: assetActions.request.REQUEST_ASSETS_SUCCESS,
         };
 
         state = reducers.sort(defaultState, action);
@@ -194,10 +194,10 @@ describe('Assets Reducers', () => {
 
       // the status reducer treats all the following actions identically, so loop over them
       const sameBehaviorReducers = [
-        assetActions.REQUEST_ASSETS_SUCCESS,
-        assetActions.REQUEST_ASSETS_FAILURE,
-        assetActions.DELETE_ASSET_SUCCESS,
-        assetActions.DELETE_ASSET_FAILURE,
+        assetActions.request.REQUEST_ASSETS_SUCCESS,
+        assetActions.request.REQUEST_ASSETS_FAILURE,
+        assetActions.delete.DELETE_ASSET_SUCCESS,
+        assetActions.delete.DELETE_ASSET_FAILURE,
       ];
 
       sameBehaviorReducers.forEach((reducer) => {
@@ -215,7 +215,7 @@ describe('Assets Reducers', () => {
 
       it('returns correct status state on CLEAR_ASSETS_STATUS action', () => {
         state = reducers.status(defaultState, {
-          type: assetActions.CLEAR_ASSETS_STATUS,
+          type: assetActions.clear.CLEAR_ASSETS_STATUS,
         });
 
         expect(state).toEqual({});
@@ -224,7 +224,7 @@ describe('Assets Reducers', () => {
         action = {
           asset: 'asset',
           response: 'Failure!',
-          type: assetActions.TOGGLING_LOCK_ASSET_FAILURE,
+          type: assetActions.lock.TOGGLING_LOCK_ASSET_FAILURE,
         };
 
         state = reducers.status(defaultState, action);
@@ -234,7 +234,7 @@ describe('Assets Reducers', () => {
       it('returns correct status state on UPLOAD_ASSET_SUCCESS action without state.loadedCount', () => {
         action = {
           response: 'Success!',
-          type: assetActions.UPLOAD_ASSET_SUCCESS,
+          type: assetActions.upload.UPLOAD_ASSET_SUCCESS,
         };
 
         state = reducers.status(defaultState, action);
@@ -244,7 +244,7 @@ describe('Assets Reducers', () => {
       it('returns correct status state on UPLOAD_ASSET_SUCCESS action with state.loadedCount', () => {
         action = {
           response: 'Success!',
-          type: assetActions.UPLOAD_ASSET_SUCCESS,
+          type: assetActions.upload.UPLOAD_ASSET_SUCCESS,
         };
 
         state = reducers.status({ ...defaultState }, action);
@@ -255,7 +255,7 @@ describe('Assets Reducers', () => {
         action = {
           asset: 'asset.txt',
           response: 'Failure!',
-          type: assetActions.UPLOAD_ASSET_FAILURE,
+          type: assetActions.upload.UPLOAD_ASSET_FAILURE,
         };
 
         state = reducers.status(defaultState, action);
@@ -265,7 +265,7 @@ describe('Assets Reducers', () => {
       it('returns correct status state on UPLOAD_EXCEED_MAX_COUNT_ERROR action', () => {
         action = {
           maxFileCount: 1,
-          type: assetActions.UPLOAD_EXCEED_MAX_COUNT_ERROR,
+          type: assetActions.upload.UPLOAD_EXCEED_MAX_COUNT_ERROR,
         };
 
         state = reducers.status(defaultState, action);
@@ -275,7 +275,7 @@ describe('Assets Reducers', () => {
       it('returns correct status state on UPLOAD_EXCEED_MAX_SIZE_ERROR action', () => {
         action = {
           maxFileSizeMB: 1,
-          type: assetActions.UPLOAD_EXCEED_MAX_SIZE_ERROR,
+          type: assetActions.upload.UPLOAD_EXCEED_MAX_SIZE_ERROR,
         };
 
         state = reducers.status(defaultState, action);
@@ -285,7 +285,7 @@ describe('Assets Reducers', () => {
       it('returns correct status state on UPLOADING_ASSETS action', () => {
         action = {
           count: 1,
-          type: assetActions.UPLOADING_ASSETS,
+          type: assetActions.upload.UPLOADING_ASSETS,
         };
 
         state = reducers.status(defaultState, action);
@@ -303,7 +303,7 @@ describe('Assets Reducers', () => {
           sort: 'edX',
           direction: 'desc',
         },
-        type: assetActions.SORT_UPDATE,
+        type: assetActions.sort.SORT_UPDATE,
       };
 
       state = reducers.request(defaultState, action);
@@ -318,7 +318,7 @@ describe('Assets Reducers', () => {
         data: {
           page: 100,
         },
-        type: assetActions.PAGE_UPDATE,
+        type: assetActions.paginate.PAGE_UPDATE,
       };
 
       state = reducers.request(defaultState, action);
@@ -335,7 +335,7 @@ describe('Assets Reducers', () => {
             edX: true,
           },
         },
-        type: assetActions.FILTER_UPDATED,
+        type: assetActions.filter.FILTER_UPDATED,
       };
 
       state = reducers.request(defaultState, action);

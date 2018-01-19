@@ -4,14 +4,14 @@ import { accessibilityActions } from '../constants/actionTypes';
 
 const status = (state = {}, action) => {
   switch (action.type) {
-    case accessibilityActions.CLEAR_ACCESSIBILITY_STATUS:
+    case accessibilityActions.clear.CLEAR_ACCESSIBILITY_STATUS:
       return {};
-    case accessibilityActions.ACCESSIBILITY_FORM_SUBMIT_SUCCESS:
+    case accessibilityActions.submit.ACCESSIBILITY_FORM_SUBMIT_SUCCESS:
       return {
         statusCode: action.statusCode,
         type: action.type,
       };
-    case accessibilityActions.ACCESSIBILITY_FORM_SUBMIT_RATE_LIMIT_FAILURE:
+    case accessibilityActions.submit.ACCESSIBILITY_FORM_SUBMIT_RATE_LIMIT_FAILURE:
       return {
         statusCode: action.statusCode,
         failureDetails: action.failureDetails,

@@ -105,18 +105,23 @@ const clearStatus = (wrapper) => {
 
 const getMockForDeleteAsset = (wrapper, assetToDeleteId) => (
   jest.fn(() => {
-    wrapper.setProps({ assetsList: defaultProps.assetsList.filter(asset => asset.id !== assetToDeleteId), assetsStatus: { type: 'DELETE_ASSET_SUCCESS' } });
+    wrapper.setProps({
+      assetsList: defaultProps.assetsList.filter(asset => asset.id !== assetToDeleteId),
+      assetsStatus: { type: assetActions.delete.DELETE_ASSET_SUCCESS },
+    });
   })
 );
 
 const getMockForTogglingLockAsset = (wrapper, assetToToggle) => (
   jest.fn(() => {
-    wrapper.setProps({ assetsList: defaultProps.assetsList.map((asset) => {
-      if (asset.id === assetToToggle) {
-        return { ...asset, loadingFields: [assetLoading.LOCK] };
-      }
-      return asset;
-    }) });
+    wrapper.setProps({
+      assetsList: defaultProps.assetsList.map((asset) => {
+        if (asset.id === assetToToggle) {
+          return { ...asset, loadingFields: [assetLoading.LOCK] };
+        }
+        return asset;
+      }),
+    });
   })
 );
 
@@ -206,7 +211,7 @@ describe('<AssetsTable />', () => {
       wrapper.setProps({
         assetsStatus: {
           response: {},
-          type: assetActions.DELETE_ASSET_FAILURE,
+          type: assetActions.delete.DELETE_ASSET_FAILURE,
         },
         assetsList: [],
       });
@@ -555,7 +560,7 @@ describe('Lock asset', () => {
     wrapper.setProps({
       assetsStatus: {
         response: {},
-        type: assetActions.TOGGLING_LOCK_ASSET_FAILURE,
+        type: assetActions.lock.TOGGLING_LOCK_ASSET_FAILURE,
         asset: { name: 'marmoset.png' },
       },
     });
@@ -576,7 +581,7 @@ describe('displays status alert properly', () => {
     wrapper.setProps({
       assetsStatus: {
         response: {},
-        type: assetActions.DELETE_ASSET_SUCCESS,
+        type: assetActions.delete.DELETE_ASSET_SUCCESS,
       },
     });
     const statusAlert = wrapper.find('StatusAlert');
@@ -596,7 +601,7 @@ describe('displays status alert properly', () => {
     wrapper.setProps({
       assetsStatus: {
         response: {},
-        type: assetActions.DELETE_ASSET_FAILURE,
+        type: assetActions.delete.DELETE_ASSET_FAILURE,
       },
     });
     const statusAlert = wrapper.find('StatusAlert');
@@ -631,7 +636,7 @@ describe('displays status alert properly', () => {
     wrapper.setProps({
       clearAssetsStatus: () => clearStatus(wrapper),
     });
-    wrapper.setProps({ assetsStatus: { type: assetActions.UPLOADING_ASSETS, count: 77 } });
+    wrapper.setProps({ assetsStatus: { type: assetActions.upload.UPLOADING_ASSETS, count: 77 } });
 
     let statusAlert = wrapper.find('StatusAlert');
     expect(statusAlert.find('.alert-dialog').text()).toEqual('77 files uploading.');
@@ -656,7 +661,7 @@ describe('Upload statuses', () => {
   it('renders uploading', () => {
     wrapper.setProps({
       assetsStatus: {
-        type: assetActions.UPLOADING_ASSETS,
+        type: assetActions.upload.UPLOADING_ASSETS,
         count: 885,
       },
     });
@@ -668,7 +673,7 @@ describe('Upload statuses', () => {
     wrapper.setState({ uploadSuccessCount: 5 });
     wrapper.setProps({
       assetsStatus: {
-        type: assetActions.UPLOAD_ASSET_SUCCESS,
+        type: assetActions.upload.UPLOAD_ASSET_SUCCESS,
       },
     });
 
@@ -679,7 +684,7 @@ describe('Upload statuses', () => {
   it('renders upload success', () => {
     wrapper.setProps({
       assetsStatus: {
-        type: assetActions.UPLOAD_EXCEED_MAX_COUNT_ERROR,
+        type: assetActions.upload.UPLOAD_EXCEED_MAX_COUNT_ERROR,
         maxFileCount: 110,
       },
     });
@@ -690,7 +695,7 @@ describe('Upload statuses', () => {
   it('renders upload exceeds maximum file count', () => {
     wrapper.setProps({
       assetsStatus: {
-        type: assetActions.UPLOAD_EXCEED_MAX_COUNT_ERROR,
+        type: assetActions.upload.UPLOAD_EXCEED_MAX_COUNT_ERROR,
         maxFileCount: 110,
       },
     });
@@ -701,7 +706,7 @@ describe('Upload statuses', () => {
   it('renders upload exceeds maximum file size', () => {
     wrapper.setProps({
       assetsStatus: {
-        type: assetActions.UPLOAD_EXCEED_MAX_SIZE_ERROR,
+        type: assetActions.upload.UPLOAD_EXCEED_MAX_SIZE_ERROR,
         maxFileSizeMB: 9,
       },
     });
@@ -712,7 +717,7 @@ describe('Upload statuses', () => {
   it('renders upload failed', () => {
     wrapper.setProps({
       assetsStatus: {
-        type: assetActions.UPLOAD_ASSET_FAILURE,
+        type: assetActions.upload.UPLOAD_ASSET_FAILURE,
         file: { name: 'quail.png' },
       },
     });

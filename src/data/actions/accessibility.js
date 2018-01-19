@@ -2,12 +2,12 @@ import * as clientApi from '../api/client';
 import { accessibilityActions } from '../constants/actionTypes';
 
 export const submitAccessibilityFormSuccess = response => ({
-  type: accessibilityActions.ACCESSIBILITY_FORM_SUBMIT_SUCCESS,
+  type: accessibilityActions.submit.ACCESSIBILITY_FORM_SUBMIT_SUCCESS,
   statusCode: response.status,
 });
 
 export const submitAccessibilityFormRateLimitFailure = response => ({
-  type: accessibilityActions.ACCESSIBILITY_FORM_SUBMIT_RATE_LIMIT_FAILURE,
+  type: accessibilityActions.submit.ACCESSIBILITY_FORM_SUBMIT_RATE_LIMIT_FAILURE,
   statusCode: 429,
   failureDetails: response.detail,
 });
@@ -36,5 +36,5 @@ export const submitAccessibilityForm = (formEmail, formFullName, formMessage) =>
       });
 
 export const clearAccessibilityStatus = () => ({
-  type: accessibilityActions.CLEAR_ACCESSIBILITY_STATUS,
+  type: accessibilityActions.clear.CLEAR_ACCESSIBILITY_STATUS,
 });
