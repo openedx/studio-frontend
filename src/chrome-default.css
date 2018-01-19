@@ -53,10 +53,10 @@ body:-webkit-full-page-media {
 }
 p {
     display: block;
-    -webkit-margin-before: 1__qem;
-    -webkit-margin-after: 1__qem;
-    -webkit-margin-start: 0;
-    -webkit-margin-end: 0;
+    margin-before: 1__qem;
+    margin-after: 1__qem;
+    margin-start: 0;
+    margin-end: 0;
 }
 div {
     display: block
@@ -75,20 +75,20 @@ address {
 }
 blockquote {
     display: block;
-    -webkit-margin-before: 1__qem;
-    -webkit-margin-after: 1em;
-    -webkit-margin-start: 40px;
-    -webkit-margin-end: 40px;
+    margin-before: 1__qem;
+    margin-after: 1em;
+    margin-start: 40px;
+    margin-end: 40px;
 }
 figcaption {
     display: block
 }
 figure {
     display: block;
-    -webkit-margin-before: 1em;
-    -webkit-margin-after: 1em;
-    -webkit-margin-start: 40px;
-    -webkit-margin-end: 40px;
+    margin-before: 1em;
+    margin-after: 1em;
+    margin-start: 40px;
+    margin-end: 40px;
 }
 q {
     display: inline
@@ -102,14 +102,14 @@ q:after {
 center {
     display: block;
     /* special centering to be able to emulate the html4/netscape behaviour */
-    text-align: -webkit-center
+    text-align: center
 }
 hr {
     display: block;
-    -webkit-margin-before: 0.5em;
-    -webkit-margin-after: 0.5em;
-    -webkit-margin-start: auto;
-    -webkit-margin-end: auto;
+    margin-before: 0.5em;
+    margin-after: 0.5em;
+    margin-start: auto;
+    margin-end: auto;
     border-style: inset;
     border-width: 1px
 }
@@ -123,79 +123,79 @@ video {
 h1 {
     display: block;
     font-size: 2em;
-    -webkit-margin-before: 0.67__qem;
-    -webkit-margin-after: 0.67em;
-    -webkit-margin-start: 0;
-    -webkit-margin-end: 0;
+    margin-before: 0.67__qem;
+    margin-after: 0.67em;
+    margin-start: 0;
+    margin-end: 0;
     font-weight: bold
 }
-:-webkit-any(article,aside,nav,section) h1 {
+:any(article,aside,nav,section) h1 {
     font-size: 1.5em;
-    -webkit-margin-before: 0.83__qem;
-    -webkit-margin-after: 0.83em;
+    margin-before: 0.83__qem;
+    margin-after: 0.83em;
 }
-:-webkit-any(article,aside,nav,section) :-webkit-any(article,aside,nav,section) h1 {
+:any(article,aside,nav,section) :any(article,aside,nav,section) h1 {
     font-size: 1.17em;
-    -webkit-margin-before: 1__qem;
-    -webkit-margin-after: 1em;
+    margin-before: 1__qem;
+    margin-after: 1em;
 }
-:-webkit-any(article,aside,nav,section) :-webkit-any(article,aside,nav,section) :-webkit-any(article,aside,nav,section) h1 {
+:any(article,aside,nav,section) :any(article,aside,nav,section) :any(article,aside,nav,section) h1 {
     font-size: 1.00em;
-    -webkit-margin-before: 1.33__qem;
-    -webkit-margin-after: 1.33em;
+    margin-before: 1.33__qem;
+    margin-after: 1.33em;
 }
-:-webkit-any(article,aside,nav,section) :-webkit-any(article,aside,nav,section) :-webkit-any(article,aside,nav,section) :-webkit-any(article,aside,nav,section) h1 {
+:any(article,aside,nav,section) :any(article,aside,nav,section) :any(article,aside,nav,section) :any(article,aside,nav,section) h1 {
     font-size: .83em;
-    -webkit-margin-before: 1.67__qem;
-    -webkit-margin-after: 1.67em;
+    margin-before: 1.67__qem;
+    margin-after: 1.67em;
 }
-:-webkit-any(article,aside,nav,section) :-webkit-any(article,aside,nav,section) :-webkit-any(article,aside,nav,section) :-webkit-any(article,aside,nav,section) :-webkit-any(article,aside,nav,section) h1 {
+:any(article,aside,nav,section) :any(article,aside,nav,section) :any(article,aside,nav,section) :any(article,aside,nav,section) :any(article,aside,nav,section) h1 {
     font-size: .67em;
-    -webkit-margin-before: 2.33__qem;
-    -webkit-margin-after: 2.33em;
+    margin-before: 2.33__qem;
+    margin-after: 2.33em;
 }
 h2 {
     display: block;
     font-size: 1.5em;
-    -webkit-margin-before: 0.83__qem;
-    -webkit-margin-after: 0.83em;
-    -webkit-margin-start: 0;
-    -webkit-margin-end: 0;
+    margin-before: 0.83__qem;
+    margin-after: 0.83em;
+    margin-start: 0;
+    margin-end: 0;
     font-weight: bold
 }
 h3 {
     display: block;
     font-size: 1.17em;
-    -webkit-margin-before: 1__qem;
-    -webkit-margin-after: 1em;
-    -webkit-margin-start: 0;
-    -webkit-margin-end: 0;
+    margin-before: 1__qem;
+    margin-after: 1em;
+    margin-start: 0;
+    margin-end: 0;
     font-weight: bold
 }
 h4 {
     display: block;
-    -webkit-margin-before: 1.33__qem;
-    -webkit-margin-after: 1.33em;
-    -webkit-margin-start: 0;
-    -webkit-margin-end: 0;
+    margin-before: 1.33__qem;
+    margin-after: 1.33em;
+    margin-start: 0;
+    margin-end: 0;
     font-weight: bold
 }
 h5 {
     display: block;
     font-size: .83em;
-    -webkit-margin-before: 1.67__qem;
-    -webkit-margin-after: 1.67em;
-    -webkit-margin-start: 0;
-    -webkit-margin-end: 0;
+    margin-before: 1.67__qem;
+    margin-after: 1.67em;
+    margin-start: 0;
+    margin-end: 0;
     font-weight: bold
 }
 h6 {
     display: block;
     font-size: .67em;
-    -webkit-margin-before: 2.33__qem;
-    -webkit-margin-after: 2.33em;
-    -webkit-margin-start: 0;
-    -webkit-margin-end: 0;
+    margin-before: 2.33__qem;
+    margin-after: 2.33em;
+    margin-start: 0;
+    margin-end: 0;
     font-weight: bold
 }
 /* tables */
@@ -244,30 +244,30 @@ th {
 }
 caption {
     display: table-caption;
-    text-align: -webkit-center
+    text-align: center
 }
 /* lists */
 ul, menu, dir {
     display: block;
     list-style-type: disc;
-    -webkit-margin-before: 1__qem;
-    -webkit-margin-after: 1em;
-    -webkit-margin-start: 0;
-    -webkit-margin-end: 0;
-    -webkit-padding-start: 40px
+    margin-before: 1__qem;
+    margin-after: 1em;
+    margin-start: 0;
+    margin-end: 0;
+    padding-start: 40px
 }
 ol {
     display: block;
     list-style-type: decimal;
-    -webkit-margin-before: 1__qem;
-    -webkit-margin-after: 1em;
-    -webkit-margin-start: 0;
-    -webkit-margin-end: 0;
-    -webkit-padding-start: 40px
+    margin-before: 1__qem;
+    margin-after: 1em;
+    margin-start: 0;
+    margin-end: 0;
+    padding-start: 40px
 }
 li {
     display: list-item;
-    text-align: -webkit-match-parent;
+    text-align: match-parent;
 }
 ul ul, ol ul {
     list-style-type: circle
@@ -277,21 +277,21 @@ ol ol ul, ol ul ul, ul ol ul, ul ul ul {
 }
 dd {
     display: block;
-    -webkit-margin-start: 40px
+    margin-start: 40px
 }
 dl {
     display: block;
-    -webkit-margin-before: 1__qem;
-    -webkit-margin-after: 1em;
-    -webkit-margin-start: 0;
-    -webkit-margin-end: 0;
+    margin-before: 1__qem;
+    margin-after: 1em;
+    margin-start: 0;
+    margin-end: 0;
 }
 dt {
     display: block
 }
 ol ul, ul ol, ul ul, ol ol {
-    -webkit-margin-before: 0;
-    -webkit-margin-after: 0
+    margin-before: 0;
+    margin-after: 0
 }
 /* form elements */
 form {
@@ -303,31 +303,31 @@ label {
 }
 legend {
     display: block;
-    -webkit-padding-start: 2px;
-    -webkit-padding-end: 2px;
+    padding-start: 2px;
+    padding-end: 2px;
     border: none
 }
 fieldset {
     display: block;
-    -webkit-margin-start: 2px;
-    -webkit-margin-end: 2px;
-    -webkit-padding-before: 0.35em;
-    -webkit-padding-start: 0.75em;
-    -webkit-padding-end: 0.75em;
-    -webkit-padding-after: 0.625em;
+    margin-start: 2px;
+    margin-end: 2px;
+    padding-before: 0.35em;
+    padding-start: 0.75em;
+    padding-end: 0.75em;
+    padding-after: 0.625em;
     border: 2px groove ThreeDFace;
-    min-width: -webkit-min-content;
+    min-width: min-content;
 }
 button {
-    -webkit-appearance: button;
+    appearance: button;
 }
 /* Form controls don't go vertical. */
 input, textarea, keygen, select, button, meter, progress {
-    -webkit-writing-mode: horizontal-tb !important;
+    webkit-writing-mode: horizontal-tb !important;
 }
 input, textarea, keygen, select, button {
     margin: 0__qem;
-    font: -webkit-small-control;
+    font: small-control;
     text-rendering: auto; /* FIXME: Remove when tabs work with optimizeLegibility. */
     color: initial;
     letter-spacing: normal;
@@ -343,16 +343,16 @@ input[type="hidden"] {
     display: none
 }
 input {
-    -webkit-appearance: textfield;
+    appearance: textfield;
     padding: 1px;
     background-color: white;
     border: 2px inset;
-    -webkit-rtl-ordering: logical;
-    -webkit-user-select: text;
+    rtl-ordering: logical;
+    user-select: text;
     cursor: auto;
 }
 input[type="search"] {
-    -webkit-appearance: searchfield;
+    appearance: searchfield;
     box-sizing: border-box;
 }
 input::-webkit-textfield-decoration-container {
@@ -373,7 +373,7 @@ input::-webkit-clear-button {
     opacity: 0;
     pointer-events: none;
 }
-input:enabled:read-write:-webkit-any(:focus,:hover)::-webkit-clear-button {
+input:enabled:read-write:any(:focus,:hover)::-webkit-clear-button {
     opacity: 1;
     pointer-events: auto;
 }
@@ -386,7 +386,7 @@ input[type="search"]::-webkit-search-cancel-button {
     opacity: 0;
     pointer-events: none;
 }
-input[type="search"]:enabled:read-write:-webkit-any(:focus,:hover)::-webkit-search-cancel-button {
+input[type="search"]:enabled:read-write:any(:focus,:hover)::-webkit-search-cancel-button {
     opacity: 1;
     pointer-events: auto;
 }
@@ -417,7 +417,7 @@ input::-webkit-inner-spin-button {
     opacity: 0;
     pointer-events: none;
 }
-input:enabled:read-write:-webkit-any(:focus,:hover)::-webkit-inner-spin-button {
+input:enabled:read-write:any(:focus,:hover)::-webkit-inner-spin-button {
     opacity: 1;
     pointer-events: auto;
 }
@@ -455,7 +455,7 @@ input[type="password"] {
     -webkit-text-security: disc !important;
 }
 input[type="hidden"], input[type="image"], input[type="file"] {
-    -webkit-appearance: initial;
+    appearance: initial;
     padding: initial;
     background-color: initial;
     border: initial;
@@ -477,8 +477,8 @@ input[type="radio"], input[type="checkbox"] {
     border: initial;
 }
 input[type="button"], input[type="submit"], input[type="reset"] {
-    -webkit-appearance: push-button;
-    -webkit-user-select: none;
+    appearance: push-button;
+    user-select: none;
     white-space: pre
 }
 input[type="file"]::-webkit-file-upload-button {
@@ -499,7 +499,7 @@ input[type="button"], input[type="submit"], input[type="reset"], input[type="fil
     box-sizing: border-box
 }
 input[type="range"] {
-    -webkit-appearance: slider-horizontal;
+    appearance: slider-horizontal;
     padding: initial;
     border: initial;
     margin: 2px;
@@ -553,15 +553,15 @@ param {
     display: none
 }
 input[type="checkbox"] {
-    -webkit-appearance: checkbox;
+    appearance: checkbox;
     box-sizing: border-box;
 }
 input[type="radio"] {
-    -webkit-appearance: radio;
+    appearance: radio;
     box-sizing: border-box;
 }
 input[type="color"] {
-    -webkit-appearance: square-button;
+    appearance: square-button;
     width: 44px;
     height: 23px;
     background-color: ButtonFace;
@@ -585,7 +585,7 @@ input[type="color"]::-webkit-color-swatch {
     -webkit-user-modify: read-only !important;
 }
 input[type="color"][list] {
-    -webkit-appearance: menulist;
+    appearance: menulist;
     width: 88px;
     height: 23px
 }
@@ -608,7 +608,7 @@ input::-webkit-calendar-picker-indicator {
 input::-webkit-calendar-picker-indicator:hover {
     background-color: #eee;
 }
-input:enabled:read-write:-webkit-any(:focus,:hover)::-webkit-calendar-picker-indicator,
+input:enabled:read-write:any(:focus,:hover)::-webkit-calendar-picker-indicator,
 input::-webkit-calendar-picker-indicator:focus {
     opacity: 1;
     pointer-events: auto;
@@ -634,12 +634,12 @@ input[readonly]::-webkit-calendar-picker-indicator {
     visibility: hidden;
 }
 select {
-    -webkit-appearance: menulist;
+    appearance: menulist;
     box-sizing: border-box;
     align-items: center;
     border: 1px solid;
     white-space: pre;
-    -webkit-rtl-ordering: logical;
+    rtl-ordering: logical;
     color: black;
     background-color: white;
     cursor: default;
@@ -648,14 +648,14 @@ select:not(:-internal-list-box) {
     overflow: visible !important;
 }
 select:-internal-list-box {
-    -webkit-appearance: listbox;
+    appearance: listbox;
     align-items: flex-start;
     border: 1px inset gray;
     border-radius: initial;
     overflow-x: hidden;
     overflow-y: scroll;
     vertical-align: text-bottom;
-    -webkit-user-select: none;
+    user-select: none;
     white-space: nowrap;
 }
 optgroup {
@@ -696,7 +696,7 @@ output {
 }
 /* meter */
 meter {
-    -webkit-appearance: meter;
+    appearance: meter;
     box-sizing: border-box;
     display: inline-block;
     height: 1em;
@@ -737,7 +737,7 @@ meter::-webkit-meter-even-less-good-value {
 }
 /* progress */
 progress {
-    -webkit-appearance: progress-bar;
+    appearance: progress-bar;
     box-sizing: border-box;
     display: inline-block;
     height: 1em;
@@ -810,7 +810,7 @@ nobr {
 }
 /* states */
 :focus { 
-    outline: auto 5px -webkit-focus-ring-color
+    outline: auto 5px Highlight
 }
 /* Read-only text fields do not show a focus ring but do still receive focus */
 html:focus, body:focus, input[readonly]:focus { 
@@ -836,12 +836,12 @@ input[type="file"]:focus::-webkit-file-upload-button {
     outline-offset: 0
 }
     
-a:-webkit-any-link {
+a:any-link {
     color: -webkit-link;
     text-decoration: underline;
     cursor: auto;
 }
-a:-webkit-any-link:active {
+a:any-link:active {
     color: -webkit-activelink
 }
 /* HTML5 ruby elements */
@@ -850,7 +850,7 @@ ruby, rt {
 }
 rt {
     line-height: normal;
-    -webkit-text-emphasis: none;
+    text-emphasis: none;
 }
 ruby > rt {
     display: block;
@@ -889,13 +889,13 @@ template {
     display: none
 }
 bdi, output {
-    unicode-bidi: -webkit-isolate;
+    unicode-bidi: isolate;
 }
 bdo {
     unicode-bidi: bidi-override;
 }
 textarea[dir=auto] {
-    unicode-bidi: -webkit-plaintext;
+    unicode-bidi: plaintext;
 }
 dialog:not([open]) {
     display: none
@@ -904,8 +904,8 @@ dialog {
     position: absolute;
     left: 0;
     right: 0;
-    width: -webkit-fit-content;
-    height: -webkit-fit-content;
+    width: fit-content;
+    height: fit-content;
     margin: auto;
     border: solid;
     padding: 1em;
@@ -930,6 +930,6 @@ dialog::backdrop {
 }
 /* Disable multicol in printing, since it's not implemented properly. See crbug.com/99358 */
 @media print {
-    * { -webkit-columns: auto !important; }
+    * { columns: auto !important; }
 }
 /* noscript is handled internally, as it depends on settings. */

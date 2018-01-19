@@ -61,6 +61,7 @@ module.exports = Merge.smart(commonConfig, {
               sourceMap: true,
               ident: 'postcss',
               plugins: () => [
+                require('autoprefixer'),
                 require('postcss-initial')(),
                 require('postcss-prepend-selector')({ selector: '.SFE ' })
               ],
