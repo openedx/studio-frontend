@@ -11,12 +11,12 @@ const isSameResponse = (request, lastRequest) => (
 );
 
 export const requestAssetsSuccess = response => ({
-  type: assetActions.REQUEST_ASSETS_SUCCESS,
+  type: assetActions.request.REQUEST_ASSETS_SUCCESS,
   data: response,
 });
 
 export const requestAssetsFailure = response => ({
-  type: assetActions.REQUEST_ASSETS_FAILURE,
+  type: assetActions.request.REQUEST_ASSETS_FAILURE,
   data: response,
 });
 
@@ -45,27 +45,27 @@ export const getAssets = (request, courseDetails) =>
       });
 
 export const filterUpdate = (filterKey, filterValue) => ({
-  type: assetActions.FILTER_UPDATED,
+  type: assetActions.filter.FILTER_UPDATED,
   data: { [filterKey]: filterValue },
 });
 
 export const sortUpdate = (sort, direction) => ({
-  type: assetActions.SORT_UPDATE,
+  type: assetActions.sort.SORT_UPDATE,
   data: { sort, direction },
 });
 
 export const pageUpdate = page => ({
-  type: assetActions.PAGE_UPDATE,
+  type: assetActions.paginate.PAGE_UPDATE,
   data: { page },
 });
 
 export const deleteAssetSuccess = assetId => ({
-  type: assetActions.DELETE_ASSET_SUCCESS,
+  type: assetActions.delete.DELETE_ASSET_SUCCESS,
   assetId,
 });
 
 export const deleteAssetFailure = assetId => ({
-  type: assetActions.DELETE_ASSET_FAILURE,
+  type: assetActions.delete.DELETE_ASSET_FAILURE,
   assetId,
 });
 
@@ -83,21 +83,21 @@ export const deleteAsset = (assetId, courseDetails) =>
       });
 
 export const togglingLockAsset = asset => ({
-  type: assetActions.TOGGLING_LOCK_ASSET_SUCCESS,
+  type: assetActions.lock.TOGGLING_LOCK_ASSET_SUCCESS,
   asset,
 });
 
 export const clearAssetsStatus = () => ({
-  type: assetActions.CLEAR_ASSETS_STATUS,
+  type: assetActions.clear.CLEAR_ASSETS_STATUS,
 });
 
 export const toggleLockAssetSuccess = asset => ({
-  type: assetActions.TOGGLE_LOCK_ASSET_SUCCESS,
+  type: assetActions.lock.TOGGLE_LOCK_ASSET_SUCCESS,
   asset,
 });
 
 export const toggleLockAssetFailure = (asset, response) => ({
-  type: assetActions.TOGGLING_LOCK_ASSET_FAILURE,
+  type: assetActions.lock.TOGGLING_LOCK_ASSET_FAILURE,
   asset,
   response,
 });
@@ -120,17 +120,17 @@ export const toggleLockAsset = (asset, courseDetails) =>
   };
 
 export const uploadingAssets = count => ({
-  type: assetActions.UPLOADING_ASSETS,
+  type: assetActions.upload.UPLOADING_ASSETS,
   count,
 });
 
 export const uploadAssetSuccess = response => ({
-  type: assetActions.UPLOAD_ASSET_SUCCESS,
+  type: assetActions.upload.UPLOAD_ASSET_SUCCESS,
   response,
 });
 
 export const uploadAssetFailure = (asset, response) => ({
-  type: assetActions.UPLOAD_ASSET_FAILURE,
+  type: assetActions.upload.UPLOAD_ASSET_FAILURE,
   asset,
   response,
 });
@@ -157,11 +157,11 @@ export const uploadAssets = (assets, courseDetails) =>
   };
 
 export const uploadExceedMaxCount = maxFileCount => ({
-  type: assetActions.UPLOAD_EXCEED_MAX_COUNT_ERROR,
+  type: assetActions.upload.UPLOAD_EXCEED_MAX_COUNT_ERROR,
   maxFileCount,
 });
 
 export const uploadExceedMaxSize = maxFileSizeMB => ({
-  type: assetActions.UPLOAD_EXCEED_MAX_SIZE_ERROR,
+  type: assetActions.upload.UPLOAD_EXCEED_MAX_SIZE_ERROR,
   maxFileSizeMB,
 });

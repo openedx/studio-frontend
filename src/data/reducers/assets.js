@@ -32,7 +32,7 @@ export const requestInitial = {
 
 export const filters = (state = filtersInitial, action) => {
   switch (action.type) {
-    case assetActions.REQUEST_ASSETS_SUCCESS:
+    case assetActions.request.REQUEST_ASSETS_SUCCESS:
       return { ...state, assetTypes: { ...state.assetTypes, ...action.data } };
     default:
       return state;
@@ -42,18 +42,18 @@ export const filters = (state = filtersInitial, action) => {
 export const assets = (state = [], action) => {
   let assetsList;
   switch (action.type) {
-    case assetActions.REQUEST_ASSETS_SUCCESS:
+    case assetActions.request.REQUEST_ASSETS_SUCCESS:
       return action.data.assets;
-    case assetActions.DELETE_ASSET_SUCCESS:
+    case assetActions.delete.DELETE_ASSET_SUCCESS:
       return state.filter(asset => asset.id !== action.assetId);
-    case assetActions.TOGGLE_LOCK_ASSET_SUCCESS:
+    case assetActions.lock.TOGGLE_LOCK_ASSET_SUCCESS:
       assetsList = removeLoadingField(state, action.asset.id, assetLoading.LOCK);
       return toggleLockAsset(assetsList, action.asset.id);
-    case assetActions.TOGGLING_LOCK_ASSET_FAILURE:
+    case assetActions.lock.TOGGLING_LOCK_ASSET_FAILURE:
       return removeLoadingField(state, action.assetId, assetLoading.LOCK);
-    case assetActions.TOGGLING_LOCK_ASSET_SUCCESS:
+    case assetActions.lock.TOGGLING_LOCK_ASSET_SUCCESS:
       return addLoadingField(state, action.asset.id, assetLoading.LOCK);
-    case assetActions.DELETE_ASSET_FAILURE:
+    case assetActions.delete.DELETE_ASSET_FAILURE:
       return [];
     default:
       return state;
@@ -62,7 +62,7 @@ export const assets = (state = [], action) => {
 
 export const pagination = (state = paginationInitial, action) => {
   switch (action.type) {
-    case assetActions.REQUEST_ASSETS_SUCCESS:
+    case assetActions.request.REQUEST_ASSETS_SUCCESS:
       return {
         start: action.data.start,
         end: action.data.end,
@@ -77,7 +77,7 @@ export const pagination = (state = paginationInitial, action) => {
 
 export const sort = (state = sortInitial, action) => {
   switch (action.type) {
-    case assetActions.REQUEST_ASSETS_SUCCESS:
+    case assetActions.request.REQUEST_ASSETS_SUCCESS:
       return {
         sort: getAssetAPIAttributeFromDatabaseAttribute(action.data.sort),
         direction: action.data.direction,
@@ -89,56 +89,56 @@ export const sort = (state = sortInitial, action) => {
 
 export const status = (state = {}, action) => {
   switch (action.type) {
-    case assetActions.REQUEST_ASSETS_SUCCESS:
+    case assetActions.request.REQUEST_ASSETS_SUCCESS:
       return {
         response: action.response,
         type: action.type,
       };
-    case assetActions.REQUEST_ASSETS_FAILURE:
+    case assetActions.request.REQUEST_ASSETS_FAILURE:
       return {
         response: action.response,
         type: action.type,
       };
-    case assetActions.CLEAR_ASSETS_STATUS:
+    case assetActions.clear.CLEAR_ASSETS_STATUS:
       return {};
-    case assetActions.DELETE_ASSET_SUCCESS:
+    case assetActions.delete.DELETE_ASSET_SUCCESS:
       return {
         response: action.response,
         type: action.type,
       };
-    case assetActions.DELETE_ASSET_FAILURE:
+    case assetActions.delete.DELETE_ASSET_FAILURE:
       return {
         response: action.response,
         type: action.type,
       };
-    case assetActions.TOGGLING_LOCK_ASSET_FAILURE:
-      return {
-        asset: action.asset,
-        response: action.response,
-        type: action.type,
-      };
-    case assetActions.UPLOAD_ASSET_SUCCESS:
-      return {
-        response: action.response,
-        type: action.type,
-      };
-    case assetActions.UPLOAD_ASSET_FAILURE:
+    case assetActions.lock.TOGGLING_LOCK_ASSET_FAILURE:
       return {
         asset: action.asset,
         response: action.response,
         type: action.type,
       };
-    case assetActions.UPLOAD_EXCEED_MAX_COUNT_ERROR:
+    case assetActions.upload.UPLOAD_ASSET_SUCCESS:
+      return {
+        response: action.response,
+        type: action.type,
+      };
+    case assetActions.upload.UPLOAD_ASSET_FAILURE:
+      return {
+        asset: action.asset,
+        response: action.response,
+        type: action.type,
+      };
+    case assetActions.upload.UPLOAD_EXCEED_MAX_COUNT_ERROR:
       return {
         maxFileCount: action.maxFileCount,
         type: action.type,
       };
-    case assetActions.UPLOAD_EXCEED_MAX_SIZE_ERROR:
+    case assetActions.upload.UPLOAD_EXCEED_MAX_SIZE_ERROR:
       return {
         maxFileSizeMB: action.maxFileSizeMB,
         type: action.type,
       };
-    case assetActions.UPLOADING_ASSETS:
+    case assetActions.upload.UPLOADING_ASSETS:
       return {
         count: action.count,
         type: action.type,
@@ -150,18 +150,18 @@ export const status = (state = {}, action) => {
 
 export const request = (state = requestInitial, action) => {
   switch (action.type) {
-    case assetActions.SORT_UPDATE:
+    case assetActions.sort.SORT_UPDATE:
       return {
         ...state,
         sort: action.data.sort,
         direction: action.data.direction,
       };
-    case assetActions.PAGE_UPDATE:
+    case assetActions.paginate.PAGE_UPDATE:
       return {
         ...state,
         page: action.data.page,
       };
-    case assetActions.FILTER_UPDATED:
+    case assetActions.filter.FILTER_UPDATED:
       return {
         ...state,
         assetTypes: { ...state.assetTypes, ...action.data },

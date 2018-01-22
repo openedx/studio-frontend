@@ -32,7 +32,7 @@ describe('Accessibility Action Creators', () => {
 
     const expectedAction = {
       statusCode: response.status,
-      type: accessibilityActions.ACCESSIBILITY_FORM_SUBMIT_SUCCESS,
+      type: accessibilityActions.submit.ACCESSIBILITY_FORM_SUBMIT_SUCCESS,
     };
 
     expect(store.dispatch(
@@ -47,7 +47,7 @@ describe('Accessibility Action Creators', () => {
     const expectedAction = {
       statusCode: 429,
       failureDetails: response.detail,
-      type: accessibilityActions.ACCESSIBILITY_FORM_SUBMIT_RATE_LIMIT_FAILURE,
+      type: accessibilityActions.submit.ACCESSIBILITY_FORM_SUBMIT_RATE_LIMIT_FAILURE,
     };
 
     expect(store.dispatch(
@@ -56,7 +56,7 @@ describe('Accessibility Action Creators', () => {
   it('returns expected state from success', () => {
     fetchMock.once(zendeskEndpoint, 201);
     const expectedActions = [
-      { type: accessibilityActions.ACCESSIBILITY_FORM_SUBMIT_SUCCESS, statusCode: 201 },
+      { type: accessibilityActions.submit.ACCESSIBILITY_FORM_SUBMIT_SUCCESS, statusCode: 201 },
     ];
 
     return store.dispatch(actionCreators.submitAccessibilityForm()).then(() => {
@@ -71,7 +71,7 @@ describe('Accessibility Action Creators', () => {
       body: { detail: 'Request was throttled. Expected available in 175.0 seconds.' },
     });
     const expectedActions = [{
-      type: accessibilityActions.ACCESSIBILITY_FORM_SUBMIT_RATE_LIMIT_FAILURE,
+      type: accessibilityActions.submit.ACCESSIBILITY_FORM_SUBMIT_RATE_LIMIT_FAILURE,
       statusCode: 429,
       failureDetails: 'Request was throttled. Expected available in 175.0 seconds.',
     }];
@@ -83,7 +83,7 @@ describe('Accessibility Action Creators', () => {
   });
 
   it('returns expected state from clearing status', () => {
-    const expectedAction = { type: accessibilityActions.CLEAR_ACCESSIBILITY_STATUS };
+    const expectedAction = { type: accessibilityActions.clear.CLEAR_ACCESSIBILITY_STATUS };
     expect(store.dispatch(actionCreators.clearAccessibilityStatus())).toEqual(expectedAction);
   });
 });

@@ -74,8 +74,6 @@ export class AssetsTable extends React.Component {
       },
     };
 
-    this.deleteActions = [assetActions.DELETE_ASSET_FAILURE, assetActions.DELETE_ASSET_SUCCESS];
-
     this.trashcanRefs = {};
     this.statusAlertRef = {};
 
@@ -165,7 +163,7 @@ export class AssetsTable extends React.Component {
     let focusAsset = this.state.deletedAsset;
 
     switch (assetsStatus.type) {
-      case assetActions.DELETE_ASSET_SUCCESS:
+      case assetActions.delete.DELETE_ASSET_SUCCESS:
         if (deletedIndex > 0) {
           deletedIndex -= 1;
         }
@@ -229,37 +227,37 @@ export class AssetsTable extends React.Component {
     let alertType;
 
     switch (assetsStatus.type) {
-      case assetActions.DELETE_ASSET_FAILURE:
+      case assetActions.delete.DELETE_ASSET_FAILURE:
         alertDialog = `Unable to delete ${assetName}.`;
         alertType = 'danger';
         break;
-      case assetActions.DELETE_ASSET_SUCCESS:
+      case assetActions.delete.DELETE_ASSET_SUCCESS:
         alertDialog = `${assetName} has been deleted.`;
         alertType = 'success';
         break;
-      case assetActions.UPLOAD_ASSET_SUCCESS:
+      case assetActions.upload.UPLOAD_ASSET_SUCCESS:
         this.updateUploadSuccessCount();
         alertDialog = `${this.state.uploadSuccessCount} files successfully uploaded.`;
         alertType = 'success';
         break;
-      case assetActions.UPLOADING_ASSETS:
+      case assetActions.upload.UPLOADING_ASSETS:
         this.closeStatusAlert();
         alertDialog = `${assetsStatus.count} files uploading.`;
         alertType = 'info';
         break;
-      case assetActions.UPLOAD_EXCEED_MAX_COUNT_ERROR:
+      case assetActions.upload.UPLOAD_EXCEED_MAX_COUNT_ERROR:
         alertDialog = `The maximum number of files for an upload is ${assetsStatus.maxFileCount}. No files were uploaded.`;
         alertType = 'danger';
         break;
-      case assetActions.UPLOAD_EXCEED_MAX_SIZE_ERROR:
+      case assetActions.upload.UPLOAD_EXCEED_MAX_SIZE_ERROR:
         alertDialog = `The maximum size for an upload is ${assetsStatus.maxFileSizeMB} MB. No files were uploaded.`;
         alertType = 'danger';
         break;
-      case assetActions.UPLOAD_ASSET_FAILURE:
+      case assetActions.upload.UPLOAD_ASSET_FAILURE:
         alertDialog = `Error uploading ${assetsStatus.file.name}. Try again.`;
         alertType = 'danger';
         break;
-      case assetActions.TOGGLING_LOCK_ASSET_FAILURE:
+      case assetActions.lock.TOGGLING_LOCK_ASSET_FAILURE:
         alertDialog = `Failed to toggle lock for ${assetsStatus.asset.name}.`;
         alertType = 'danger';
         break;
@@ -409,7 +407,7 @@ export class AssetsTable extends React.Component {
     const { assetsStatus } = this.props;
 
     let onClose = this.closeStatusAlert;
-    if (this.deleteActions.includes(assetsStatus.type)) {
+    if (Object.prototype.hasOwnProperty.call(assetActions.delete, assetsStatus.type)) {
       onClose = this.closeDeleteStatus;
     }
 

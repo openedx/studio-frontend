@@ -40,7 +40,8 @@ export class AccessibilityPolicyForm extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     const { accessibilityStatus } = nextProps;
-    if (accessibilityStatus.type === accessibilityActions.ACCESSIBILITY_FORM_SUBMIT_SUCCESS) {
+    if (accessibilityStatus.type ===
+      accessibilityActions.submit.ACCESSIBILITY_FORM_SUBMIT_SUCCESS) {
       this.clearInputs();
     }
   }
@@ -102,7 +103,7 @@ export class AccessibilityPolicyForm extends React.Component {
         ),
       };
     } else if (accessibilityStatus.type ===
-        accessibilityActions.ACCESSIBILITY_FORM_SUBMIT_RATE_LIMIT_FAILURE) {
+        accessibilityActions.submit.ACCESSIBILITY_FORM_SUBMIT_RATE_LIMIT_FAILURE) {
       status = {
         alertType: 'danger',
         alertDialog: (
@@ -113,7 +114,7 @@ export class AccessibilityPolicyForm extends React.Component {
         ),
       };
     } else if (accessibilityStatus.type ===
-        accessibilityActions.ACCESSIBILITY_FORM_SUBMIT_SUCCESS) {
+        accessibilityActions.submit.ACCESSIBILITY_FORM_SUBMIT_SUCCESS) {
       status = {
         alertType: 'success',
         alertDialog: (
