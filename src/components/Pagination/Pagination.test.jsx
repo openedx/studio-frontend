@@ -6,13 +6,14 @@ const { mount } = Enzyme;
 
 const defaultProps = {
   assetsListMetaData: {
+    page: 0,
     pageSize: 50,
     totalCount: 5000,
   },
   updatePage: () => {},
 };
 
-const totalPages = Math.floor(
+const totalPages = Math.ceil(
   defaultProps.assetsListMetaData.totalCount / defaultProps.assetsListMetaData.pageSize,
 );
 
@@ -46,6 +47,28 @@ describe('<Pagination />', () => {
     expect(updatePageSpy).toHaveBeenCalledTimes(1);
     // API treats pages as 0-indexed, but we treat them as 1-indexed
     expect(updatePageSpy).toHaveBeenCalledWith(totalPages - 1);
+  });
+  it('changes the current page when assets list state updates', () => {
+    let currentPage = wrapper.props().assetsListMetaData.page;
+    let currentPageLink = pageItems.at(0).find('a');
+
+    expect(currentPage).toEqual(0);
+    expect(currentPageLink.prop('aria-label')).toContain('current page');
+
+    wrapper.setProps({
+      assetsListMetaData: {
+        page: 1,
+        pageSize: 50,
+        totalCount: 5000,
+      },
+    });
+
+    pageItems = wrapper.find('.page-item');
+    currentPage = wrapper.props().assetsListMetaData.page;
+    currentPageLink = pageItems.at(1).find('a');
+
+    expect(currentPage).toEqual(1);
+    expect(currentPageLink.prop('aria-label')).toContain('current page');
   });
   it('has correct mapDispatchToProps', () => {
     const dispatchSpy = jest.fn();

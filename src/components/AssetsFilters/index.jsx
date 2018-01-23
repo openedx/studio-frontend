@@ -4,7 +4,7 @@ import CheckBoxGroup from '@edx/paragon/src/CheckBoxGroup';
 import CheckBox from '@edx/paragon/src/CheckBox';
 import { connect } from 'react-redux';
 
-import { filterUpdate } from '../../data/actions/assets';
+import { filterUpdate, pageUpdate } from '../../data/actions/assets';
 import styles from './AssetsFilters.scss';
 
 const ASSET_TYPES = [
@@ -30,7 +30,7 @@ const ASSET_TYPES = [
   },
 ];
 
-export const AssetsFilters = ({ assetsFilters, updateFilter }) => (
+export const AssetsFilters = ({ assetsFilters, updateFilter, updatePage }) => (
   <div role="group" aria-labelledby="filter-label">
     <h4 id="filter-label" className={styles['filter-heading']}>Filter by File Type</h4>
     <div className={styles['filter-set']}>
@@ -42,7 +42,7 @@ export const AssetsFilters = ({ assetsFilters, updateFilter }) => (
             name={type.key}
             label={type.displayName}
             checked={assetsFilters[type.key]}
-            onChange={checked => updateFilter(type.key, checked)}
+            onChange={(checked) => { updatePage(0); updateFilter(type.key, checked); }}
           />
         ))}
       </CheckBoxGroup>
@@ -55,14 +55,21 @@ AssetsFilters.propTypes = {
     assetTypes: PropTypes.object,
   }).isRequired,
   updateFilter: PropTypes.func.isRequired,
+  updatePage: PropTypes.func.isRequired,
 };
 
+const mapStateToProps = state => ({
+  assetsFilters: state.metadata.filters,
+});
+
+export const mapDispatchToProps = dispatch => ({
+  updateFilter: (filterKey, filterValue) => dispatch(filterUpdate(filterKey, filterValue)),
+  updatePage: page => dispatch(pageUpdate(page)),
+});
+
 const WrappedAssetsFilters = connect(
-  state => ({
-    assetsFilters: state.metadata.filters,
-  }), dispatch => ({
-    updateFilter: (filterKey, filterValue) => dispatch(filterUpdate(filterKey, filterValue)),
-  }),
+  mapStateToProps,
+  mapDispatchToProps,
 )(AssetsFilters);
 
 export default WrappedAssetsFilters;
