@@ -1,12 +1,14 @@
 import React from 'react';
 import Enzyme from 'enzyme';
-import { AssetsFilters } from './index';
+import { AssetsFilters, mapDispatchToProps } from './index';
+import { assetActions } from '../../data/constants/actionTypes';
 
 const mount = Enzyme.mount;
 
 const defaultProps = {
   assetsFilters: {},
   updateFilter: () => {},
+  updatePage: () => {},
 };
 
 let wrapper;
@@ -38,6 +40,59 @@ describe('<AssetsFilters />', () => {
       checkBoxes.first().simulate('change', { target: { checked: true, type: 'checkbox' } });
       checkBoxes = checkBoxGroup.find('[type="checkbox"]');
       expect(checkBoxes.first().html()).toContain('checked');
+    });
+    it('correctly maps updateFilter to dispatch props', () => {
+      const dispatchSpy = jest.fn();
+
+      const { updateFilter } = mapDispatchToProps(dispatchSpy);
+
+      const updateFilterAction = {
+        data: {
+          Code: 'Code',
+        },
+        type: assetActions.filter.FILTER_UPDATED,
+      };
+
+      updateFilter('Code', 'Code');
+
+      expect(dispatchSpy).toHaveBeenCalledTimes(1);
+      expect(dispatchSpy).toHaveBeenCalledWith(updateFilterAction);
+    });
+    it('correctly maps updatePage to dispatch props', () => {
+      const dispatchSpy = jest.fn();
+
+      const { updatePage } = mapDispatchToProps(dispatchSpy);
+
+      const updatePageAction = {
+        data: {
+          page: 0,
+        },
+        type: assetActions.paginate.PAGE_UPDATE,
+      };
+
+      updatePage(0);
+
+      expect(dispatchSpy).toHaveBeenCalledTimes(1);
+      expect(dispatchSpy).toHaveBeenCalledWith(updatePageAction);
+    });
+    it('calls updatePage & updateFilter when filter box is checked', () => {
+      const filterSpy = jest.fn();
+      const pageUpdateSpy = jest.fn();
+
+      wrapper.setProps({
+        updateFilter: filterSpy,
+        updatePage: pageUpdateSpy,
+      });
+
+      const checkBoxGroup = wrapper.find('CheckBoxGroup');
+      const checkBoxes = checkBoxGroup.find('[type="checkbox"]');
+      const checkBox = checkBoxes.first();
+      checkBox.simulate('change', { target: { checked: true, type: 'checkbox' } });
+
+      expect(pageUpdateSpy).toHaveBeenCalledTimes(1);
+      expect(pageUpdateSpy).toHaveBeenCalledWith(0);
+      expect(filterSpy).toHaveBeenCalledTimes(1);
+      expect(filterSpy).toHaveBeenCalledWith(checkBox.prop('id'), true);
     });
   });
 });

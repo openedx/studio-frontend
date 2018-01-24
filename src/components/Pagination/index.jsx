@@ -54,8 +54,8 @@ export class Pagination extends React.Component {
   }
 
   render() {
-    const { pageSize, totalCount } = this.props.assetsListMetaData;
-    const totalPages = Math.floor(totalCount / pageSize);
+    const { page, pageSize, totalCount } = this.props.assetsListMetaData;
+    const totalPages = Math.ceil(totalCount / pageSize);
 
     return (
       <nav aria-label="Assets Pagination Navigation">
@@ -64,6 +64,7 @@ export class Pagination extends React.Component {
           nextLabel={this.getNextLabel(totalPages)}
           breakLabel={this.getBreakLabel()}
           pageCount={totalPages}
+          forcePage={page}
           marginPagesDisplayed={2}
           pageRangeDisplayed={5}
           onPageChange={this.onPageClick}
