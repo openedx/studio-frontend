@@ -2,12 +2,15 @@ import { combineReducers } from 'redux';
 
 import { assetActions } from '../constants/actionTypes';
 import { assetLoading } from '../constants/loadingTypes';
+import { getDefaultFilterState } from '../../utils/getAssetsFilters';
 
 import { addLoadingField, removeLoadingField, toggleLockAsset } from './utils';
 import { getAssetAPIAttributeFromDatabaseAttribute } from '../../utils/getAssetsAttributes';
 
+const defaultAssetTypeFilters = getDefaultFilterState();
+
 export const filtersInitial = {
-  assetTypes: {},
+  assetTypes: { ...defaultAssetTypeFilters },
 };
 
 export const paginationInitial = {
@@ -31,9 +34,13 @@ export const requestInitial = {
 
 
 export const filters = (state = filtersInitial, action) => {
+  let filterTypes = {};
+
   switch (action.type) {
     case assetActions.request.REQUEST_ASSETS_SUCCESS:
-      return { ...state, assetTypes: { ...state.assetTypes, ...action.data } };
+      filterTypes = { ...defaultAssetTypeFilters };
+      action.data.assetTypes.forEach((assetType) => { filterTypes[assetType] = true; });
+      return { ...state, assetTypes: filterTypes };
     default:
       return state;
   }
@@ -97,6 +104,10 @@ export const status = (state = {}, action) => {
     case assetActions.request.REQUEST_ASSETS_FAILURE:
       return {
         response: action.response,
+        type: action.type,
+      };
+    case assetActions.request.REQUESTING_ASSETS:
+      return {
         type: action.type,
       };
     case assetActions.clear.CLEAR_ASSETS_STATUS:
@@ -165,6 +176,11 @@ export const request = (state = requestInitial, action) => {
       return {
         ...state,
         assetTypes: { ...state.assetTypes, ...action.data },
+      };
+    case assetActions.clear.CLEAR_FILTERS:
+      return {
+        ...state,
+        assetTypes: defaultAssetTypeFilters,
       };
     default:
       return state;
