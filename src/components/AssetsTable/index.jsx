@@ -432,17 +432,19 @@ export class AssetsTable extends React.Component {
     return (
       <React.Fragment>
         {this.renderStatusAlert()}
-        <Table
-          className={['table-responsive']}
-          columns={Object.keys(this.columns).map(columnKey => ({
-            ...this.columns[columnKey],
-            onSort: () => this.onSortClick(columnKey),
-          }))}
-          data={this.addSupplementalTableElements(this.props.assetsList)}
-          tableSortable
-          defaultSortedColumn="date_added"
-          defaultSortDirection="desc"
-        />
+        <span className={classNames(styles['wrap-text'])}>
+          <Table
+            className={['table-responsive']}
+            columns={Object.keys(this.columns).map(columnKey => ({
+              ...this.columns[columnKey],
+              onSort: () => this.onSortClick(columnKey),
+            }))}
+            data={this.addSupplementalTableElements(this.props.assetsList)}
+            tableSortable
+            defaultSortedColumn="date_added"
+            defaultSortDirection="desc"
+          />
+        </span>
         {this.renderModal()}
         <span className={styles['sr-only']} aria-live="assertive" id="copy-status"> {this.state.copyButtonIsClicked ? 'Copied' : ''} </span>
       </React.Fragment>

@@ -15,3 +15,8 @@
   background-color: theme-color('lightest');
   color: theme-color('disabled');
 }
+
+.wrap-text {
+  overflow-wrap: break-all;
+  word-break: break-all;
+}
