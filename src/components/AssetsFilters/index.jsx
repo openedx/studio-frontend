@@ -5,30 +5,8 @@ import CheckBox from '@edx/paragon/src/CheckBox';
 import { connect } from 'react-redux';
 
 import { filterUpdate, pageUpdate } from '../../data/actions/assets';
+import ASSET_TYPES from '../../data/constants/assetTypeFilters';
 import styles from './AssetsFilters.scss';
-
-const ASSET_TYPES = [
-  {
-    key: 'Audio',
-    displayName: 'Audio',
-  },
-  {
-    key: 'Code',
-    displayName: 'Code',
-  },
-  {
-    key: 'Documents',
-    displayName: 'Documents',
-  },
-  {
-    key: 'Images',
-    displayName: 'Images',
-  },
-  {
-    key: 'OTHER',
-    displayName: 'Other',
-  },
-];
 
 export const AssetsFilters = ({ assetsFilters, updateFilter, updatePage }) => (
   <div role="group" aria-labelledby="filter-label">
@@ -41,7 +19,7 @@ export const AssetsFilters = ({ assetsFilters, updateFilter, updatePage }) => (
             id={type.key}
             name={type.key}
             label={type.displayName}
-            checked={assetsFilters[type.key]}
+            checked={assetsFilters.assetTypes[type.key]}
             onChange={(checked) => { updatePage(0); updateFilter(type.key, checked); }}
           />
         ))}

@@ -57,6 +57,7 @@ describe('Assets Action Creators', () => {
 
     fetchMock.once(`begin:${assetsEndpoint}`, response);
     const expectedActions = [
+      { type: assetActions.request.REQUESTING_ASSETS },
       { type: assetActions.request.REQUEST_ASSETS_SUCCESS, data: response },
     ];
 
@@ -77,6 +78,7 @@ describe('Assets Action Creators', () => {
 
     fetchMock.once(`begin:${assetsEndpoint}`, response);
     const expectedActions = [
+      { type: assetActions.request.REQUESTING_ASSETS },
       { type: assetActions.request.REQUEST_ASSETS_FAILURE, data: errorResponse },
     ];
 
@@ -97,7 +99,9 @@ describe('Assets Action Creators', () => {
     fetchMock.once(`begin:${assetsEndpoint}`, response);
 
     // if the response is not the same as the request, we expect nothing
-    const expectedActions = [];
+    const expectedActions = [
+      { type: assetActions.request.REQUESTING_ASSETS },
+    ];
 
     return store.dispatch(actionCreators.getAssets(request, courseDetails)).then(() => {
       // return of async actions
@@ -246,6 +250,7 @@ describe('Assets Action Creators', () => {
 
     assets.forEach((asset) => {
       expectedActions.push({ type: assetActions.upload.UPLOAD_ASSET_SUCCESS, response: { asset } });
+      expectedActions.push({ type: assetActions.request.REQUESTING_ASSETS });
     });
 
     assets.forEach(() => {

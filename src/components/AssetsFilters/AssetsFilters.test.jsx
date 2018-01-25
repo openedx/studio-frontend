@@ -2,13 +2,15 @@ import React from 'react';
 import Enzyme from 'enzyme';
 import { AssetsFilters, mapDispatchToProps } from './index';
 import { assetActions } from '../../data/constants/actionTypes';
+import { filtersInitial } from './../../data/reducers/assets';
 
 const mount = Enzyme.mount;
 
 const defaultProps = {
-  assetsFilters: {},
+  assetsFilters: { ...filtersInitial },
   updateFilter: () => {},
   updatePage: () => {},
+  clearFilters: () => {},
 };
 
 let wrapper;

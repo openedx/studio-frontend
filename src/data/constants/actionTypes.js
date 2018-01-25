@@ -2,6 +2,7 @@
 export const assetActions = {
   clear: {
     CLEAR_ASSETS_STATUS: 'CLEAR_ASSETS_STATUS',
+    CLEAR_FILTERS: 'CLEAR_FILTERS',
   },
   delete: {
     DELETE_ASSET_SUCCESS: 'DELETE_ASSET_SUCCESS',
@@ -21,6 +22,7 @@ export const assetActions = {
   request: {
     REQUEST_ASSETS_SUCCESS: 'REQUEST_ASSETS_SUCCESS',
     REQUEST_ASSETS_FAILURE: 'REQUEST_ASSETS_FAILURE',
+    REQUESTING_ASSETS: 'REQUESTING_ASSETS',
   },
   sort: {
     SORT_UPDATE: 'SORT_UPDATE',

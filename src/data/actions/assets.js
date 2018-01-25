@@ -20,9 +20,14 @@ export const requestAssetsFailure = response => ({
   data: response,
 });
 
+export const requestingAssets = () => ({
+  type: assetActions.request.REQUESTING_ASSETS,
+});
+
 export const getAssets = (request, courseDetails) =>
-  (dispatch, getState) =>
-    clientApi.requestAssets(courseDetails.id, {
+  (dispatch, getState) => {
+    dispatch(requestingAssets());
+    return clientApi.requestAssets(courseDetails.id, {
       page: request.page,
       assetTypes: request.assetTypes,
       sort: request.sort,
@@ -43,10 +48,15 @@ export const getAssets = (request, courseDetails) =>
       .catch((error) => {
         dispatch(requestAssetsFailure(error));
       });
+  };
 
 export const filterUpdate = (filterKey, filterValue) => ({
   type: assetActions.filter.FILTER_UPDATED,
   data: { [filterKey]: filterValue },
+});
+
+export const clearFilters = () => ({
+  type: assetActions.clear.CLEAR_FILTERS,
 });
 
 export const sortUpdate = (sort, direction) => ({
