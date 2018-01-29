@@ -39,6 +39,14 @@ from-scratch: ## start development environment from scratch
 	docker build -t edxops/studio-frontend:latest --no-cache .
 	make up
 
+restart:
+	make down
+	make up
+
+restart-detached:
+	make down
+	make up-detached
+
 devstack-install: validate-devstack-folders ## install local version of package into docker devstack for development
 	# note that this assumes a structure /src/sfe_parent/studio-frontend
 	# step 0: remove studio-frontend from edx-platform/node_modules
