@@ -1,38 +1,62 @@
 import * as clientApi from '../api/client';
 import { assetActions } from '../constants/actionTypes';
+import { getDefaultFilterState } from '../../utils/getAssetsFilters';
+import deepCopy from './utils';
 
 const compare = (attributes, obj1, obj2) => (
   attributes.every(attribute => (obj1[attribute] === obj2[attribute]))
 );
 
-const isSameResponse = (request, lastRequest) => (
-  compare(['page', 'sort', 'direction'], request, lastRequest) &&
-  compare(['Audio', 'Code', 'Documents', 'Images', 'OTHER'], request.assetTypes, lastRequest.assetTypes)
+const compareRequestToResponse = (request1, request2) => (
+  compare(['page', 'sort', 'direction'], request1, request2) &&
+  compare(['Audio', 'Code', 'Documents', 'Images', 'OTHER'], request1.assetTypes, request2.assetTypes)
 );
+
+const isLastRequestMade = (requestMade, lastRequest) => (
+  compareRequestToResponse(requestMade, lastRequest)
+);
+
+const requestFailed = responseAction => (
+  responseAction && 'type' in responseAction && responseAction.type === assetActions.request.REQUEST_ASSETS_FAILURE
+);
+
+export const updateRequest = newRequest => ({
+  type: assetActions.request.UPDATE_REQUEST,
+  newRequest,
+});
 
 export const requestAssetsSuccess = response => ({
   type: assetActions.request.REQUEST_ASSETS_SUCCESS,
-  data: response,
+  response,
 });
 
-export const requestAssetsFailure = response => ({
+export const requestAssetsFailure = (response, previousAssetsState) => ({
   type: assetActions.request.REQUEST_ASSETS_FAILURE,
-  data: response,
+  response,
+  previousState: previousAssetsState,
 });
 
 export const requestingAssets = () => ({
   type: assetActions.request.REQUESTING_ASSETS,
 });
 
-export const getAssets = (request, courseDetails) =>
+export const getAssets = (parameters, courseDetails) =>
   (dispatch, getState) => {
     dispatch(requestingAssets());
-    return clientApi.requestAssets(courseDetails.id, {
-      page: request.page,
-      assetTypes: request.assetTypes,
-      sort: request.sort,
-      direction: request.direction,
-    })
+
+    const state = getState();
+
+    const requestParameters = {
+      page: state.metadata.pagination.page,
+      assetTypes: state.metadata.filters.assetTypes,
+      sort: state.metadata.sort.sort,
+      direction: state.metadata.sort.direction,
+      ...parameters,
+    };
+
+    dispatch(updateRequest(requestParameters));
+
+    return clientApi.requestAssets(courseDetails.id, { ...requestParameters })
       .then((response) => {
         if (response.ok) {
           return response.json();
@@ -40,34 +64,120 @@ export const getAssets = (request, courseDetails) =>
         throw new Error(response);
       })
       .then((json) => {
-        const lastRequest = getState().request;
-        if (isSameResponse(request, lastRequest)) {
-          dispatch(requestAssetsSuccess(json));
+        if (isLastRequestMade(getState().metadata.request, requestParameters)) {
+          return dispatch(requestAssetsSuccess(json));
         }
+        return Promise.resolve();
       })
       .catch((error) => {
-        dispatch(requestAssetsFailure(error));
+        if (isLastRequestMade(getState().metadata.request, requestParameters)) {
+          return dispatch(requestAssetsFailure(error, state.assets));
+        }
+        return Promise.resolve();
       });
   };
 
-export const filterUpdate = (filterKey, filterValue) => ({
-  type: assetActions.filter.FILTER_UPDATED,
-  data: { [filterKey]: filterValue },
+export const filterUpdateFailure = previousFilterState => ({
+  type: assetActions.filter.FILTER_UPDATE_FAILURE,
+  previousState: {
+    assetTypes: previousFilterState,
+  },
 });
 
-export const clearFilters = () => ({
-  type: assetActions.clear.CLEAR_FILTERS,
+export const filterUpdate = (filterKey, filterValue, courseDetails) =>
+  (dispatch, getState) => {
+    const currentFilterState = getState().metadata.filters.assetTypes;
+
+    // because filter state is not binary, we have to add on to the request and
+    // not rely on the page metadata for constructing the request
+    const currentFilterParameters = deepCopy(getState().metadata.request.assetTypes);
+    currentFilterParameters[filterKey] = filterValue;
+
+    const parameters = {
+      assetTypes: currentFilterParameters,
+      page: 0,
+    };
+
+    return dispatch(getAssets(parameters, courseDetails)).then((responseAction) => {
+      if (requestFailed(responseAction)) {
+        dispatch(filterUpdateFailure(currentFilterState));
+      }
+    });
+  };
+
+export const clearFiltersFailure = previousFilterState => ({
+  type: assetActions.clear.CLEAR_FILTERS_FAILURE,
+  previousState: {
+    assetTypes: previousFilterState,
+  },
 });
 
-export const sortUpdate = (sort, direction) => ({
-  type: assetActions.sort.SORT_UPDATE,
-  data: { sort, direction },
+export const clearFilters = courseDetails =>
+  (dispatch, getState) => {
+    const currentFilterState = getState().metadata.filters.assetTypes;
+
+    const defaultFilterParameters = getDefaultFilterState();
+    const parameters = {
+      assetTypes: defaultFilterParameters,
+      page: 0,
+    };
+
+    return dispatch(getAssets(parameters, courseDetails)).then((responseAction) => {
+      if (requestFailed(responseAction)) {
+        dispatch(clearFiltersFailure(currentFilterState));
+      }
+    });
+  };
+
+export const sortUpdateFailure = previousSortState => ({
+  type: assetActions.sort.SORT_UPDATE_FAILURE,
+  previousState: { ...previousSortState },
 });
 
-export const pageUpdate = page => ({
-  type: assetActions.paginate.PAGE_UPDATE,
-  data: { page },
+export const sortUpdate = (sort, direction, courseDetails) =>
+  (dispatch, getState) => {
+    const currentSortState = getState().metadata.sort;
+
+    const parameters = {
+      sort,
+      direction,
+    };
+
+    return dispatch(getAssets(parameters, courseDetails)).then((responseAction) => {
+      if (requestFailed(responseAction)) {
+        dispatch(sortUpdateFailure(currentSortState));
+      }
+    });
+  };
+
+export const pageUpdateFailure = previousPageState => ({
+  type: assetActions.paginate.PAGE_UPDATE_FAILURE,
+  previousState: { ...previousPageState },
 });
+
+export const resetPageState = () => ({
+  type: assetActions.paginate.RESET_PAGE,
+});
+
+export const pageUpdate = (page, courseDetails) =>
+  (dispatch, getState) => {
+    const currentPageState = getState().metadata.pagination;
+
+    const parameters = {
+      page,
+    };
+
+    return dispatch(getAssets(parameters, courseDetails)).then((responseAction) => {
+      if (requestFailed(responseAction)) {
+        // react-paginate does not force the page state via the forcePage prop when
+        // the previous and next props for forcePage are the same; therefore, we
+        // have to reset the page state after a failed click in order to be able
+        // to reset the page
+        dispatch(resetPageState());
+        dispatch(pageUpdateFailure(currentPageState));
+      }
+    });
+  };
 
 export const deleteAssetSuccess = assetId => ({
   type: assetActions.delete.DELETE_ASSET_SUCCESS,
@@ -86,10 +196,11 @@ export const deleteAsset = (assetId, courseDetails) =>
       // content, we don't json-ify the response
       .then((response) => {
         if (response.ok) {
-          dispatch(deleteAssetSuccess(assetId));
-        } else {
-          dispatch(deleteAssetFailure(assetId));
+          return dispatch(getAssets({}, courseDetails)).then(() => (
+            dispatch(deleteAssetSuccess(assetId))
+          ));
         }
+        return dispatch(deleteAssetFailure(assetId));
       });
 
 export const togglingLockAsset = asset => ({
@@ -146,7 +257,7 @@ export const uploadAssetFailure = (asset, response) => ({
 });
 
 export const uploadAssets = (assets, courseDetails) =>
-  (dispatch, getState) => {
+  (dispatch) => {
     dispatch(uploadingAssets(assets.length));
     // gather all the promises into a single promise that can be returned
     return Promise.all(assets.map(asset => (
@@ -156,12 +267,11 @@ export const uploadAssets = (assets, courseDetails) =>
             return response.json().then((json) => {
               dispatch(uploadAssetSuccess(json));
               // dispatch(getAssets(..)) returns a promise, so we return it
-              // up to chain it
-              return dispatch(getAssets(getState().request, courseDetails));
+              return dispatch(getAssets({}, courseDetails));
             });
           }
           dispatch(uploadAssetFailure(asset, response.status));
-          return undefined;
+          return Promise.resolve();
         })
     )));
   };

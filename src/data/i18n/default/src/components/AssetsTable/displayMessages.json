@@ -100,6 +100,11 @@
     "defaultMessage": "Error uploading {assetName}. Try again."
   },
   {
+    "id": "assetsTableGenericUpdateError",
+    "description": "States that the action could not be completed and asks the user to refresh the page and try the action again",
+    "defaultMessage": "The action could not be completed. Refresh the page, and then try the action again."
+  },
+  {
     "id": "assetsTableStudioLink",
     "description": "Label that indicates a relative (as opposed to an absolute) URL",
     "defaultMessage": "Studio"

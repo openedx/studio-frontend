@@ -2,19 +2,17 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Table, Button, Modal, StatusAlert, Variant } from '@edx/paragon';
 import classNames from 'classnames';
-import { connect } from 'react-redux';
 import { FormattedNumber } from 'react-intl';
 
 import FontAwesomeStyles from 'font-awesome/css/font-awesome.min.css';
 import styles from './AssetsTable.scss';
 import { assetActions } from '../../data/constants/actionTypes';
 import { assetLoading } from '../../data/constants/loadingTypes';
-import { clearAssetsStatus, deleteAsset, sortUpdate, toggleLockAsset } from '../../data/actions/assets';
 import CopyButton from '../CopyButton';
 import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
 import messages from './displayMessages';
 
-export class AssetsTable extends React.Component {
+export default class AssetsTable extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -102,7 +100,7 @@ export class AssetsTable extends React.Component {
       newDirection = sortedDirection === 'desc' ? 'asc' : 'desc';
     }
 
-    this.props.updateSort(columnKey, newDirection);
+    this.props.updateSort(columnKey, newDirection, this.props.courseDetails);
   }
 
   onDeleteClick(index) {
@@ -265,16 +263,16 @@ export class AssetsTable extends React.Component {
     );
   }
 
-  handleCopyButtonEvent(buttonIsClicked) {
-    this.setState({
-      copyButtonIsClicked: buttonIsClicked,
-    });
-  }
-
   updateStatusAlertFields(assetsStatus) {
     const assetName = this.state.deletedAsset.display_name;
     let alertDialog;
     let alertType;
+
+    const genericUpdateError = (
+      <WrappedMessage
+        message={messages.assetsTableGenericUpdateError}
+      />
+    );
 
     switch (assetsStatus.type) {
       case assetActions.delete.DELETE_ASSET_FAILURE:
@@ -349,6 +347,22 @@ export class AssetsTable extends React.Component {
             values={{ assetName: assetsStatus.asset.name }}
           />
         );
+        alertType = 'danger';
+        break;
+      case assetActions.clear.CLEAR_FILTERS_FAILURE:
+        alertDialog = genericUpdateError;
+        alertType = 'danger';
+        break;
+      case assetActions.filter.FILTER_UPDATE_FAILURE:
+        alertDialog = genericUpdateError;
+        alertType = 'danger';
+        break;
+      case assetActions.paginate.PAGE_UPDATE_FAILURE:
+        alertDialog = genericUpdateError;
+        alertType = 'danger';
+        break;
+      case assetActions.sort.SORT_UPDATE_FAILURE:
+        alertDialog = genericUpdateError;
         alertType = 'danger';
         break;
       default:
@@ -532,22 +546,6 @@ export class AssetsTable extends React.Component {
     );
   }
 
-  /**
-   * Rendering an empty status alert keeps the alert in the DOM initially and
-   * enables screen readers to listen for changes.
-   */
-  renderEmptyStatusAlert() {
-    return (
-      <div>
-        <StatusAlert
-          dialog=""
-          open={false}
-          dismissible={false}
-        />
-      </div>
-    );
-  }
-
   renderStatusAlert() {
     const { assetsStatus } = this.props;
 
@@ -630,26 +628,3 @@ AssetsTable.propTypes = {
   clearAssetsStatus: PropTypes.func.isRequired,
   toggleLockAsset: PropTypes.func.isRequired,
 };
-
-const mapStateToProps = state => ({
-  assetsList: state.assets,
-  assetsSortMetaData: state.metadata.sort,
-  assetsStatus: state.metadata.status,
-  courseDetails: state.studioDetails.course,
-  courseFilesDocs: state.studioDetails.help_tokens.files,
-  upload: state.assets.upload,
-});
-
-const mapDispatchToProps = dispatch => ({
-  clearAssetsStatus: () => dispatch(clearAssetsStatus()),
-  deleteAsset: (assetId, courseDetails) => dispatch(deleteAsset(assetId, courseDetails)),
-  updateSort: (sortKey, sortDirection) => dispatch(sortUpdate(sortKey, sortDirection)),
-  toggleLockAsset: (asset, courseDetails) => dispatch(toggleLockAsset(asset, courseDetails)),
-});
-
-const WrappedAssetsTable = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(AssetsTable);
-
-export default WrappedAssetsTable;

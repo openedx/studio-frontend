@@ -1,17 +1,15 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Button } from '@edx/paragon';
 
 import { assetActions } from '../../data/constants/actionTypes';
-import { getAssets, clearFilters } from '../../data/actions/assets';
 import { hasSelectedFilters, getSelectedFilters } from '../../utils/getAssetsFilters';
 import edxBootstrap from '../../SFE.scss';
 import styles from './AssetsPage.scss';
-import WrappedAssetsDropZone from '../AssetsDropZone';
-import WrappedAssetsTable from '../AssetsTable';
-import WrappedAssetsFilters from '../AssetsFilters';
-import WrappedPagination from '../Pagination';
+import WrappedAssetsDropZone from '../AssetsDropZone/container';
+import WrappedAssetsTable from '../AssetsTable/container';
+import WrappedAssetsFilters from '../AssetsFilters/container';
+import WrappedPagination from '../Pagination/container';
 
 export const types = {
   NO_ASSETS: 'noAssets',
@@ -20,17 +18,19 @@ export const types = {
   SKELETON: 'skeleton',
 };
 
-export class AssetsPage extends React.Component {
+export default class AssetsPage extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
       pageType: types.SKELETON,
     };
+
+    this.onClearFiltersButtonClick = this.onClearFiltersButtonClick.bind(this);
   }
 
   componentDidMount() {
-    this.props.getAssets(this.props.request, this.props.courseDetails);
+    this.props.getAssets({}, this.props.courseDetails);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -39,10 +39,8 @@ export class AssetsPage extends React.Component {
     });
   }
 
-  componentDidUpdate(prevProps) {
-    if (JSON.stringify(prevProps.request) !== JSON.stringify(this.props.request)) {
-      this.props.getAssets(this.props.request, this.props.courseDetails);
-    }
+  onClearFiltersButtonClick = () => {
+    this.props.clearFilters(this.props.courseDetails);
   }
 
   getPageType = (props) => {
@@ -123,7 +121,7 @@ export class AssetsPage extends React.Component {
       <h4>{ numberOfSelectedFilters > 1 ? 'No files were found for these filters.' : 'No files were found for this filter.'}</h4>
       <Button
         buttonType="link"
-        onClick={this.props.clearFilters}
+        onClick={this.onClearFiltersButtonClick}
         label={numberOfSelectedFilters > 1 ? 'Clear all filters' : 'Clear filter'}
       />
     </React.Fragment>);
@@ -179,12 +177,6 @@ AssetsPage.propTypes = {
     assetTypes: PropTypes.object,
   }).isRequired,
   getAssets: PropTypes.func.isRequired,
-  request: PropTypes.shape({
-    sort: PropTypes.string,
-    direction: PropTypes.string,
-    assetTypes: PropTypes.object,
-    page: PropTypes.number,
-  }).isRequired,
   // eslint-disable-next-line react/no-unused-prop-types
   status: PropTypes.shape({
     type: PropTypes.string,
@@ -194,24 +186,3 @@ AssetsPage.propTypes = {
     max_file_size_in_mbs: PropTypes.number,
   }).isRequired,
 };
-
-const mapStateToProps = state => ({
-  assetsList: state.assets,
-  courseDetails: state.studioDetails.course,
-  request: state.request,
-  uploadSettings: state.studioDetails.upload_settings,
-  status: state.metadata.status,
-  filtersMetaData: state.metadata.filters,
-});
-
-export const mapDispatchToProps = dispatch => ({
-  clearFilters: () => dispatch(clearFilters()),
-  getAssets: (request, courseDetails) => dispatch(getAssets(request, courseDetails)),
-});
-
-const WrappedAssetsPage = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(AssetsPage);
-
-export default WrappedAssetsPage;

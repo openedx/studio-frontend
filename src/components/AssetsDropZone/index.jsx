@@ -1,20 +1,15 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import classNames from 'classnames';
 import Dropzone from 'react-dropzone';
 import PropTypes from 'prop-types';
 
 import { Button } from '@edx/paragon';
 import FontAwesomeStyles from 'font-awesome/css/font-awesome.min.css';
-
-import { uploadAssets, uploadExceedMaxSize, uploadExceedMaxCount } from '../../data/actions/assets';
 import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
-
 import messages from './displayMessages';
 import styles from './AssetsDropZone.scss';
 
-
-export class AssetsDropZone extends React.Component {
+export default class AssetsDropZone extends React.Component {
   constructor() {
     super();
     this.dropzoneRef = {};
@@ -102,20 +97,3 @@ AssetsDropZone.defaultProps = {
   maxFileCount: 100,
   maxFileSizeMB: 10,
 };
-
-const mapStateToProps = state => ({
-  courseDetails: state.studioDetails.course,
-});
-
-const mapDispatchToProps = dispatch => ({
-  uploadAssets: (files, courseDetails) => dispatch(uploadAssets(files, courseDetails)),
-  uploadExceedMaxCount: maxFileCount => dispatch(uploadExceedMaxCount(maxFileCount)),
-  uploadExceedMaxSize: maxFileSizeMB => dispatch(uploadExceedMaxSize(maxFileSizeMB)),
-});
-
-const WrappedAssetsDropZone = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(AssetsDropZone);
-
-export default WrappedAssetsDropZone;

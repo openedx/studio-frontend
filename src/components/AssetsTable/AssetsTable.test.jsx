@@ -1,11 +1,12 @@
 import React from 'react';
 import { StatusAlert } from '@edx/paragon';
 
-import { AssetsTable } from './index';
+import AssetsTable from './index';
 
 import { mountWithIntl } from '../../utils/i18n/enzymeHelper';
 import { assetActions } from '../../data/constants/actionTypes';
 import { assetLoading } from '../../data/constants/loadingTypes';
+import courseDetails from '../../utils/testConstants';
 
 const thumbnail = '/animal';
 const copyUrl = 'animal';
@@ -47,17 +48,7 @@ const defaultProps = {
   ],
   assetsSortMetaData: {},
   assetsStatus: {},
-  courseDetails: {
-    lang: 'en',
-    url_name: 'course',
-    name: 'edX Demonstration Course',
-    display_course_number: '',
-    num: 'DemoX',
-    org: 'edX',
-    id: 'course-v1:edX+DemoX+Demo_Course',
-    revision: '',
-    base_url: 'sfe',
-  },
+  courseDetails,
   courseFilesDocs: 'testUrl',
   clearAssetsStatus: () => {},
   deleteAsset: () => {},
@@ -301,8 +292,26 @@ describe('<AssetsTable />', () => {
         expect(updateSortSpy).toHaveBeenLastCalledWith(
           expectedValues.onSortColumnParameter,
           expectedValues.onSortDirectionParameter,
+          defaultProps.courseDetails,
         );
       });
+    });
+  });
+  describe('copy buttons', () => {
+    beforeEach(() => {
+      wrapper = mountWithIntl(
+        <AssetsTable
+          {...defaultProps}
+        />,
+      );
+    });
+    it('onCopyButton click changes copyButtonIsClicked state', () => {
+      expect(wrapper.state('copyButtonIsClicked')).toEqual(false);
+
+      const copyButtons = wrapper.find('tr td CopyButton');
+      copyButtons.at(0).simulate('click');
+
+      expect(wrapper.state('copyButtonIsClicked')).toEqual(true);
     });
   });
   describe('modal', () => {
@@ -500,6 +509,40 @@ describe('<AssetsTable />', () => {
 
         expect(trashButtons.at(test.newFocusIndex).html())
           .toEqual(document.activeElement.outerHTML);
+      });
+    });
+  });
+  describe('status alert', () => {
+    describe('renders', () => {
+      const assetsStatuses = [
+        assetActions.clear.CLEAR_FILTERS_FAILURE,
+        assetActions.filter.FILTER_UPDATE_FAILURE,
+        assetActions.paginate.PAGE_UPDATE_FAILURE,
+        assetActions.sort.SORT_UPDATE_FAILURE,
+      ];
+
+      beforeEach(() => {
+        wrapper = mountWithIntl(
+          <AssetsTable
+            {...defaultProps}
+          />,
+        );
+      });
+
+      assetsStatuses.forEach((statusType) => {
+        it(`on ${statusType}`, () => {
+          const assetsStatus = {
+            type: statusType,
+          };
+
+          wrapper.setProps({
+            assetsStatus,
+          });
+
+          const statusAlert = wrapper.find(StatusAlert);
+          expect(statusAlert.prop('alertType')).toEqual('danger');
+          expect(statusAlert.find('.alert-dialog').text()).toEqual('The action could not be completed. Refresh the page, and then try the action again.');
+        });
       });
     });
   });

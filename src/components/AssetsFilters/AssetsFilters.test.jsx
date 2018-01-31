@@ -1,18 +1,14 @@
 import React from 'react';
-
 import { CheckBoxGroup } from '@edx/paragon';
 
-import { AssetsFilters, mapDispatchToProps } from './index';
-import { assetActions } from '../../data/constants/actionTypes';
+import AssetsFilters from './index';
 import { filtersInitial } from './../../data/reducers/assets';
 import { mountWithIntl } from '../../utils/i18n/enzymeHelper';
-
 
 const defaultProps = {
   assetsFilters: { ...filtersInitial },
   updateFilter: () => {},
-  updatePage: () => {},
-  clearFilters: () => {},
+  courseDetails: {},
 };
 
 let wrapper;
@@ -45,47 +41,11 @@ describe('<AssetsFilters />', () => {
       checkBoxes = checkBoxGroup.find('[type="checkbox"]');
       expect(checkBoxes.first().html()).toContain('checked');
     });
-    it('correctly maps updateFilter to dispatch props', () => {
-      const dispatchSpy = jest.fn();
-
-      const { updateFilter } = mapDispatchToProps(dispatchSpy);
-
-      const updateFilterAction = {
-        data: {
-          Code: 'Code',
-        },
-        type: assetActions.filter.FILTER_UPDATED,
-      };
-
-      updateFilter('Code', 'Code');
-
-      expect(dispatchSpy).toHaveBeenCalledTimes(1);
-      expect(dispatchSpy).toHaveBeenCalledWith(updateFilterAction);
-    });
-    it('correctly maps updatePage to dispatch props', () => {
-      const dispatchSpy = jest.fn();
-
-      const { updatePage } = mapDispatchToProps(dispatchSpy);
-
-      const updatePageAction = {
-        data: {
-          page: 0,
-        },
-        type: assetActions.paginate.PAGE_UPDATE,
-      };
-
-      updatePage(0);
-
-      expect(dispatchSpy).toHaveBeenCalledTimes(1);
-      expect(dispatchSpy).toHaveBeenCalledWith(updatePageAction);
-    });
-    it('calls updatePage & updateFilter when filter box is checked', () => {
+    it('calls updateFilter when filter box is checked', () => {
       const filterSpy = jest.fn();
-      const pageUpdateSpy = jest.fn();
 
       wrapper.setProps({
         updateFilter: filterSpy,
-        updatePage: pageUpdateSpy,
       });
 
       const checkBoxGroup = wrapper.find(CheckBoxGroup);
@@ -93,10 +53,8 @@ describe('<AssetsFilters />', () => {
       const checkBox = checkBoxes.first();
       checkBox.simulate('change', { target: { checked: true, type: 'checkbox' } });
 
-      expect(pageUpdateSpy).toHaveBeenCalledTimes(1);
-      expect(pageUpdateSpy).toHaveBeenCalledWith(0);
       expect(filterSpy).toHaveBeenCalledTimes(1);
-      expect(filterSpy).toHaveBeenCalledWith(checkBox.prop('id'), true);
+      expect(filterSpy).toHaveBeenCalledWith(checkBox.prop('id'), true, defaultProps.courseDetails);
     });
   });
 });

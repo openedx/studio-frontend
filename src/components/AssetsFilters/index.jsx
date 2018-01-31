@@ -1,15 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { CheckBox, CheckBoxGroup } from '@edx/paragon';
-import { connect } from 'react-redux';
 
-import { filterUpdate, pageUpdate } from '../../data/actions/assets';
 import ASSET_TYPES from '../../data/constants/assetTypeFilters';
 import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
 import styles from './AssetsFilters.scss';
 import messages from './displayMessages';
 
-export const AssetsFilters = ({ assetsFilters, updateFilter, updatePage }) => (
+const AssetsFilters = ({ assetsFilters, updateFilter, courseDetails }) => (
   <div role="group" aria-labelledby="filter-label">
     <WrappedMessage message={messages.assetsFiltersSectionLabel}>
       {
@@ -26,7 +24,7 @@ export const AssetsFilters = ({ assetsFilters, updateFilter, updatePage }) => (
             name={type.key}
             label={<WrappedMessage message={messages[`assetsFilters${type.displayName}`]} />}
             checked={assetsFilters.assetTypes[type.key]}
-            onChange={(checked) => { updatePage(0); updateFilter(type.key, checked); }}
+            onChange={(checked) => { updateFilter(type.key, checked, courseDetails); }}
           />
         ))}
       </CheckBoxGroup>
@@ -38,22 +36,18 @@ AssetsFilters.propTypes = {
   assetsFilters: PropTypes.shape({
     assetTypes: PropTypes.object,
   }).isRequired,
+  courseDetails: PropTypes.shape({
+    lang: PropTypes.string,
+    url_name: PropTypes.string,
+    name: PropTypes.string,
+    display_course_number: PropTypes.string,
+    num: PropTypes.string,
+    org: PropTypes.string,
+    id: PropTypes.string,
+    revision: PropTypes.string,
+    base_url: PropTypes.string,
+  }).isRequired,
   updateFilter: PropTypes.func.isRequired,
-  updatePage: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = state => ({
-  assetsFilters: state.metadata.filters,
-});
-
-export const mapDispatchToProps = dispatch => ({
-  updateFilter: (filterKey, filterValue) => dispatch(filterUpdate(filterKey, filterValue)),
-  updatePage: page => dispatch(pageUpdate(page)),
-});
-
-const WrappedAssetsFilters = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(AssetsFilters);
-
-export default WrappedAssetsFilters;
+export default AssetsFilters;

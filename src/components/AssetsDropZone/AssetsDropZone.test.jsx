@@ -1,5 +1,7 @@
 import React from 'react';
-import { AssetsDropZone } from './index';
+
+import AssetsDropZone from './index';
+import courseDetails from '../../utils/testConstants';
 import { mountWithIntl } from '../../utils/i18n/enzymeHelper';
 
 const defaultProps = {
@@ -8,17 +10,7 @@ const defaultProps = {
   uploadExceedMaxSize: () => {},
   maxFileSizeMB: 87,
   maxFileCount: 3,
-  courseDetails: {
-    lang: 'en',
-    url_name: 'course',
-    name: 'edX Demonstration Course',
-    display_course_number: '',
-    num: 'DemoX',
-    org: 'edX',
-    id: 'course-v1:edX+DemoX+Demo_Course',
-    revision: '',
-    base_url: 'sfe',
-  },
+  courseDetails,
 };
 
 let wrapper;
