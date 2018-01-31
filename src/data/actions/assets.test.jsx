@@ -4,11 +4,18 @@ import thunk from 'redux-thunk';
 
 import endpoints from '../api/endpoints';
 import * as actionCreators from './assets';
-import { requestInitial } from '../reducers/assets';
+import { filtersInitial, paginationInitial, sortInitial, requestInitial } from '../reducers/assets';
 import { assetActions } from '../../data/constants/actionTypes';
+import deepCopy from './utils';
 
 const initialState = {
-  request: { ...requestInitial },
+  assets: [],
+  metadata: {
+    filters: { ...filtersInitial },
+    pagination: { ...paginationInitial },
+    request: { ...requestInitial },
+    sort: { ...sortInitial },
+  },
 };
 
 const courseDetails = {
@@ -21,6 +28,20 @@ const assetsEndpoint = endpoints.assets;
 const middlewares = [thunk];
 const mockStore = configureStore(middlewares);
 let store;
+
+const getMockStoreWithNewRequestState = (request) => {
+  const newRequestState = {
+    ...deepCopy(requestInitial),
+    ...request,
+  };
+
+  const newStateWithRequest = {
+    ...deepCopy(initialState),
+  };
+  newStateWithRequest.metadata.request = newRequestState;
+
+  return mockStore(newStateWithRequest);
+};
 
 // currying a function that can be passed to fetch-mock to determine what
 // response should be based on whether or not upload succeeds or fails
@@ -44,7 +65,7 @@ describe('Assets Action Creators', () => {
   });
 
   it('returns expected state from requestAssetsSuccess', () => {
-    const expectedAction = { data: 'response', type: assetActions.request.REQUEST_ASSETS_SUCCESS };
+    const expectedAction = { response: 'response', type: assetActions.request.REQUEST_ASSETS_SUCCESS };
     expect(store.dispatch(actionCreators.requestAssetsSuccess('response'))).toEqual(expectedAction);
   });
   it('returns expected state from assetDeleteFailure', () => {
@@ -52,26 +73,33 @@ describe('Assets Action Creators', () => {
     expect(store.dispatch(actionCreators.deleteAssetFailure(assetId))).toEqual(expectedAction);
   });
   it('returns expected state from getAssets success', () => {
-    const request = requestInitial;
-    const response = request;
+    const requestParameters = {};
+    const response = {
+      body: {
+        success: 'Success',
+        ...initialState,
+      },
+    };
 
     fetchMock.once(`begin:${assetsEndpoint}`, response);
     const expectedActions = [
       { type: assetActions.request.REQUESTING_ASSETS },
-      { type: assetActions.request.REQUEST_ASSETS_SUCCESS, data: response },
+      { type: assetActions.request.UPDATE_REQUEST, newRequest: requestInitial },
+      { type: assetActions.request.REQUEST_ASSETS_SUCCESS, response: response.body },
     ];
-
-    return store.dispatch(actionCreators.getAssets(request, courseDetails)).then(() => {
+    return store.dispatch(actionCreators.getAssets(requestParameters, courseDetails)).then(() => {
       // return of async actions
       expect(store.getActions()).toEqual(expectedActions);
     });
   });
   it('returns expected state from getAssets failure', () => {
-    const request = requestInitial;
-
+    const requestParameters = {};
     const response = {
       status: 400,
-      body: request,
+      body: {
+        failure: 'Failure',
+        ...initialState,
+      },
     };
 
     const errorResponse = new Error(response);
@@ -79,46 +107,328 @@ describe('Assets Action Creators', () => {
     fetchMock.once(`begin:${assetsEndpoint}`, response);
     const expectedActions = [
       { type: assetActions.request.REQUESTING_ASSETS },
-      { type: assetActions.request.REQUEST_ASSETS_FAILURE, data: errorResponse },
+      { type: assetActions.request.UPDATE_REQUEST, newRequest: requestInitial },
+      { type: assetActions.request.REQUEST_ASSETS_FAILURE,
+        previousState: initialState.assets,
+        response: errorResponse },
     ];
 
     store = mockStore(initialState);
-    return store.dispatch(actionCreators.getAssets(request, courseDetails)).then(() => {
+    return store.dispatch(actionCreators.getAssets(requestParameters, courseDetails)).then(() => {
       // return of async actions
       expect(store.getActions()).toEqual(expectedActions);
     });
   });
-  it('returns expected state from getAssets if response metadata does not match request', () => {
-    const request = {
-      ...requestInitial,
-      direction: 'asc',
+  it('returns expected state from getAssets success when not last made request', () => {
+    const requestParameters = {
+      page: 10,
     };
 
-    const response = request;
+    const newRequest = {
+      ...requestInitial,
+      ...requestParameters,
+    };
+
+    const response = {
+      body: {
+        success: 'Success',
+        ...initialState,
+      },
+    };
 
     fetchMock.once(`begin:${assetsEndpoint}`, response);
-
-    // if the response is not the same as the request, we expect nothing
     const expectedActions = [
       { type: assetActions.request.REQUESTING_ASSETS },
+      { type: assetActions.request.UPDATE_REQUEST, newRequest },
     ];
-
-    return store.dispatch(actionCreators.getAssets(request, courseDetails)).then(() => {
+    return store.dispatch(actionCreators.getAssets(requestParameters, courseDetails)).then(() => {
       // return of async actions
       expect(store.getActions()).toEqual(expectedActions);
     });
   });
-  it('returns expected state from filterUpdate', () => {
-    const expectedAction = { data: { filter: true }, type: assetActions.filter.FILTER_UPDATED };
-    expect(store.dispatch(actionCreators.filterUpdate('filter', true))).toEqual(expectedAction);
+  it('returns expected state from getAssets failure when not last made request', () => {
+    const requestParameters = {
+      page: 10,
+    };
+
+    const newRequest = {
+      ...requestInitial,
+      ...requestParameters,
+    };
+
+    const response = {
+      status: 400,
+      body: {
+        failure: 'Failure',
+        ...initialState,
+      },
+    };
+
+    fetchMock.once(`begin:${assetsEndpoint}`, response);
+    const expectedActions = [
+      { type: assetActions.request.REQUESTING_ASSETS },
+      { type: assetActions.request.UPDATE_REQUEST, newRequest },
+    ];
+    return store.dispatch(actionCreators.getAssets(requestParameters, courseDetails)).then(() => {
+      // return of async actions
+      expect(store.getActions()).toEqual(expectedActions);
+    });
   });
-  it('returns expected state from sortUpdate', () => {
-    const expectedAction = { data: { sort: 'edX', direction: 'desc' }, type: assetActions.sort.SORT_UPDATE };
-    expect(store.dispatch(actionCreators.sortUpdate('edX', 'desc'))).toEqual(expectedAction);
+  it('returns expected state from filterUpdate success', () => {
+    const filterParameter = 'Images';
+
+    const newRequest = {
+      ...deepCopy(filtersInitial),
+      page: 0,
+    };
+    newRequest.assetTypes[filterParameter] = true;
+
+    store = getMockStoreWithNewRequestState(newRequest);
+
+    const response = {
+      body: {
+        assetTypes: filterParameter,
+      },
+    };
+
+    fetchMock.once(`begin:${assetsEndpoint}`, response);
+    const expectedActions = [
+      { type: assetActions.request.REQUESTING_ASSETS },
+      { type: assetActions.request.UPDATE_REQUEST,
+        newRequest: { ...requestInitial, ...newRequest } },
+      { type: assetActions.request.REQUEST_ASSETS_SUCCESS, response: response.body },
+    ];
+
+    return store.dispatch(actionCreators.filterUpdate(filterParameter, true, courseDetails))
+      .then(() => {
+        // return of async actions
+        expect(store.getActions()).toEqual(expectedActions);
+      });
   });
-  it('returns expected state from pageUpdate', () => {
-    const expectedAction = { data: { page: 0 }, type: assetActions.paginate.PAGE_UPDATE };
-    expect(store.dispatch(actionCreators.pageUpdate(0))).toEqual(expectedAction);
+  it('returns expected state from filterUpdate failure', () => {
+    const filterParameter = 'Images';
+
+    const newRequest = {
+      ...deepCopy(filtersInitial),
+      page: 0,
+    };
+    newRequest.assetTypes[filterParameter] = true;
+
+    store = getMockStoreWithNewRequestState(newRequest);
+
+    const response = {
+      status: 400,
+      body: {
+        failure: 'Failure',
+      },
+    };
+    const errorResponse = new Error(response);
+
+    fetchMock.once(`begin:${assetsEndpoint}`, response);
+    const expectedActions = [
+      { type: assetActions.request.REQUESTING_ASSETS },
+      { type: assetActions.request.UPDATE_REQUEST,
+        newRequest: { ...requestInitial, ...newRequest } },
+      { type: assetActions.request.REQUEST_ASSETS_FAILURE,
+        previousState: initialState.assets,
+        response: errorResponse },
+      { type: assetActions.filter.FILTER_UPDATE_FAILURE,
+        previousState: { assetTypes: initialState.metadata.filters.assetTypes } },
+    ];
+
+    return store.dispatch(actionCreators.filterUpdate(filterParameter, true, courseDetails))
+      .then(() => {
+        // return of async actions
+        expect(store.getActions()).toEqual(expectedActions);
+      });
+  });
+  it('returns expected state from clearFilters success', () => {
+    const newRequest = {
+      ...filtersInitial,
+      page: 0,
+    };
+
+    const response = {
+      body: {
+        ...initialState.metadata.filters,
+      },
+    };
+
+    fetchMock.once(`begin:${assetsEndpoint}`, response);
+    const expectedActions = [
+      { type: assetActions.request.REQUESTING_ASSETS },
+      { type: assetActions.request.UPDATE_REQUEST,
+        newRequest: { ...requestInitial, ...newRequest } },
+      { type: assetActions.request.REQUEST_ASSETS_SUCCESS, response: response.body },
+    ];
+
+    return store.dispatch(actionCreators.clearFilters(courseDetails)).then(() => {
+      // return of async actions
+      expect(store.getActions()).toEqual(expectedActions);
+    });
+  });
+  it('returns expected state from clearFilters failure', () => {
+    const response = {
+      status: 400,
+      body: {
+        failure: 'Failure',
+      },
+    };
+
+    const errorResponse = new Error(response);
+
+    const newRequest = {
+      ...initialState.metadata.filters,
+      page: 0,
+    };
+
+    fetchMock.once(`begin:${assetsEndpoint}`, response);
+    const expectedActions = [
+      { type: assetActions.request.REQUESTING_ASSETS },
+      { type: assetActions.request.UPDATE_REQUEST,
+        newRequest: { ...requestInitial, ...newRequest } },
+      { type: assetActions.request.REQUEST_ASSETS_FAILURE,
+        previousState: initialState.assets,
+        response: errorResponse },
+      { type: assetActions.clear.CLEAR_FILTERS_FAILURE,
+        previousState: { assetTypes: initialState.metadata.filters.assetTypes } },
+    ];
+
+    return store.dispatch(actionCreators.clearFilters(courseDetails)).then(() => {
+      // return of async actions
+      expect(store.getActions()).toEqual(expectedActions);
+    });
+  });
+  it('returns expected state from sortUpdate success', () => {
+    const sortParameters = { sort: 'edX', direction: 'desc' };
+
+    const newRequest = {
+      ...sortInitial,
+      ...sortParameters,
+    };
+
+    store = getMockStoreWithNewRequestState(newRequest);
+
+    const response = {
+      body: {
+        ...sortParameters,
+      },
+    };
+
+    fetchMock.once(`begin:${assetsEndpoint}`, response);
+    const expectedActions = [
+      { type: assetActions.request.REQUESTING_ASSETS },
+      { type: assetActions.request.UPDATE_REQUEST,
+        newRequest: { ...requestInitial, ...newRequest } },
+      { type: assetActions.request.REQUEST_ASSETS_SUCCESS, response: response.body },
+    ];
+
+    return store.dispatch(actionCreators
+      .sortUpdate(sortParameters.sort, sortParameters.direction, courseDetails)).then(() => {
+      // return of async actions
+      expect(store.getActions()).toEqual(expectedActions);
+    });
+  });
+  it('returns expected state from sortUpdate failure', () => {
+    const sortParameters = { sort: 'edX', direction: 'desc' };
+
+    const newRequest = {
+      ...sortInitial,
+      ...sortParameters,
+    };
+
+    store = getMockStoreWithNewRequestState(newRequest);
+
+    const response = {
+      status: 400,
+      body: {
+        failure: 'Failure',
+      },
+    };
+
+    const errorResponse = new Error(response);
+
+    fetchMock.once(`begin:${assetsEndpoint}`, response);
+    const expectedActions = [
+      { type: assetActions.request.REQUESTING_ASSETS },
+      { type: assetActions.request.UPDATE_REQUEST,
+        newRequest: { ...requestInitial, ...newRequest } },
+      { type: assetActions.request.REQUEST_ASSETS_FAILURE,
+        previousState: initialState.assets,
+        response: errorResponse },
+      { type: assetActions.sort.SORT_UPDATE_FAILURE,
+        previousState: { ...initialState.metadata.sort } },
+    ];
+
+    return store.dispatch(actionCreators.sortUpdate('edX', 'desc', courseDetails)).then(() => {
+      // return of async actions
+      expect(store.getActions()).toEqual(expectedActions);
+    });
+  });
+  it('returns expected state from pageUpdate success', () => {
+    const paginationParameters = { page: 10 };
+
+    const newRequest = {
+      ...paginationParameters,
+    };
+
+    store = getMockStoreWithNewRequestState(newRequest);
+
+    const response = {
+      body: {
+        ...paginationParameters,
+      },
+    };
+
+    fetchMock.once(`begin:${assetsEndpoint}`, response);
+    const expectedActions = [
+      { type: assetActions.request.REQUESTING_ASSETS },
+      { type: assetActions.request.UPDATE_REQUEST,
+        newRequest: { ...requestInitial, ...newRequest } },
+      { type: assetActions.request.REQUEST_ASSETS_SUCCESS, response: response.body },
+    ];
+
+    return store.dispatch(actionCreators.pageUpdate(paginationParameters.page, courseDetails))
+      .then(() => {
+        // return of async actions
+        expect(store.getActions()).toEqual(expectedActions);
+      });
+  });
+  it('returns expected state from pageUpdate failure', () => {
+    const paginationParameters = { page: 10 };
+
+    const newRequest = {
+      ...paginationParameters,
+    };
+
+    store = getMockStoreWithNewRequestState(newRequest);
+
+    const response = {
+      status: 400,
+      body: {
+        failure: 'Failure',
+      },
+    };
+
+    const errorResponse = new Error(response);
+
+    fetchMock.once(`begin:${assetsEndpoint}`, response);
+    const expectedActions = [
+      { type: assetActions.request.REQUESTING_ASSETS },
+      { type: assetActions.request.UPDATE_REQUEST,
+        newRequest: { ...requestInitial, ...newRequest } },
+      { type: assetActions.request.REQUEST_ASSETS_FAILURE,
+        previousState: initialState.assets,
+        response: errorResponse },
+      { type: assetActions.paginate.RESET_PAGE },
+      { type: assetActions.paginate.PAGE_UPDATE_FAILURE,
+        previousState: { ...initialState.metadata.pagination } },
+    ];
+
+    return store.dispatch(actionCreators.pageUpdate(10, courseDetails)).then(() => {
+      // return of async actions
+      expect(store.getActions()).toEqual(expectedActions);
+    });
   });
   it('returns expected state from deleteAsset success', () => {
     const response = {
@@ -126,9 +436,13 @@ describe('Assets Action Creators', () => {
       body: {},
     };
 
-    fetchMock.once(`begin:${assetsEndpoint}`, response);
+    fetchMock.deleteOnce(`begin:${assetsEndpoint}`, {});
+    fetchMock.getOnce(`begin:${assetsEndpoint}`, response);
 
     const expectedActions = [
+      { type: assetActions.request.REQUESTING_ASSETS },
+      { type: assetActions.request.UPDATE_REQUEST, newRequest: requestInitial },
+      { type: assetActions.request.REQUEST_ASSETS_SUCCESS, response: response.body },
       { type: assetActions.delete.DELETE_ASSET_SUCCESS, assetId },
     ];
 
@@ -174,7 +488,7 @@ describe('Assets Action Creators', () => {
       expect(store.getActions()).toEqual(expectedActions);
     });
   });
-  it('returns expected state from toggleLockAsset success', () => {
+  it('returns expected state from toggleLockAsset failure', () => {
     const response = {
       status: 400,
     };
@@ -251,11 +565,13 @@ describe('Assets Action Creators', () => {
     assets.forEach((asset) => {
       expectedActions.push({ type: assetActions.upload.UPLOAD_ASSET_SUCCESS, response: { asset } });
       expectedActions.push({ type: assetActions.request.REQUESTING_ASSETS });
+      expectedActions.push({ type: assetActions.request.UPDATE_REQUEST,
+        newRequest: requestInitial });
     });
 
     assets.forEach(() => {
       expectedActions.push(
-        { type: assetActions.request.REQUEST_ASSETS_SUCCESS, data: assetsResponse.body },
+        { type: assetActions.request.REQUEST_ASSETS_SUCCESS, response: assetsResponse.body },
       );
     });
 

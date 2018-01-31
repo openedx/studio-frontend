@@ -1,5 +1,4 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import ReactPaginate from 'react-paginate';
 
@@ -8,16 +7,15 @@ import paginationStyles from './Pagination.scss';
 import edxBootstrap from '../../SFE.scss';
 import messages from './displayMessages';
 import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
-import { pageUpdate } from '../../data/actions/assets';
 
-export class Pagination extends React.Component {
+export default class Pagination extends React.Component {
   constructor(props) {
     super(props);
     this.onPageClick = this.onPageClick.bind(this);
   }
 
   onPageClick(pageData) {
-    this.props.updatePage(pageData.selected);
+    this.props.updatePage(pageData.selected, this.props.courseDetails);
   }
 
   getDisabledScreenReaderText() {
@@ -96,22 +94,16 @@ Pagination.propTypes = {
     pageSize: PropTypes.number,
     totalCount: PropTypes.number,
   }).isRequired,
+  courseDetails: PropTypes.shape({
+    lang: PropTypes.string,
+    url_name: PropTypes.string,
+    name: PropTypes.string,
+    display_course_number: PropTypes.string,
+    num: PropTypes.string,
+    org: PropTypes.string,
+    id: PropTypes.string,
+    revision: PropTypes.string,
+    base_url: PropTypes.string,
+  }).isRequired,
   updatePage: PropTypes.func.isRequired,
 };
-
-
-const mapStateToProps = state => ({
-  assetsListMetaData: state.metadata.pagination,
-  courseDetails: state.courseDetails,
-});
-
-export const mapDispatchToProps = dispatch => ({
-  updatePage: page => dispatch(pageUpdate(page)),
-});
-
-const WrappedPagination = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(Pagination);
-
-export default WrappedPagination;

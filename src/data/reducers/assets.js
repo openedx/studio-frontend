@@ -26,12 +26,12 @@ export const sortInitial = {
   direction: 'desc',
 };
 
+
 export const requestInitial = {
   ...filtersInitial,
-  ...paginationInitial,
   ...sortInitial,
+  page: paginationInitial.page,
 };
-
 
 export const filters = (state = filtersInitial, action) => {
   let filterTypes = {};
@@ -39,8 +39,12 @@ export const filters = (state = filtersInitial, action) => {
   switch (action.type) {
     case assetActions.request.REQUEST_ASSETS_SUCCESS:
       filterTypes = { ...defaultAssetTypeFilters };
-      action.data.assetTypes.forEach((assetType) => { filterTypes[assetType] = true; });
+      action.response.assetTypes.forEach((assetType) => { filterTypes[assetType] = true; });
       return { ...state, assetTypes: filterTypes };
+    case assetActions.filter.FILTER_UPDATE_FAILURE:
+      return { ...state, assetTypes: action.previousState.assetTypes };
+    case assetActions.clear.CLEAR_FILTERS_FAILURE:
+      return { ...state, assetTypes: action.previousState.assetTypes };
     default:
       return state;
   }
@@ -50,9 +54,9 @@ export const assets = (state = [], action) => {
   let assetsList;
   switch (action.type) {
     case assetActions.request.REQUEST_ASSETS_SUCCESS:
-      return action.data.assets;
-    case assetActions.delete.DELETE_ASSET_SUCCESS:
-      return state.filter(asset => asset.id !== action.assetId);
+      return action.response.assets;
+    case assetActions.request.REQUEST_ASSETS_FAILURE:
+      return action.previousState;
     case assetActions.lock.TOGGLE_LOCK_ASSET_SUCCESS:
       assetsList = removeLoadingField(state, action.asset.id, assetLoading.LOCK);
       return toggleLockAsset(assetsList, action.asset.id);
@@ -71,12 +75,16 @@ export const pagination = (state = paginationInitial, action) => {
   switch (action.type) {
     case assetActions.request.REQUEST_ASSETS_SUCCESS:
       return {
-        start: action.data.start,
-        end: action.data.end,
-        page: action.data.page,
-        pageSize: action.data.pageSize,
-        totalCount: action.data.totalCount,
+        start: action.response.start,
+        end: action.response.end,
+        page: action.response.page,
+        pageSize: action.response.pageSize,
+        totalCount: action.response.totalCount,
       };
+    case assetActions.paginate.PAGE_UPDATE_FAILURE:
+      return { ...state, ...action.previousState };
+    case assetActions.paginate.RESET_PAGE:
+      return { ...state, page: -1 };
     default:
       return state;
   }
@@ -86,9 +94,11 @@ export const sort = (state = sortInitial, action) => {
   switch (action.type) {
     case assetActions.request.REQUEST_ASSETS_SUCCESS:
       return {
-        sort: getAssetAPIAttributeFromDatabaseAttribute(action.data.sort),
-        direction: action.data.direction,
+        sort: getAssetAPIAttributeFromDatabaseAttribute(action.response.sort),
+        direction: action.response.direction,
       };
+    case assetActions.sort.SORT_UPDATE_FAILURE:
+      return { ...state, ...action.previousState };
     default:
       return state;
   }
@@ -154,6 +164,18 @@ export const status = (state = {}, action) => {
         count: action.count,
         type: action.type,
       };
+    case assetActions.filter.FILTER_UPDATE_FAILURE:
+      return {
+        type: action.type,
+      };
+    case assetActions.sort.SORT_UPDATE_FAILURE:
+      return {
+        type: action.type,
+      };
+    case assetActions.paginate.PAGE_UPDATE_FAILURE:
+      return {
+        type: action.type,
+      };
     default:
       return state;
   }
@@ -161,26 +183,10 @@ export const status = (state = {}, action) => {
 
 export const request = (state = requestInitial, action) => {
   switch (action.type) {
-    case assetActions.sort.SORT_UPDATE:
+    case assetActions.request.UPDATE_REQUEST:
       return {
         ...state,
-        sort: action.data.sort,
-        direction: action.data.direction,
-      };
-    case assetActions.paginate.PAGE_UPDATE:
-      return {
-        ...state,
-        page: action.data.page,
-      };
-    case assetActions.filter.FILTER_UPDATED:
-      return {
-        ...state,
-        assetTypes: { ...state.assetTypes, ...action.data },
-      };
-    case assetActions.clear.CLEAR_FILTERS:
-      return {
-        ...state,
-        assetTypes: defaultAssetTypeFilters,
+        ...action.newRequest,
       };
     default:
       return state;
@@ -190,6 +196,7 @@ export const request = (state = requestInitial, action) => {
 export const metadata = combineReducers({
   filters,
   pagination,
+  request,
   sort,
   status,
 });

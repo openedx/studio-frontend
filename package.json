@@ -91,7 +91,8 @@
       "/node_modules/",
       "/src/accessibilityIndex.jsx",
       "/src/index.jsx",
-      "/src/components/BackendStatusBanner/"
+      "/src/components/BackendStatusBanner/",
+      "<rootDir>/src/.*/container.jsx"
     ],
     "transformIgnorePatterns": [
       "/node_modules/(?!(@edx/paragon)/).*/"

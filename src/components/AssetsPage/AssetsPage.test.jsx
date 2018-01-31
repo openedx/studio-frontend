@@ -2,9 +2,9 @@ import React from 'react';
 import Enzyme from 'enzyme';
 import { Button } from '@edx/paragon';
 
-import { AssetsPage, mapDispatchToProps, types } from './index';
+import AssetsPage, { types } from './index';
 import { assetActions } from '../../data/constants/actionTypes';
-// import { types } from './pageTypes';
+import courseDetails from '../../utils/testConstants';
 
 const { shallow } = Enzyme;
 
@@ -12,14 +12,11 @@ let wrapper;
 
 const defaultProps = {
   assetsList: [],
-  courseDetails: {},
+  courseDetails,
   filtersMetaData: {
     assetTypes: {
       edX: false,
     },
-  },
-  request: {
-    assetTypes: {},
   },
   status: {},
   uploadSettings: {
@@ -318,72 +315,6 @@ describe('<AssetsPage />', () => {
 
         expect(wrapper.state('pageType')).toEqual(types.NORMAL);
       });
-    });
-  });
-  describe('getAssets', () => {
-    const getAssetsMock = jest.fn();
-    beforeEach(() => {
-      wrapper = shallow(
-        <AssetsPage
-          {...defaultProps}
-          getAssets={getAssetsMock}
-        />,
-      );
-
-      getAssetsMock.mockReset();
-    });
-    it('is called on changes to request', () => {
-      const request = {
-        request: 'request',
-      };
-
-      wrapper.setProps({
-        request,
-      });
-
-      expect(getAssetsMock).toHaveBeenCalledTimes(1);
-      expect(getAssetsMock).toHaveBeenCalledWith(request, defaultProps.courseDetails);
-    });
-    it('is not called on no changes to request', () => {
-      wrapper.setProps({
-        request: defaultProps.request,
-      });
-
-      expect(getAssetsMock).toHaveBeenCalledTimes(0);
-    });
-  });
-  describe('has correct mapDispatchToProps', () => {
-    it('for clearFilters', () => {
-      const dispatchSpy = jest.fn();
-
-      const { clearFilters } = mapDispatchToProps(dispatchSpy);
-
-      const clearFiltersAction = {
-        type: assetActions.clear.CLEAR_FILTERS,
-      };
-
-      clearFilters();
-
-      expect(dispatchSpy).toHaveBeenCalledTimes(1);
-      expect(dispatchSpy).toHaveBeenCalledWith(clearFiltersAction);
-    });
-    it('for getAssets', () => {
-      const dispatchSpy = jest.fn();
-      const getAssetsMock = jest.fn();
-
-      wrapper = shallow(
-        <AssetsPage
-          {...defaultProps}
-          getAssets={getAssetsMock}
-        />,
-      );
-
-      const { getAssets } = mapDispatchToProps(dispatchSpy);
-
-      getAssets(defaultProps.request, defaultProps.courseDetails);
-
-      expect(dispatchSpy).toHaveBeenCalledTimes(1);
-      expect(getAssetsMock).toHaveBeenCalledTimes(1);
     });
   });
   describe('other page type', () => {

@@ -5,7 +5,7 @@ import { Provider } from 'react-redux';
 import { addLocaleData, IntlProvider } from 'react-intl';
 import enLocaleData from 'react-intl/locale-data/en';
 
-import WrappedAssetsPage from './components/AssetsPage';
+import WrappedAssetsPage from './components/AssetsPage/container';
 import BackendStatusBanner from './components/BackendStatusBanner';
 import store from './data/store';
 

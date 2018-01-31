@@ -101,6 +101,11 @@ const messages = defineMessages({
     defaultMessage: 'Error uploading {assetName}. Try again.',
     description: 'Generic error message while uploading files',
   },
+  assetsTableGenericUpdateError: {
+    id: 'assetsTableGenericUpdateError',
+    defaultMessage: 'The action could not be completed. Refresh the page, and then try the action again.',
+    description: 'States that the action could not be completed and asks the user to refresh the page and try the action again',
+  },
   assetsTableStudioLink: {
     id: 'assetsTableStudioLink',
     defaultMessage: 'Studio',

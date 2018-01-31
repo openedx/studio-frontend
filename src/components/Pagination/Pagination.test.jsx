@@ -1,7 +1,8 @@
 import React from 'react';
-import { Pagination, mapDispatchToProps } from './index';
-import { mountWithIntl } from '../../utils/i18n/enzymeHelper';
 
+import courseDetails from '../../utils/testConstants';
+import { mountWithIntl } from '../../utils/i18n/enzymeHelper';
+import Pagination from './index';
 
 const defaultProps = {
   assetsListMetaData: {
@@ -9,6 +10,7 @@ const defaultProps = {
     pageSize: 50,
     totalCount: 5000,
   },
+  courseDetails,
   updatePage: () => {},
 };
 
@@ -45,7 +47,7 @@ describe('<Pagination />', () => {
 
     expect(updatePageSpy).toHaveBeenCalledTimes(1);
     // API treats pages as 0-indexed, but we treat them as 1-indexed
-    expect(updatePageSpy).toHaveBeenCalledWith(totalPages - 1);
+    expect(updatePageSpy).toHaveBeenCalledWith(totalPages - 1, defaultProps.courseDetails);
   });
   it('changes the current page when assets list state updates', () => {
     let currentPage = wrapper.props().assetsListMetaData.page;
@@ -68,23 +70,6 @@ describe('<Pagination />', () => {
 
     expect(currentPage).toEqual(1);
     expect(currentPageLink.prop('aria-label')).toContain('current page');
-  });
-  it('has correct mapDispatchToProps', () => {
-    const dispatchSpy = jest.fn();
-
-    const { updatePage } = mapDispatchToProps(dispatchSpy);
-
-    const updatePageAction = {
-      data: {
-        page: totalPages,
-      },
-      type: 'PAGE_UPDATE',
-    };
-
-    updatePage(totalPages);
-
-    expect(dispatchSpy).toHaveBeenCalledTimes(1);
-    expect(dispatchSpy).toHaveBeenCalledWith(updatePageAction);
   });
   describe('break link', () => {
     let breakLink;

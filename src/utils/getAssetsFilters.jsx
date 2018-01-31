@@ -2,7 +2,7 @@ import ASSET_TYPES from '../data/constants/assetTypeFilters';
 
 export const getSelectedFilters = (filters) => {
   if (filters === null || filters === undefined) {
-    return {};
+    return [];
   }
   return Object.keys(filters)
     .filter(type => filters[type] === true);
@@ -21,3 +21,13 @@ export const getDefaultFilterState = () => (
       {},
     )
 );
+
+export const getFilterStateObjectFromArray = (enabledFilters) => {
+  const filterState = getDefaultFilterState();
+
+  enabledFilters.forEach((filter) => {
+    filterState[filter] = true;
+  });
+
+  return filterState;
+};
