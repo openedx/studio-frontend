@@ -1,7 +1,9 @@
 import React from 'react';
 import Enzyme from 'enzyme';
-import { AssetsTable } from './index';
 
+import { StatusAlert } from '@edx/paragon';
+
+import { AssetsTable } from './index';
 import { assetActions } from '../../data/constants/actionTypes';
 import { assetLoading } from '../../data/constants/loadingTypes';
 
@@ -450,7 +452,7 @@ describe('<AssetsTable />', () => {
       mockDeleteAsset = getMockForDeleteAsset(wrapper, 0);
       wrapper.setProps({ deleteAsset: mockDeleteAsset });
       deleteButton.simulate('click');
-      const statusAlert = wrapper.find('StatusAlert');
+      const statusAlert = wrapper.find(StatusAlert);
       const closeStatusAlertButton = statusAlert.find('button').filterWhere(button => button.matchesElement(<button><span>&times;</span></button>));
       expect(closeStatusAlertButton.html()).toEqual(document.activeElement.outerHTML);
     });
@@ -483,7 +485,7 @@ describe('<AssetsTable />', () => {
         deleteButton.simulate('click');
         expect(mockDeleteAsset).toHaveBeenCalledTimes(1);
 
-        const statusAlert = wrapper.find('StatusAlert');
+        const statusAlert = wrapper.find(StatusAlert);
         const closeStatusAlertButton = statusAlert.find('button').filterWhere(button => button.matchesElement(<button><span>&times;</span></button>));
         wrapper.setProps({
           clearAssetsStatus: () => clearStatus(wrapper),
@@ -564,7 +566,7 @@ describe('Lock asset', () => {
         asset: { name: 'marmoset.png' },
       },
     });
-    const statusAlert = wrapper.find('StatusAlert');
+    const statusAlert = wrapper.find(StatusAlert);
     expect(statusAlert.prop('alertType')).toEqual('danger');
     expect(statusAlert.find('.alert-dialog').text()).toEqual('Failed to toggle lock for marmoset.png.');
   });
@@ -584,7 +586,7 @@ describe('displays status alert properly', () => {
         type: assetActions.delete.DELETE_ASSET_SUCCESS,
       },
     });
-    const statusAlert = wrapper.find('StatusAlert');
+    const statusAlert = wrapper.find(StatusAlert);
     const statusAlertType = statusAlert.prop('alertType');
 
     expect(statusAlertType).toEqual('success');
@@ -604,7 +606,7 @@ describe('displays status alert properly', () => {
         type: assetActions.delete.DELETE_ASSET_FAILURE,
       },
     });
-    const statusAlert = wrapper.find('StatusAlert');
+    const statusAlert = wrapper.find(StatusAlert);
     const statusAlertType = statusAlert.prop('alertType');
 
     expect(statusAlertType).toEqual('danger');
@@ -617,13 +619,13 @@ describe('displays status alert properly', () => {
         {...defaultProps}
       />,
     );
-    let statusAlert = wrapper.find('StatusAlert');
+    let statusAlert = wrapper.find(StatusAlert);
 
-    statusAlert = wrapper.find('StatusAlert');
+    statusAlert = wrapper.find(StatusAlert);
     expect(statusAlert).toBeDefined();
 
     wrapper.setState({ assetsStatus: {} });
-    statusAlert = wrapper.find('StatusAlert');
+    statusAlert = wrapper.find(StatusAlert);
     expect(statusAlert.find('.alert-dialog').text()).toEqual('');
   });
 
@@ -638,13 +640,13 @@ describe('displays status alert properly', () => {
     });
     wrapper.setProps({ assetsStatus: { type: assetActions.upload.UPLOADING_ASSETS, count: 77 } });
 
-    let statusAlert = wrapper.find('StatusAlert');
+    let statusAlert = wrapper.find(StatusAlert);
     expect(statusAlert.find('.alert-dialog').text()).toEqual('77 files uploading.');
 
     statusAlert.find('button').at(0).simulate('keyDown', { key: 'Enter' });
     expect(wrapper.props().assetsStatus).toEqual({});
 
-    statusAlert = wrapper.find('StatusAlert');
+    statusAlert = wrapper.find(StatusAlert);
     expect(statusAlert.find('.alert-dialog').text()).toEqual('');
   });
 });
@@ -665,7 +667,7 @@ describe('Upload statuses', () => {
         count: 885,
       },
     });
-    const statusAlert = wrapper.find('StatusAlert');
+    const statusAlert = wrapper.find(StatusAlert);
     expect(statusAlert.find('.alert-dialog').text()).toEqual('885 files uploading.');
   });
 
@@ -677,7 +679,7 @@ describe('Upload statuses', () => {
       },
     });
 
-    const statusAlert = wrapper.find('StatusAlert');
+    const statusAlert = wrapper.find(StatusAlert);
     expect(statusAlert.find('.alert-dialog').text()).toEqual('5 files successfully uploaded.');
   });
 
@@ -688,7 +690,7 @@ describe('Upload statuses', () => {
         maxFileCount: 110,
       },
     });
-    const statusAlert = wrapper.find('StatusAlert');
+    const statusAlert = wrapper.find(StatusAlert);
     expect(statusAlert.find('.alert-dialog').text()).toEqual('The maximum number of files for an upload is 110. No files were uploaded.');
   });
 
@@ -699,7 +701,7 @@ describe('Upload statuses', () => {
         maxFileCount: 110,
       },
     });
-    const statusAlert = wrapper.find('StatusAlert');
+    const statusAlert = wrapper.find(StatusAlert);
     expect(statusAlert.find('.alert-dialog').text()).toEqual('The maximum number of files for an upload is 110. No files were uploaded.');
   });
 
@@ -710,7 +712,7 @@ describe('Upload statuses', () => {
         maxFileSizeMB: 9,
       },
     });
-    const statusAlert = wrapper.find('StatusAlert');
+    const statusAlert = wrapper.find(StatusAlert);
     expect(statusAlert.find('.alert-dialog').text()).toEqual('The maximum size for an upload is 9 MB. No files were uploaded.');
   });
 
@@ -721,7 +723,7 @@ describe('Upload statuses', () => {
         file: { name: 'quail.png' },
       },
     });
-    const statusAlert = wrapper.find('StatusAlert');
+    const statusAlert = wrapper.find(StatusAlert);
     expect(statusAlert.find('.alert-dialog').text()).toEqual('Error uploading quail.png. Try again.');
   });
 });

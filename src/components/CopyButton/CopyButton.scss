@@ -1,7 +1,6 @@
-@import '../../SFE.scss';
+@import 'edx-bootstrap';
 
 .copy-button {
-    @extend .button-primary-outline;
     width: 100px;
     vertical-align: top;
 }

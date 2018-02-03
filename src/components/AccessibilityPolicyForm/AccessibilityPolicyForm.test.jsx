@@ -3,6 +3,8 @@ import Enzyme from 'enzyme';
 import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
 
+import { StatusAlert } from '@edx/paragon';
+
 import WrappedAccessibilityPolicyForm, { AccessibilityPolicyForm } from './index';
 import { accessibilityActions } from '../../data/constants/actionTypes';
 
@@ -111,7 +113,7 @@ describe('<AccessibilityPolicyForm />', () => {
         />,
       );
       formSection = wrapper.find('section');
-      statusAlert = wrapper.find('StatusAlert');
+      statusAlert = wrapper.find(StatusAlert);
     });
 
     it('correct number of form fields', () => {
@@ -138,7 +140,7 @@ describe('<AccessibilityPolicyForm />', () => {
       );
       formSection = wrapper.find('section');
       submitButton = formSection.find('button');
-      statusAlert = wrapper.find('StatusAlert');
+      statusAlert = wrapper.find(StatusAlert);
     });
 
     it('shows correct success message', () => {
@@ -152,7 +154,7 @@ describe('<AccessibilityPolicyForm />', () => {
         submitterMessage: 'feedback message',
       });
       submitButton.simulate('click');
-      statusAlert = wrapper.find('StatusAlert');
+      statusAlert = wrapper.find(StatusAlert);
       const statusAlertType = statusAlert.prop('alertType');
       expect(wrapper.state('isStatusAlertOpen')).toEqual(true);
       expect(statusAlertType).toEqual('success');
@@ -172,7 +174,7 @@ describe('<AccessibilityPolicyForm />', () => {
       });
       submitButton.simulate('click');
 
-      statusAlert = wrapper.find('StatusAlert');
+      statusAlert = wrapper.find(StatusAlert);
       const statusAlertType = statusAlert.prop('alertType');
       expect(wrapper.state('isStatusAlertOpen')).toEqual(true);
       expect(statusAlertType).toEqual('danger');
@@ -201,7 +203,7 @@ describe('<AccessibilityPolicyForm />', () => {
       fullNameInput = wrapper.find('input#fullName');
       messageInput = wrapper.find('textarea#message');
       submitButton = formSection.find('button');
-      statusAlert = wrapper.find('StatusAlert');
+      statusAlert = wrapper.find(StatusAlert);
       testValue = 'testValue';
     });
 
@@ -236,7 +238,7 @@ describe('<AccessibilityPolicyForm />', () => {
     it('shows validation errors when trying to submit with all empty fields', () => {
       submitButton.simulate('click');
 
-      statusAlert = wrapper.find('StatusAlert');
+      statusAlert = wrapper.find(StatusAlert);
       expect(wrapper.state('isStatusAlertOpen')).toEqual(true);
       expect(statusAlert.find('div').first().prop('hidden')).toEqual(false);
       expect(statusAlert.find('div').first().hasClass('alert-danger')).toEqual(true);
@@ -248,7 +250,7 @@ describe('<AccessibilityPolicyForm />', () => {
       messageInput.simulate('change', { target: { value: testValue } });
       submitButton.simulate('click');
 
-      statusAlert = wrapper.find('StatusAlert');
+      statusAlert = wrapper.find(StatusAlert);
       expect(statusAlert.text()).toContain(`Make sure to fill in all fields.${validationMessages.email}`);
     });
 
@@ -258,7 +260,7 @@ describe('<AccessibilityPolicyForm />', () => {
       messageInput.simulate('change', { target: { value: testValue } });
       submitButton.simulate('click');
 
-      statusAlert = wrapper.find('StatusAlert');
+      statusAlert = wrapper.find(StatusAlert);
       expect(statusAlert.text()).toContain(`Make sure to fill in all fields.${validationMessages.email}`);
     });
 
@@ -267,7 +269,7 @@ describe('<AccessibilityPolicyForm />', () => {
       messageInput.simulate('change', { target: { value: testValue } });
       submitButton.simulate('click');
 
-      statusAlert = wrapper.find('StatusAlert');
+      statusAlert = wrapper.find(StatusAlert);
       expect(statusAlert.text()).toContain(`Make sure to fill in all fields.${validationMessages.fullName}`);
     });
 
@@ -276,7 +278,7 @@ describe('<AccessibilityPolicyForm />', () => {
       fullNameInput.simulate('change', { target: { value: testValue } });
       submitButton.simulate('click');
 
-      statusAlert = wrapper.find('StatusAlert');
+      statusAlert = wrapper.find(StatusAlert);
       expect(statusAlert.text()).toContain(`Make sure to fill in all fields.${validationMessages.message}`);
     });
 
@@ -284,7 +286,7 @@ describe('<AccessibilityPolicyForm />', () => {
       emailInput.simulate('change', { target: { value: `${testValue}@test.com` } });
       submitButton.simulate('click');
 
-      statusAlert = wrapper.find('StatusAlert');
+      statusAlert = wrapper.find(StatusAlert);
       expect(statusAlert.text()).toContain(`Make sure to fill in all fields.${validationMessages.fullName}${validationMessages.message}`);
     });
 
@@ -292,7 +294,7 @@ describe('<AccessibilityPolicyForm />', () => {
       fullNameInput.simulate('change', { target: { value: testValue } });
       submitButton.simulate('click');
 
-      statusAlert = wrapper.find('StatusAlert');
+      statusAlert = wrapper.find(StatusAlert);
       expect(statusAlert.text()).toContain(`Make sure to fill in all fields.${validationMessages.email}${validationMessages.message}`);
     });
 
@@ -300,7 +302,7 @@ describe('<AccessibilityPolicyForm />', () => {
       messageInput.simulate('change', { target: { value: testValue } });
       submitButton.simulate('click');
 
-      statusAlert = wrapper.find('StatusAlert');
+      statusAlert = wrapper.find(StatusAlert);
       expect(statusAlert.text()).toContain(`Make sure to fill in all fields.${validationMessages.email}${validationMessages.fullName}`);
     });
   });
@@ -383,7 +385,7 @@ describe('<AccessibilityPolicyForm />', () => {
 
       formSection = wrapper.find('section');
       submitButton = formSection.find('button');
-      statusAlert = wrapper.find('StatusAlert');
+      statusAlert = wrapper.find(StatusAlert);
       emailInput = wrapper.find('input#email');
     });
 
@@ -394,7 +396,7 @@ describe('<AccessibilityPolicyForm />', () => {
       });
       submitButton.simulate('click');
 
-      statusAlert = wrapper.find('StatusAlert');
+      statusAlert = wrapper.find(StatusAlert);
       const statusAlertDismissButton = statusAlert.find('button');
       expect(wrapper.state('isStatusAlertOpen')).toEqual(true);
       expect(statusAlertDismissButton.html()).toEqual(document.activeElement.outerHTML);
@@ -407,7 +409,7 @@ describe('<AccessibilityPolicyForm />', () => {
       });
       submitButton.simulate('click');
 
-      statusAlert = wrapper.find('StatusAlert');
+      statusAlert = wrapper.find(StatusAlert);
       const statusAlertDismissButton = statusAlert.find('button');
       statusAlertDismissButton.simulate('click');
       expect(wrapper.state('isStatusAlertOpen')).toEqual(false);

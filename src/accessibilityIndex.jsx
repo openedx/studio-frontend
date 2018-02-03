@@ -8,7 +8,7 @@ import store from './data/store';
 
 const AccessibilityApp = () => (
   <Provider store={store}>
-    <div>
+    <div className="SFE">
       <AccessibilityPolicyPage
         communityAccessibilityLink="https://www.edx.org/accessibility"
         phoneNumber="+1 617-258-6577"

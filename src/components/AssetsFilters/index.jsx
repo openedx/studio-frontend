@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import CheckBoxGroup from '@edx/paragon/src/CheckBoxGroup';
-import CheckBox from '@edx/paragon/src/CheckBox';
+import { CheckBox, CheckBoxGroup } from '@edx/paragon';
 import { connect } from 'react-redux';
 
 import { filterUpdate, pageUpdate } from '../../data/actions/assets';

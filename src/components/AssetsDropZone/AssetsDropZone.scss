@@ -1,4 +1,4 @@
-@import '../../SFE.scss';
+@import 'edx-bootstrap';
 
 .center-text {
   text-align: center;
@@ -9,8 +9,6 @@
   padding: $spacer;
 
   button {
-    @extend .btn;
-    @extend .btn-outline-primary;
     white-space: normal;
     margin-bottom: $spacer;
   }
