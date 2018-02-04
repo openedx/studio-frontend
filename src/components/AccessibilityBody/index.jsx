@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { MailtoLink } from '@edx/paragon';
 
 import edxBootstrap from '../../SFE.scss';
 import styles from './AccessibilityBody.scss';
 
 const AccessibilityBody = (props) => {
-  const mailto = `mailto:${props.email}`;
-  const emailElement = (<a href={mailto}>{props.email}</a>);
+  const mailto = (<MailtoLink to={props.email} content={props.email} />);
   const communityAccessibilityElement = (
     <a href={props.communityAccessibilityLink}>Website Accessibility Policy</a>
   );
@@ -22,7 +22,7 @@ const AccessibilityBody = (props) => {
         Course team creators and authors who, because of their disabilities, need assistance to use Studio should take the following steps:
       </p>
       <ol className={styles['numerical-list']}>
-        <li>Notify us by email addressed to {emailElement}.  In order for edX to fully and promptly assess and respond to your request, please provide the following information:
+        <li>Notify us by email addressed to {mailto}.  In order for edX to fully and promptly assess and respond to your request, please provide the following information:
           <ol className={styles['alphabetical-list']}>
             <li>Your name and email address;</li>
             <li>The edX member institution that you are affiliated with;</li>
@@ -50,10 +50,10 @@ const AccessibilityBody = (props) => {
         EdX will provide ongoing technical support as needed and will address any additional issues that arise after the initial course creation.
       </p>
       <p>
-        If you have any questions about this process, you may contact us at {emailElement} or {props.phoneNumber}.
+        If you have any questions about this process, you may contact us at {mailto} or {props.phoneNumber}.
       </p>
       <p>
-        Please direct any questions or suggestions on how to improve the accessibility of Studio to {emailElement} or use the form below. We welcome your feedback.
+        Please direct any questions or suggestions on how to improve the accessibility of Studio to {mailto} or use the form below. We welcome your feedback.
       </p>
     </div>
   );

@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Button, InputText, StatusAlert, TextArea } from '@edx/paragon';
+import { Button, InputText, StatusAlert, TextArea, MailtoLink } from '@edx/paragon';
 
 import { clearAccessibilityStatus, submitAccessibilityForm } from '../../data/actions/accessibility';
 import { accessibilityActions } from '../../data/constants/actionTypes';
@@ -101,12 +101,13 @@ export class AccessibilityPolicyForm extends React.Component {
       };
     } else if (accessibilityStatus.type ===
         accessibilityActions.submit.ACCESSIBILITY_FORM_SUBMIT_RATE_LIMIT_FAILURE) {
+      const mailto = (<MailtoLink to={accessibilityEmail} content={accessibilityEmail} />);
       status = {
         alertType: 'danger',
         alertDialog: (
           <div>
             We are currently experiencing high volume. Try again later today or
-             send an email message to <a href={`mailto:${accessibilityEmail}`}>{accessibilityEmail}</a>.
+             send an email message to {mailto}.
           </div>
         ),
       };
