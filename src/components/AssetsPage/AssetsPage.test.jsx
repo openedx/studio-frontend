@@ -1,5 +1,6 @@
 import React from 'react';
 import Enzyme from 'enzyme';
+import { Button } from '@edx/paragon';
 
 import { AssetsPage, mapDispatchToProps, types } from './index';
 import { assetActions } from '../../data/constants/actionTypes';
@@ -226,7 +227,7 @@ describe('<AssetsPage />', () => {
         });
         it('renders for 1 filter', () => {
           const body = wrapper.find('.container .row .col-10');
-          const clearFiltersButton = body.find('Button');
+          const clearFiltersButton = body.find(Button);
 
           expect(clearFiltersButton).toHaveLength(1);
           expect(clearFiltersButton.prop('buttonType')).toEqual('link');
@@ -243,7 +244,7 @@ describe('<AssetsPage />', () => {
           });
 
           const body = wrapper.find('.container .row .col-10');
-          const clearFiltersButton = body.find('Button');
+          const clearFiltersButton = body.find(Button);
 
           expect(clearFiltersButton).toHaveLength(1);
           expect(clearFiltersButton.prop('buttonType')).toEqual('link');
@@ -268,7 +269,7 @@ describe('<AssetsPage />', () => {
           });
 
           const body = wrapper.find('.container .row .col-10');
-          const clearFiltersButton = body.find('Button');
+          const clearFiltersButton = body.find(Button);
 
           clearFiltersButton.simulate('click');
 
