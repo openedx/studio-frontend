@@ -8,12 +8,13 @@ services:
  - docker
 
 before_script:
- - git diff --name-only --exit-code
  - docker build -t studio-frontend --no-cache .
 
 script:
   - npm run lint
   - npm run test
+  - make i18n.pre_validate
+  - make package-lock.validate
 
 after_script:
   - codecov
