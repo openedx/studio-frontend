@@ -195,7 +195,7 @@ export class AssetsTable extends React.Component {
     return (
       <WrappedMessage
         message={messages.assetsTableUpdateLock}
-        values={{ asset_name: asset.display_name }}
+        values={{ assetName: asset.display_name }}
       >
         { displayText =>
           (<Button
@@ -281,7 +281,7 @@ export class AssetsTable extends React.Component {
         alertDialog = (
           <WrappedMessage
             message={messages.assetsTableCantDelete}
-            values={{ asset_name: assetName }}
+            values={{ assetName }}
           />
         );
         alertType = 'danger';
@@ -290,7 +290,7 @@ export class AssetsTable extends React.Component {
         alertDialog = (
           <WrappedMessage
             message={messages.assetsTableDeleteSuccess}
-            values={{ asset_name: assetName }}
+            values={{ assetName }}
           />
         );
         alertType = 'success';
@@ -346,7 +346,7 @@ export class AssetsTable extends React.Component {
         alertDialog = (
           <WrappedMessage
             message={messages.assetsTableFailedLock}
-            values={{ asset_name: assetsStatus.asset.name }}
+            values={{ assetName: assetsStatus.asset.name }}
           />
         );
         alertType = 'danger';

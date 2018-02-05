@@ -3,15 +3,13 @@ language: node_js
 node_js:
   - 8.9.4
 
-sudo: required
-services:
- - docker
-
-before_script:
- - git diff --name-only --exit-code
- - docker build -t studio-frontend --no-cache .
+cache:
+  directory:
+    - studio-frontend/node_modules/
 
 script:
+  - make package-lock.validate
+  - make i18n.pre_validate
   - npm run lint
   - npm run test
 
