@@ -1,8 +1,7 @@
 import React from 'react';
-import Enzyme from 'enzyme';
 import { AssetsDropZone } from './index';
+import { mountWithIntl } from '../../utils/i18n/enzymeHelper';
 
-const mount = Enzyme.mount;
 const defaultProps = {
   uploadAssets: () => {},
   uploadExceedMaxCount: () => {},
@@ -26,7 +25,7 @@ let wrapper;
 
 describe('<AssetsDropZone />', () => {
   beforeEach(() => {
-    wrapper = mount(
+    wrapper = mountWithIntl(
       <AssetsDropZone
         {...defaultProps}
       />,

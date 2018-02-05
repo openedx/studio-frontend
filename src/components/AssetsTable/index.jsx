@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Table, Button, Modal, StatusAlert, Variant } from '@edx/paragon';
 import classNames from 'classnames';
 import { connect } from 'react-redux';
+import { FormattedNumber } from 'react-intl';
 
 import FontAwesomeStyles from 'font-awesome/css/font-awesome.min.css';
 import styles from './AssetsTable.scss';
@@ -10,6 +11,8 @@ import { assetActions } from '../../data/constants/actionTypes';
 import { assetLoading } from '../../data/constants/loadingTypes';
 import { clearAssetsStatus, deleteAsset, sortUpdate, toggleLockAsset } from '../../data/actions/assets';
 import CopyButton from '../CopyButton';
+import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
+import messages from './displayMessages';
 
 export class AssetsTable extends React.Component {
   constructor(props) {
@@ -31,39 +34,39 @@ export class AssetsTable extends React.Component {
 
     this.columns = {
       image_preview: {
-        label: 'Image Preview',
+        label: (<WrappedMessage message={messages.assetsTablePreviewLabel} />),
         key: 'image_preview',
         columnSortable: false,
         hideHeader: true,
       },
       display_name: {
-        label: 'Name',
+        label: (<WrappedMessage message={messages.assetsTableNameLabel} />),
         key: 'display_name',
         columnSortable: true,
       },
       content_type: {
-        label: 'Type',
+        label: (<WrappedMessage message={messages.assetsTableTypeLable} />),
         key: 'content_type',
         columnSortable: true,
       },
       date_added: {
-        label: 'Date Added',
+        label: (<WrappedMessage message={messages.assetsTableDateLabel} />),
         key: 'date_added',
         columnSortable: true,
       },
       urls: {
-        label: 'Copy URLs',
+        label: (<WrappedMessage message={messages.assetsTableCopyLabel} />),
         key: 'urls',
         columnSortable: false,
       },
       delete_asset: {
-        label: 'Delete Asset',
+        label: (<WrappedMessage message={messages.assetsTableDeleteLabel} />),
         key: 'delete_asset',
         columnSortable: false,
         hideHeader: true,
       },
       lock_asset: {
-        label: 'Lock Asset',
+        label: (<WrappedMessage message={messages.assetsTableLockLabel} />),
         key: 'lock_asset',
         columnSortable: false,
         hideHeader: true,
@@ -128,28 +131,42 @@ export class AssetsTable extends React.Component {
   getImageThumbnail(thumbnail) {
     const baseUrl = this.props.courseDetails.base_url || '';
     if (thumbnail) {
-      return (<img src={`${baseUrl}${thumbnail}`} alt="Description not available" />);
+      return (
+        <WrappedMessage message={messages.assetsTableNoDescription} >
+          { displayText => (<img src={`${baseUrl}${thumbnail}`} alt={displayText} />) }
+        </WrappedMessage>
+      );
     }
-    return (<div className={styles['no-image-preview']}>Preview not available</div>);
+    return (
+      <WrappedMessage message={messages.assetsTableNoPreview} >
+        { displayText => <div className={styles['no-image-preview']}>{displayText}</div> }
+      </WrappedMessage>
+    );
   }
 
   getLockButton(asset) {
     const classes = [FontAwesomeStyles.fa, 'btn-outline-primary'];
-    let lockState;
+    let lockStateMessage;
     if (asset.locked) {
-      lockState = 'Locked';
+      lockStateMessage = messages.assetsTableUnlockedObject;
       classes.push(FontAwesomeStyles['fa-lock']);
     } else {
-      lockState = 'Unlocked';
+      lockStateMessage = messages.assetsTableUnlockedObject;
       classes.push(FontAwesomeStyles['fa-unlock']);
     }
-    return (<Button
-      className={classes}
-      label={''}
-      data-asset-id={asset.id}
-      aria-label={`${lockState} ${asset.display_name}`}
-      onClick={this.onLockClick}
-    />);
+    return (
+      <WrappedMessage message={lockStateMessage} values={{ object: asset.display_name }}>
+        { displayText =>
+          (<Button
+            className={classes}
+            label={''}
+            data-asset-id={asset.id}
+            aria-label={displayText}
+            onClick={this.onLockClick}
+          />)
+        }
+      </WrappedMessage>
+    );
   }
 
   getNextFocusElementOnDelete() {
@@ -175,40 +192,77 @@ export class AssetsTable extends React.Component {
   getLoadingLockButton(asset) {
     // spinner classes are applied to the span to keep the whole button from spinning
     const spinnerClasses = [FontAwesomeStyles.fa, FontAwesomeStyles['fa-spinner'], FontAwesomeStyles['fa-spin']];
-    return (<Button
-      className={['btn-outline-primary']}
-      label={(<span className={classNames(...spinnerClasses)} />)}
-      aria-label={`Updating lock status for ${asset.display_name}`}
-    />);
+    return (
+      <WrappedMessage
+        message={messages.assetsTableUpdateLock}
+        values={{ asset_name: asset.display_name }}
+      >
+        { displayText =>
+          (<Button
+            className={['btn-outline-primary']}
+            label={(<span className={classNames(...spinnerClasses)} />)}
+            aria-label={displayText}
+          />)
+        }
+      </WrappedMessage>
+    );
   }
 
   getCopyUrlButtons(assetDisplayName, studioUrl, webUrl) {
     return (
       <span>
-        {studioUrl && this.getCopyUrlButton(assetDisplayName, studioUrl, 'Studio', [styles['studio-copy-button']])}
-        {webUrl && this.getCopyUrlButton(assetDisplayName, webUrl, 'Web')}
+        {
+          studioUrl && this.getCopyUrlButton(
+            assetDisplayName,
+            studioUrl,
+            messages.assetsTableStudioLink,
+            [styles['studio-copy-button']],
+          )
+        }
+        {
+          webUrl && this.getCopyUrlButton(
+            assetDisplayName,
+            webUrl,
+            messages.assetsTableWebLink,
+          )
+        }
       </span>
     );
   }
 
-  getCopyUrlButton(assetDisplayName, url, label, classes = []) {
+  getCopyUrlButton(assetDisplayName, url, labelMessage, classes = []) {
     const buttonLabel = (
       <span>
         <span className={classNames(FontAwesomeStyles.fa, FontAwesomeStyles['fa-files-o'], styles['copy-icon'])} aria-hidden />
-        {label}
+        <WrappedMessage message={labelMessage} />
       </span>
     );
 
-    const onCopyLabel = (<span>Copied!</span>);
+    const onCopyLabel = (
+      <WrappedMessage message={messages.assetsTableCopiedStatus} />
+    );
 
-    return (<CopyButton
-      label={buttonLabel}
-      className={classes}
-      textToCopy={url}
-      onCopyButtonClick={this.onCopyButtonClick}
-      ariaLabel={`${assetDisplayName} copy ${label} URL`}
-      onCopyLabel={onCopyLabel}
-    />);
+    return (
+      <WrappedMessage
+        message={messages.assetsTableDetailedCopyLink}
+        values={{
+          displayName: assetDisplayName,
+          label: (<WrappedMessage message={labelMessage} />),
+        }}
+      >
+        {
+          displayText =>
+            (<CopyButton
+              label={buttonLabel}
+              className={classes}
+              textToCopy={url}
+              onCopyButtonClick={this.onCopyButtonClick}
+              ariaLabel={displayText}
+              onCopyLabel={onCopyLabel}
+            />)
+        }
+      </WrappedMessage>
+    );
   }
 
   handleCopyButtonEvent(buttonIsClicked) {
@@ -224,37 +278,77 @@ export class AssetsTable extends React.Component {
 
     switch (assetsStatus.type) {
       case assetActions.delete.DELETE_ASSET_FAILURE:
-        alertDialog = `Unable to delete ${assetName}.`;
+        alertDialog = (
+          <WrappedMessage
+            message={messages.assetsTableCantDelete}
+            values={{ asset_name: assetName }}
+          />
+        );
         alertType = 'danger';
         break;
       case assetActions.delete.DELETE_ASSET_SUCCESS:
-        alertDialog = `${assetName} has been deleted.`;
+        alertDialog = (
+          <WrappedMessage
+            message={messages.assetsTableDeleteSuccess}
+            values={{ asset_name: assetName }}
+          />
+        );
         alertType = 'success';
         break;
       case assetActions.upload.UPLOAD_ASSET_SUCCESS:
         this.updateUploadSuccessCount();
-        alertDialog = `${this.state.uploadSuccessCount} files successfully uploaded.`;
+        alertDialog = (
+          <WrappedMessage
+            message={messages.assetsTableUploadSuccess}
+            values={{ uploaded_count: (<FormattedNumber value={this.state.uploadSuccessCount} />) }}
+          />
+        );
         alertType = 'success';
         break;
       case assetActions.upload.UPLOADING_ASSETS:
         this.closeStatusAlert();
-        alertDialog = `${assetsStatus.count} files uploading.`;
+        alertDialog = (
+          <WrappedMessage
+            message={messages.assetsTableUploadInProgress}
+            values={{ uploading_count: (<FormattedNumber value={assetsStatus.count} />) }}
+          />
+        );
         alertType = 'info';
         break;
       case assetActions.upload.UPLOAD_EXCEED_MAX_COUNT_ERROR:
-        alertDialog = `The maximum number of files for an upload is ${assetsStatus.maxFileCount}. No files were uploaded.`;
+        alertDialog = (
+          <WrappedMessage
+            message={messages.assetsTableTooManyFiles}
+            values={{ max_count: (<FormattedNumber value={assetsStatus.maxFileCount} />) }}
+          />
+        );
         alertType = 'danger';
         break;
       case assetActions.upload.UPLOAD_EXCEED_MAX_SIZE_ERROR:
-        alertDialog = `The maximum size for an upload is ${assetsStatus.maxFileSizeMB} MB. No files were uploaded.`;
+        alertDialog = (
+          <WrappedMessage
+            message={messages.assetsTableTooMuchData}
+            values={{ max_size: (<FormattedNumber value={assetsStatus.maxFileSizeMB} />) }}
+          />
+        );
         alertType = 'danger';
         break;
       case assetActions.upload.UPLOAD_ASSET_FAILURE:
-        alertDialog = `Error uploading ${assetsStatus.file.name}. Try again.`;
+        alertDialog = (
+          <WrappedMessage
+            message={messages.assetsTableGenericError}
+            values={{ assetName: assetsStatus.file.name }}
+          />
+        );
         alertType = 'danger';
         break;
       case assetActions.lock.TOGGLING_LOCK_ASSET_FAILURE:
-        alertDialog = `Failed to toggle lock for ${assetsStatus.asset.name}.`;
+        alertDialog = (
+          <WrappedMessage
+            message={messages.assetsTableFailedLock}
+            values={{ asset_name: assetsStatus.asset.name }}
+          />
+        );
         alertType = 'danger';
         break;
       default:
@@ -282,14 +376,23 @@ export class AssetsTable extends React.Component {
     const newAssetsList = this.props.assetsList.map((asset, index) => {
       const currentAsset = Object.assign({}, asset);
 
-      const deleteButton = (<Button
-        key={currentAsset.id}
-        className={[FontAwesomeStyles.fa, FontAwesomeStyles['fa-trash'], 'btn-outline-primary']}
-        label={''}
-        aria-label={`Delete ${currentAsset.display_name}`}
-        onClick={() => { this.onDeleteClick(index); }}
-        inputRef={(ref) => { this.trashcanRefs[currentAsset.id] = ref; }}
-      />);
+      const deleteButton = (
+        <WrappedMessage
+          message={messages.assetsTableDeleteObject}
+          values={{ displayName: currentAsset.display_name }}
+        >
+          { displayText =>
+            (<Button
+              key={currentAsset.id}
+              className={[FontAwesomeStyles.fa, FontAwesomeStyles['fa-trash'], 'btn-outline-primary']}
+              label={''}
+              aria-label={displayText}
+              onClick={() => { this.onDeleteClick(index); }}
+              inputRef={(ref) => { this.trashcanRefs[currentAsset.id] = ref; }}
+            />)
+          }
+        </WrappedMessage>
+      );
       const isLoadingLock = currentAsset.loadingFields &&
         currentAsset.loadingFields.includes(assetLoading.LOCK);
 
@@ -364,38 +467,84 @@ export class AssetsTable extends React.Component {
 
   renderModal() {
     return (
-      <Modal
-        open={this.state.modalOpen}
-        title={`Delete ${this.state.assetToDelete.display_name}`}
-        body={this.renderModalBody()}
-        closeText="Cancel"
-        onClose={this.closeModal}
-        buttons={[
-          <Button
-            label="Permanently delete"
-            buttonType="primary"
-            onClick={this.deleteAsset}
-          />,
-        ]}
-        variant={{ status: Variant.status.WARNING }}
-      />
+      <WrappedMessage message={messages.assetsTableCancel} >
+        {
+          displayText => (
+            <Modal
+              open={this.state.modalOpen}
+              title={(<WrappedMessage
+                message={messages.assetsTableDeleteObject}
+                values={{
+                  displayName: this.state.assetToDelete.display_name,
+                }}
+              />)}
+              body={this.renderModalBody()}
+              closeText={displayText}
+              onClose={this.closeModal}
+              buttons={[
+                <Button
+                  label={<WrappedMessage message={messages.assetsTablePermaDelete} />}
+                  buttonType="primary"
+                  onClick={this.deleteAsset}
+                />,
+              ]}
+              variant={{ status: Variant.status.WARNING }}
+            />
+          )
+        }
+      </WrappedMessage>
     );
   }
 
   renderModalBody() {
+    const learnMoreLink = (
+      <WrappedMessage tagName="a" message={messages.assetsTableLearnMore}>
+        {
+          displayText => (
+            <a
+              target="_blank"
+              rel="noopener noreferrer"
+              href={this.props.courseFilesDocs}
+            >
+              {displayText}
+            </a>
+          )
+        }
+      </WrappedMessage>
+    );
     return (
       <React.Fragment>
-        <p>Deleting <b>{this.state.assetToDelete.display_name}</b> cannot be undone.</p>
-        <p>
-          Any links or references to this file will no longer work. <a
-            target="_blank"
-            rel="noopener noreferrer"
-            href={this.props.courseFilesDocs}
-          >
-            Learn more.
-          </a>
-        </p>
+        <WrappedMessage
+          message={messages.assetsTableDeleteWarning}
+          tagName="p"
+          values={{
+            displayName: <b>{this.state.assetToDelete.display_name}</b>,
+          }}
+        />
+        <WrappedMessage
+          message={messages.assetsTableDeleteConsequences}
+          tagName="p"
+          values={{
+            link: learnMoreLink,
+          }}
+        />
       </React.Fragment>
+    );
+  }
+
+  /**
+   * Rendering an empty status alert keeps the alert in the DOM initially and
+   * enables screen readers to listen for changes.
+   */
+  renderEmptyStatusAlert() {
+    return (
+      <div>
+        <StatusAlert
+          dialog=""
+          open={false}
+          dismissible={false}
+        />
+      </div>
     );
   }
 
@@ -442,7 +591,13 @@ export class AssetsTable extends React.Component {
           />
         </span>
         {this.renderModal()}
-        <span className={styles['sr-only']} aria-live="assertive" id="copy-status"> {this.state.copyButtonIsClicked ? 'Copied' : ''} </span>
+        <span className="sr" aria-live="assertive" id="copy-status">
+          {
+            this.state.copyButtonIsClicked
+              ? (<WrappedMessage message={messages.assetsTableCopiedStatus} />)
+              : ''
+          }
+        </span>
       </React.Fragment>
     );
   }

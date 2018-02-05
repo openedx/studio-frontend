@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import messages from './displayMessages';
+import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
 import edxBootstrap from '../../SFE.scss';
 import styles from './AccessibilityBody.scss';
 
@@ -8,53 +10,121 @@ const AccessibilityBody = (props) => {
   const mailto = `mailto:${props.email}`;
   const emailElement = (<a href={mailto}>{props.email}</a>);
   const communityAccessibilityElement = (
-    <a href={props.communityAccessibilityLink}>Website Accessibility Policy</a>
+    <WrappedMessage message={messages.a11yBodyPolicyLink}>
+      { displayText => <a href={props.communityAccessibilityLink}>{displayText}</a> }
+    </WrappedMessage>
   );
 
   /* eslint-disable max-len */
   return (
     <div>
-      <h2 className={edxBootstrap['page-header']}>Individualized Accessibility Process for Course Creators</h2>
-      <p>
-        At edX, we seek to understand and respect the unique needs and perspectives of the edX global community.  We value every course team and are committed to being a leader in expanding access to all, including course team creators and authors with disabilities.  To that end, we have adopted a {communityAccessibilityElement} and this process to ensure that course team creators and authors with disabilities are able to develop and post content on our platform via Studio.
-      </p>
-      <p>
-        Course team creators and authors who, because of their disabilities, need assistance to use Studio should take the following steps:
-      </p>
+      <WrappedMessage message={messages.a11yBodyPageHeader}>
+        { displayText => <h2 className={edxBootstrap['page-header']}>{displayText}</h2> }
+      </WrappedMessage>
+      <WrappedMessage
+        message={messages.a11yBodyIntroGraph}
+        values={{
+          communityAccessibilityElement,
+        }}
+        tagName="p"
+      />
+      <WrappedMessage
+        message={messages.a11yBodyStepsHeader}
+        tagName="p"
+      />
       <ol className={styles['numerical-list']}>
-        <li>Notify us by email addressed to {emailElement}.  In order for edX to fully and promptly assess and respond to your request, please provide the following information:
-          <ol className={styles['alphabetical-list']}>
-            <li>Your name and email address;</li>
-            <li>The edX member institution that you are affiliated with;</li>
-            <li>A brief description of the challenge or barrier to access that you are experiencing; and</li>
-            <li>How soon you need access and for how long (e.g., a planned course start date or in connection with a course-related deadline such as a final essay).</li>
-          </ol>
-        </li>
-        <li>Within 48 business hours of receiving your request, the edX Support Team will respond to confirm receipt and forward your request to the edX Partner Manager for your institution and the edX Website Accessibility Coordinator.</li>
-        <li>With guidance from the Website Accessibility Coordinator, edX will contact you within 5 business days to discuss your request and gather additional information from you to identify a solution.</li>
-        <li>EdX will assist you promptly and thoroughly so that you are able to create content on the CMS within your time constraints.  Such efforts may include, but are not limited to:
-          <ol className={styles['alphabetical-list']}>
-            <li>Purchasing a third-party tool or software for use on an individual basis to assist your use of Studio;</li>
-            <li>Engaging a trained independent contractor to provide real-time visual, verbal and physical assistance; or</li>
-            <li>Developing new code to implement a technical fix.</li>
-          </ol>
-        </li>
+        <WrappedMessage
+          message={messages.a11yBodyEmailHeading}
+          values={{
+            emailElement,
+          }}
+        >
+          {
+            displayText => (
+              <li>{displayText}
+                <ol className={styles['alphabetical-list']}>
+                  <WrappedMessage
+                    message={messages.a11yBodyNameEmail}
+                    tagName="li"
+                  />
+                  <WrappedMessage
+                    message={messages.a11yBodyInstitution}
+                    tagName="li"
+                  />
+                  <WrappedMessage
+                    message={messages.a11yBodyBarrier}
+                    tagName="li"
+                  />
+                  <WrappedMessage
+                    message={messages.a11yBodyTimeConstraints}
+                    tagName="li"
+                  />
+                </ol>
+              </li>
+            )
+          }
+        </WrappedMessage>
+        <WrappedMessage
+          message={messages.a11yBodyReceipt}
+          tagName="li"
+        />
+        <WrappedMessage
+          message={messages.a11yBodyExtraInfo}
+          tagName="li"
+        />
+        <WrappedMessage
+          message={messages.a11yBodyFixesListHeader}
+          tagName="li"
+        >
+          {
+            displayText => (
+              <li>{displayText}
+                <ol className={styles['alphabetical-list']}>
+                  <WrappedMessage
+                    message={messages.a11yBodyThirdParty}
+                    tagName="li"
+                  />
+                  <WrappedMessage
+                    message={messages.a11yBodyContractor}
+                    tagName="li"
+                  />
+                  <WrappedMessage
+                    message={messages.a11yBodyCodeFix}
+                    tagName="li"
+                  />
+                </ol>
+              </li>
+            )
+          }
+        </WrappedMessage>
       </ol>
-      <p>
-        We will communicate with you about your preferences and needs in determining the appropriate solution, although the ultimate decision will be ours, provided that the solution is effective and timely.  The factors we will consider in choosing an accessibility solution are: effectiveness; timeliness (relative to your deadlines); ease of implementation; and ease of use for you.  We will notify you of the decision and explain the basis for our decision within 10 business days of discussing with you.
-      </p>
-      <p>
-        Thereafter, we will communicate with you on a weekly basis regarding our evaluation, decision, and progress in implementing the accessibility solution.  We will notify you when implementation of your accessibility solution is complete and will follow-up with you as may be necessary to see if the solution was effective.
-      </p>
-      <p>
-        EdX will provide ongoing technical support as needed and will address any additional issues that arise after the initial course creation.
-      </p>
-      <p>
-        If you have any questions about this process, you may contact us at {emailElement} or {props.phoneNumber}.
-      </p>
-      <p>
-        Please direct any questions or suggestions on how to improve the accessibility of Studio to {emailElement} or use the form below. We welcome your feedback.
-      </p>
+      <WrappedMessage
+        message={messages.a11yBodyEdxResponse}
+        tagName="p"
+      />
+      <WrappedMessage
+        message={messages.a11yBodyEdxFollowUp}
+        tagName="p"
+      />
+      <WrappedMessage
+        message={messages.a11yBodyOngoingSupport}
+        tagName="p"
+      />
+      <WrappedMessage
+        message={messages.a11yBodyProcessContact}
+        tagName="p"
+        values={{
+          emailElement,
+          phoneNumber: props.phoneNumber,
+        }}
+      />
+      <WrappedMessage
+        message={messages.a11yBodyA11yFeedback}
+        tagName="p"
+        values={{
+          emailElement,
+        }}
+      />
     </div>
   );
   /* eslint-enable max-len */

@@ -2,7 +2,10 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Button, InputText, StatusAlert, TextArea } from '@edx/paragon';
+import { FormattedTime, FormattedDate } from 'react-intl';
 
+import messages from './displayMessages';
+import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
 import { clearAccessibilityStatus, submitAccessibilityForm } from '../../data/actions/accessibility';
 import { accessibilityActions } from '../../data/constants/actionTypes';
 import styles from './AccessibilityPolicyForm.scss';
@@ -74,7 +77,9 @@ export class AccessibilityPolicyForm extends React.Component {
     const { isValidFormContent, validationMessages } = this.state;
     let status = {
       alertType: 'info',
-      alertDialog: 'Submitting feedback',
+      alertDialog: <WrappedMessage
+        message={messages.accessibilityPolicyFormSubmittingFeedbackLabel}
+      />,
     };
 
     if (!isValidFormContent) {
@@ -82,7 +87,10 @@ export class AccessibilityPolicyForm extends React.Component {
         alertType: 'danger',
         alertDialog: (
           <div>
-            <div>Make sure to fill in all fields.</div>
+            <WrappedMessage
+              message={messages.accessibilityPolicyFormErrorMissingFields}
+              tagName="div"
+            />
             <br />
             <div>
               <ul className={styles['bullet-list']}>
@@ -104,23 +112,35 @@ export class AccessibilityPolicyForm extends React.Component {
       status = {
         alertType: 'danger',
         alertDialog: (
-          <div>
-            We are currently experiencing high volume. Try again later today or
-             send an email message to <a href={`mailto:${accessibilityEmail}`}>{accessibilityEmail}</a>.
-          </div>
+          <WrappedMessage
+            message={messages.accessibilityPolicyFormErrorHighVolume}
+            tagName="div"
+            values={{
+              emailLink: <a href={`mailto:${accessibilityEmail}`}>{accessibilityEmail}</a>,
+            }}
+          />
         ),
       };
     } else if (accessibilityStatus.type ===
         accessibilityActions.submit.ACCESSIBILITY_FORM_SUBMIT_SUCCESS) {
+      const start = new Date('Mon Jan 29 2018 13:00:00 GMT (UTC)');
+      const end = new Date('Fri Feb 2 2018 21:00:00 GMT (UTC)');
       status = {
         alertType: 'success',
         alertDialog: (
           <div>
-            Thank you for contacting edX!
+            <WrappedMessage message={messages.accessibilityPolicyFormSuccess} />
             <br />
             <br />
-            Thank you for your feedback regarding the accessibility of Studio. We typically respond
-             within one business day (Monday to Friday, 13:00 to 21:00 UTC).
+            <WrappedMessage
+              message={messages.accessibilityPolicyFormSuccessDetails}
+              values={{
+                day_start: (<FormattedDate value={start} weekday="long" />),
+                time_start: (<FormattedTime value={start} timeZoneName="short" />),
+                day_end: (<FormattedDate value={end} weekday="long" />),
+                time_end: (<FormattedTime value={end} timeZoneName="short" />),
+              }}
+            />
           </div>
         ),
       };
@@ -157,8 +177,8 @@ export class AccessibilityPolicyForm extends React.Component {
     if (!emailRegEx.test(email)) {
       feedback = {
         isValid: false,
-        validationMessage: 'Enter a valid email address.',
-        dangerIconDescription: 'Error: ',
+        validationMessage: <WrappedMessage message={messages.accessibilityPolicyFormValidEmail} />,
+        dangerIconDescription: <WrappedMessage message={messages.accessibilityPolicyFormError} />,
       };
     }
     return feedback;
@@ -169,8 +189,8 @@ export class AccessibilityPolicyForm extends React.Component {
     if (!fullName) {
       feedback = {
         isValid: false,
-        validationMessage: 'Enter a name.',
-        dangerIconDescription: 'Error: ',
+        validationMessage: <WrappedMessage message={messages.accessibilityPolicyFormValidName} />,
+        dangerIconDescription: <WrappedMessage message={messages.accessibilityPolicyFormError} />,
       };
     }
     return feedback;
@@ -181,8 +201,10 @@ export class AccessibilityPolicyForm extends React.Component {
     if (!message) {
       feedback = {
         isValid: false,
-        validationMessage: 'Enter a message.',
-        dangerIconDescription: 'Error: ',
+        validationMessage: <WrappedMessage
+          message={messages.accessibilityPolicyFormValidMessage}
+        />,
+        dangerIconDescription: <WrappedMessage message={messages.accessibilityPolicyFormError} />,
       };
     }
     return feedback;
@@ -226,13 +248,17 @@ export class AccessibilityPolicyForm extends React.Component {
   render() {
     return (
       <div>
-        <h2 id="a11y-feedback" className={styles['page-header']}>Studio Accessibility Feedback</h2>
+        <WrappedMessage message={messages.accessibilityPolicyFormHeader}>
+          { displayText => <h2 id="a11y-feedback" className={styles['page-header']}>{displayText}</h2> }
+        </WrappedMessage>
         {this.renderStatusAlert()}
         <section className={styles['form-section']} role="group" aria-labelledby="a11y-feedback fields-required">
-          <p id="fields-required">All fields are required.</p>
+          <WrappedMessage message={messages.accessibilityPolicyFormFieldsRequired}>
+            { displayText => <p id="fields-required">{displayText}</p>}
+          </WrappedMessage>
           <InputText
             name="email"
-            label="Email Address"
+            label={<WrappedMessage message={messages.accessibilityPolicyFormEmailLabel} />}
             id="email"
             type="email"
             onChange={this.handleEmailChange}
@@ -244,7 +270,7 @@ export class AccessibilityPolicyForm extends React.Component {
           />
           <InputText
             name="fullName"
-            label="Name"
+            label={<WrappedMessage message={messages.accessibilityPolicyFormNameLabel} />}
             id="fullName"
             onChange={this.handleFullNameChange}
             value={this.state.submitterFullName}
@@ -254,7 +280,7 @@ export class AccessibilityPolicyForm extends React.Component {
           />
           <TextArea
             name="message"
-            label="Message"
+            label={<WrappedMessage message={messages.accessibilityPolicyFormMessageLabel} />}
             id="message"
             onChange={this.handleMessageChange}
             value={this.state.submitterMessage}
@@ -262,13 +288,17 @@ export class AccessibilityPolicyForm extends React.Component {
             validator={message => this.validateMessage(message)}
             inputRef={(ref) => { this.messageInputRef = ref; }}
           />
-          <Button
-            buttonType="primary"
-            label="Submit"
-            aria-label="Submit Accessibility Feedback Form"
-            onClick={() => { this.onSubmitClick(); }}
-            inputRef={(ref) => { this.submitButtonRef = ref; }}
-          />
+          <WrappedMessage message={messages.accessibilityPolicyFormSubmitAria}>
+            { displayText =>
+              (<Button
+                buttonType="primary"
+                label={<WrappedMessage message={messages.accessibilityPolicyFormSubmitLabel} />}
+                aria-label={displayText}
+                onClick={() => { this.onSubmitClick(); }}
+                inputRef={(ref) => { this.submitButtonRef = ref; }}
+              />)
+            }
+          </WrappedMessage>
         </section>
       </div>
     );

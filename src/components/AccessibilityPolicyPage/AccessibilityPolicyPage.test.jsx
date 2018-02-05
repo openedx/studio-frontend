@@ -1,10 +1,9 @@
 import React from 'react';
-import Enzyme from 'enzyme';
 import configureStore from 'redux-mock-store';
 import { Provider } from 'react-redux';
 import AccessibilityPolicyPage from './index';
+import { mountWithIntl } from '../../utils/i18n/enzymeHelper';
 
-const mount = Enzyme.mount;
 
 const defaultProps = {
   communityAccessibilityLink: 'http://www.testLink.com',
@@ -25,7 +24,7 @@ describe('<AccessibilityPolicyPage />', () => {
   describe('renders', () => {
     beforeEach(() => {
       store = mockStore(initialState);
-      wrapper = mount(
+      wrapper = mountWithIntl(
         <Provider store={store}>
           <AccessibilityPolicyPage
             {...defaultProps}

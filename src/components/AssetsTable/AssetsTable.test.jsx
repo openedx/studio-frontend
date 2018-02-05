@@ -1,13 +1,11 @@
 import React from 'react';
-import Enzyme from 'enzyme';
-
 import { StatusAlert } from '@edx/paragon';
 
 import { AssetsTable } from './index';
+
+import { mountWithIntl } from '../../utils/i18n/enzymeHelper';
 import { assetActions } from '../../data/constants/actionTypes';
 import { assetLoading } from '../../data/constants/loadingTypes';
-
-const { mount } = Enzyme;
 
 const thumbnail = '/animal';
 const copyUrl = 'animal';
@@ -136,7 +134,7 @@ let wrapper;
 describe('<AssetsTable />', () => {
   describe('renders', () => {
     beforeEach(() => {
-      wrapper = mount(
+      wrapper = mountWithIntl(
         <AssetsTable
           {...defaultProps}
         />,
@@ -277,7 +275,7 @@ describe('<AssetsTable />', () => {
           ...sortProps,
         };
 
-        wrapper = mount(
+        wrapper = mountWithIntl(
           <AssetsTable
             {...defaultProps}
             updateSort={updateSortSpy}
@@ -311,7 +309,7 @@ describe('<AssetsTable />', () => {
     let modal;
 
     beforeEach(() => {
-      wrapper = mount(
+      wrapper = mountWithIntl(
         <AssetsTable
           {...defaultProps}
         />,
@@ -337,8 +335,7 @@ describe('<AssetsTable />', () => {
       const trashButtons = wrapper.find('button').filterWhere(button => button.hasClass('fa-trash'));
       trashButtons.at(0).simulate('click');
 
-      const closeButton = modal.find('button').filterWhere(
-        button => button.matchesElement(<button>Cancel</button>));
+      const closeButton = modal.find('button').filterWhere(button => button.text() === 'Cancel');
       expect(closeButton).toHaveLength(1);
 
       closeButton.simulate('click');
@@ -350,7 +347,7 @@ describe('<AssetsTable />', () => {
     it('calls deleteAsset function prop correctly', () => {
       const deleteAssetSpy = jest.fn();
 
-      wrapper = mount(
+      wrapper = mountWithIntl(
         <AssetsTable
           {...defaultProps}
           deleteAsset={deleteAssetSpy}
@@ -358,7 +355,7 @@ describe('<AssetsTable />', () => {
       );
 
       const trashButtons = wrapper.find('button').filterWhere(button => button.hasClass('fa-trash'));
-      const deleteButton = wrapper.find('[role="dialog"] button').filterWhere(button => button.hasClass('btn-primary') && button.matchesElement(<button>Permanently delete</button>));
+      const deleteButton = wrapper.find('[role="dialog"] button').filterWhere(button => button.hasClass('btn-primary') && button.text() === 'Permanently delete');
 
       trashButtons.at(0).simulate('click');
       deleteButton.simulate('click');
@@ -370,14 +367,14 @@ describe('<AssetsTable />', () => {
       );
     });
     it('closes on deleteAsset call', () => {
-      wrapper = mount(
+      wrapper = mountWithIntl(
         <AssetsTable
           {...defaultProps}
         />,
       );
 
       const trashButtons = wrapper.find('button').filterWhere(button => button.hasClass('fa-trash'));
-      const deleteButton = wrapper.find('[role="dialog"] button').filterWhere(button => button.hasClass('btn-primary') && button.matchesElement(<button>Permanently delete</button>));
+      const deleteButton = wrapper.find('[role="dialog"] button').filterWhere(button => button.hasClass('btn-primary') && button.text() === 'Permanently delete');
 
       trashButtons.at(0).simulate('click');
       deleteButton.simulate('click');
@@ -390,7 +387,7 @@ describe('<AssetsTable />', () => {
     let trashButtons;
 
     beforeEach(() => {
-      wrapper = mount(
+      wrapper = mountWithIntl(
         <AssetsTable
           {...defaultProps}
         />,
@@ -422,7 +419,7 @@ describe('<AssetsTable />', () => {
     let mockDeleteAsset;
 
     beforeEach(() => {
-      wrapper = mount(
+      wrapper = mountWithIntl(
         <AssetsTable
           {...defaultProps}
         />,
@@ -431,7 +428,7 @@ describe('<AssetsTable />', () => {
       trashButtons = wrapper.find('button').filterWhere(button => button.hasClass('fa-trash'));
 
       modal = wrapper.find('[role="dialog"]');
-      closeButton = modal.find('button').filterWhere(button => button.matchesElement(<button><span>&times;</span></button>));
+      closeButton = modal.find('button').filterWhere(button => button.text() === '×');
     });
 
     it('moves from modal to trashcan on modal close', () => {
@@ -445,7 +442,7 @@ describe('<AssetsTable />', () => {
     });
 
     it('moves from modal to status alert on asset delete', () => {
-      const deleteButton = wrapper.find('[role="dialog"] button').filterWhere(button => button.hasClass('btn-primary') && button.matchesElement(<button>Permanently delete</button>));
+      const deleteButton = wrapper.find('[role="dialog"] button').filterWhere(button => button.hasClass('btn-primary') && button.text() === 'Permanently delete');
       trashButtons.at(0).simulate('click');
       expect(closeButton.html()).toEqual(document.activeElement.outerHTML);
 
@@ -453,7 +450,7 @@ describe('<AssetsTable />', () => {
       wrapper.setProps({ deleteAsset: mockDeleteAsset });
       deleteButton.simulate('click');
       const statusAlert = wrapper.find(StatusAlert);
-      const closeStatusAlertButton = statusAlert.find('button').filterWhere(button => button.matchesElement(<button><span>&times;</span></button>));
+      const closeStatusAlertButton = statusAlert.find('button').filterWhere(button => button.text() === '×');
       expect(closeStatusAlertButton.html()).toEqual(document.activeElement.outerHTML);
     });
 
@@ -478,7 +475,7 @@ describe('<AssetsTable />', () => {
 
         wrapper.setProps({ deleteAsset: mockDeleteAsset });
 
-        const deleteButton = wrapper.find('[role="dialog"] button').filterWhere(button => button.hasClass('btn-primary') && button.matchesElement(<button>Permanently delete</button>));
+        const deleteButton = wrapper.find('[role="dialog"] button').filterWhere(button => button.hasClass('btn-primary') && button.text() === 'Permanently delete');
 
         trashButtons.at(test.trashButtonIndex).simulate('click');
 
@@ -486,7 +483,7 @@ describe('<AssetsTable />', () => {
         expect(mockDeleteAsset).toHaveBeenCalledTimes(1);
 
         const statusAlert = wrapper.find(StatusAlert);
-        const closeStatusAlertButton = statusAlert.find('button').filterWhere(button => button.matchesElement(<button><span>&times;</span></button>));
+        const closeStatusAlertButton = statusAlert.find('button').filterWhere(button => button.text() === '×');
         wrapper.setProps({
           clearAssetsStatus: () => clearStatus(wrapper),
         });
@@ -513,7 +510,7 @@ describe('Lock asset', () => {
   const getUnlockedButtons = () => wrapper.find('button .fa-unlock');
   const getLockingButtons = () => wrapper.find('button > .fa-spinner');
   beforeEach(() => {
-    wrapper = mount(
+    wrapper = mountWithIntl(
       <AssetsTable
         {...defaultProps}
       />,
@@ -574,7 +571,7 @@ describe('Lock asset', () => {
 
 describe('displays status alert properly', () => {
   it('renders success alert on success', () => {
-    wrapper = mount(
+    wrapper = mountWithIntl(
       <AssetsTable
         {...defaultProps}
       />,
@@ -594,7 +591,7 @@ describe('displays status alert properly', () => {
   });
 
   it('renders danger alert on error', () => {
-    wrapper = mount(
+    wrapper = mountWithIntl(
       <AssetsTable
         {...defaultProps}
       />,
@@ -614,7 +611,7 @@ describe('displays status alert properly', () => {
   });
 
   it('hides the alert when state cleared', () => {
-    wrapper = mount(
+    wrapper = mountWithIntl(
       <AssetsTable
         {...defaultProps}
       />,
@@ -630,7 +627,7 @@ describe('displays status alert properly', () => {
   });
 
   it('clears uploading assets on keyDown', () => {
-    wrapper = mount(
+    wrapper = mountWithIntl(
       <AssetsTable
         {...defaultProps}
       />,
@@ -653,7 +650,7 @@ describe('displays status alert properly', () => {
 
 describe('Upload statuses', () => {
   beforeEach(() => {
-    wrapper = mount(
+    wrapper = mountWithIntl(
       <AssetsTable
         {...defaultProps}
       />,

@@ -1,0 +1,32 @@
+[
+  {
+    "id": "assetsFiltersAudio",
+    "description": "Label for audio file types",
+    "defaultMessage": "Audio"
+  },
+  {
+    "id": "assetsFiltersCode",
+    "description": "Label for code file types",
+    "defaultMessage": "Code"
+  },
+  {
+    "id": "assetsFiltersDocuments",
+    "description": "Label for document file types",
+    "defaultMessage": "Document"
+  },
+  {
+    "id": "assetsFiltersImages",
+    "description": "Label for image file types",
+    "defaultMessage": "Image"
+  },
+  {
+    "id": "assetsFiltersOther",
+    "description": "Label for other file types",
+    "defaultMessage": "Other"
+  },
+  {
+    "id": "assetsFiltersSectionLabel",
+    "description": "Label for the filter section of the page",
+    "defaultMessage": "Filter by File Type"
+  }
+]

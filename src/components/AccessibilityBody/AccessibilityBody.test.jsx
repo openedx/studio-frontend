@@ -1,15 +1,14 @@
 import React from 'react';
-import Enzyme from 'enzyme';
 import AccessibilityBody from './index';
+import { mountWithIntl } from '../../utils/i18n/enzymeHelper';
 
-const mount = Enzyme.mount;
 
 let wrapper;
 
 describe('<AccessibilityBody />', () => {
   describe('renders', () => {
     beforeEach(() => {
-      wrapper = mount(
+      wrapper = mountWithIntl(
         <AccessibilityBody
           communityAccessibilityLink="http://example.com"
           phoneNumber="555-555-5555"
