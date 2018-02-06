@@ -18,7 +18,7 @@ const messages = {};
 const App = () => (
   <IntlProvider locale={locale} messages={messages}>
     <Provider store={store}>
-      <div className="SFE">
+      <div>
         <BackendStatusBanner />
         <WrappedAssetsPage />
       </div>
