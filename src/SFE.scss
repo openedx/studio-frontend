@@ -25,9 +25,9 @@
 @import '~bootstrap/scss/bootstrap';
 
 /* Since elements inside the SFE div can no longer inherit styles set on the <body>, we will apply the styles that
- * the Bootstrap reboot applies to the <body> on the root div instead, which containing elements can inherit.
+ * the Bootstrap reboot applies to the <body> on the wrapper div instead, which containing elements can inherit.
  */
-.SFE {
+.SFE-wrapper {
   font-family: $font-family-base;
   font-size: $font-size-base;
   font-weight: $font-weight-base;
