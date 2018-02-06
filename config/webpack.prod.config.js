@@ -32,6 +32,7 @@ module.exports = Merge.smart(commonConfig, {
                 modules: true,
                 minimize: true,
                 localIdentName: '[local]',
+                importLoaders: 1,
               },
             },
             {
@@ -67,7 +68,18 @@ module.exports = Merge.smart(commonConfig, {
     ],
   },
   plugins: [
-    new ExtractTextPlugin('studio-frontend.min.css'),
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'vendor',
+      minChunks: module => module.context && module.context.includes('node_modules'),
+    }),
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'manifest',
+      minChunks: Infinity,
+    }),
+    new ExtractTextPlugin({
+      filename: '[name].min.css',
+      allChunks: true,
+    }),
     new webpack.DefinePlugin({
       'process.env': {
         NODE_ENV: JSON.stringify(process.env.NODE_ENV),

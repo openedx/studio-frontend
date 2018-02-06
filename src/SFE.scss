@@ -11,7 +11,6 @@
   line-height: $line-height-base;
   color: $body-color;
   text-align: left;
-  background-color: $body-bg;
 }
 
 /* The page-header class exists in Bootstrap 3.3 but not in our alpha version currently */
@@ -23,5 +22,5 @@
 
 button {
   // override default of `buttonface` which varies in different browsers
-  background-color: white;
+  background-color: inherit;
 }
