@@ -14,6 +14,11 @@ module.exports = Merge.smart(commonConfig, {
   module: {
     rules: [
       {
+        // babel-pollyfill is already loaded once in Studio
+        test: /babel-polyfill/,
+        use: 'null-loader',
+      },
+      {
         test: /\.(js|jsx)$/,
         include: [
           path.resolve(__dirname, '../src'),
@@ -62,8 +67,9 @@ module.exports = Merge.smart(commonConfig, {
         }),
       },
       {
+        // Font-Awesome and OpenSans is already loaded and available in Studio
         test: /\.(woff2?|ttf|svg|eot)(\?v=\d+\.\d+\.\d+)?$/,
-        loader: 'file-loader',
+        loader: 'null-loader',
       },
     ],
   },
