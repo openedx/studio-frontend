@@ -3,18 +3,17 @@ language: node_js
 node_js:
   - 8.9.4
 
-sudo: required
-services:
- - docker
+cache:
+  directories:
+    - node_modules
 
-before_script:
- - docker build -t studio-frontend --no-cache .
+env:
+  global:
+    - MAKEFLAGS="-j 2"
 
 script:
-  - npm run lint
-  - npm run test
-  - make i18n.pre_validate
-  - make package-lock.validate
+  - make travis_fast_checks
+  - make travis_slow_tests
 
 after_script:
   - codecov

@@ -67,3 +67,9 @@ i18n.pre_validate: | i18n.extract i18n.preprocess
 
 package-lock.validate:
 	git diff --name-only --exit-code package-lock.json
+
+travis_fast_checks: | i18n.pre_validate package-lock.validate
+	npm run lint
+
+travis_slow_tests:
+	npm run test
