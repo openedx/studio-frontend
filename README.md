@@ -49,6 +49,22 @@ The development server will run regardless of whether devstack is running along 
 | Yes             | Yes, non-staff account | 403        |
 | Yes             | Yes, staff account     | 200        |
 
+## Development Inside Devstack Studio
+
+To load studio-frontend components from the webpack-dev-server inside your
+studio instance running in [Devstack](https://github.com/edx/devstack):
+
+1. In your devstack edx-platform folder, create `cms/envs/private.py` if it
+   does not exist already.
+2. Add `STUDIO_FRONTEND_CONTAINER_URL = 'http://localhost:18011'` to
+   `cms/envs/private.py`.
+3. Reload your Studio server: `make studio-restart`.
+
+Pages in Studio that have studio-frontend components should now request assets
+from your studio-frontend docker container's webpack-dev-server. If you make a
+change to a file that webpack is watching, the Studio page should hot-reload or
+auto-reload to reflect the changes.
+
 ## Releases
 
 Currently, the process for releasing a new version of our package is as follows:
@@ -57,8 +73,9 @@ Currently, the process for releasing a new version of our package is as follows:
 2. Merge your pull request.
 3. Publish a [GitHub release](https://github.com/edx/studio-frontend/releases). Make sure to prefix the version number with `v`, as in `v2.3.4`.
 3. `git checkout master` and `git pull`. Ensure your current directory is cleaned, with no outstanding commits or files. As an extra precaution, you can `rm -rf node node_modules` and `npm install` prior to publishing.
-4. Be a member of the correct edX and npm orgs, and be logged in. All of @edx/educator-dahlia should be set up, and others shouldn't need to be publishing this package.
-5. Run `npm publish`.
+4. Make sure that build production files in /dist will be included in the release by running `npm run build`.
+5. Be a member of the correct edX and npm orgs, and be logged in. All of @edx/educator-dahlia should be set up, and others shouldn't need to be publishing this package.
+6. Run `npm publish`.
 
 
 ## Getting Help

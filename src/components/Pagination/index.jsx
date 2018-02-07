@@ -5,6 +5,7 @@ import ReactPaginate from 'react-paginate';
 
 import classNames from 'classnames';
 import paginationStyles from './Pagination.scss';
+import edxBootstrap from '../../SFE.scss';
 import messages from './displayMessages';
 import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
 import { pageUpdate } from '../../data/actions/assets';
@@ -71,16 +72,16 @@ export class Pagination extends React.Component {
           marginPagesDisplayed={2}
           pageRangeDisplayed={5}
           onPageChange={this.onPageClick}
-          activeClassName={classNames(paginationStyles.active)}
-          breakClassName={classNames(paginationStyles['page-link'], paginationStyles.disabled)}
-          containerClassName={classNames(paginationStyles.pagination)}
-          disabledClassName={classNames(paginationStyles.disabled)}
-          nextClassName={classNames(paginationStyles.next)}
-          nextLinkClassName={classNames(paginationStyles['page-link'])}
-          pageClassName={classNames(paginationStyles['page-item'])}
-          pageLinkClassName={classNames(paginationStyles['page-link'])}
-          previousClassName={classNames(paginationStyles.previous)}
-          previousLinkClassName={classNames(paginationStyles['page-link'])}
+          activeClassName={classNames(edxBootstrap.active)}
+          breakClassName={classNames(edxBootstrap['page-link'], edxBootstrap.disabled)}
+          containerClassName={classNames(edxBootstrap.pagination)}
+          disabledClassName={classNames(edxBootstrap.disabled)}
+          nextClassName={classNames(edxBootstrap.next)}
+          nextLinkClassName={classNames(edxBootstrap['page-link'])}
+          pageClassName={classNames(edxBootstrap['page-item'])}
+          pageLinkClassName={classNames(edxBootstrap['page-link'])}
+          previousClassName={classNames(edxBootstrap.previous)}
+          previousLinkClassName={classNames(edxBootstrap['page-link'])}
         />
       </nav>
     );

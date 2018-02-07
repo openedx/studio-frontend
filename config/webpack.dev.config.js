@@ -7,28 +7,10 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const apiEndpoints = require('../src/data/api/endpoints.js');
 const commonConfig = require('./webpack.common.config.js');
 
-let targetUrl = 'localhost';
-if (!process.env.RUNNING_ON_LINUX) {
-  targetUrl = `docker.for.mac.${targetUrl}`;
-}
-targetUrl = `http://${targetUrl}:18010`;
+const targetUrl = 'http://edx.devstack.studio:18010';
 
 module.exports = Merge.smart(commonConfig, {
   devtool: 'cheap-module-eval-source-map',
-  entry: {
-    assets: [
-      // enable react's custom hot dev client so we get errors reported
-      // in the browser
-      require.resolve('react-dev-utils/webpackHotDevClient'),
-      path.resolve(__dirname, '../src/index.jsx'),
-    ],
-    accessibilityPolicy: [
-      // enable react's custom hot dev client so we get errors reported
-      // in the browser
-      require.resolve('react-dev-utils/webpackHotDevClient'),
-      path.resolve(__dirname, '../src/accessibilityIndex.jsx'),
-    ],
-  },
   module: {
     rules: [
       {
@@ -62,7 +44,8 @@ module.exports = Merge.smart(commonConfig, {
               plugins: () => [
                 /* eslint-disable global-require */
                 require('autoprefixer'),
-                require('postcss-prepend-selector')({ selector: '.SFE ' }),
+                require('postcss-initial')(),
+                require('postcss-prepend-selector')({ selector: '#root.SFE ' }),
                 /* eslint-enable global-require */
               ],
             },
@@ -102,6 +85,10 @@ module.exports = Merge.smart(commonConfig, {
   devServer: {
     host: '0.0.0.0',
     port: 18011,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+    },
+    overlay: true,
     proxy: Object.keys(apiEndpoints).reduce(
       (map, endpoint) => {
         map[apiEndpoints[endpoint]] = { // eslint-disable-line no-param-reassign

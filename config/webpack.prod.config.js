@@ -14,6 +14,11 @@ module.exports = Merge.smart(commonConfig, {
   module: {
     rules: [
       {
+        // babel-pollyfill is already loaded once in Studio
+        test: /babel-polyfill/,
+        use: 'null-loader',
+      },
+      {
         test: /\.(js|jsx)$/,
         include: [
           path.resolve(__dirname, '../src'),
@@ -32,6 +37,7 @@ module.exports = Merge.smart(commonConfig, {
                 modules: true,
                 minimize: true,
                 localIdentName: '[local]',
+                importLoaders: 1,
               },
             },
             {
@@ -42,7 +48,8 @@ module.exports = Merge.smart(commonConfig, {
                 plugins: () => [
                   /* eslint-disable global-require */
                   require('autoprefixer'),
-                  require('postcss-prepend-selector')({ selector: '.SFE ' }),
+                  require('postcss-initial')(),
+                  require('postcss-prepend-selector')({ selector: '#root.SFE ' }),
                   /* eslint-enable global-require */
                 ],
               },
@@ -61,13 +68,25 @@ module.exports = Merge.smart(commonConfig, {
         }),
       },
       {
+        // Font-Awesome and OpenSans is already loaded and available in Studio
         test: /\.(woff2?|ttf|svg|eot)(\?v=\d+\.\d+\.\d+)?$/,
-        loader: 'file-loader',
+        loader: 'null-loader',
       },
     ],
   },
   plugins: [
-    new ExtractTextPlugin('studio-frontend.min.css'),
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'vendor',
+      minChunks: module => module.context && module.context.includes('node_modules'),
+    }),
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'manifest',
+      minChunks: Infinity,
+    }),
+    new ExtractTextPlugin({
+      filename: '[name].min.css',
+      allChunks: true,
+    }),
     new webpack.DefinePlugin({
       'process.env': {
         NODE_ENV: JSON.stringify(process.env.NODE_ENV),

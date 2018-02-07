@@ -10,3 +10,7 @@ services:
             - .:/studio-frontend
         ports:
             - "18011:18011"
+networks:
+    default:
+        external:
+            name: devstack_default

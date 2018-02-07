@@ -2,8 +2,10 @@
  * (those should go into SFE.scss). Because this file does not define styles, it is okay to import into every
  * individual component's SCSS file. */
 
+$base-rem-size: 0.625;
 @import '~@edx/edx-bootstrap/sass/edx/theme';
 @import '~bootstrap/scss/variables';
 @import '~bootstrap/scss/mixins';
 @import '~bootstrap/scss/utilities/spacing';
 @import '~bootstrap/scss/utilities/screenreaders';
+@import 'var-reset';

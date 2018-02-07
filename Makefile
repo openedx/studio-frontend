@@ -1,9 +1,4 @@
 UNAME := $(shell uname)
-COMPOSE_FILE_EXTRA_ARG :=
-
-ifeq ($(UNAME), Linux)
-COMPOSE_FILE_EXTRA_ARG := -f docker-compose.linux.yml
-endif
 
 # Help message borrowed from https://github.com/edx/devstack, which borrowed it from https://github.com/pydanny/cookiecutter-djangopackage.
 help: ## display a help message
@@ -18,10 +13,10 @@ attach:
 	docker attach --sig-proxy=false dahlia.studio-frontend
 
 up: ## bring up studio-frontend container
-	docker-compose $(COMPOSE_FILE_EXTRA_ARG) up studio-frontend
+	docker-compose up studio-frontend
 
 up-detached: ## bring up studio-frontend container in detached mode
-	docker-compose $(COMPOSE_FILE_EXTRA_ARG) up -d studio-frontend
+	docker-compose up -d studio-frontend
 
 logs: ## show logs for studio-frontend container
 	docker-compose logs -f studio-frontend

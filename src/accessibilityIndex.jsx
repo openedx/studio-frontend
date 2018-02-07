@@ -17,7 +17,7 @@ const messages = {};
 const AccessibilityApp = () => (
   <IntlProvider locale={locale} messages={messages}>
     <Provider store={store}>
-      <div className="SFE">
+      <div className="SFE-wrapper">
         <AccessibilityPolicyPage
           communityAccessibilityLink="https://www.edx.org/accessibility"
           phoneNumber="+1 617-258-6577"

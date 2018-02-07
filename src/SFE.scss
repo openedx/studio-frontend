@@ -1,17 +1,41 @@
+/* Note: Because postcss-prepend-selector is used in this project, all selectors defined in any CSS/SCSS file will have
+ * "#root.SFE " prepended to them so that all styles here will be scoped to *only* the root div. */
+
+/* reset all element properties to initial values as defined in CSS spec (*not* browser defaults) */
+* {
+  all: initial;
+  /* allow all elements to inherit these properties from the root "body" div */
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  color: inherit;
+  text-align: left;
+  background-color: inherit;
+  cursor: inherit;
+}
+
+/* apply Chrome's default stylesheet so that Bootstrap has some browser-like styling to work with */
+@import 'chrome-default';
+
+/* apply the edx-bootstrap theme */
 @import 'edx-bootstrap';
+
+/* apply the Bootstrap reboot (normalize.css) to convert Chrome default styling to some cross-browser baseline
+ * then, apply the Bootstrap component styling */
 @import '~bootstrap/scss/bootstrap';
 
 /* Since elements inside the SFE div can no longer inherit styles set on the <body>, we will apply the styles that
- * the Bootstrap reboot applies to the <body> on the <div class="SFE"> instead, which containing elements can inherit.
+ * the Bootstrap reboot applies to the <body> on the wrapper div instead, which containing elements can inherit.
  */
-.SFE {
+.SFE-wrapper {
   font-family: $font-family-base;
   font-size: $font-size-base;
   font-weight: $font-weight-base;
   line-height: $line-height-base;
   color: $body-color;
   text-align: left;
-  background-color: $body-bg;
+  background-color: rgb(245, 245, 245);
 }
 
 /* The page-header class exists in Bootstrap 3.3 but not in our alpha version currently */
@@ -23,5 +47,6 @@
 
 button {
   // override default of `buttonface` which varies in different browsers
-  background-color: white;
+  background-color: inherit;
+  cursor: pointer;
 }
