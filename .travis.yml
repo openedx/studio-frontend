@@ -7,13 +7,9 @@ cache:
   directories:
     - node_modules
 
-env:
-  global:
-    - MAKEFLAGS="-j 2"
-
 script:
-  - make travis_fast_checks
-  - make travis_slow_tests
+  # run these 2 targets in parallel jobs
+  - make -jobs 2 travis_fast_checks travis_slow_checks
 
 after_script:
   - codecov
