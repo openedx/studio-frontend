@@ -9,7 +9,7 @@ cache:
 
 script:
   # run these 2 targets in parallel jobs
-  - make --jobs 2 travis_fast_checks travis_slow_checks
+  - make --jobs 2 travis_fast_checks travis_slow_tests
 
 after_script:
   - codecov
