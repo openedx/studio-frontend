@@ -58,12 +58,12 @@ const messages = defineMessages({
   },
   assetsTableUpdateLock: {
     id: 'assetsTableUpdateLock',
-    defaultMessage: 'Updating lock status for {asset_name}.',
+    defaultMessage: 'Updating lock status for {assetName}.',
     description: 'States that the lock status of an item is updating',
   },
   assetsTableFailedLock: {
     id: 'assetsTableFailedLock',
-    defaultMessage: 'Failed to toggle lock for {asset_name}.',
+    defaultMessage: 'Failed to toggle lock for {assetName}.',
     description: 'States that there was a failure toggling an item\'s lock status',
   },
   assetsTableCantDelete: {
