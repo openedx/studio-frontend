@@ -1,17 +1,22 @@
 @import 'edx-bootstrap';
 
 .pagination {
-    justify-content: center;
-    align-items: center;
+  justify-content: center;
+  align-items: center;
 
-    li {
-      list-style: none;
-    }
+  li {
+    list-style: none;
+    cursor: pointer;
+  }
 }
 
 .page-item {
-    min-width: 50px;
-    text-align: center;
+  min-width: 50px;
+  text-align: center;
+}
+
+.page-link {
+  text-align: center;
 }
 
 .disabled {
@@ -19,10 +24,8 @@
   pointer-events: none;
   background-color: $pagination-disabled-bg;
   border-color: $pagination-disabled-border-color;
-}
 
-.disabled {
   .page-link {
-    @extend .disabled
+    @extend .disabled;
   }
 }

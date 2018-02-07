@@ -12,6 +12,7 @@
   color: inherit;
   text-align: left;
   background-color: inherit;
+  cursor: inherit;
 }
 
 /* apply Chrome's default stylesheet so that Bootstrap has some browser-like styling to work with */
@@ -47,4 +48,5 @@
 button {
   // override default of `buttonface` which varies in different browsers
   background-color: inherit;
+  cursor: pointer;
 }
