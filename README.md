@@ -61,6 +61,16 @@ Currently, the process for releasing a new version of our package is as follows:
 5. Run `npm publish`.
 
 
+## Updating Latest Docker Image in Docker Hub
+
+If you are making changes to the Dockerfile or docker-compose.yml you may want to include them in the default docker container.
+
+1. Run `make from-scratch`
+2. Run `docker tag edxops/studio-frontend:latest edxops/studio-frontend:latest`
+3. Run `docker push edxops/studio-frontend:latest`
+4. Check that "Last Updated" was updated here: https://hub.docker.com/r/edxops/studio-frontend/tags/
+
+
 ## Getting Help
 
 If you need assistance with this repository please see our documentation for [Getting Help](https://github.com/edx/edx-platform#getting-help) for more information.
