@@ -2,6 +2,7 @@ FROM node:8.9.4
 
 USER root
 RUN apt-get update
+RUN apt-get install -y vim
 
 WORKDIR /prebuilt
 COPY package.json .
