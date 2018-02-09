@@ -12,3 +12,6 @@ config
 coverage
 node_modules
 public
+
+src/data/i18n/locales/tmp/
+src/data/i18n/locales/po/
