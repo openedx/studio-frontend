@@ -70,7 +70,7 @@ module.exports = Merge.smart(commonConfig, {
       {
         // Font-Awesome and OpenSans is already loaded and available in Studio
         test: /\.(woff2?|ttf|svg|eot)(\?v=\d+\.\d+\.\d+)?$/,
-        loader: 'null-loader',
+        loader: ['raw-loader', 'ignore-loader'],
       },
     ],
   },
