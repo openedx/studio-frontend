@@ -1,5 +1,7 @@
 # studio-frontend
 [![codecov](https://codecov.io/gh/edx/studio-frontend/branch/master/graph/badge.svg)](https://codecov.io/gh/edx/studio-frontend)
+[![Build Status](https://travis-ci.org/edx/studio-frontend.svg?branch=master)](https://travis-ci.org/edx/studio-frontend)
+[![npm package](https://badge.fury.io/js/%40edx%2Fstudio-frontend.svg)](https://badge.fury.io/js/%40edx%2Fstudio-frontend)
 
 React front end for edX Studio
 
