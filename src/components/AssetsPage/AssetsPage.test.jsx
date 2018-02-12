@@ -1,12 +1,10 @@
 import React from 'react';
-import Enzyme from 'enzyme';
 import { Button } from '@edx/paragon';
 
 import AssetsPage, { types } from './index';
 import { assetActions } from '../../data/constants/actionTypes';
 import courseDetails from '../../utils/testConstants';
-
-const { shallow } = Enzyme;
+import { shallowWithIntl } from '../../utils/i18n/enzymeHelper';
 
 let wrapper;
 
@@ -73,7 +71,7 @@ const normalAssetsPageRenderTest = () => {
 };
 
 beforeEach(() => {
-  wrapper = shallow(
+  wrapper = shallowWithIntl(
     <AssetsPage
       {...defaultProps}
     />,
@@ -250,7 +248,7 @@ describe('<AssetsPage />', () => {
         it('calls clearFilters onClick', () => {
           const clearFiltersMock = jest.fn();
 
-          wrapper = shallow(
+          wrapper = shallowWithIntl(
             <AssetsPage
               {...defaultProps}
               clearFilters={clearFiltersMock}
