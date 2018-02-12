@@ -2,11 +2,11 @@
 # Juan Camilo Montoya Franco <juan.montoya@edunext.co>, 2018
 # Diego Rojas <diego.rojas@edunext.co>, 2018
 # Miguel Bonilla <mbonilla@edx.org>, 2018
-# Albeiro Gonzalez <albeiro.gonzalez@edunext.co>, 2018
+# Natalia, 2018
 # Cristian Salamea <ovnicraft@gmail.com>, 2018
 # Luis Moreno <morenoluisma@gmail.com>, 2018
+# Albeiro Gonzalez <albeiro.gonzalez@edunext.co>, 2018
 # dzepeda <davitzepeda@hotmail.com>, 2018
-# Natalia, 2018
 # Miguel Hidalgo <mike08ahj@hotmail.com>, 2018
 msgid ""
 msgstr ""
@@ -27,13 +27,13 @@ msgstr ""
 # AccessibilityBody/displayMessages.json
 msgctxt "a11yBodyPolicyLink"
 msgid "Website Accessibility Policy"
-msgstr ""
+msgstr "Políticas de Accesibilidad del Sitio Web"
 
 #. Heading for studio's accessibility policy page.
 # AccessibilityBody/displayMessages.json
 msgctxt "a11yBodyPageHeader"
 msgid "Individualized Accessibility Process for Course Creators"
-msgstr ""
+msgstr "Proceso de Accesibilidad Individualizada para Creadores de Cursos"
 
 #. Introductory paragraph outlining why we care about accessiblity, and what
 #. we're doing about it.
@@ -81,6 +81,11 @@ msgid ""
 "solution is complete and will follow-up with you as may be necessary to see "
 "if the solution was effective."
 msgstr ""
+"Posteriormente, nos pondremos en contacto semanalmente sobre nuestra "
+"evaluación, decisión y progreso al implementar la solución de accesibilidad."
+" Te notificaremos cuando se complete la implementación de tu solución de "
+"accesibilidad y haremos un seguimiento si es necesario para ver si la "
+"solución fue efectiva."
 
 #. A statement of ongoing support.
 # AccessibilityBody/displayMessages.json
@@ -89,6 +94,9 @@ msgid ""
 "EdX will provide ongoing technical support as needed and will address any "
 "additional issues that arise after the initial course creation."
 msgstr ""
+"EdX te proporcionará soporte técnico continuo en el caso de que sea "
+"necesario y trabajará en cualquier problema adicional que pueda surgir "
+"después de la creación inicial del curso."
 
 #. Contact information heading for those with questions about the
 #. accessibility process.
@@ -128,7 +136,7 @@ msgstr ""
 # AccessibilityBody/displayMessages.json
 msgctxt "a11yBodyInstitution"
 msgid "The edX member institution that you are affiliated with;"
-msgstr ""
+msgstr "La institución miembro de edX con la que estás asociado;"
 
 #. Accessibility problem information.
 # AccessibilityBody/displayMessages.json

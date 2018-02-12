@@ -1,1 +1,7 @@
-{}
+{
+	"a11yBodyPolicyLink": "Políticas de Accesibilidad del Sitio Web",
+	"a11yBodyPageHeader": "Proceso de Accesibilidad Individualizada para Creadores de Cursos",
+	"a11yBodyEdxFollowUp": "Posteriormente, nos pondremos en contacto semanalmente sobre nuestra evaluación, decisión y progreso al implementar la solución de accesibilidad. Te notificaremos cuando se complete la implementación de tu solución de accesibilidad y haremos un seguimiento si es necesario para ver si la solución fue efectiva.",
+	"a11yBodyOngoingSupport": "EdX te proporcionará soporte técnico continuo en el caso de que sea necesario y trabajará en cualquier problema adicional que pueda surgir después de la creación inicial del curso.",
+	"a11yBodyInstitution": "La institución miembro de edX con la que estás asociado;"
+}
