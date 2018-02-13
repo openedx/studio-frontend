@@ -23,6 +23,28 @@ module.exports = Merge.smart(commonConfig, {
         loader: 'babel-loader',
       },
       {
+        test: /\.json$/,
+        include: [
+          path.resolve(__dirname, '../src/data/i18n/locales/json'),
+        ],
+        loader: 'file-loader',
+        options: {
+          name: '[name].[ext]',
+          outputPath: '/i18n/messages/',
+        },
+      },
+      {
+        test: /\.(js|jsx)$/,
+        include: [
+          path.resolve(__dirname, '../node_modules/react-intl/locale-data'),
+        ],
+        loader: 'file-loader',
+        options: {
+          name: '[name].[ext]',
+          outputPath: '/i18n/locale_data/',
+        },
+      },
+      {
         test: /(.scss|.css)$/,
         use: ExtractTextPlugin.extract({
           fallback: 'style-loader',

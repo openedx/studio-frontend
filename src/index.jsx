@@ -10,22 +10,18 @@ if ((typeof window !== 'undefined' && !window._babelPolyfill) ||
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { addLocaleData, IntlProvider } from 'react-intl';
-import enLocaleData from 'react-intl/locale-data/en';
+import { IntlProvider } from 'react-intl';
 
 import WrappedAssetsPage from './components/AssetsPage/container';
 import BackendStatusBanner from './components/BackendStatusBanner';
 import store from './data/store';
+import loadI18nDomData from './utils/i18n/loadI18nDomData';
 /* eslint-enable import/first */
 
-addLocaleData(enLocaleData);
-
-// TODO: make these values dynamic and correct
-const locale = 'en';
-const messages = {};
+const i18nData = loadI18nDomData();
 
 const App = () => (
-  <IntlProvider locale={locale} messages={messages}>
+  <IntlProvider locale={i18nData.locale} messages={i18nData.messages}>
     <Provider store={store}>
       <div className="SFE-wrapper">
         <BackendStatusBanner />
