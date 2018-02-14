@@ -1,10 +1,12 @@
 'use strict';
 
-const Merge = require('webpack-merge');
-const commonConfig = require('./webpack.common.config.js');
-const path = require('path');
-const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const Merge = require('webpack-merge');
+const path = require('path');
+const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const webpack = require('webpack');
+
+const commonConfig = require('./webpack.common.config.js');
 
 module.exports = Merge.smart(commonConfig, {
   devtool: 'source-map',
@@ -16,7 +18,7 @@ module.exports = Merge.smart(commonConfig, {
       {
         // babel-pollyfill is already loaded once in Studio
         test: /babel-polyfill/,
-        use: 'null-loader',
+        loader: 'null-loader',
       },
       {
         test: /\.(js|jsx)$/,
@@ -68,9 +70,8 @@ module.exports = Merge.smart(commonConfig, {
         }),
       },
       {
-        // Font-Awesome and OpenSans is already loaded and available in Studio
         test: /\.(woff2?|ttf|svg|eot)(\?v=\d+\.\d+\.\d+)?$/,
-        loader: ['raw-loader', 'ignore-loader'],
+        loader: 'file-loader',
       },
     ],
   },
@@ -87,6 +88,7 @@ module.exports = Merge.smart(commonConfig, {
       filename: '[name].min.css',
       allChunks: true,
     }),
+    new OptimizeCssAssetsPlugin(),
     new webpack.DefinePlugin({
       'process.env': {
         NODE_ENV: JSON.stringify(process.env.NODE_ENV),
