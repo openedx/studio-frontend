@@ -52,6 +52,7 @@ module.exports = Merge.smart(commonConfig, {
                   require('autoprefixer'),
                   require('postcss-initial')(),
                   require('postcss-prepend-selector')({ selector: '#root.SFE ' }),
+                  require('postcss-strip-font-face'),
                   /* eslint-enable global-require */
                 ],
               },
@@ -70,8 +71,9 @@ module.exports = Merge.smart(commonConfig, {
         }),
       },
       {
+        // Font-Awesome is already loaded and available in Studio
         test: /\.(woff2?|ttf|svg|eot)(\?v=\d+\.\d+\.\d+)?$/,
-        loader: 'file-loader',
+        use: ['raw-loader', 'ignore-loader'],
       },
     ],
   },

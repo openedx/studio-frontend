@@ -1,6 +1,6 @@
 {
   "name": "@edx/studio-frontend",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "The frontend for the Open edX platform",
   "repository": "edx/studio-frontend",
   "scripts": {
@@ -67,6 +67,7 @@
     "postcss-initial": "^2.0.0",
     "postcss-loader": "^2.0.10",
     "postcss-prepend-selector": "^0.3.1",
+    "postcss-strip-font-face": "^1.0.0",
     "raw-loader": "^0.5.1",
     "react-dev-utils": "^4.0.0",
     "react-intl-gettext": "^5.1.1",
