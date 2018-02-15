@@ -16,11 +16,6 @@ module.exports = Merge.smart(commonConfig, {
   module: {
     rules: [
       {
-        // babel-pollyfill is already loaded once in Studio
-        test: /babel-polyfill/,
-        loader: 'null-loader',
-      },
-      {
         test: /\.(js|jsx)$/,
         include: [
           path.resolve(__dirname, '../src'),
