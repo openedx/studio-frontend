@@ -9,10 +9,10 @@
 # Fahrettin Perçin <fapercin90@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: @edx/studio-frontend 1.1.0\n"
+"Project-Id-Version: @edx/studio-frontend 1.2.0\n"
 "Report-Msgid-Bugs-To: edx/studio-frontend\n"
-"POT-Creation-Date: 2018-02-06T20:37:36.106Z\n"
-"PO-Revision-Date: 2018-02-06T20:37:36.106Z\n"
+"POT-Creation-Date: 2018-02-09T20:54:36.515Z\n"
+"PO-Revision-Date: 2018-02-09T20:54:36.515Z\n"
 "Last-Translator: Fahrettin Perçin <fapercin90@gmail.com>, 2018\n"
 "Language-Team: Turkish (Turkey) (https://www.transifex.com/open-edx/teams/6205/tr_TR/)\n"
 "MIME-Version: 1.0\n"
@@ -473,25 +473,25 @@ msgstr ""
 # AssetsTable/displayMessages.json
 msgctxt "assetsTableCantDelete"
 msgid "Unable to delete {assetName}."
-msgstr ""
+msgstr "{assetName} silinemedi."
 
 #. States that an item was successfully deleted
 # AssetsTable/displayMessages.json
 msgctxt "assetsTableDeleteSuccess"
 msgid "{assetName} has been deleted."
-msgstr ""
+msgstr "{assetName} silindi."
 
 #. States that files were successfully uploaded
 # AssetsTable/displayMessages.json
 msgctxt "assetsTableUploadSuccess"
 msgid "{uploaded_count} files successfully uploaded."
-msgstr ""
+msgstr "{uploaded_count} adet dosya başarıyla yüklendi."
 
 #. States that the file upload operation is in progress
 # AssetsTable/displayMessages.json
 msgctxt "assetsTableUploadInProgress"
 msgid "{uploading_count} files uploading."
-msgstr ""
+msgstr "{uploading_count} adet dosya yükleniyor."
 
 #. Error message shown when too many files are selected for upload
 # AssetsTable/displayMessages.json
@@ -500,6 +500,7 @@ msgid ""
 "The maximum number of files for an upload is {max_count}. No files were "
 "uploaded."
 msgstr ""
+"En fazla {max_count} adet dosya yüklenebilir. Hiçbir dosya yüklenmedi."
 
 #. Error message shown when too much data is being uploaded
 # AssetsTable/displayMessages.json
@@ -514,6 +515,15 @@ msgstr ""
 msgctxt "assetsTableGenericError"
 msgid "Error uploading {assetName}. Try again."
 msgstr "{assetName} yüklemesinde hata. Tekrar deneyin."
+
+#. States that the action could not be completed and asks the user to refresh
+#. the page and try the action again
+# AssetsTable/displayMessages.json
+msgctxt "assetsTableGenericUpdateError"
+msgid ""
+"The action could not be completed. Refresh the page, and then try the action"
+" again."
+msgstr ""
 
 #. Label that indicates a relative (as opposed to an absolute) URL
 # AssetsTable/displayMessages.json
@@ -574,6 +584,8 @@ msgstr "{displayName} silmek geri alınamaz."
 msgctxt "assetsTableDeleteConsequences"
 msgid "Any links or references to this file will no longer work. {link}"
 msgstr ""
+"Bu dosyaya verilen herhangi bir bağlantı veya referans artık çalışmayacak.  "
+"{link}"
 
 #. Indicates something is loading
 # AssetsTable/displayMessages.json

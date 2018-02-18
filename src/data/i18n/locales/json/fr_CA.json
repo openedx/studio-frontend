@@ -64,6 +64,7 @@
 	"assetsTableTooManyFiles": "Le nombre maximal de fichiers pouvant être téléversés est {max_count}. Aucun fichier n'a été téléversé.",
 	"assetsTableTooMuchData": "La taille maximale d'un fichier pouvant être téléversé est de {max_size} Mo. Aucun fichier n'a été téléversé.",
 	"assetsTableGenericError": "Erreur lors du téléversement de {assetName}. Veuillez réessayer.",
+	"assetsTableGenericUpdateError": "Cette action n'a pas pu être complétée. Rafraîchissez la page, puis réessayez.",
 	"assetsTableStudioLink": "Studio",
 	"assetsTableWebLink": "Web",
 	"assetsTableCopiedStatus": "Copié",
