@@ -5,10 +5,10 @@
 # Danil Moskovoy <tenrius@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: @edx/studio-frontend 1.1.0\n"
+"Project-Id-Version: @edx/studio-frontend 1.2.0\n"
 "Report-Msgid-Bugs-To: edx/studio-frontend\n"
-"POT-Creation-Date: 2018-02-06T20:37:36.106Z\n"
-"PO-Revision-Date: 2018-02-06T20:37:36.106Z\n"
+"POT-Creation-Date: 2018-02-09T20:54:36.515Z\n"
+"PO-Revision-Date: 2018-02-09T20:54:36.515Z\n"
 "Last-Translator: Danil Moskovoy <tenrius@gmail.com>, 2018\n"
 "Language-Team: Russian (https://www.transifex.com/open-edx/teams/6205/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -467,6 +467,15 @@ msgstr ""
 # AssetsTable/displayMessages.json
 msgctxt "assetsTableGenericError"
 msgid "Error uploading {assetName}. Try again."
+msgstr ""
+
+#. States that the action could not be completed and asks the user to refresh
+#. the page and try the action again
+# AssetsTable/displayMessages.json
+msgctxt "assetsTableGenericUpdateError"
+msgid ""
+"The action could not be completed. Refresh the page, and then try the action"
+" again."
 msgstr ""
 
 #. Label that indicates a relative (as opposed to an absolute) URL
