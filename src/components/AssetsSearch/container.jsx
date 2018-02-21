@@ -4,7 +4,7 @@ import AssetsSearch from '.';
 import { searchUpdate } from '../../data/actions/assets';
 
 const mapStateToProps = state => ({
-  assetsFilters: state.metadata.filters,
+  assetsSearch: state.metadata.search,
   courseDetails: state.studioDetails.course,
 });
 
