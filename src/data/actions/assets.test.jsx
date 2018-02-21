@@ -366,6 +366,72 @@ describe('Assets Action Creators', () => {
       expect(store.getActions()).toEqual(expectedActions);
     });
   });
+  it('returns expected state from searchUpdate success', () => {
+    const searchParameters = { search: 'edX' };
+
+    const newRequest = {
+      ...searchInitial,
+      ...searchParameters,
+    };
+
+    store = getMockStoreWithNewRequestState(newRequest);
+
+    const response = {
+      body: {
+        ...searchParameters,
+      },
+    };
+
+    fetchMock.once(`begin:${assetsEndpoint}`, response);
+    const expectedActions = [
+      { type: assetActions.request.REQUESTING_ASSETS },
+      { type: assetActions.request.UPDATE_REQUEST,
+        newRequest: { ...requestInitial, ...newRequest } },
+      { type: assetActions.request.REQUEST_ASSETS_SUCCESS, response: response.body },
+    ];
+
+    return store.dispatch(actionCreators
+      .searchUpdate(searchParameters.search, courseDetails)).then(() => {
+      // return of async actions
+      expect(store.getActions()).toEqual(expectedActions);
+    });
+  });
+  it('returns expected state from searchUpdate failure', () => {
+    const searchParameters = { search: 'edX' };
+
+    const newRequest = {
+      ...searchInitial,
+      ...searchParameters,
+    };
+
+    store = getMockStoreWithNewRequestState(newRequest);
+
+    const response = {
+      status: 400,
+      body: {
+        failure: 'Failure',
+      },
+    };
+
+    const errorResponse = new Error(response);
+
+    fetchMock.once(`begin:${assetsEndpoint}`, response);
+    const expectedActions = [
+      { type: assetActions.request.REQUESTING_ASSETS },
+      { type: assetActions.request.UPDATE_REQUEST,
+        newRequest: { ...requestInitial, ...newRequest } },
+      { type: assetActions.request.REQUEST_ASSETS_FAILURE,
+        previousState: initialState.assets,
+        response: errorResponse },
+      { type: assetActions.search.SEARCH_UPDATE_FAILURE,
+        previousState: { ...initialState.metadata.search } },
+    ];
+
+    return store.dispatch(actionCreators.searchUpdate('edX', courseDetails)).then(() => {
+      // return of async actions
+      expect(store.getActions()).toEqual(expectedActions);
+    });
+  });
   it('returns expected state from pageUpdate success', () => {
     const paginationParameters = { page: 10 };
 
