@@ -173,7 +173,9 @@ describe('<AssetsTable />', () => {
       const baseUrl = defaultProps.courseDetails.base_url;
 
       rows.forEach((row, index) => {
-        expect(row.containsMatchingElement(<td>{defaultProps.assetsList[index].display_name}</td>))
+        expect(row.containsMatchingElement(
+          <td><span data-identifier="asset-file-name">{defaultProps.assetsList[index].display_name}</span></td>,
+        ))
           .toEqual(true);
 
         const rowThumbnail = defaultProps.assetsList[index].thumbnail;
