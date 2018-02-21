@@ -9,13 +9,14 @@
 # Mariangeles Fernandez <mariangelesfm@gmail.com>, 2018
 # Maxfer <maxfer@gmail.com>, 2018
 # Adrián Báez Rojas <adrianbaezrojas@gmail.com>, 2018
+# Eric Fischer <efischer@edx.org>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: @edx/studio-frontend 1.2.0\n"
 "Report-Msgid-Bugs-To: edx/studio-frontend\n"
 "POT-Creation-Date: 2018-02-09T20:54:36.515Z\n"
 "PO-Revision-Date: 2018-02-09T20:54:36.515Z\n"
-"Last-Translator: Adrián Báez Rojas <adrianbaezrojas@gmail.com>, 2018\n"
+"Last-Translator: Eric Fischer <efischer@edx.org>, 2018\n"
 "Language-Team: Spanish (Spain) (https://www.transifex.com/open-edx/teams/6205/es_ES/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -332,7 +333,7 @@ msgstr ""
 # AssetsFilters/displayMessages.json
 msgctxt "assetsFiltersDocuments"
 msgid "Document"
-msgstr ""
+msgstr "Documento"
 
 #. Label for image file types
 # AssetsFilters/displayMessages.json
