@@ -31,6 +31,8 @@ export function requestAssets(courseId, params) {
     assetTypes: undefined,
     page_size: params.pageSize,
     pageSize: undefined,
+    text_search: params.search,
+    search: undefined,
   };
 
   const requestString = Object.keys(parameters).reduce((memo, key) => { if (parameters[key]) { memo.push(`${key}=${parameters[key]}`); } return memo; }, []).join('&');

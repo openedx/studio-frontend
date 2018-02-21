@@ -51,6 +51,7 @@ export const getAssets = (parameters, courseDetails) =>
       assetTypes: state.metadata.filters.assetTypes,
       sort: state.metadata.sort.sort,
       direction: state.metadata.sort.direction,
+      search: state.metadata.search.search,
       ...parameters,
     };
 
@@ -146,6 +147,22 @@ export const sortUpdate = (sort, direction, courseDetails) =>
     return dispatch(getAssets(parameters, courseDetails)).then((responseAction) => {
       if (requestFailed(responseAction)) {
         dispatch(sortUpdateFailure(currentSortState));
+      }
+    });
+  };
+
+export const searchUpdateFailure = previousSearchState => ({
+  type: assetActions.search.SEARCH_UPDATE_FAILURE,
+  previousState: { ...previousSearchState },
+});
+
+export const searchUpdate = (search, courseDetails) =>
+  (dispatch, getState) => {
+    const currentSearchState = getState().metadata.search;
+
+    return dispatch(getAssets({ search }, courseDetails)).then((responseAction) => {
+      if (requestFailed(responseAction)) {
+        dispatch(searchUpdateFailure(currentSearchState));
       }
     });
   };

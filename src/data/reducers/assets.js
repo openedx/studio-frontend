@@ -26,10 +26,14 @@ export const sortInitial = {
   direction: 'desc',
 };
 
+export const searchInitial = {
+  search: '',
+};
 
 export const requestInitial = {
   ...filtersInitial,
   ...sortInitial,
+  ...searchInitial,
   page: paginationInitial.page,
 };
 
@@ -98,6 +102,19 @@ export const sort = (state = sortInitial, action) => {
         direction: action.response.direction,
       };
     case assetActions.sort.SORT_UPDATE_FAILURE:
+      return { ...state, ...action.previousState };
+    default:
+      return state;
+  }
+};
+
+export const search = (state = searchInitial, action) => {
+  switch (action.type) {
+    case assetActions.request.REQUEST_ASSETS_SUCCESS:
+      return {
+        search: action.response.search,
+      };
+    case assetActions.sort.SEARCH_UPDATE_FAILURE:
       return { ...state, ...action.previousState };
     default:
       return state;
@@ -199,4 +216,5 @@ export const metadata = combineReducers({
   request,
   sort,
   status,
+  search,
 });
