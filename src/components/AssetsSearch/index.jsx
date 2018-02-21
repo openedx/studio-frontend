@@ -9,7 +9,7 @@ import './AssetsSearch.scss';
 export default class AssetsSearch extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { value: '' };
+    this.state = { value: props.assetsSearch.search };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleInputKeyDown = this.handleInputKeyDown.bind(this);
@@ -53,6 +53,7 @@ export default class AssetsSearch extends React.Component {
             type="search"
             inline
             label={<WrappedMessage message={messages.assetsSearchInputLabel} />}
+            value={this.state.value}
             onChange={this.handleChange}
           />
           <Button
@@ -73,7 +74,9 @@ export default class AssetsSearch extends React.Component {
 
 
 AssetsSearch.propTypes = {
-  updateSearch: PropTypes.func.isRequired,
+  assetsSearch: PropTypes.shape({
+    search: PropTypes.string,
+  }).isRequired,
   courseDetails: PropTypes.shape({
     lang: PropTypes.string,
     url_name: PropTypes.string,
@@ -85,4 +88,5 @@ AssetsSearch.propTypes = {
     revision: PropTypes.string,
     base_url: PropTypes.string,
   }).isRequired,
+  updateSearch: PropTypes.func.isRequired,
 };
