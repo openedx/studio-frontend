@@ -4,7 +4,7 @@ import thunk from 'redux-thunk';
 
 import endpoints from '../api/endpoints';
 import * as actionCreators from './assets';
-import { filtersInitial, paginationInitial, sortInitial, requestInitial } from '../reducers/assets';
+import { filtersInitial, paginationInitial, sortInitial, searchInitial, requestInitial } from '../reducers/assets';
 import { assetActions } from '../../data/constants/actionTypes';
 import deepCopy from './utils';
 
@@ -15,6 +15,7 @@ const initialState = {
     pagination: { ...paginationInitial },
     request: { ...requestInitial },
     sort: { ...sortInitial },
+    search: { ...searchInitial },
   },
 };
 

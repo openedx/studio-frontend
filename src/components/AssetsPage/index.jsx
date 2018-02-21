@@ -10,6 +10,7 @@ import WrappedAssetsDropZone from '../AssetsDropZone/container';
 import WrappedAssetsTable from '../AssetsTable/container';
 import WrappedAssetsFilters from '../AssetsFilters/container';
 import WrappedPagination from '../Pagination/container';
+import WrappedAssetsSearch from '../AssetsSearch/container';
 
 export const types = {
   NO_ASSETS: 'noAssets',
@@ -150,6 +151,11 @@ export default class AssetsPage extends React.Component {
     return (
       <div className={styles.assets}>
         <div className={edxBootstrap.container}>
+          <div className={edxBootstrap.row}>
+            <div className={`${edxBootstrap['col-md-3']} ${edxBootstrap['offset-md-9']}`}>
+              <WrappedAssetsSearch />
+            </div>
+          </div>
           <div className={edxBootstrap.row}>
             { this.getPage(this.state.pageType) }
           </div>
