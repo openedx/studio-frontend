@@ -12,8 +12,6 @@ export default class AssetsSearch extends React.Component {
     this.state = { value: props.assetsSearch.search };
 
     this.handleChange = this.handleChange.bind(this);
-    this.handleInputKeyDown = this.handleInputKeyDown.bind(this);
-    this.handleButtonKeyDown = this.handleButtonKeyDown.bind(this);
     this.submit = this.submit.bind(this);
   }
 
@@ -24,18 +22,6 @@ export default class AssetsSearch extends React.Component {
 
   handleChange(value) {
     this.setState({ value });
-  }
-
-  handleInputKeyDown(event) {
-    if (event.key === 'Enter') {
-      this.submit();
-    }
-  }
-
-  handleButtonKeyDown(event) {
-    if (event.key === 'Enter' || event.key === 'Space') {
-      this.submit();
-    }
   }
 
   render() {
