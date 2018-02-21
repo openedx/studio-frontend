@@ -69,6 +69,7 @@ export default class CopyButton extends React.Component {
         onBlur={this.onBlur}
         onMouseUp={this.onMouseUp}
         onMouseDown={this.onMouseDown}
+        data-identifier={this.props['data-identifier']}
       />
     );
   }
@@ -81,10 +82,12 @@ CopyButton.propTypes = {
   textToCopy: PropTypes.string.isRequired,
   onCopyButtonClick: PropTypes.func,
   className: PropTypes.arrayOf(PropTypes.string),
+  'data-identifier': PropTypes.string,
 };
 
 CopyButton.defaultProps = {
   onCopyButtonClick: () => {},
   ariaLabel: 'Copy',
   className: [],
+  'data-identifier': undefined,
 };

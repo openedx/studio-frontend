@@ -12,10 +12,10 @@ const AssetsFilters = ({ assetsFilters, updateFilter, courseDetails }) => (
     <WrappedMessage message={messages.assetsFiltersSectionLabel}>
       {
         displayText =>
-          <h4 id="filter-label" className={styles['filter-heading']}>{displayText}</h4>
+          <h4 id="filter-label" className={styles['filter-heading']} data-identifier="asset-filters-header">{displayText}</h4>
       }
     </WrappedMessage>
-    <div className={styles['filter-set']}>
+    <div className={styles['filter-set']} data-identifier="asset-filters">
       <CheckBoxGroup>
         {ASSET_TYPES.map(type => (
           <CheckBox

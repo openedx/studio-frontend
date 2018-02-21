@@ -131,13 +131,13 @@ export default class AssetsTable extends React.Component {
     if (thumbnail) {
       return (
         <WrappedMessage message={messages.assetsTableNoDescription} >
-          { displayText => (<img src={`${baseUrl}${thumbnail}`} alt={displayText} />) }
+          { displayText => (<img src={`${baseUrl}${thumbnail}`} alt={displayText} data-identifier="asset-image-thumbnail" />) }
         </WrappedMessage>
       );
     }
     return (
       <WrappedMessage message={messages.assetsTableNoPreview} >
-        { displayText => <div className={styles['no-image-preview']}>{displayText}</div> }
+        { displayText => <div className={styles['no-image-preview']} data-identifier="asset-image-thumbnail">{displayText}</div> }
       </WrappedMessage>
     );
   }
@@ -161,6 +161,7 @@ export default class AssetsTable extends React.Component {
             data-asset-id={asset.id}
             aria-label={displayText}
             onClick={this.onLockClick}
+            data-identifier="asset-lock-button"
           />)
         }
       </WrappedMessage>
@@ -200,6 +201,7 @@ export default class AssetsTable extends React.Component {
             className={['btn-outline-primary']}
             label={(<span className={classNames(...spinnerClasses)} />)}
             aria-label={displayText}
+            data-identifier="asset-locking-button"
           />)
         }
       </WrappedMessage>
@@ -237,7 +239,7 @@ export default class AssetsTable extends React.Component {
     );
 
     const onCopyLabel = (
-      <WrappedMessage message={messages.assetsTableCopiedStatus} />
+      <WrappedMessage message={messages.assetsTableCopiedStatus} data-identifier={`asset-copy-${labelMessage}-url-button-copy-label`} />
     );
 
     return (
@@ -257,6 +259,7 @@ export default class AssetsTable extends React.Component {
               onCopyButtonClick={this.onCopyButtonClick}
               ariaLabel={displayText}
               onCopyLabel={onCopyLabel}
+              data-identifier={`asset-copy-${labelMessage.defaultMessage.toLowerCase()}-url-button`}
             />)
         }
       </WrappedMessage>
@@ -403,10 +406,12 @@ export default class AssetsTable extends React.Component {
               aria-label={displayText}
               onClick={() => { this.onDeleteClick(index); }}
               inputRef={(ref) => { this.trashcanRefs[currentAsset.id] = ref; }}
+              data-identifier="asset-delete-button"
             />)
           }
         </WrappedMessage>
       );
+
       const isLoadingLock = currentAsset.loadingFields &&
         currentAsset.loadingFields.includes(assetLoading.LOCK);
 
@@ -427,6 +432,18 @@ export default class AssetsTable extends React.Component {
         currentAsset.display_name,
         currentAsset.url,
         currentAsset.external_url,
+      );
+
+      currentAsset.display_name = (
+        <span data-identifier="asset-file-name">{currentAsset.display_name}</span>
+      );
+
+      currentAsset.content_type = (
+        <span data-identifier="asset-content-type">{currentAsset.content_type}</span>
+      );
+
+      currentAsset.date_added = (
+        <span data-identifier="asset-date-added">{currentAsset.date_added}</span>
       );
 
       return currentAsset;
@@ -500,6 +517,7 @@ export default class AssetsTable extends React.Component {
                   label={<WrappedMessage message={messages.assetsTablePermaDelete} />}
                   buttonType="primary"
                   onClick={this.deleteAsset}
+                  data-identifier="asset-confirm-delete-button"
                 />,
               ]}
               variant={{ status: Variant.status.WARNING }}
@@ -526,6 +544,7 @@ export default class AssetsTable extends React.Component {
         }
       </WrappedMessage>
     );
+
     return (
       <React.Fragment>
         <WrappedMessage
@@ -564,11 +583,7 @@ export default class AssetsTable extends React.Component {
       />
     );
 
-    return (
-      <React.Fragment>
-        {statusAlert}
-      </React.Fragment>
-    );
+    return statusAlert;
   }
 
   render() {

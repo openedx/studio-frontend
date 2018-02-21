@@ -43,14 +43,19 @@ export default class AssetsDropZone extends React.Component {
           activeClassName={styles['drop-active']}
           disableClick
           maxSize={this.props.maxFileSizeMB * 1000000}
+          data-identifier="asset-drop-zone"
         >
-          <p className={styles['upload-icon']}>
+          <p className={styles['upload-icon']} data-identifier="asset-drop-zone-icon">
             <span
               aria-hidden
               className={classNames(FontAwesomeStyles.fa, FontAwesomeStyles['fa-cloud-upload'])}
             />
           </p>
-          <WrappedMessage message={messages.assetsDropZoneHeader} tagName="h2" />
+          <WrappedMessage message={messages.assetsDropZoneHeader}>
+            { displayText => (
+              <h2 data-identifier="asset-drop-zone-header">{displayText}</h2>
+            )}
+          </WrappedMessage>
           <div className={styles['center-text']}>
             <WrappedMessage message={messages.assetsDropZoneBrowseLabel} >
               { displayText => (
@@ -58,17 +63,23 @@ export default class AssetsDropZone extends React.Component {
                   className={['btn', 'btn-outline-primary']}
                   label={displayText}
                   onClick={this.handleClick}
+                  data-identifier="asset-drop-zone-browse-button"
                 />
               )}
             </WrappedMessage>
           </div>
           <WrappedMessage
-            tagName="p"
             message={messages.assetsDropZoneMaxFileSizeLabel}
             values={{
               maxFileSizeMB: this.props.maxFileSizeMB,
             }}
-          />
+          >
+            { displayText => (
+              <p data-identifier="asset-drop-zone-max-file-size-label">
+                {displayText}
+              </p>
+            )}
+          </WrappedMessage>
         </Dropzone>
       </div>
     );
