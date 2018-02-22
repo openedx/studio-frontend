@@ -57,5 +57,12 @@ describe('<AssetsSearch />', () => {
       expect(searchSpy).toHaveBeenCalledTimes(1);
       expect(searchSpy).toHaveBeenCalledWith('edX', defaultProps.courseDetails);
     });
+    it('updates search input text when search redux state is updated', () => {
+      const searchInput = wrapper.find('form input[type="search"]');
+      wrapper.setProps({ assetsSearch: { search: 'foobar' } }, () => {
+        expect(wrapper.state('value')).toEqual('foobar');
+        expect(searchInput.instance().value).toEqual('foobar');
+      });
+    });
   });
 });

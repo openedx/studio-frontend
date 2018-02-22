@@ -15,6 +15,12 @@ export default class AssetsSearch extends React.Component {
     this.submit = this.submit.bind(this);
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (this.state.value !== nextProps.assetsSearch.search) {
+      this.setState({ value: nextProps.assetsSearch.search });
+    }
+  }
+
   submit(event) {
     this.props.updateSearch(this.state.value, this.props.courseDetails);
     event.preventDefault(); // prevent the page from navigating to the form action URL

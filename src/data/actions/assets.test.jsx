@@ -246,12 +246,14 @@ describe('Assets Action Creators', () => {
   it('returns expected state from clearFilters success', () => {
     const newRequest = {
       ...filtersInitial,
+      ...searchInitial,
       page: 0,
     };
 
     const response = {
       body: {
         ...initialState.metadata.filters,
+        ...initialState.metadata.search,
       },
     };
 
@@ -280,6 +282,7 @@ describe('Assets Action Creators', () => {
 
     const newRequest = {
       ...initialState.metadata.filters,
+      ...initialState.metadata.search,
       page: 0,
     };
 

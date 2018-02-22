@@ -1,6 +1,7 @@
 import * as clientApi from '../api/client';
 import { assetActions } from '../constants/actionTypes';
 import { getDefaultFilterState } from '../../utils/getAssetsFilters';
+import { searchInitial } from '../reducers/assets.js';
 import deepCopy from './utils';
 
 const compare = (attributes, obj1, obj2) => (
@@ -121,6 +122,7 @@ export const clearFilters = courseDetails =>
     const parameters = {
       assetTypes: defaultFilterParameters,
       page: 0,
+      search: searchInitial.search,
     };
 
     return dispatch(getAssets(parameters, courseDetails)).then((responseAction) => {
