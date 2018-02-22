@@ -31,36 +31,34 @@ export default class AssetsSearch extends React.Component {
   }
 
   render() {
+    // TODO: InputText creates it's own form-group div. Nesting them is not semantic.
+    // Once Paragon's asInput is refactored, use only one form-group element.
     return (
-      <div role="group" aria-labelledby="search-label">
-        {/* TODO: InputText creates it's own form-group div. Nesting them is not semantic.
-            Once Paragon's asInput is refactored, use only one form-group element. */}
-        <form
-          className="form-group form-inline"
-          onSubmit={this.submit}
-        >
-          <InputText
-            name="search"
-            className={['form-inline']}
-            type="search"
-            inline
-            label={<WrappedMessage message={messages.assetsSearchInputLabel} />}
-            value={this.state.value}
-            onChange={this.handleChange}
-          />
-          <Button
-            buttonType="primary"
-            type="submit"
-            label={
-              /* TODO: How to translate this screenReaderText? */
-              <Icon
-                className={['fa', 'fa-search']}
-                screenReaderText="Submit search"
-              />
-            }
-          />
-        </form>
-      </div>
+      <form
+        className="form-group form-inline"
+        onSubmit={this.submit}
+      >
+        <InputText
+          name="search"
+          className={['form-inline']}
+          type="search"
+          inline
+          label={<WrappedMessage message={messages.assetsSearchInputLabel} />}
+          value={this.state.value}
+          onChange={this.handleChange}
+        />
+        <Button
+          buttonType="primary"
+          type="submit"
+          label={
+            /* TODO: How to translate this screenReaderText? */
+            <Icon
+              className={['fa', 'fa-search']}
+              screenReaderText="Submit search"
+            />
+          }
+        />
+      </form>
     );
   }
 }

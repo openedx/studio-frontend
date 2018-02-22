@@ -8,8 +8,8 @@ msgstr ""
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
 "X-Generator: react-intl-gettext 5.1.1\n"
-"POT-Creation-Date: 2018-02-21T22:19:57.367Z\n"
-"PO-Revision-Date: 2018-02-21T22:19:57.367Z\n"
+"POT-Creation-Date: 2018-02-22T22:42:24.597Z\n"
+"PO-Revision-Date: 2018-02-22T22:42:24.597Z\n"
 "Language: en\n"
 
 #. Title for link to full accessiblity policy.
@@ -311,6 +311,18 @@ msgstr "0 files in your course"
 msgctxt "assetsPageNoAssetsMessage"
 msgid "Enhance your course content by uploading files such as images and documents."
 msgstr "Enhance your course content by uploading files such as images and documents."
+
+#. Message above a paginated table describing what subset of a filtered result set is currently visible.
+# AssetsResultsCount/displayMessages.json
+msgctxt "assetsResultsCountFiltered"
+msgid "Showing {start}-{end} out of {total} possible matches."
+msgstr "Showing {start}-{end} out of {total} possible matches."
+
+#. Message above a paginated table of files describing what subset of all files is currently visible.
+# AssetsResultsCount/displayMessages.json
+msgctxt "assetsResultsCountTotal"
+msgid "Showing {start}-{end} out of {total} total files."
+msgstr "Showing {start}-{end} out of {total} total files."
 
 #. Label for search input
 # AssetsSearch/displayMessages.json

@@ -87,7 +87,7 @@ beforeEach(() => {
 });
 
 describe('<AssetsPage />', () => {
-  describe('search', () => {
+  describe('AssetsSearch', () => {
     it('is hidden when disabled', () => {
       wrapper = shallowWithIntl(
         <AssetsPage
@@ -99,6 +99,28 @@ describe('<AssetsPage />', () => {
     });
     it('is visible when enabled', () => {
       expect(wrapper.find('Connect(AssetsSearch)')).toHaveLength(1);
+    });
+  });
+  describe('AssetsResultsCount', () => {
+    it('is hidden when disabled', () => {
+      wrapper = shallowWithIntl(
+        <AssetsPage
+          {...defaultProps}
+          searchSettings={{ enabled: false }}
+        />,
+      );
+      expect(wrapper.find('Connect(AssetsResultsCount)')).toHaveLength(0);
+    });
+    it('is hidden when enabled and no assets', () => {
+      expect(wrapper.find('Connect(AssetsResultsCount)')).toHaveLength(0);
+    });
+    it('is visible when enabled and has assets', () => {
+      wrapper.setProps({
+        assetsList: [{
+          display_name: 'a.txt',
+        }],
+      });
+      expect(wrapper.find('Connect(AssetsResultsCount)')).toHaveLength(1);
     });
   });
   describe('with assets', () => {

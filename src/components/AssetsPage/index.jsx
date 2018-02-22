@@ -11,6 +11,7 @@ import WrappedAssetsTable from '../AssetsTable/container';
 import WrappedAssetsFilters from '../AssetsFilters/container';
 import WrappedPagination from '../Pagination/container';
 import WrappedAssetsSearch from '../AssetsSearch/container';
+import WrappedAssetsResultsCount from '../AssetsResultsCount/container';
 import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
 import messages from './displayMessages';
 
@@ -155,11 +156,23 @@ export default class AssetsPage extends React.Component {
       <div className={styles.assets}>
         <div className={edxBootstrap.container}>
           {this.props.searchSettings.enabled &&
-            <div className={edxBootstrap.row}>
-              <div className={`${edxBootstrap['col-md-3']} ${edxBootstrap['offset-md-9']}`}>
-                <WrappedAssetsSearch />
+            <React.Fragment>
+              <div className={edxBootstrap.row}>
+                <div className={`${edxBootstrap['col-md-3']} ${edxBootstrap['offset-md-9']}`}>
+                  <WrappedAssetsSearch />
+                </div>
               </div>
-            </div>
+              {this.state.pageType === types.NORMAL &&
+                <div className={edxBootstrap.row}>
+                  <div className={`${edxBootstrap['col-md-7']} ${edxBootstrap['offset-md-2']}`}>
+                    <WrappedAssetsResultsCount />
+                  </div>
+                  <div className={`${edxBootstrap['col-md-3']} ${edxBootstrap['text-right']}`}>
+                    <span>View all files</span>
+                  </div>
+                </div>
+              }
+            </React.Fragment>
           }
           <div className={edxBootstrap.row}>
             { this.getPage(this.state.pageType) }
