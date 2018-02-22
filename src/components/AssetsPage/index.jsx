@@ -154,11 +154,13 @@ export default class AssetsPage extends React.Component {
     return (
       <div className={styles.assets}>
         <div className={edxBootstrap.container}>
-          <div className={edxBootstrap.row}>
-            <div className={`${edxBootstrap['col-md-3']} ${edxBootstrap['offset-md-9']}`}>
-              <WrappedAssetsSearch />
+          {this.props.searchSettings.enabled &&
+            <div className={edxBootstrap.row}>
+              <div className={`${edxBootstrap['col-md-3']} ${edxBootstrap['offset-md-9']}`}>
+                <WrappedAssetsSearch />
+              </div>
             </div>
-          </div>
+          }
           <div className={edxBootstrap.row}>
             { this.getPage(this.state.pageType) }
           </div>
@@ -198,5 +200,8 @@ AssetsPage.propTypes = {
   }).isRequired,
   uploadSettings: PropTypes.shape({
     max_file_size_in_mbs: PropTypes.number,
+  }).isRequired,
+  searchSettings: PropTypes.shape({
+    enabled: PropTypes.bool,
   }).isRequired,
 };

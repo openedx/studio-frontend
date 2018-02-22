@@ -11,6 +11,7 @@ const mapStateToProps = state => ({
   status: state.metadata.status,
   filtersMetaData: state.metadata.filters,
   searchMetaData: state.metadata.search,
+  searchSettings: state.studioDetails.search_settings,
 });
 
 const mapDispatchToProps = dispatch => ({
