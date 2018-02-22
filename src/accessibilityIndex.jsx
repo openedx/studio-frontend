@@ -17,11 +17,15 @@ import AccessibilityPolicyPage from './components/AccessibilityPolicyPage';
 import store from './data/store';
 /* eslint-enable import/first */
 
-addLocaleData(enLocaleData);
 
-// hard-coded NON-defaults for testing. TODO: make these dynamic and correct
+/* This page is deliberately *not* making use of src/utils/i18n/loadI18nDomData.jsx
+ *
+ * For legal purposes, we want to translate the entire page as a whole using some
+ * yet-to-be-determined mechanism.
+*/
 const locale = 'en';
 const messages = {};
+addLocaleData(enLocaleData);
 
 const AccessibilityApp = () => (
   <IntlProvider locale={locale} messages={messages}>
