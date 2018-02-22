@@ -46,6 +46,7 @@ export default class AssetsSearch extends React.Component {
             buttonType="primary"
             type="submit"
             label={
+              /* TODO: How to translate this screenReaderText? */
               <Icon
                 className={['fa', 'fa-search']}
                 screenReaderText="Submit search"

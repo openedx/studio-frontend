@@ -10,6 +10,7 @@ const mapStateToProps = state => ({
   uploadSettings: state.studioDetails.upload_settings,
   status: state.metadata.status,
   filtersMetaData: state.metadata.filters,
+  searchMetaData: state.metadata.search,
 });
 
 const mapDispatchToProps = dispatch => ({

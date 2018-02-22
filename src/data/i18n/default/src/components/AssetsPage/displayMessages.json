@@ -1,0 +1,27 @@
+[
+  {
+    "id": "assetsPageNoResultsNumFiles",
+    "description": "Title for a message displayed when no results are found.",
+    "defaultMessage": "0 files"
+  },
+  {
+    "id": "assetsPageNoResultsMessage",
+    "description": "Message displayed in table when no results are found.",
+    "defaultMessage": "No files were found."
+  },
+  {
+    "id": "assetsPageNoResultsClear",
+    "description": "Label for a button that clears all of the filters applied on the table.",
+    "defaultMessage": "Clear all filters"
+  },
+  {
+    "id": "assetsPageNoAssetsNumFiles",
+    "description": "Title for a message displayed when a course has no files to display in the table.",
+    "defaultMessage": "0 files in your course"
+  },
+  {
+    "id": "assetsPageNoAssetsMessage",
+    "description": "Message displayed when a course has no files to display in the table.",
+    "defaultMessage": "Enhance your course content by uploading files such as images and documents."
+  }
+]

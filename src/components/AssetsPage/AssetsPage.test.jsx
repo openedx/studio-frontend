@@ -4,7 +4,9 @@ import { Button } from '@edx/paragon';
 import AssetsPage, { types } from './index';
 import { assetActions } from '../../data/constants/actionTypes';
 import courseDetails from '../../utils/testConstants';
-import { shallowWithIntl } from '../../utils/i18n/enzymeHelper';
+import { mountWithIntl, shallowWithIntl } from '../../utils/i18n/enzymeHelper';
+import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
+import messages from './displayMessages';
 
 let wrapper;
 
@@ -15,6 +17,9 @@ const defaultProps = {
     assetTypes: {
       edX: false,
     },
+  },
+  searchMetaData: {
+    search: '',
   },
   status: {},
   uploadSettings: {
@@ -118,8 +123,8 @@ describe('<AssetsPage />', () => {
       it('noAssetsBody', () => {
         const body = wrapper.find('.container .row .col-10');
 
-        expect(body.find('h3').text()).toEqual('0 files in your course');
-        expect(body.find('h4').text()).toEqual('Enhance your course content by uploading files such as images and documents.');
+        expect(body.find(WrappedMessage).at(0).prop('message')).toEqual(messages.assetsPageNoAssetsNumFiles);
+        expect(body.find(WrappedMessage).at(1).prop('message')).toEqual(messages.assetsPageNoAssetsMessage);
       });
       it('with correct markup structure', () => {
         const page = wrapper.find('.container .row .col');
@@ -131,8 +136,8 @@ describe('<AssetsPage />', () => {
         rendersAssetsDropZoneTest(page);
 
         expect(body).toHaveLength(1);
-        expect(body.find('h3')).toHaveLength(1);
-        expect(body.find('h4')).toHaveLength(1);
+        expect(body.find(WrappedMessage).at(0).prop('tagName')).toEqual('h3');
+        expect(body.find(WrappedMessage).at(1).prop('tagName')).toEqual('h4');
       });
     });
     describe('has correct state', () => {
@@ -177,8 +182,8 @@ describe('<AssetsPage />', () => {
       it('noResultsBody for 1 filter', () => {
         const body = wrapper.find('.container .row .col-10');
 
-        expect(body.find('h3').text()).toEqual('0 files');
-        expect(body.find('h4').text()).toEqual('No files were found for this filter.');
+        expect(body.find(WrappedMessage).at(0).prop('message')).toEqual(messages.assetsPageNoResultsNumFiles);
+        expect(body.find(WrappedMessage).at(1).prop('message')).toEqual(messages.assetsPageNoResultsMessage);
       });
 
       it('with correct markup structure', () => {
@@ -193,8 +198,8 @@ describe('<AssetsPage />', () => {
         renderAssetsFiltersTest();
 
         expect(body).toHaveLength(1);
-        expect(body.find('h3')).toHaveLength(1);
-        expect(body.find('h4')).toHaveLength(1);
+        expect(body.find(WrappedMessage).at(0).prop('tagName')).toEqual('h3');
+        expect(body.find(WrappedMessage).at(1).prop('tagName')).toEqual('h4');
       });
       it('noResultsBody for 2+ filters', () => {
         wrapper.setProps({
@@ -207,8 +212,8 @@ describe('<AssetsPage />', () => {
         });
 
         const body = wrapper.find('.container .row .col-10');
-        expect(body.find('h3').text()).toEqual('0 files');
-        expect(body.find('h4').text()).toEqual('No files were found for these filters.');
+        expect(body.find(WrappedMessage).at(0).prop('message')).toEqual(messages.assetsPageNoResultsNumFiles);
+        expect(body.find(WrappedMessage).at(1).prop('message')).toEqual(messages.assetsPageNoResultsMessage);
       });
       describe('clear filters button', () => {
         beforeEach(() => {
@@ -226,7 +231,7 @@ describe('<AssetsPage />', () => {
 
           expect(clearFiltersButton).toHaveLength(1);
           expect(clearFiltersButton.prop('buttonType')).toEqual('link');
-          expect(clearFiltersButton.prop('label')).toEqual('Clear filter');
+          expect(clearFiltersButton.prop('label')).toEqual(<WrappedMessage message={messages.assetsPageNoResultsClear} />);
         });
         it('renders for 2+ filters', () => {
           wrapper.setProps({
@@ -243,7 +248,7 @@ describe('<AssetsPage />', () => {
 
           expect(clearFiltersButton).toHaveLength(1);
           expect(clearFiltersButton.prop('buttonType')).toEqual('link');
-          expect(clearFiltersButton.prop('label')).toEqual('Clear all filters');
+          expect(clearFiltersButton.prop('label')).toEqual(<WrappedMessage message={messages.assetsPageNoResultsClear} />);
         });
         it('calls clearFilters onClick', () => {
           const clearFiltersMock = jest.fn();

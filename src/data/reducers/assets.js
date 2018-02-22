@@ -112,7 +112,7 @@ export const search = (state = searchInitial, action) => {
   switch (action.type) {
     case assetActions.request.REQUEST_ASSETS_SUCCESS:
       return {
-        search: action.response.search,
+        search: action.response.textSearch,
       };
     case assetActions.sort.SEARCH_UPDATE_FAILURE:
       return { ...state, ...action.previousState };
