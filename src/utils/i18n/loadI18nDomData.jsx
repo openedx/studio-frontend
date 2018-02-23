@@ -8,5 +8,3 @@ export default loadI18nDomData = () => {
   }
   return {"locale": domLocale, "messages": domMessages};
 };
-
-export default loadI18nDomData;
