@@ -88,8 +88,22 @@ export default class AssetsPage extends React.Component {
         { this.renderAssetsFilters() }
       </div>
       <div className={edxBootstrap['col-10']}>
-        <WrappedAssetsTable />
-        <WrappedPagination />
+        {this.props.searchSettings.enabled &&
+          <React.Fragment>
+            <div className={edxBootstrap.row}>
+              <div className={`${edxBootstrap['col-md-8']}`}>
+                <WrappedAssetsResultsCount />
+              </div>
+              <div className={`${edxBootstrap['col-md-4']} ${edxBootstrap['text-right']}`}>
+                <WrappedAssetsClearFiltersButton />
+              </div>
+            </div>
+          </React.Fragment>
+        }
+        <div className={edxBootstrap.row}>
+          <WrappedAssetsTable />
+          <WrappedPagination />
+        </div>
       </div>
     </React.Fragment>
   );
@@ -107,7 +121,9 @@ export default class AssetsPage extends React.Component {
         { this.renderAssetsDropZone() }
       </div>
       <div className={edxBootstrap['col-10']}>
-        { this.renderNoAssetsBody() }
+        <div className={edxBootstrap.row}>
+          { this.renderNoAssetsBody() }
+        </div>
       </div>
     </React.Fragment>
   );
@@ -127,7 +143,9 @@ export default class AssetsPage extends React.Component {
         { this.renderAssetsFilters() }
       </div>
       <div className={edxBootstrap['col-10']}>
-        { this.renderNoResultsBody() }
+        <div className={edxBootstrap.row}>
+          { this.renderNoResultsBody() }
+        </div>
       </div>
     </React.Fragment>
   );
@@ -144,23 +162,11 @@ export default class AssetsPage extends React.Component {
       <div className={styles.assets}>
         <div className={edxBootstrap.container}>
           {this.props.searchSettings.enabled &&
-            <React.Fragment>
-              <div className={edxBootstrap.row}>
-                <div className={`${edxBootstrap['col-md-3']} ${edxBootstrap['offset-md-9']}`}>
-                  <WrappedAssetsSearch />
-                </div>
+            <div className={edxBootstrap.row}>
+              <div className={edxBootstrap['col-12']}>
+                <WrappedAssetsSearch />
               </div>
-              {this.state.pageType === types.NORMAL &&
-                <div className={edxBootstrap.row}>
-                  <div className={`${edxBootstrap['col-md-7']} ${edxBootstrap['offset-md-2']}`}>
-                    <WrappedAssetsResultsCount />
-                  </div>
-                  <div className={`${edxBootstrap['col-md-3']} ${edxBootstrap['text-right']}`}>
-                    <WrappedAssetsClearFiltersButton />
-                  </div>
-                </div>
-              }
-            </React.Fragment>
+            </div>
           }
           <div className={edxBootstrap.row}>
             { this.getPage(this.state.pageType) }

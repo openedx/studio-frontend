@@ -1,7 +1,10 @@
 import React from 'react';
+import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import { Button, Icon, InputText } from '@edx/paragon';
+import FontAwesomeStyles from 'font-awesome/css/font-awesome.min.css';
 
+import edxBootstrap from '../../SFE.scss';
 import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
 import messages from './displayMessages';
 import './AssetsSearch.scss';
@@ -35,12 +38,12 @@ export default class AssetsSearch extends React.Component {
     // Once Paragon's asInput is refactored, use only one form-group element.
     return (
       <form
-        className="form-group form-inline"
+        className={classNames(edxBootstrap['form-group'], edxBootstrap['form-inline'], edxBootstrap['justify-content-end'])}
         onSubmit={this.submit}
       >
         <InputText
           name="search"
-          className={['form-inline']}
+          className={[edxBootstrap['form-inline']]}
           type="search"
           inline
           label={<WrappedMessage message={messages.assetsSearchInputLabel} />}
@@ -53,7 +56,7 @@ export default class AssetsSearch extends React.Component {
           label={
             /* TODO: How to translate this screenReaderText? */
             <Icon
-              className={['fa', 'fa-search']}
+              className={[classNames(FontAwesomeStyles.fa, FontAwesomeStyles['fa-search'])]}
               screenReaderText="Submit search"
             />
           }
