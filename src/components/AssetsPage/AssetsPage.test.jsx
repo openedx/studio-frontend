@@ -1,10 +1,9 @@
 import React from 'react';
-import { Button } from '@edx/paragon';
 
 import AssetsPage, { types } from './index';
 import { assetActions } from '../../data/constants/actionTypes';
 import courseDetails from '../../utils/testConstants';
-import { mountWithIntl, shallowWithIntl } from '../../utils/i18n/enzymeHelper';
+import { shallowWithIntl } from '../../utils/i18n/enzymeHelper';
 import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
 import messages from './displayMessages';
 
@@ -29,7 +28,6 @@ const defaultProps = {
     enabled: true,
   },
 
-  clearFilters: () => {},
   getAssets: () => {},
 };
 
@@ -121,6 +119,28 @@ describe('<AssetsPage />', () => {
         }],
       });
       expect(wrapper.find('Connect(AssetsResultsCount)')).toHaveLength(1);
+    });
+  });
+  describe('AssetsClearFiltersButton', () => {
+    it('is hidden when disabled', () => {
+      wrapper = shallowWithIntl(
+        <AssetsPage
+          {...defaultProps}
+          searchSettings={{ enabled: false }}
+        />,
+      );
+      expect(wrapper.find('Connect(AssetsClearFiltersButton)')).toHaveLength(0);
+    });
+    it('is hidden when enabled and no assets', () => {
+      expect(wrapper.find('Connect(AssetsClearFiltersButton)')).toHaveLength(0);
+    });
+    it('is visible when enabled and has assets', () => {
+      wrapper.setProps({
+        assetsList: [{
+          display_name: 'a.txt',
+        }],
+      });
+      expect(wrapper.find('Connect(AssetsClearFiltersButton)')).toHaveLength(1);
     });
   });
   describe('with assets', () => {
@@ -254,7 +274,7 @@ describe('<AssetsPage />', () => {
         expect(body.find(WrappedMessage).at(0).prop('message')).toEqual(messages.assetsPageNoResultsNumFiles);
         expect(body.find(WrappedMessage).at(1).prop('message')).toEqual(messages.assetsPageNoResultsMessage);
       });
-      describe('clear filters button', () => {
+      describe('AssetsClearFiltersButton', () => {
         beforeEach(() => {
           wrapper.setProps({
             filtersMetaData: {
@@ -266,11 +286,7 @@ describe('<AssetsPage />', () => {
         });
         it('renders for 1 filter', () => {
           const body = wrapper.find('.container .row .col-10');
-          const clearFiltersButton = body.find(Button);
-
-          expect(clearFiltersButton).toHaveLength(1);
-          expect(clearFiltersButton.prop('buttonType')).toEqual('link');
-          expect(clearFiltersButton.prop('label')).toEqual(<WrappedMessage message={messages.assetsPageNoResultsClear} />);
+          expect(body.find('Connect(AssetsClearFiltersButton)')).toHaveLength(1);
         });
         it('renders for 2+ filters', () => {
           wrapper.setProps({
@@ -283,36 +299,7 @@ describe('<AssetsPage />', () => {
           });
 
           const body = wrapper.find('.container .row .col-10');
-          const clearFiltersButton = body.find(Button);
-
-          expect(clearFiltersButton).toHaveLength(1);
-          expect(clearFiltersButton.prop('buttonType')).toEqual('link');
-          expect(clearFiltersButton.prop('label')).toEqual(<WrappedMessage message={messages.assetsPageNoResultsClear} />);
-        });
-        it('calls clearFilters onClick', () => {
-          const clearFiltersMock = jest.fn();
-
-          wrapper = shallowWithIntl(
-            <AssetsPage
-              {...defaultProps}
-              clearFilters={clearFiltersMock}
-            />,
-          );
-
-          wrapper.setProps({
-            filtersMetaData: {
-              assetTypes: {
-                edX: true,
-              },
-            },
-          });
-
-          const body = wrapper.find('.container .row .col-10');
-          const clearFiltersButton = body.find(Button);
-
-          clearFiltersButton.simulate('click');
-
-          expect(clearFiltersMock).toHaveBeenCalledTimes(1);
+          expect(body.find('Connect(AssetsClearFiltersButton)')).toHaveLength(1);
         });
       });
     });

@@ -1,0 +1,7 @@
+[
+  {
+    "id": "assetsClearFiltersButtonLabel",
+    "description": "Label for a button that clears all filters applied to a table.",
+    "defaultMessage": "View all files"
+  }
+]

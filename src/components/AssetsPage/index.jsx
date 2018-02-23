@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button } from '@edx/paragon';
 
 import { assetActions } from '../../data/constants/actionTypes';
 import { hasSelectedFilters } from '../../utils/getAssetsFilters';
@@ -12,6 +11,7 @@ import WrappedAssetsFilters from '../AssetsFilters/container';
 import WrappedPagination from '../Pagination/container';
 import WrappedAssetsSearch from '../AssetsSearch/container';
 import WrappedAssetsResultsCount from '../AssetsResultsCount/container';
+import WrappedAssetsClearFiltersButton from '../AssetsClearFiltersButton/container';
 import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
 import messages from './displayMessages';
 
@@ -29,8 +29,6 @@ export default class AssetsPage extends React.Component {
     this.state = {
       pageType: types.SKELETON,
     };
-
-    this.onClearFiltersButtonClick = this.onClearFiltersButtonClick.bind(this);
   }
 
   componentDidMount() {
@@ -41,10 +39,6 @@ export default class AssetsPage extends React.Component {
     this.setState({
       pageType: this.getPageType(nextProps),
     });
-  }
-
-  onClearFiltersButtonClick = () => {
-    this.props.clearFilters(this.props.courseDetails);
   }
 
   getPageType = (props) => {
@@ -122,13 +116,7 @@ export default class AssetsPage extends React.Component {
     <div>
       <WrappedMessage message={messages.assetsPageNoResultsNumFiles} tagName="h3" />
       <WrappedMessage message={messages.assetsPageNoResultsMessage} tagName="h4" />
-      <Button
-        buttonType="link"
-        onClick={this.onClearFiltersButtonClick}
-        label={
-          <WrappedMessage message={messages.assetsPageNoResultsClear} />
-        }
-      />
+      <WrappedAssetsClearFiltersButton />
     </div>
   );
 
@@ -168,7 +156,7 @@ export default class AssetsPage extends React.Component {
                     <WrappedAssetsResultsCount />
                   </div>
                   <div className={`${edxBootstrap['col-md-3']} ${edxBootstrap['text-right']}`}>
-                    <span>View all files</span>
+                    <WrappedAssetsClearFiltersButton />
                   </div>
                 </div>
               }
@@ -186,7 +174,6 @@ export default class AssetsPage extends React.Component {
 AssetsPage.propTypes = {
   // eslint-disable-next-line react/no-unused-prop-types
   assetsList: PropTypes.arrayOf(PropTypes.object).isRequired,
-  clearFilters: PropTypes.func.isRequired,
   courseDetails: PropTypes.shape({
     lang: PropTypes.string,
     url_name: PropTypes.string,

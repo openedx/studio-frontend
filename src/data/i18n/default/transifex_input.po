@@ -8,8 +8,8 @@ msgstr ""
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
 "X-Generator: react-intl-gettext 5.1.1\n"
-"POT-Creation-Date: 2018-02-22T22:42:24.597Z\n"
-"PO-Revision-Date: 2018-02-22T22:42:24.597Z\n"
+"POT-Creation-Date: 2018-02-23T16:47:46.066Z\n"
+"PO-Revision-Date: 2018-02-23T16:47:46.066Z\n"
 "Language: en\n"
 
 #. Title for link to full accessiblity policy.
@@ -227,6 +227,12 @@ msgstr "Enter a message."
 msgctxt "accessibilityPolicyFormValidName"
 msgid "Enter a name."
 msgstr "Enter a name."
+
+#. Label for a button that clears all filters applied to a table.
+# AssetsClearFiltersButton/displayMessages.json
+msgctxt "assetsClearFiltersButtonLabel"
+msgid "View all files"
+msgstr "View all files"
 
 #. Upload label for the "Browse" button
 # AssetsDropZone/displayMessages.json

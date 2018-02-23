@@ -1,7 +1,7 @@
 import * as clientApi from '../api/client';
 import { assetActions } from '../constants/actionTypes';
 import { getDefaultFilterState } from '../../utils/getAssetsFilters';
-import { searchInitial } from '../reducers/assets.js';
+import { searchInitial } from '../reducers/assets';
 import deepCopy from './utils';
 
 const compare = (attributes, obj1, obj2) => (
