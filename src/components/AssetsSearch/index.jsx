@@ -54,11 +54,14 @@ export default class AssetsSearch extends React.Component {
           buttonType="primary"
           type="submit"
           label={
-            /* TODO: How to translate this screenReaderText? */
-            <Icon
-              className={[classNames(FontAwesomeStyles.fa, FontAwesomeStyles['fa-search'])]}
-              screenReaderText="Submit search"
-            />
+            <WrappedMessage message={messages.assetsSearchSubmitLabel}>{
+              txt => (
+                <Icon
+                  className={[classNames(FontAwesomeStyles.fa, FontAwesomeStyles['fa-search'])]}
+                  screenReaderText={txt}
+                />
+              )
+            }</WrappedMessage>
           }
         />
       </form>
