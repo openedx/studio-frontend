@@ -1,25 +1,13 @@
-import enLocaleData from 'react-intl/locale-data/en';
-import { addLocaleData } from 'react-intl';
-
 const loadI18nDomData = () => {
-  const retDict = {};
-  let localeData;
-
   try {
-    const domDefinedLocaleData = JSON.parse(document.getElementById('SFE_i18n_localeScript').innerHTML);
-    localeData = domDefinedLocaleData.data;
-    retDict.locale = domDefinedLocaleData.locale;
-    retDict.messages = JSON.parse(document.getElementById('SFE_i18n_messages').innerHTML);
+    const domLocale = document.getElementById('SFE_i18n_locale').innerHTML.trim();
+    const domMessages = JSON.parse(document.getElementById('SFE_i18n_messages').innerHTML);
+    return {"locale": domLocale, "messages": domMessages};
   } catch (err) {
-    // fail back to default english values if any errors
-    localeData = enLocaleData;
-    retDict.locale = 'en';
-    // an empty dict will yield defaultMessages on fallback, no problem there
-    retDict.messages = {};
+    console.log(err);
   }
-  addLocaleData(localeData);
-
-  return retDict;
+  // fail back to default english values if any errors
+  return { "locale": "en", "messages": {} };
 };
 
 export default loadI18nDomData;
