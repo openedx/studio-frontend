@@ -4,5 +4,4 @@ node_modules
 npm-debug.log
 coverage
 
-dist/
 src/data/i18n/locales/tmp/
