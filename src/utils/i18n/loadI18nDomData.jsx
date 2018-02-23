@@ -1,4 +1,4 @@
-export default loadI18nDomData = () => {
+const loadI18nDomData = () => {
   try {
     const domLocale = document.getElementById('SFE_i18n_locale').innerHTML;
     const domMessages = JSON.parse(document.getElementById('SFE_i18n_messages').innerHTML);
@@ -8,3 +8,5 @@ export default loadI18nDomData = () => {
   }
   return {"locale": domLocale, "messages": domMessages};
 };
+
+export default loadI18nDomData;
