@@ -231,6 +231,19 @@ export default class AssetsTable extends React.Component {
     this.props.deleteButtonRefs(ref, currentAsset);
   }
 
+  getTableColumns() {
+    let columns = Object.keys(this.columns);
+
+    if (!this.props.isImagePreviewEnabled) {
+      columns = columns.filter(column => column !== 'image_preview');
+    }
+
+    return columns.map(columnKey => ({
+      ...this.columns[columnKey],
+      onSort: () => this.onSortClick(columnKey),
+    }));
+  }
+
   addSupplementalTableElements() {
     const newAssetsList = this.props.assetsList.map((asset, index) => {
       const currentAsset = Object.assign({}, asset);
@@ -387,10 +400,7 @@ export default class AssetsTable extends React.Component {
         <span className={classNames(styles['wrap-text'])}>
           <Table
             className={['table-responsive']}
-            columns={Object.keys(this.columns).map(columnKey => ({
-              ...this.columns[columnKey],
-              onSort: () => this.onSortClick(columnKey),
-            }))}
+            columns={this.getTableColumns()}
             data={this.addSupplementalTableElements(this.props.assetsList)}
             tableSortable
             defaultSortedColumn="date_added"
@@ -430,6 +440,7 @@ AssetsTable.propTypes = {
   courseFilesDocs: PropTypes.string.isRequired,
   deleteAsset: PropTypes.func.isRequired,
   deleteButtonRefs: PropTypes.func,
+  isImagePreviewEnabled: PropTypes.bool.isRequired,
   updateSort: PropTypes.func.isRequired,
   toggleLockAsset: PropTypes.func.isRequired,
   stageAssetDeletion: PropTypes.func.isRequired,

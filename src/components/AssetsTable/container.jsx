@@ -11,6 +11,7 @@ const mapStateToProps = state => ({
   courseDetails: state.studioDetails.course,
   courseFilesDocs: state.studioDetails.help_tokens.files,
   upload: state.assets.upload,
+  isImagePreviewEnabled: state.metadata.imagePreview.enabled,
 });
 
 const mapDispatchToProps = dispatch => ({

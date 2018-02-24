@@ -128,6 +128,26 @@ describe('Assets Reducers', () => {
       expect(state).toEqual([]);
     });
   });
+  describe('imagePreview reducer', () => {
+    beforeEach(() => {
+      defaultState = reducers.imagePreviewInitial;
+    });
+
+    it('returns correct imagePreview state on IMAGE_PREVIEW_UPDATE action', () => {
+      const newState = {
+        enabled: false,
+      };
+
+      action = {
+        ...newState,
+        type: assetActions.imagePreview.IMAGE_PREVIEW_UPDATE,
+      };
+
+      state = reducers.imagePreview(defaultState, action);
+
+      expect(state).toEqual(newState);
+    });
+  });
   describe('metadata reducer', () => {
     describe('filter reducer', () => {
       beforeEach(() => {

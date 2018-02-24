@@ -20,6 +20,7 @@ const defaultProps = {
   assetToDelete: {},
   courseDetails,
   courseFilesDocs: 'testUrl',
+  isImagePreviewEnabled: true,
   clearAssetsStatus: () => {},
   deleteAsset: () => {},
   stageAssetDeletion: () => {},
@@ -430,6 +431,27 @@ describe('<AssetsTable />', () => {
       closeButton.simulate('click');
 
       expect(trashButtons.at(0).html()).toEqual(document.activeElement.outerHTML);
+    });
+  });
+  describe('image previews', () => {
+    beforeEach(() => {
+      wrapper = mountWithIntl(
+        <AssetsTable
+          {...defaultProps}
+        />,
+      );
+    });
+
+    test('show by default', () => {
+      expect(wrapper.find('[data-identifier="asset-image-thumbnail"]')).toHaveLength(wrapper.prop('assetsList').length);
+    });
+
+    test('do not show when isImagePreviewEnabled is false', () => {
+      wrapper.setProps({
+        isImagePreviewEnabled: false,
+      });
+
+      expect(wrapper.find('[data-identifier="asset-image-thumbnail"]')).toHaveLength(0);
     });
   });
 });

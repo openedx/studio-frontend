@@ -1,0 +1,7 @@
+[
+  {
+    "id": "assetsImagePreviewFilterLabel",
+    "description": "Label checkbox to hide image previews in the assets table.",
+    "defaultMessage": "Hide File Preview"
+  }
+]

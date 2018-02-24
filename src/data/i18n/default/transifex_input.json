@@ -45,6 +45,7 @@
   "assetsFiltersImages": "Image",
   "assetsFiltersOther": "Other",
   "assetsFiltersSectionLabel": "Filter by File Type",
+  "assetsImagePreviewFilterLabel": "Hide File Preview",
   "assetsPageNoResultsCountFiles": "0 files",
   "assetsPageNoResultsMessage": "No files were found.",
   "assetsPageNoAssetsNumFiles": "0 files in your course",
