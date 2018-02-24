@@ -42,7 +42,7 @@
 .page-header {
   padding-bottom: $spacer * 0.5;
   margin: ($spacer * 2) 0 $spacer;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid theme-color(light);
 }
 
 button {

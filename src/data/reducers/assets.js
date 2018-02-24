@@ -36,6 +36,10 @@ export const searchInitial = {
   search: '',
 };
 
+export const imagePreviewInitial = {
+  enabled: true,
+};
+
 export const requestInitial = {
   ...filtersInitial,
   ...sortInitial,
@@ -204,6 +208,17 @@ export const status = (state = {}, action) => {
   }
 };
 
+export const imagePreview = (state = imagePreviewInitial, action) => {
+  switch (action.type) {
+    case assetActions.imagePreview.IMAGE_PREVIEW_UPDATE:
+      return {
+        enabled: action.enabled,
+      };
+    default:
+      return state;
+  }
+};
+
 export const request = (state = requestInitial, action) => {
   switch (action.type) {
     case assetActions.request.UPDATE_REQUEST:
@@ -249,4 +264,5 @@ export const metadata = combineReducers({
   status,
   search,
   deletion,
+  imagePreview,
 });

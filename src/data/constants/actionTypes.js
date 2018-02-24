@@ -48,7 +48,9 @@ export const assetActions = {
     UPLOAD_EXCEED_MAX_COUNT_ERROR: 'UPLOAD_EXCEED_MAX_COUNT_ERROR',
     UPLOAD_EXCEED_MAX_SIZE_ERROR: 'UPLOAD_EXCEED_MAX_SIZE_ERROR',
   },
-
+  imagePreview: {
+    IMAGE_PREVIEW_UPDATE: 'IMAGE_PREVIEW_UPDATE',
+  },
 };
 
 export const accessibilityActions = {
