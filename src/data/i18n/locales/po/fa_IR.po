@@ -4,13 +4,14 @@
 # Saman Ismael <saman.2791@gmail.com>, 2018
 # mschool <admin@ipersia.org>, 2018
 # smctech <tech@smallmedia.org.uk>, 2018
+# Raham R <raham@radiozamaneh.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: @edx/studio-frontend 1.2.0\n"
 "Report-Msgid-Bugs-To: edx/studio-frontend\n"
 "POT-Creation-Date: 2018-02-09T20:54:36.515Z\n"
 "PO-Revision-Date: 2018-02-09T20:54:36.515Z\n"
-"Last-Translator: smctech <tech@smallmedia.org.uk>, 2018\n"
+"Last-Translator: Raham R <raham@radiozamaneh.com>, 2018\n"
 "Language-Team: Persian (Iran) (https://www.transifex.com/open-edx/teams/6205/fa_IR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
