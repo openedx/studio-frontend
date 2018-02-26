@@ -2,11 +2,13 @@ import configureStore from 'redux-mock-store';
 import fetchMock from 'fetch-mock';
 import thunk from 'redux-thunk';
 
-import endpoints from '../api/endpoints';
-import * as actionCreators from './assets';
-import { filtersInitial, paginationInitial, sortInitial, searchInitial, requestInitial } from '../reducers/assets';
-import { assetActions } from '../../data/constants/actionTypes';
 import deepCopy from './utils';
+import endpoints from '../api/endpoints';
+import { assetActions } from '../../data/constants/actionTypes';
+import { deletionInitial, filtersInitial, paginationInitial, sortInitial, searchInitial, requestInitial } from '../reducers/assets';
+import { testAssetsList } from '../../utils/testConstants';
+import * as actionCreators from './assets';
+
 
 const initialState = {
   assets: [],
@@ -16,14 +18,13 @@ const initialState = {
     request: { ...requestInitial },
     sort: { ...sortInitial },
     search: { ...searchInitial },
+    deletion: { ...deletionInitial },
   },
 };
 
 const courseDetails = {
   id: 'edX',
 };
-
-const assetId = 'asset';
 
 const assetsEndpoint = endpoints.assets;
 const middlewares = [thunk];
@@ -70,8 +71,9 @@ describe('Assets Action Creators', () => {
     expect(store.dispatch(actionCreators.requestAssetsSuccess('response'))).toEqual(expectedAction);
   });
   it('returns expected state from assetDeleteFailure', () => {
-    const expectedAction = { assetId, type: assetActions.delete.DELETE_ASSET_FAILURE };
-    expect(store.dispatch(actionCreators.deleteAssetFailure(assetId))).toEqual(expectedAction);
+    const asset = testAssetsList[0];
+    const expectedAction = { asset, type: assetActions.delete.DELETE_ASSET_FAILURE };
+    expect(store.dispatch(actionCreators.deleteAssetFailure(asset))).toEqual(expectedAction);
   });
   it('returns expected state from getAssets success', () => {
     const requestParameters = {};
@@ -506,6 +508,8 @@ describe('Assets Action Creators', () => {
       body: {},
     };
 
+    const asset = testAssetsList[0];
+
     fetchMock.deleteOnce(`begin:${assetsEndpoint}`, {});
     fetchMock.getOnce(`begin:${assetsEndpoint}`, response);
 
@@ -513,10 +517,10 @@ describe('Assets Action Creators', () => {
       { type: assetActions.request.REQUESTING_ASSETS },
       { type: assetActions.request.UPDATE_REQUEST, newRequest: requestInitial },
       { type: assetActions.request.REQUEST_ASSETS_SUCCESS, response: response.body },
-      { type: assetActions.delete.DELETE_ASSET_SUCCESS, assetId },
+      { type: assetActions.delete.DELETE_ASSET_SUCCESS, asset },
     ];
 
-    return store.dispatch(actionCreators.deleteAsset(assetId, courseDetails)).then(() => {
+    return store.dispatch(actionCreators.deleteAsset(asset, courseDetails)).then(() => {
       // return of async actions
       expect(store.getActions()).toEqual(expectedActions);
     });
@@ -526,16 +530,28 @@ describe('Assets Action Creators', () => {
       status: 400,
     };
 
+    const asset = testAssetsList[0];
+
     fetchMock.once(`begin:${assetsEndpoint}`, response);
 
     const expectedActions = [
-      { type: assetActions.delete.DELETE_ASSET_FAILURE, assetId },
+      { type: assetActions.delete.DELETE_ASSET_FAILURE, asset },
     ];
 
-    return store.dispatch(actionCreators.deleteAsset(assetId, courseDetails)).then(() => {
+    return store.dispatch(actionCreators.deleteAsset(asset, courseDetails)).then(() => {
       // return of async actions
       expect(store.getActions()).toEqual(expectedActions);
     });
+  });
+  it('returns expected state from stageAssetDeletion', () => {
+    const index = 0;
+    const asset = testAssetsList[index];
+    const expectedAction = { type: assetActions.delete.STAGE_ASSET_DELETION, asset, index };
+    expect(store.dispatch(actionCreators.stageAssetDeletion(asset, index))).toEqual(expectedAction);
+  });
+  it('returns expected state from unstageAssetDeletion', () => {
+    const expectedAction = { type: assetActions.delete.UNSTAGE_ASSET_DELETION };
+    expect(store.dispatch(actionCreators.unstageAssetDeletion())).toEqual(expectedAction);
   });
   it('returns expected state from clearAssetsStatus', () => {
     const expectedAction = { type: assetActions.clear.CLEAR_ASSETS_STATUS };
@@ -546,14 +562,16 @@ describe('Assets Action Creators', () => {
       status: 200,
     };
 
+    const asset = testAssetsList[0];
+
     fetchMock.once(`begin:${assetsEndpoint}`, response);
 
     const expectedActions = [
-      { type: assetActions.lock.TOGGLING_LOCK_ASSET_SUCCESS, asset: assetId },
-      { type: assetActions.lock.TOGGLE_LOCK_ASSET_SUCCESS, asset: assetId },
+      { type: assetActions.lock.TOGGLING_LOCK_ASSET_SUCCESS, asset: asset.id },
+      { type: assetActions.lock.TOGGLE_LOCK_ASSET_SUCCESS, asset: asset.id },
     ];
 
-    return store.dispatch(actionCreators.toggleLockAsset(assetId, courseDetails)).then(() => {
+    return store.dispatch(actionCreators.toggleLockAsset(asset.id, courseDetails)).then(() => {
       // return of async actions
       expect(store.getActions()).toEqual(expectedActions);
     });
@@ -564,15 +582,16 @@ describe('Assets Action Creators', () => {
     };
 
     const error = new Error(response);
+    const asset = testAssetsList[0];
 
     fetchMock.once(`begin:${assetsEndpoint}`, response);
 
     const expectedActions = [
-      { type: assetActions.lock.TOGGLING_LOCK_ASSET_SUCCESS, asset: assetId },
-      { type: assetActions.lock.TOGGLING_LOCK_ASSET_FAILURE, asset: assetId, response: error },
+      { type: assetActions.lock.TOGGLING_LOCK_ASSET_SUCCESS, asset: asset.id },
+      { type: assetActions.lock.TOGGLING_LOCK_ASSET_FAILURE, asset: asset.id, response: error },
     ];
 
-    return store.dispatch(actionCreators.toggleLockAsset(assetId, courseDetails)).then(() => {
+    return store.dispatch(actionCreators.toggleLockAsset(asset.id, courseDetails)).then(() => {
       // return of async actions
       expect(store.getActions()).toEqual(expectedActions);
     });
