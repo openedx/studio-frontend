@@ -15,6 +15,10 @@
     ],
     "class-methods-use-this": [
       "off"
+    ],
+    "quote-props": [
+      "error",
+      "consistent-as-needed"
     ]
   },
   "env": {

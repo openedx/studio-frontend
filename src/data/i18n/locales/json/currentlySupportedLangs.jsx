@@ -1,7 +1,8 @@
-import 'react-intl/locale-data/ar';
-import 'react-intl/locale-data/es';
-import 'react-intl/locale-data/fr';
-import 'react-intl/locale-data/zh';
+import arData from 'react-intl/locale-data/ar';
+import enData from 'react-intl/locale-data/en';
+import esData from 'react-intl/locale-data/es';
+import frData from 'react-intl/locale-data/fr';
+import zhData from 'react-intl/locale-data/zh';
 
 import './ar.json';
 import './es_419.json';
@@ -14,3 +15,13 @@ import './zh_CN.json';
 //
 // Further, I hit the read replica in order to confirm the live values, which are currently:
 //    en, fr, zh-cn, es-419, ar
+
+const localeDataMap = {
+  'ar': arData,
+  'en': enData,
+  'es-419': esData,
+  'fr': frData,
+  'zh-cn': zhData,
+};
+
+export default localeDataMap;

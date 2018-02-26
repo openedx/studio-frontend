@@ -13,7 +13,7 @@ describe('loadI18nDomData Utility Functions', () => {
       expect(ret.messages).toEqual(testJSON);
     });
     it('falls back to english when given bad data', () => {
-      document.getElementById('SFE_i18n_localeScript').innerHTML = 'not real json }}::}{}:{';
+      document.getElementById('SFE_i18n_data').innerHTML = 'not real json }}::}{}:{';
       const ret = loadI18nDomData();
       expect(ret.locale).toEqual('en');
       expect(ret.messages).toEqual({});
