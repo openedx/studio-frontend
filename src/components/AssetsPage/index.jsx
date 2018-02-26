@@ -101,8 +101,14 @@ export default class AssetsPage extends React.Component {
           </React.Fragment>
         }
         <div className={edxBootstrap.row}>
-          <WrappedAssetsTable />
-          <WrappedPagination />
+          <div className={edxBootstrap.col}>
+            <WrappedAssetsTable />
+          </div>
+        </div>
+        <div className={edxBootstrap.row}>
+          <div className={edxBootstrap.col}>
+            <WrappedPagination />
+          </div>
         </div>
       </div>
     </React.Fragment>
