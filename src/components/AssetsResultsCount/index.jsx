@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import edxBootstrap from '../../SFE.scss';
-import { hasSelectedFilters } from '../../utils/getAssetsFilters';
+import { hasSearchOrFilterApplied } from '../../utils/getAssetsFilters';
 import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
 import messages from './displayMessages';
 
@@ -13,8 +13,7 @@ const renderCount = count => (
 );
 
 const AssetsResultsCount = ({ paginationMetaData, filtersMetaData, searchMetaData }) => {
-  if (hasSelectedFilters(filtersMetaData.assetTypes) ||
-      (searchMetaData.search && searchMetaData.search.length > 0)) {
+  if (hasSearchOrFilterApplied(filtersMetaData.assetTypes, searchMetaData.search)) {
     return (
       <WrappedMessage
         message={messages.assetsResultsCountFiltered}

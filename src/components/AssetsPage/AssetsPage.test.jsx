@@ -62,7 +62,7 @@ const normalAssetsPageRenderTest = () => {
   });
   it('with correct markup structure', () => {
     const page = wrapper.find('.container .row .col');
-    expect(page).toHaveLength(1);
+    expect(page).toHaveLength(3);
     const body = wrapper.find('.col-10');
 
     wrapper = page;

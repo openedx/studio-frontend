@@ -77,4 +77,37 @@ describe('getAssetsFilters Utility Functions', () => {
       expect(filterStateObject).toEqual(expectedfilterStateObject);
     });
   });
+  describe('hasSearchOrFilterApplied', () => {
+    it('returns false with no filters and empty search string', () => {
+      const filters = {};
+      const search = '';
+      expect(utilities.hasSearchOrFilterApplied(filters, search)).toEqual(false);
+    });
+    it('returns false with no filters and undefined search', () => {
+      const filters = {};
+      const search = undefined;
+      expect(utilities.hasSearchOrFilterApplied(filters, search)).toEqual(false);
+    });
+    it('returns true with one filter and empty search string', () => {
+      const filters = {
+        Images: true,
+      };
+      const search = '';
+      expect(utilities.hasSearchOrFilterApplied(filters, search)).toEqual(true);
+    });
+    it('returns true with no filters and search string', () => {
+      const filters = {};
+      const search = 'edX';
+      expect(utilities.hasSearchOrFilterApplied(filters, search)).toEqual(true);
+    });
+    it('returns true with filters and search string', () => {
+      const filters = {
+        Images: true,
+        Audio: true,
+        Documents: false,
+      };
+      const search = 'edX';
+      expect(utilities.hasSearchOrFilterApplied(filters, search)).toEqual(true);
+    });
+  });
 });

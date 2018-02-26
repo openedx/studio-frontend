@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { assetActions } from '../../data/constants/actionTypes';
-import { hasSelectedFilters } from '../../utils/getAssetsFilters';
+import { hasSearchOrFilterApplied } from '../../utils/getAssetsFilters';
 import edxBootstrap from '../../SFE.scss';
 import styles from './AssetsPage.scss';
 import WrappedAssetsDropZone from '../AssetsDropZone/container';
@@ -43,14 +43,14 @@ export default class AssetsPage extends React.Component {
 
   getPageType = (props) => {
     const numberOfAssets = props.assetsList.length;
+    const filters = props.filtersMetaData.assetTypes;
+    const search = props.searchMetaData.search;
 
     if ('type' in props.status && props.status.type === assetActions.request.REQUESTING_ASSETS) {
       return this.state.pageType;
     } else if (numberOfAssets > 0) {
       return types.NORMAL;
-    } else if (numberOfAssets === 0 &&
-               (hasSelectedFilters(props.filtersMetaData.assetTypes) ||
-                (props.searchMetaData.search && props.searchMetaData.search.length > 0))) {
+    } else if (numberOfAssets === 0 && hasSearchOrFilterApplied(filters, search)) {
       return types.NO_RESULTS;
     }
     return types.NO_ASSETS;
