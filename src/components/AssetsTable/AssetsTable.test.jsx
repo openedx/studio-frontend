@@ -18,7 +18,7 @@ const defaultProps = {
       id: 'cat.jpg',
       thumbnail,
       locked: false,
-      url: copyUrl,
+      portable_url: copyUrl,
       external_url: copyUrl,
     },
     {
@@ -26,7 +26,7 @@ const defaultProps = {
       id: 'dog.png',
       thumbnail,
       locked: true,
-      url: null,
+      portable_url: null,
       external_url: null,
     },
     {
@@ -34,7 +34,7 @@ const defaultProps = {
       id: 'bird.json',
       thumbnail: null,
       locked: false,
-      url: null,
+      portable_url: null,
       external_url: copyUrl,
     },
     {
@@ -42,7 +42,7 @@ const defaultProps = {
       id: 'fish.doc',
       thumbnail: null,
       locked: false,
-      url: copyUrl,
+      portable_url: copyUrl,
       external_url: null,
     },
   ],
@@ -117,7 +117,7 @@ const getMockForTogglingLockAsset = (wrapper, assetToToggle) => (
 );
 
 const numberOfImages = defaultProps.assetsList.filter(asset => asset.thumbnail).length;
-const numberOfStudioButtons = defaultProps.assetsList.filter(asset => asset.url).length;
+const numberOfStudioButtons = defaultProps.assetsList.filter(asset => asset.portable_url).length;
 const numberOfWebButtons = defaultProps.assetsList.filter(asset => asset.external_url).length;
 
 let wrapper;
