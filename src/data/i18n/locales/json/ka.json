@@ -1,1 +1,10 @@
-{}
+{
+	"accessibilityPolicyFormError": "შეცდომა",
+	"assetsDropZoneMaxFileSizeLabel": "ფაილის მაქსიმალური ზომა {maxFileSizeMB} MB",
+	"assetsFiltersAudio": "აუდიო",
+	"assetsFiltersCode": "კოდი",
+	"assetsFiltersDocuments": "დოკუმენტი",
+	"assetsFiltersOther": "სხვა",
+	"paginationNext": "მომდევნო",
+	"paginationPrevious": "წინა"
+}

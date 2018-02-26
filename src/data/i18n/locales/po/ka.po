@@ -201,7 +201,7 @@ msgstr ""
 # AccessibilityPolicyForm/displayMessages.json
 msgctxt "accessibilityPolicyFormError"
 msgid "Error"
-msgstr ""
+msgstr "შეცდომა"
 
 #. Error message when site is experiencing high volume that will include an
 #. email link
@@ -309,25 +309,25 @@ msgstr ""
 # AssetsDropZone/displayMessages.json
 msgctxt "assetsDropZoneMaxFileSizeLabel"
 msgid "Maximum file size: {maxFileSizeMB} MB"
-msgstr ""
+msgstr "ფაილის მაქსიმალური ზომა {maxFileSizeMB} MB"
 
 #. Label for audio file types
 # AssetsFilters/displayMessages.json
 msgctxt "assetsFiltersAudio"
 msgid "Audio"
-msgstr ""
+msgstr "აუდიო"
 
 #. Label for code file types
 # AssetsFilters/displayMessages.json
 msgctxt "assetsFiltersCode"
 msgid "Code"
-msgstr ""
+msgstr "კოდი"
 
 #. Label for document file types
 # AssetsFilters/displayMessages.json
 msgctxt "assetsFiltersDocuments"
 msgid "Document"
-msgstr ""
+msgstr "დოკუმენტი"
 
 #. Label for image file types
 # AssetsFilters/displayMessages.json
@@ -339,7 +339,7 @@ msgstr ""
 # AssetsFilters/displayMessages.json
 msgctxt "assetsFiltersOther"
 msgid "Other"
-msgstr ""
+msgstr "სხვა"
 
 #. Label for the filter section of the page
 # AssetsFilters/displayMessages.json
@@ -555,10 +555,10 @@ msgstr ""
 # Pagination/displayMessages.json
 msgctxt "paginationNext"
 msgid "next"
-msgstr ""
+msgstr "მომდევნო"
 
 #. Label for previous button
 # Pagination/displayMessages.json
 msgctxt "paginationPrevious"
 msgid "previous"
-msgstr ""
+msgstr "წინა"

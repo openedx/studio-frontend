@@ -188,6 +188,9 @@ msgid ""
 "will respond to confirm receipt and forward your request to the edX Partner "
 "Manager for your institution and the edX Website Accessibility Coordinator."
 msgstr ""
+"Talebinizi almamızdan sonraki 48 iş saati içinde edX Destek Ekibi size "
+"adlındı teyidi için size geri dönecek ve talebiniz kurumunuzun edX iş Ortağı"
+" Yöneticisi ve edX Website Erişilebilirlik Koordinatörü'ne iletilecektir. "
 
 #. Paragraph outlining how and when edX will reach out to you.
 # AccessibilityBody/displayMessages.json
@@ -197,6 +200,9 @@ msgid ""
 "you within 5 business days to discuss your request and gather additional "
 "information from you to identify a solution."
 msgstr ""
+"Website Erişilebilirlik Koordinatörü'nü yol göstericiliğinde, edX sizinle 5 "
+"iş günü içinde doğrudan iletişime geçerek, uygun bir çözümün sağlanması için"
+" sizden ek bilgiler talep edecek."
 
 #. Heading for list of ways we might be able to assist.
 # AccessibilityBody/displayMessages.json
@@ -524,6 +530,8 @@ msgid ""
 "The action could not be completed. Refresh the page, and then try the action"
 " again."
 msgstr ""
+"Bu eylem tamamlanamadı. Sayfayı güncelleyin ve ardından eylemi tekrar "
+"deneyin."
 
 #. Label that indicates a relative (as opposed to an absolute) URL
 # AssetsTable/displayMessages.json
