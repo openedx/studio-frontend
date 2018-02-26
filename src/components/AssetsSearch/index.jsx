@@ -34,7 +34,7 @@ export default class AssetsSearch extends React.Component {
   }
 
   render() {
-    // TODO: InputText creates it's own form-group div. Nesting them is not semantic.
+    // TODO: InputText creates its own form-group div. Nesting them is not semantic.
     // Once Paragon's asInput is refactored, use only one form-group element.
     return (
       <form
