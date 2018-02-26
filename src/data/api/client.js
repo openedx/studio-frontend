@@ -50,7 +50,7 @@ export function requestDeleteAsset(courseId, assetId) {
       credentials: 'same-origin',
       method: 'delete',
       headers: {
-        Accept: 'application/json',
+        'Accept': 'application/json',
         'X-CSRFToken': Cookies.get('csrftoken'),
       },
     },
@@ -64,7 +64,7 @@ export function requestToggleLockAsset(courseId, asset) {
       method: 'put',
       body: JSON.stringify({ locked: !asset.locked }),
       headers: {
-        Accept: 'application/json',
+        'Accept': 'application/json',
         'X-CSRFToken': Cookies.get('csrftoken'),
       },
     },
@@ -80,7 +80,7 @@ export function postUploadAsset(courseId, file) {
       method: 'post',
       body: data,
       headers: {
-        Accept: 'application/json',
+        'Accept': 'application/json',
         'X-CSRFToken': Cookies.get('csrftoken'),
       },
     },
@@ -103,7 +103,7 @@ export function postAccessibilityForm(formEmail, formFullName, formMessage) {
       }),
       headers: {
         'Content-Type': 'application/json',
-        Accept: 'application/json',
+        'Accept': 'application/json',
         'X-CSRFToken': Cookies.get('csrftoken'),
       },
     },

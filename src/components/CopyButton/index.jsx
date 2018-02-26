@@ -76,18 +76,18 @@ export default class CopyButton extends React.Component {
 }
 
 CopyButton.propTypes = {
-  ariaLabel: PropTypes.string,
-  label: PropTypes.oneOfType([PropTypes.string, PropTypes.element]).isRequired,
-  onCopyLabel: PropTypes.oneOfType([PropTypes.string, PropTypes.element]).isRequired,
-  textToCopy: PropTypes.string.isRequired,
-  onCopyButtonClick: PropTypes.func,
-  className: PropTypes.arrayOf(PropTypes.string),
+  'ariaLabel': PropTypes.string,
+  'label': PropTypes.oneOfType([PropTypes.string, PropTypes.element]).isRequired,
+  'onCopyLabel': PropTypes.oneOfType([PropTypes.string, PropTypes.element]).isRequired,
+  'textToCopy': PropTypes.string.isRequired,
+  'onCopyButtonClick': PropTypes.func,
+  'className': PropTypes.arrayOf(PropTypes.string),
   'data-identifier': PropTypes.string,
 };
 
 CopyButton.defaultProps = {
-  onCopyButtonClick: () => {},
-  ariaLabel: 'Copy',
-  className: [],
+  'onCopyButtonClick': () => {},
+  'ariaLabel': 'Copy',
+  'className': [],
   'data-identifier': undefined,
 };
