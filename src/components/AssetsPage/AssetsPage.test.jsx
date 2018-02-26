@@ -1,8 +1,8 @@
 import React from 'react';
 
 import AssetsPage, { types } from './index';
-import { assetActions } from '../../data/constants/actionTypes';
-import courseDetails from '../../utils/testConstants';
+import { assetActions } from '../../data/constants//actionTypes';
+import courseDetails, { testAssetsList } from '../../utils/testConstants';
 import { shallowWithIntl } from '../../utils/i18n/enzymeHelper';
 import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
 import messages from './displayMessages';
@@ -11,7 +11,9 @@ let wrapper;
 
 const defaultProps = {
   assetsList: [],
+  assetsStatus: {},
   courseDetails,
+  deletedAsset: {},
   filtersMetadata: {
     assetTypes: {
       edX: false,
@@ -27,7 +29,7 @@ const defaultProps = {
   searchSettings: {
     enabled: true,
   },
-
+  clearAssetDeletion: () => {},
   getAssets: () => {},
 };
 
@@ -387,5 +389,56 @@ describe('<AssetsPage />', () => {
     });
 
     normalAssetsPageRenderTest();
+  });
+  describe('onDeleteStatusAlertClose', () => {
+    it('calls clearAssetDeletion prop', () => {
+      const clearAssetDeletionSpy = jest.fn();
+
+      // run test with no assets to avoid triggering a focus change
+      wrapper.setProps({
+        clearAssetDeletion: clearAssetDeletionSpy,
+        deletedAsset: testAssetsList[0],
+        deletedAssetIndex: 0,
+      });
+
+      wrapper.instance().onDeleteStatusAlertClose();
+      expect(clearAssetDeletionSpy).toHaveBeenCalledTimes(1);
+    });
+  });
+  describe('getNextFocusElementOnDelete', () => {
+    const deleteButtonRefs = testAssetsList
+      .map(asset => asset.id)
+      .reduce(
+        // eslint-disable-next-line no-param-reassign
+        ((memo, id) => { memo[id] = id; return memo; }),
+        {},
+      );
+
+    const testData = [
+      { deletedAssetIndex: 0 },
+      { deletedAssetIndex: testAssetsList.length - 1 },
+      { deletedAssetIndex: 2 },
+    ];
+
+    testData.forEach((test) => {
+      it(`returns the correct element to focus on when element at index ${test.deletedAssetIndex} deleted`, () => {
+        const deletedAssetIndex = test.deletedAssetIndex;
+
+        wrapper.setProps({
+          assetsList: testAssetsList,
+          assetsStatus: {
+            type: assetActions.delete.DELETE_ASSET_SUCCESS,
+          },
+          deletedAssetIndex,
+          deleteAsset: testAssetsList[deletedAssetIndex],
+        });
+
+        wrapper.instance().deleteButtonRefs = deleteButtonRefs;
+
+        const nextFocusElementOnDelete = wrapper.instance().getNextFocusElementOnDelete();
+
+        expect(nextFocusElementOnDelete).toEqual(testAssetsList[deletedAssetIndex].id);
+      });
+    });
   });
 });

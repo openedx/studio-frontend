@@ -1,12 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Table, Button, Modal, StatusAlert, Variant } from '@edx/paragon';
+import { Table, Button, Modal, Variant } from '@edx/paragon';
 import classNames from 'classnames';
-import { FormattedNumber } from 'react-intl';
 
 import FontAwesomeStyles from 'font-awesome/css/font-awesome.min.css';
 import styles from './AssetsTable.scss';
-import { assetActions } from '../../data/constants/actionTypes';
 import { assetLoading } from '../../data/constants/loadingTypes';
 import CopyButton from '../CopyButton';
 import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
@@ -16,18 +14,9 @@ export default class AssetsTable extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      assetToDelete: {},
       copyButtonIsClicked: false,
-      deletedAsset: {},
-      deletedAssetIndex: null,
       elementToFocusOnModalClose: {},
       modalOpen: false,
-      statusAlertFields: {
-        alertDialog: '',
-        alertType: 'info',
-      },
-      statusAlertOpen: false,
-      uploadSuccessCount: 1,
     };
 
     this.columns = {
@@ -72,22 +61,13 @@ export default class AssetsTable extends React.Component {
     };
 
     this.trashcanRefs = {};
-    this.statusAlertRef = {};
 
     this.addSupplementalTableElements = this.addSupplementalTableElements.bind(this);
     this.closeModal = this.closeModal.bind(this);
-    this.closeStatusAlert = this.closeStatusAlert.bind(this);
     this.deleteAsset = this.deleteAsset.bind(this);
+    this.getAssetDeleteButtonRef = this.getAssetDeleteButtonRef.bind(this);
     this.onCopyButtonClick = this.onCopyButtonClick.bind(this);
     this.onDeleteClick = this.onDeleteClick.bind(this);
-    this.renderStatusAlert = this.renderStatusAlert.bind(this);
-    this.updateUploadSuccessCount = this.updateUploadSuccessCount.bind(this);
-  }
-
-
-  componentWillReceiveProps(nextProps) {
-    const { assetsStatus } = nextProps;
-    this.updateStatusAlertFields(assetsStatus);
   }
 
   onSortClick(columnKey) {
@@ -106,9 +86,9 @@ export default class AssetsTable extends React.Component {
   onDeleteClick(index) {
     const assetToDelete = this.props.assetsList[index];
 
+    this.props.stageAssetDeletion(assetToDelete, index);
+
     this.setState({
-      assetToDelete,
-      deletedAssetIndex: index,
       elementToFocusOnModalClose: this.trashcanRefs[assetToDelete.id],
       modalOpen: true,
     });
@@ -166,26 +146,6 @@ export default class AssetsTable extends React.Component {
         }
       </WrappedMessage>
     );
-  }
-
-  getNextFocusElementOnDelete() {
-    const { assetsStatus } = this.props;
-
-    let deletedIndex = this.state.deletedAssetIndex;
-    let focusAsset = this.state.deletedAsset;
-
-    switch (assetsStatus.type) {
-      case assetActions.delete.DELETE_ASSET_SUCCESS:
-        if (deletedIndex > 0) {
-          deletedIndex -= 1;
-        }
-        focusAsset = this.props.assetsList[deletedIndex];
-        break;
-      default:
-        break;
-    }
-
-    return this.trashcanRefs[focusAsset.id];
   }
 
   getLoadingLockButton(asset) {
@@ -266,127 +226,9 @@ export default class AssetsTable extends React.Component {
     );
   }
 
-  updateStatusAlertFields(assetsStatus) {
-    const assetName = this.state.deletedAsset.display_name;
-    let alertDialog;
-    let alertType;
-
-    const genericUpdateError = (
-      <WrappedMessage
-        message={messages.assetsTableGenericUpdateError}
-      />
-    );
-
-    switch (assetsStatus.type) {
-      case assetActions.delete.DELETE_ASSET_FAILURE:
-        alertDialog = (
-          <WrappedMessage
-            message={messages.assetsTableCantDelete}
-            values={{ assetName }}
-          />
-        );
-        alertType = 'danger';
-        break;
-      case assetActions.delete.DELETE_ASSET_SUCCESS:
-        alertDialog = (
-          <WrappedMessage
-            message={messages.assetsTableDeleteSuccess}
-            values={{ assetName }}
-          />
-        );
-        alertType = 'success';
-        break;
-      case assetActions.upload.UPLOAD_ASSET_SUCCESS:
-        this.updateUploadSuccessCount();
-        alertDialog = (
-          <WrappedMessage
-            message={messages.assetsTableUploadSuccess}
-            values={{ uploaded_count: (<FormattedNumber value={this.state.uploadSuccessCount} />) }}
-          />
-        );
-        alertType = 'success';
-        break;
-      case assetActions.upload.UPLOADING_ASSETS:
-        this.closeStatusAlert();
-        alertDialog = (
-          <WrappedMessage
-            message={messages.assetsTableUploadInProgress}
-            values={{ uploading_count: (<FormattedNumber value={assetsStatus.count} />) }}
-          />
-        );
-        alertType = 'info';
-        break;
-      case assetActions.upload.UPLOAD_EXCEED_MAX_COUNT_ERROR:
-        alertDialog = (
-          <WrappedMessage
-            message={messages.assetsTableTooManyFiles}
-            values={{ max_count: (<FormattedNumber value={assetsStatus.maxFileCount} />) }}
-          />
-        );
-        alertType = 'danger';
-        break;
-      case assetActions.upload.UPLOAD_EXCEED_MAX_SIZE_ERROR:
-        alertDialog = (
-          <WrappedMessage
-            message={messages.assetsTableTooMuchData}
-            values={{ max_size: (<FormattedNumber value={assetsStatus.maxFileSizeMB} />) }}
-          />
-        );
-        alertType = 'danger';
-        break;
-      case assetActions.upload.UPLOAD_ASSET_FAILURE:
-        alertDialog = (
-          <WrappedMessage
-            message={messages.assetsTableGenericError}
-            values={{ assetName: assetsStatus.file.name }}
-          />
-        );
-        alertType = 'danger';
-        break;
-      case assetActions.lock.TOGGLING_LOCK_ASSET_FAILURE:
-        alertDialog = (
-          <WrappedMessage
-            message={messages.assetsTableFailedLock}
-            values={{ assetName: assetsStatus.asset.name }}
-          />
-        );
-        alertType = 'danger';
-        break;
-      case assetActions.clear.CLEAR_FILTERS_FAILURE:
-        alertDialog = genericUpdateError;
-        alertType = 'danger';
-        break;
-      case assetActions.filter.FILTER_UPDATE_FAILURE:
-        alertDialog = genericUpdateError;
-        alertType = 'danger';
-        break;
-      case assetActions.paginate.PAGE_UPDATE_FAILURE:
-        alertDialog = genericUpdateError;
-        alertType = 'danger';
-        break;
-      case assetActions.sort.SORT_UPDATE_FAILURE:
-        alertDialog = genericUpdateError;
-        alertType = 'danger';
-        break;
-      default:
-        return;
-    }
-
-    this.setState({
-      statusAlertOpen: true,
-      statusAlertFields: {
-        alertDialog,
-        alertType,
-      },
-    });
-    this.statusAlertRef.focus();
-  }
-
-  updateUploadSuccessCount() {
-    const uploadSuccessCount = this.state.uploadSuccessCount + 1;
-    this.setState({
-      uploadSuccessCount,
-    });
+  getAssetDeleteButtonRef(ref, currentAsset) {
+    this.trashcanRefs[currentAsset.id] = ref;
+    this.props.deleteButtonRefs(ref, currentAsset);
   }
 
   addSupplementalTableElements() {
@@ -405,7 +247,7 @@ export default class AssetsTable extends React.Component {
               label={''}
               aria-label={displayText}
               onClick={() => { this.onDeleteClick(index); }}
-              inputRef={(ref) => { this.trashcanRefs[currentAsset.id] = ref; }}
+              inputRef={ref => this.getAssetDeleteButtonRef(ref, currentAsset)}
               data-identifier="asset-delete-button"
             />)
           }
@@ -453,45 +295,19 @@ export default class AssetsTable extends React.Component {
 
   closeModal() {
     this.state.elementToFocusOnModalClose.focus();
+    this.props.unstageAssetDeletion();
 
     this.setState({
-      assetToDelete: {},
-      deletedAssetIndex: null,
       elementToFocusOnModalClose: {},
       modalOpen: false,
     });
   }
 
-  closeDeleteStatus = () => {
-    this.getNextFocusElementOnDelete().focus();
-    this.closeStatusAlert();
-  }
-
-  closeStatusAlert() {
-    this.props.clearAssetsStatus();
-
-    // clear out all status related state
-    this.setState({
-      deletedAsset: {},
-      deletedAssetIndex: null,
-      statusAlertOpen: false,
-      statusAlertFields: {
-        alertDialog: '',
-        alertType: 'info',
-      },
-      uploadSuccessCount: 1,
-    });
-  }
-
   deleteAsset() {
-    const deletedAsset = { ...this.state.assetToDelete };
-
-    this.props.deleteAsset(this.state.assetToDelete.id, this.props.courseDetails);
+    this.props.deleteAsset(this.props.assetToDelete, this.props.courseDetails);
 
     this.setState({
-      assetToDelete: {},
-      deletedAsset,
-      elementToFocusOnModalClose: this.statusAlertRef,
+      elementToFocusOnModalClose: {},
       modalOpen: false,
     });
   }
@@ -506,7 +322,7 @@ export default class AssetsTable extends React.Component {
               title={(<WrappedMessage
                 message={messages.assetsTableDeleteObject}
                 values={{
-                  displayName: this.state.assetToDelete.display_name,
+                  displayName: this.props.assetToDelete.display_name,
                 }}
               />)}
               body={this.renderModalBody()}
@@ -551,7 +367,7 @@ export default class AssetsTable extends React.Component {
           message={messages.assetsTableDeleteWarning}
           tagName="p"
           values={{
-            displayName: <b>{this.state.assetToDelete.display_name}</b>,
+            displayName: <b>{this.props.assetToDelete.display_name}</b>,
           }}
         />
         <WrappedMessage
@@ -565,31 +381,9 @@ export default class AssetsTable extends React.Component {
     );
   }
 
-  renderStatusAlert() {
-    const { assetsStatus } = this.props;
-
-    let onClose = this.closeStatusAlert;
-    if (Object.prototype.hasOwnProperty.call(assetActions.delete, assetsStatus.type)) {
-      onClose = this.closeDeleteStatus;
-    }
-
-    const statusAlert = (
-      <StatusAlert
-        alertType={this.state.statusAlertFields.alertType}
-        dialog={this.state.statusAlertFields.alertDialog}
-        open={this.state.statusAlertOpen}
-        onClose={onClose}
-        ref={(input) => { this.statusAlertRef = input; }}
-      />
-    );
-
-    return statusAlert;
-  }
-
   render() {
     return (
       <React.Fragment>
-        {this.renderStatusAlert()}
         <span className={classNames(styles['wrap-text'])}>
           <Table
             className={['table-responsive']}
@@ -622,10 +416,6 @@ AssetsTable.propTypes = {
     sort: PropTypes.string,
     direction: PropTypes.string,
   }).isRequired,
-  assetsStatus: PropTypes.shape({
-    response: PropTypes.object,
-    type: PropTypes.string,
-  }).isRequired,
   courseDetails: PropTypes.shape({
     lang: PropTypes.string,
     url_name: PropTypes.string,
@@ -639,7 +429,23 @@ AssetsTable.propTypes = {
   }).isRequired,
   courseFilesDocs: PropTypes.string.isRequired,
   deleteAsset: PropTypes.func.isRequired,
+  deleteButtonRefs: PropTypes.func,
   updateSort: PropTypes.func.isRequired,
-  clearAssetsStatus: PropTypes.func.isRequired,
   toggleLockAsset: PropTypes.func.isRequired,
+  stageAssetDeletion: PropTypes.func.isRequired,
+  unstageAssetDeletion: PropTypes.func.isRequired,
+  assetToDelete: PropTypes.shape({
+    display_name: PropTypes.string,
+    content_type: PropTypes.string,
+    url: PropTypes.string,
+    date_added: PropTypes.string,
+    id: PropTypes.string,
+    portable_url: PropTypes.string,
+    thumbnail: PropTypes.string,
+    external_url: PropTypes.string,
+  }).isRequired,
+};
+
+AssetsTable.defaultProps = {
+  deleteButtonRefs: () => {},
 };

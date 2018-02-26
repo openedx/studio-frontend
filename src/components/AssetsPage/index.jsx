@@ -10,6 +10,7 @@ import WrappedAssetsTable from '../AssetsTable/container';
 import WrappedAssetsFilters from '../AssetsFilters/container';
 import WrappedPagination from '../Pagination/container';
 import WrappedAssetsSearch from '../AssetsSearch/container';
+import WrappedAssetsStatusAlert from '../AssetsStatusAlert/container';
 import WrappedAssetsResultsCount from '../AssetsResultsCount/container';
 import WrappedAssetsClearFiltersButton from '../AssetsClearFiltersButton/container';
 import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
@@ -29,16 +30,42 @@ export default class AssetsPage extends React.Component {
     this.state = {
       pageType: types.SKELETON,
     };
+
+    this.statusAlertRef = null;
+    this.deleteButtonRefs = {};
+
+    this.getNextFocusElementOnDelete = this.getNextFocusElementOnDelete.bind(this);
+    this.onDeleteStatusAlertClose = this.onDeleteStatusAlertClose.bind(this);
   }
 
   componentDidMount() {
-    this.props.getAssets({}, this.props.courseDetails);
+    if (this.props.assetsList.length === 0) {
+      this.props.getAssets({}, this.props.courseDetails);
+    }
   }
 
   componentWillReceiveProps(nextProps) {
     this.setState({
       pageType: this.getPageType(nextProps),
     });
+  }
+
+  onDeleteStatusAlertClose = () => {
+    this.props.clearAssetDeletion();
+
+    // do not attempt to focus if there are no assets delete buttons to focus on
+    // TO-DO: determine where the focus should go when the last asset is deleted
+    if (this.props.assetsList.length > 0) {
+      const focusElement = this.getNextFocusElementOnDelete();
+      focusElement.focus();
+    }
+  }
+
+  getNextFocusElementOnDelete() {
+    const { deletedAssetIndex, assetsList } = this.props;
+
+    const focusAsset = assetsList[deletedAssetIndex];
+    return this.deleteButtonRefs[focusAsset.id];
   }
 
   getPageType = (props) => {
@@ -101,7 +128,9 @@ export default class AssetsPage extends React.Component {
         </div>
         <div className={edxBootstrap.row}>
           <div className={edxBootstrap.col}>
-            <WrappedAssetsTable />
+            <WrappedAssetsTable
+              deleteButtonRefs={(button, asset) => { this.deleteButtonRefs[asset.id] = button; }}
+            />
           </div>
         </div>
         <div className={edxBootstrap.row}>
@@ -162,6 +191,15 @@ export default class AssetsPage extends React.Component {
     return (
       <div className={styles.assets}>
         <div className={edxBootstrap.container}>
+          <div className={edxBootstrap.row}>
+            <div className={edxBootstrap['col-12']}>
+              <WrappedAssetsStatusAlert
+                statusAlertRef={(input) => { this.statusAlertRef = input; }}
+                onDeleteStatusAlertClose={this.onDeleteStatusAlertClose}
+                onClose={this.onStatusAlertClose}
+              />
+            </div>
+          </div>
           {this.props.searchSettings.enabled &&
             <div className={edxBootstrap.row}>
               <div className={edxBootstrap['col-12']}>
@@ -193,6 +231,9 @@ AssetsPage.propTypes = {
     id: PropTypes.string,
     revision: PropTypes.string,
   }).isRequired,
+  deletedAssetIndex: PropTypes.oneOfType([
+    PropTypes.number,
+  ]),
   // eslint-disable-next-line react/no-unused-prop-types
   filtersMetadata: PropTypes.shape({
     assetTypes: PropTypes.object,
@@ -213,4 +254,9 @@ AssetsPage.propTypes = {
   searchSettings: PropTypes.shape({
     enabled: PropTypes.bool,
   }).isRequired,
+  clearAssetDeletion: PropTypes.func.isRequired,
+};
+
+AssetsPage.defaultProps = {
+  deletedAssetIndex: null,
 };

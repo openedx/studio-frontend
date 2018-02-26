@@ -485,4 +485,68 @@ describe('Assets Reducers', () => {
       });
     });
   });
+  describe('deletion reducer', () => {
+    const asset = { id: 'asset1' };
+    const index = 2;
+
+    beforeEach(() => {
+      defaultState = reducers.deletionInitial;
+    });
+    it('returns correct state on DELETE_ASSET_SUCCESS action', () => {
+      const defaultStateWithStagedAsset = { ...defaultState };
+      defaultStateWithStagedAsset.assetToDelete = asset;
+      defaultStateWithStagedAsset.deletedAssetIndex = index;
+
+      action = {
+        asset,
+        type: assetActions.delete.DELETE_ASSET_SUCCESS,
+      };
+
+      state = reducers.deletion(defaultStateWithStagedAsset, action);
+
+      expect(state).toEqual({
+        ...defaultState,
+        deletedAsset: action.asset,
+        assetToDelete: {},
+        deletedAssetIndex: defaultStateWithStagedAsset.deletedAssetIndex,
+      });
+    });
+    it('returns correct state on STAGE_ASSET_DELETION action', () => {
+      action = {
+        asset,
+        index,
+        type: assetActions.delete.STAGE_ASSET_DELETION,
+      };
+
+      state = reducers.deletion(defaultState, action);
+
+      expect(state).toEqual({
+        ...defaultState,
+        assetToDelete: asset,
+        deletedAssetIndex: index,
+      });
+    });
+    it('returns correct state on UNSTAGE_ASSET_DELETION action', () => {
+      const stageAssetDeletionAction = {
+        asset,
+        index,
+        type: assetActions.delete.STAGE_ASSET_DELETION,
+      };
+
+      action = {
+        type: assetActions.delete.UNSTAGE_ASSET_DELETION,
+      };
+
+      // stage an asset first
+      reducers.deletion(defaultState, stageAssetDeletionAction);
+
+      state = reducers.deletion(defaultState, action);
+
+      expect(state).toEqual({
+        ...defaultState,
+        assetToDelete: {},
+        deletedAssetIndex: null,
+      });
+    });
+  });
 });

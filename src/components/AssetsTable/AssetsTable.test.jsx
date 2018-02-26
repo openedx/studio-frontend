@@ -1,59 +1,32 @@
 import React from 'react';
-import { StatusAlert } from '@edx/paragon';
 
 import AssetsTable from './index';
-
-import { mountWithIntl } from '../../utils/i18n/enzymeHelper';
+import courseDetails, { testAssetsList } from '../../utils/testConstants';
 import { assetActions } from '../../data/constants/actionTypes';
 import { assetLoading } from '../../data/constants/loadingTypes';
-import courseDetails from '../../utils/testConstants';
+import { mountWithIntl } from '../../utils/i18n/enzymeHelper';
+import AssetsStatusAlert from '../AssetsStatusAlert/index';
 
-const thumbnail = '/animal';
-const copyUrl = 'animal';
+const getStatusAlert = () => (
+  <AssetsStatusAlert
+    clearAssetsStatus={() => {}}
+    onDeleteStatusAlertClose={() => {}}
+  />);
 
 const defaultProps = {
-  assetsList: [
-    {
-      display_name: 'cat.jpg',
-      id: 'cat.jpg',
-      thumbnail,
-      locked: false,
-      portable_url: copyUrl,
-      external_url: copyUrl,
-    },
-    {
-      display_name: 'dog.png',
-      id: 'dog.png',
-      thumbnail,
-      locked: true,
-      portable_url: null,
-      external_url: null,
-    },
-    {
-      display_name: 'bird.json',
-      id: 'bird.json',
-      thumbnail: null,
-      locked: false,
-      portable_url: null,
-      external_url: copyUrl,
-    },
-    {
-      display_name: 'fish.doc',
-      id: 'fish.doc',
-      thumbnail: null,
-      locked: false,
-      portable_url: copyUrl,
-      external_url: null,
-    },
-  ],
+  assetsList: testAssetsList,
   assetsSortMetadata: {},
   assetsStatus: {},
+  assetToDelete: {},
   courseDetails,
   courseFilesDocs: 'testUrl',
   clearAssetsStatus: () => {},
   deleteAsset: () => {},
-  updateSort: () => {},
+  stageAssetDeletion: () => {},
+  statusAlertRef: getStatusAlert(),
   toggleLockAsset: () => {},
+  unstageAssetDeletion: () => {},
+  updateSort: () => {},
 };
 
 const defaultColumns = [
@@ -89,19 +62,6 @@ const defaultColumns = [
     hideHeader: true,
   },
 ];
-
-const clearStatus = (wrapper) => {
-  wrapper.setProps({ assetsStatus: {} });
-};
-
-const getMockForDeleteAsset = (wrapper, assetToDeleteId) => (
-  jest.fn(() => {
-    wrapper.setProps({
-      assetsList: defaultProps.assetsList.filter(asset => asset.id !== assetToDeleteId),
-      assetsStatus: { type: assetActions.delete.DELETE_ASSET_SUCCESS },
-    });
-  })
-);
 
 const getMockForTogglingLockAsset = (wrapper, assetToToggle) => (
   jest.fn(() => {
@@ -353,6 +313,21 @@ describe('<AssetsTable />', () => {
 
       expect(wrapper.state('modalOpen')).toEqual(false);
     });
+    it('calls unstageAssetDeletion when Cancel button clicked', () => {
+      const unstageAssetDeletionSpy = jest.fn();
+
+      wrapper.setProps({
+        unstageAssetDeletion: unstageAssetDeletionSpy,
+      });
+
+      const trashButtons = wrapper.find('button').filterWhere(button => button.hasClass('fa-trash'));
+      trashButtons.at(0).simulate('click');
+
+      const closeButton = modal.find('button').filterWhere(button => button.text() === 'Cancel');
+      closeButton.simulate('click');
+
+      expect(unstageAssetDeletionSpy).toHaveBeenCalledTimes(1);
+    });
   });
   describe('deleteAsset', () => {
     it('calls deleteAsset function prop correctly', () => {
@@ -362,6 +337,7 @@ describe('<AssetsTable />', () => {
         <AssetsTable
           {...defaultProps}
           deleteAsset={deleteAssetSpy}
+          assetToDelete={defaultProps.assetsList[0]}
         />,
       );
 
@@ -373,11 +349,11 @@ describe('<AssetsTable />', () => {
 
       expect(deleteAssetSpy).toHaveBeenCalledTimes(1);
       expect(deleteAssetSpy).toHaveBeenCalledWith(
-        defaultProps.assetsList[0].id,
+        defaultProps.assetsList[0],
         defaultProps.courseDetails,
       );
     });
-    it('closes on deleteAsset call', () => {
+    it('closes modal on deleteAsset call', () => {
       wrapper = mountWithIntl(
         <AssetsTable
           {...defaultProps}
@@ -410,12 +386,17 @@ describe('<AssetsTable />', () => {
       trashButtons.at(0).simulate('click');
       expect(wrapper.state('modalOpen')).toEqual(true);
     });
-    it('sets assetToDelete correctly', () => {
-      const trashButtonAriaLabel = `Delete ${defaultProps.assetsList[0].display_name}`;
-      expect(trashButtons.at(0).prop('aria-label')).toEqual(trashButtonAriaLabel);
+    it('calls stageAssetDeletion prop', () => {
+      const stageAssetDeletionSpy = jest.fn();
+
+      wrapper.setProps({
+        stageAssetDeletion: stageAssetDeletionSpy,
+      });
 
       trashButtons.at(0).simulate('click');
-      expect(wrapper.state('assetToDelete')).toEqual(defaultProps.assetsList[0]);
+
+      expect(stageAssetDeletionSpy).toHaveBeenCalledTimes(1);
+      expect(stageAssetDeletionSpy).toHaveBeenCalledWith(defaultProps.assetsList[0], 0);
     });
     it('sets elementToFocusOnModalClose correctly', () => {
       trashButtons.at(0).simulate('click');
@@ -427,7 +408,6 @@ describe('<AssetsTable />', () => {
     let closeButton;
     let modal;
     let trashButtons;
-    let mockDeleteAsset;
 
     beforeEach(() => {
       wrapper = mountWithIntl(
@@ -451,109 +431,14 @@ describe('<AssetsTable />', () => {
 
       expect(trashButtons.at(0).html()).toEqual(document.activeElement.outerHTML);
     });
-
-    it('moves from modal to status alert on asset delete', () => {
-      const deleteButton = wrapper.find('[role="dialog"] button').filterWhere(button => button.hasClass('btn-primary') && button.text() === 'Permanently delete');
-      trashButtons.at(0).simulate('click');
-      expect(closeButton.html()).toEqual(document.activeElement.outerHTML);
-
-      mockDeleteAsset = getMockForDeleteAsset(wrapper, 0);
-      wrapper.setProps({ deleteAsset: mockDeleteAsset });
-      deleteButton.simulate('click');
-      const statusAlert = wrapper.find(StatusAlert);
-      const closeStatusAlertButton = statusAlert.find('button').filterWhere(button => button.text() === '×');
-      expect(closeStatusAlertButton.html()).toEqual(document.activeElement.outerHTML);
-    });
-
-    const testData = [
-      {
-        assetToDeleteIndex: 0,
-        trashButtonIndex: 0,
-        newFocusIndex: 0,
-      },
-      {
-        assetToDeleteIndex: 2,
-        trashButtonIndex: 2,
-        newFocusIndex: 1,
-      },
-    ];
-
-    testData.forEach((test) => {
-      it(`moves to correct asset trashcan icon after asset ${test.assetToDeleteIndex} deleted`, () => {
-        const assetToDeleteId = defaultProps.assetsList[test.assetToDeleteIndex].id;
-
-        mockDeleteAsset = getMockForDeleteAsset(wrapper, assetToDeleteId);
-
-        wrapper.setProps({ deleteAsset: mockDeleteAsset });
-
-        const deleteButton = wrapper.find('[role="dialog"] button').filterWhere(button => button.hasClass('btn-primary') && button.text() === 'Permanently delete');
-
-        trashButtons.at(test.trashButtonIndex).simulate('click');
-
-        deleteButton.simulate('click');
-        expect(mockDeleteAsset).toHaveBeenCalledTimes(1);
-
-        const statusAlert = wrapper.find(StatusAlert);
-        const closeStatusAlertButton = statusAlert.find('button').filterWhere(button => button.text() === '×');
-        wrapper.setProps({
-          clearAssetsStatus: () => clearStatus(wrapper),
-        });
-        closeStatusAlertButton.simulate('click');
-
-        expect(mockDeleteAsset).toHaveBeenCalledTimes(1);
-        expect(mockDeleteAsset).toHaveBeenCalledWith(
-          assetToDeleteId,
-          defaultProps.courseDetails,
-        );
-
-        // This gets the new trashcans after the asset delete.
-        trashButtons = wrapper.find('button').filterWhere(button => button.hasClass('fa-trash'));
-
-        expect(trashButtons.at(test.newFocusIndex).html())
-          .toEqual(document.activeElement.outerHTML);
-      });
-    });
-  });
-  describe('status alert', () => {
-    describe('renders', () => {
-      const assetsStatuses = [
-        assetActions.clear.CLEAR_FILTERS_FAILURE,
-        assetActions.filter.FILTER_UPDATE_FAILURE,
-        assetActions.paginate.PAGE_UPDATE_FAILURE,
-        assetActions.sort.SORT_UPDATE_FAILURE,
-      ];
-
-      beforeEach(() => {
-        wrapper = mountWithIntl(
-          <AssetsTable
-            {...defaultProps}
-          />,
-        );
-      });
-
-      assetsStatuses.forEach((statusType) => {
-        it(`on ${statusType}`, () => {
-          const assetsStatus = {
-            type: statusType,
-          };
-
-          wrapper.setProps({
-            assetsStatus,
-          });
-
-          const statusAlert = wrapper.find(StatusAlert);
-          expect(statusAlert.prop('alertType')).toEqual('danger');
-          expect(statusAlert.find('.alert-dialog').text()).toEqual('The action could not be completed. Refresh the page, and then try the action again.');
-        });
-      });
-    });
   });
 });
 
-describe('Lock asset', () => {
+describe('Lock Asset', () => {
   const getLockedButtons = () => wrapper.find('button .fa-lock');
   const getUnlockedButtons = () => wrapper.find('button .fa-unlock');
   const getLockingButtons = () => wrapper.find('button > .fa-spinner');
+
   beforeEach(() => {
     wrapper = mountWithIntl(
       <AssetsTable
@@ -561,6 +446,7 @@ describe('Lock asset', () => {
       />,
     );
   });
+
   it('renders icons and buttons', () => {
     const lockedButtons = getLockedButtons();
     expect(lockedButtons).toHaveLength(1);
@@ -568,6 +454,7 @@ describe('Lock asset', () => {
     const unlockedButtons = getUnlockedButtons();
     expect(unlockedButtons).toHaveLength(3);
   });
+
   it('can toggle state', () => {
     const assetToToggle = 'dog.png';
     const mockToggle = getMockForTogglingLockAsset(wrapper, assetToToggle);
@@ -599,173 +486,5 @@ describe('Lock asset', () => {
     });
     expect(getUnlockedButtons()).toHaveLength(4);
     expect(getLockedButtons()).toHaveLength(0);
-  });
-  it('displays locking errors', () => {
-    wrapper.setProps({
-      assetsStatus: {
-        response: {},
-        type: assetActions.lock.TOGGLING_LOCK_ASSET_FAILURE,
-        asset: { name: 'marmoset.png' },
-      },
-    });
-    const statusAlert = wrapper.find(StatusAlert);
-    expect(statusAlert.prop('alertType')).toEqual('danger');
-    expect(statusAlert.find('.alert-dialog').text()).toEqual('Failed to toggle lock for marmoset.png.');
-  });
-});
-
-describe('displays status alert properly', () => {
-  it('renders success alert on success', () => {
-    wrapper = mountWithIntl(
-      <AssetsTable
-        {...defaultProps}
-      />,
-    );
-
-    wrapper.setProps({
-      assetsStatus: {
-        response: {},
-        type: assetActions.delete.DELETE_ASSET_SUCCESS,
-      },
-    });
-    const statusAlert = wrapper.find(StatusAlert);
-    const statusAlertType = statusAlert.prop('alertType');
-
-    expect(statusAlertType).toEqual('success');
-    expect(statusAlert.find('div').first().hasClass('alert-success')).toEqual(true);
-  });
-
-  it('renders danger alert on error', () => {
-    wrapper = mountWithIntl(
-      <AssetsTable
-        {...defaultProps}
-      />,
-    );
-
-    wrapper.setProps({
-      assetsStatus: {
-        response: {},
-        type: assetActions.delete.DELETE_ASSET_FAILURE,
-      },
-    });
-    const statusAlert = wrapper.find(StatusAlert);
-    const statusAlertType = statusAlert.prop('alertType');
-
-    expect(statusAlertType).toEqual('danger');
-    expect(statusAlert.find('div').first().hasClass('alert-danger')).toEqual(true);
-  });
-
-  it('hides the alert when state cleared', () => {
-    wrapper = mountWithIntl(
-      <AssetsTable
-        {...defaultProps}
-      />,
-    );
-    let statusAlert = wrapper.find(StatusAlert);
-
-    statusAlert = wrapper.find(StatusAlert);
-    expect(statusAlert).toBeDefined();
-
-    wrapper.setState({ assetsStatus: {} });
-    statusAlert = wrapper.find(StatusAlert);
-    expect(statusAlert.find('.alert-dialog').text()).toEqual('');
-  });
-
-  it('clears uploading assets on keyDown', () => {
-    wrapper = mountWithIntl(
-      <AssetsTable
-        {...defaultProps}
-      />,
-    );
-    wrapper.setProps({
-      clearAssetsStatus: () => clearStatus(wrapper),
-    });
-    wrapper.setProps({ assetsStatus: { type: assetActions.upload.UPLOADING_ASSETS, count: 77 } });
-
-    let statusAlert = wrapper.find(StatusAlert);
-    expect(statusAlert.find('.alert-dialog').text()).toEqual('77 files uploading.');
-
-    statusAlert.find('button').at(0).simulate('keyDown', { key: 'Enter' });
-    expect(wrapper.props().assetsStatus).toEqual({});
-
-    statusAlert = wrapper.find(StatusAlert);
-    expect(statusAlert.find('.alert-dialog').text()).toEqual('');
-  });
-});
-
-describe('Upload statuses', () => {
-  beforeEach(() => {
-    wrapper = mountWithIntl(
-      <AssetsTable
-        {...defaultProps}
-      />,
-    );
-  });
-
-  it('renders uploading', () => {
-    wrapper.setProps({
-      assetsStatus: {
-        type: assetActions.upload.UPLOADING_ASSETS,
-        count: 885,
-      },
-    });
-    const statusAlert = wrapper.find(StatusAlert);
-    expect(statusAlert.find('.alert-dialog').text()).toEqual('885 files uploading.');
-  });
-
-  it('renders upload success', () => {
-    wrapper.setState({ uploadSuccessCount: 5 });
-    wrapper.setProps({
-      assetsStatus: {
-        type: assetActions.upload.UPLOAD_ASSET_SUCCESS,
-      },
-    });
-
-    const statusAlert = wrapper.find(StatusAlert);
-    expect(statusAlert.find('.alert-dialog').text()).toEqual('5 files successfully uploaded.');
-  });
-
-  it('renders upload success', () => {
-    wrapper.setProps({
-      assetsStatus: {
-        type: assetActions.upload.UPLOAD_EXCEED_MAX_COUNT_ERROR,
-        maxFileCount: 110,
-      },
-    });
-    const statusAlert = wrapper.find(StatusAlert);
-    expect(statusAlert.find('.alert-dialog').text()).toEqual('The maximum number of files for an upload is 110. No files were uploaded.');
-  });
-
-  it('renders upload exceeds maximum file count', () => {
-    wrapper.setProps({
-      assetsStatus: {
-        type: assetActions.upload.UPLOAD_EXCEED_MAX_COUNT_ERROR,
-        maxFileCount: 110,
-      },
-    });
-    const statusAlert = wrapper.find(StatusAlert);
-    expect(statusAlert.find('.alert-dialog').text()).toEqual('The maximum number of files for an upload is 110. No files were uploaded.');
-  });
-
-  it('renders upload exceeds maximum file size', () => {
-    wrapper.setProps({
-      assetsStatus: {
-        type: assetActions.upload.UPLOAD_EXCEED_MAX_SIZE_ERROR,
-        maxFileSizeMB: 9,
-      },
-    });
-    const statusAlert = wrapper.find(StatusAlert);
-    expect(statusAlert.find('.alert-dialog').text()).toEqual('The maximum size for an upload is 9 MB. No files were uploaded.');
-  });
-
-  it('renders upload failed', () => {
-    wrapper.setProps({
-      assetsStatus: {
-        type: assetActions.upload.UPLOAD_ASSET_FAILURE,
-        file: { name: 'quail.png' },
-      },
-    });
-    const statusAlert = wrapper.find(StatusAlert);
-    expect(statusAlert.find('.alert-dialog').text()).toEqual('Error uploading quail.png. Try again.');
   });
 });

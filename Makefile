@@ -9,7 +9,7 @@ help: ## display a help message
 shell: ## run a shell on the studio-frontend container
 	docker exec -it dahlia.studio-frontend /bin/bash
 
-attach:
+attach: ## attach local standard input, output, and error streams to studio-frontend container
 	docker attach --sig-proxy=false dahlia.studio-frontend
 
 up: ## bring up studio-frontend container
@@ -34,11 +34,11 @@ from-scratch: ## start development environment from scratch
 	docker build -t edxops/studio-frontend:latest --no-cache .
 	make up
 
-restart:
+restart: ## bring container down and back up
 	make down
 	make up
 
-restart-detached:
+restart-detached: ## bring container down and back up in detached mode
 	make down
 	make up-detached
 

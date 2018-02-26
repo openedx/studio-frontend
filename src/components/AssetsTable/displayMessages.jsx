@@ -61,51 +61,6 @@ const messages = defineMessages({
     defaultMessage: 'Updating lock status for {assetName}.',
     description: 'States that the lock status of an item is updating',
   },
-  assetsTableFailedLock: {
-    id: 'assetsTableFailedLock',
-    defaultMessage: 'Failed to toggle lock for {assetName}.',
-    description: 'States that there was a failure toggling an item\'s lock status',
-  },
-  assetsTableCantDelete: {
-    id: 'assetsTableCantDelete',
-    defaultMessage: 'Unable to delete {assetName}.',
-    description: 'States that an item could not be deleted',
-  },
-  assetsTableDeleteSuccess: {
-    id: 'assetsTableDeleteSuccess',
-    defaultMessage: '{assetName} has been deleted.',
-    description: 'States that an item was successfully deleted',
-  },
-  assetsTableUploadSuccess: {
-    id: 'assetsTableUploadSuccess',
-    defaultMessage: '{uploaded_count} files successfully uploaded.',
-    description: 'States that files were successfully uploaded',
-  },
-  assetsTableUploadInProgress: {
-    id: 'assetsTableUploadInProgress',
-    defaultMessage: '{uploading_count} files uploading.',
-    description: 'States that the file upload operation is in progress',
-  },
-  assetsTableTooManyFiles: {
-    id: 'assetsTableTooManyFiles',
-    defaultMessage: 'The maximum number of files for an upload is {max_count}. No files were uploaded.',
-    description: 'Error message shown when too many files are selected for upload',
-  },
-  assetsTableTooMuchData: {
-    id: 'assetsTableTooMuchData',
-    defaultMessage: 'The maximum size for an upload is {max_size} MB. No files were uploaded.',
-    description: 'Error message shown when too much data is being uploaded',
-  },
-  assetsTableGenericError: {
-    id: 'assetsTableGenericError',
-    defaultMessage: 'Error uploading {assetName}. Try again.',
-    description: 'Generic error message while uploading files',
-  },
-  assetsTableGenericUpdateError: {
-    id: 'assetsTableGenericUpdateError',
-    defaultMessage: 'The action could not be completed. Refresh the page, and then try the action again.',
-    description: 'States that the action could not be completed and asks the user to refresh the page and try the action again',
-  },
   assetsTableStudioLink: {
     id: 'assetsTableStudioLink',
     defaultMessage: 'Studio',
@@ -155,11 +110,6 @@ const messages = defineMessages({
     id: 'assetsTableDeleteConsequences',
     defaultMessage: 'Any links or references to this file will no longer work. {link}',
     description: 'Warns of the consequences of deleting an item',
-  },
-  assetsTableLoadingStatus: {
-    id: 'assetsTableLoadingStatus',
-    defaultMessage: 'Loading',
-    description: 'Indicates something is loading',
   },
 });
 

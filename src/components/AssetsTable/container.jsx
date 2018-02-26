@@ -1,10 +1,11 @@
 import { connect } from 'react-redux';
 
 import AssetsTable from '.';
-import { clearAssetsStatus, deleteAsset, sortUpdate, toggleLockAsset } from '../../data/actions/assets';
+import { clearAssetsStatus, deleteAsset, sortUpdate, stageAssetDeletion, toggleLockAsset, unstageAssetDeletion } from '../../data/actions/assets';
 
 const mapStateToProps = state => ({
   assetsList: state.assets,
+  assetToDelete: state.metadata.deletion.assetToDelete,
   assetsSortMetadata: state.metadata.sort,
   assetsStatus: state.metadata.status,
   courseDetails: state.studioDetails.course,
@@ -14,10 +15,12 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   clearAssetsStatus: () => dispatch(clearAssetsStatus()),
-  deleteAsset: (assetId, courseDetails) => dispatch(deleteAsset(assetId, courseDetails)),
+  deleteAsset: (asset, courseDetails) => dispatch(deleteAsset(asset, courseDetails)),
+  stageAssetDeletion: (asset, index) => dispatch(stageAssetDeletion(asset, index)),
+  toggleLockAsset: (asset, courseDetails) => dispatch(toggleLockAsset(asset, courseDetails)),
   updateSort: (sortKey, sortDirection, courseDetails) =>
     dispatch(sortUpdate(sortKey, sortDirection, courseDetails)),
-  toggleLockAsset: (asset, courseDetails) => dispatch(toggleLockAsset(asset, courseDetails)),
+  unstageAssetDeletion: () => dispatch(unstageAssetDeletion()),
 });
 
 const WrappedAssetsTable = connect(

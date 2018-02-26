@@ -57,7 +57,6 @@ export const getAssets = (parameters, courseDetails) =>
     };
 
     dispatch(updateRequest(requestParameters));
-
     return clientApi.requestAssets(courseDetails.id, { ...requestParameters })
       .then((response) => {
         if (response.ok) {
@@ -198,28 +197,42 @@ export const pageUpdate = (page, courseDetails) =>
     });
   };
 
-export const deleteAssetSuccess = assetId => ({
+export const clearAssetDeletion = () => ({
+  type: assetActions.delete.CLEAR_DELETE,
+});
+
+export const deleteAssetSuccess = asset => ({
   type: assetActions.delete.DELETE_ASSET_SUCCESS,
-  assetId,
+  asset,
 });
 
-export const deleteAssetFailure = assetId => ({
+export const deleteAssetFailure = asset => ({
   type: assetActions.delete.DELETE_ASSET_FAILURE,
-  assetId,
+  asset,
 });
 
-export const deleteAsset = (assetId, courseDetails) =>
+export const stageAssetDeletion = (asset, index) => ({
+  type: assetActions.delete.STAGE_ASSET_DELETION,
+  asset,
+  index,
+});
+
+export const unstageAssetDeletion = () => ({
+  type: assetActions.delete.UNSTAGE_ASSET_DELETION,
+});
+
+export const deleteAsset = (asset, courseDetails) =>
   dispatch =>
-    clientApi.requestDeleteAsset(courseDetails.id, assetId)
+    clientApi.requestDeleteAsset(courseDetails.id, asset.id)
       // since the API returns 204 on success and 404 on failure, neither of which have
       // content, we don't json-ify the response
       .then((response) => {
         if (response.ok) {
           return dispatch(getAssets({}, courseDetails)).then(() => (
-            dispatch(deleteAssetSuccess(assetId))
+            dispatch(deleteAssetSuccess(asset))
           ));
         }
-        return dispatch(deleteAssetFailure(assetId));
+        return dispatch(deleteAssetFailure(asset));
       });
 
 export const togglingLockAsset = asset => ({

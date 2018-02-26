@@ -9,6 +9,12 @@ import { getAssetAPIAttributeFromDatabaseAttribute } from '../../utils/getAssets
 
 const defaultAssetTypeFilters = getDefaultFilterState();
 
+export const deletionInitial = {
+  assetToDelete: {},
+  deletedAsset: {},
+  deletedAssetIndex: null,
+};
+
 export const filtersInitial = {
   assetTypes: { ...defaultAssetTypeFilters },
 };
@@ -210,6 +216,31 @@ export const request = (state = requestInitial, action) => {
   }
 };
 
+export const deletion = (state = deletionInitial, action) => {
+  switch (action.type) {
+    case assetActions.delete.DELETE_ASSET_SUCCESS:
+      return {
+        ...state,
+        assetToDelete: {},
+        deletedAsset: action.asset,
+      };
+    case assetActions.delete.STAGE_ASSET_DELETION:
+      return {
+        ...state,
+        assetToDelete: action.asset,
+        deletedAssetIndex: action.index,
+      };
+    case assetActions.delete.UNSTAGE_ASSET_DELETION:
+      return {
+        ...state,
+        assetToDelete: {},
+        deletedAssetIndex: null,
+      };
+    default:
+      return state;
+  }
+};
+
 export const metadata = combineReducers({
   filters,
   pagination,
@@ -217,4 +248,5 @@ export const metadata = combineReducers({
   sort,
   status,
   search,
+  deletion,
 });
