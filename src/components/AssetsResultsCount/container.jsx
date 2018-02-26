@@ -5,7 +5,7 @@ import AssetsResultsCount from '.';
 const mapStateToProps = state => ({
   paginationMetaData: state.metadata.pagination,
   filtersMetaData: state.metadata.filters,
-  searchMetaData: state.metadata.filters,
+  searchMetaData: state.metadata.search,
 });
 
 const WrappedAssetsResultsCount = connect(

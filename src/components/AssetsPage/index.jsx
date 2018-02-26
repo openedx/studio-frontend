@@ -95,7 +95,10 @@ export default class AssetsPage extends React.Component {
                 <WrappedAssetsResultsCount />
               </div>
               <div className={`${edxBootstrap['col-md-4']} ${edxBootstrap['text-right']}`}>
-                <WrappedAssetsClearFiltersButton />
+                {hasSearchOrFilterApplied(this.props.filtersMetaData.assetTypes,
+                  this.props.searchMetaData.search) &&
+                  <WrappedAssetsClearFiltersButton />
+                }
               </div>
             </div>
           </React.Fragment>

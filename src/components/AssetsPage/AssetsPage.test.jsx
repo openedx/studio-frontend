@@ -134,11 +134,22 @@ describe('<AssetsPage />', () => {
     it('is hidden when enabled and no assets', () => {
       expect(wrapper.find('Connect(AssetsClearFiltersButton)')).toHaveLength(0);
     });
-    it('is visible when enabled and has assets', () => {
+    it('is hidden when enabled and has assets', () => {
       wrapper.setProps({
         assetsList: [{
           display_name: 'a.txt',
         }],
+      });
+      expect(wrapper.find('Connect(AssetsClearFiltersButton)')).toHaveLength(0);
+    });
+    it('is visible when enabled and has assets and has search applied', () => {
+      wrapper.setProps({
+        assetsList: [{
+          display_name: 'a.txt',
+        }],
+        searchMetaData: {
+          search: 'edX',
+        },
       });
       expect(wrapper.find('Connect(AssetsClearFiltersButton)')).toHaveLength(1);
     });

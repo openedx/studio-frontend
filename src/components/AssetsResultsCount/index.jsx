@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import edxBootstrap from '../../SFE.scss';
 import { hasSearchOrFilterApplied } from '../../utils/getAssetsFilters';
+import styles from './AssetsResultsCount.scss';
 import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
 import messages from './displayMessages';
 
@@ -13,27 +14,22 @@ const renderCount = count => (
 );
 
 const AssetsResultsCount = ({ paginationMetaData, filtersMetaData, searchMetaData }) => {
+  let message = messages.assetsResultsCountTotal;
   if (hasSearchOrFilterApplied(filtersMetaData.assetTypes, searchMetaData.search)) {
-    return (
+    message = messages.assetsResultsCountFiltered;
+  }
+
+  return (
+    <div className={styles['result-count-wrapper']}>
       <WrappedMessage
-        message={messages.assetsResultsCountFiltered}
+        message={message}
         values={{
           start: renderCount(paginationMetaData.start + 1),
           end: renderCount(paginationMetaData.end),
           total: renderCount(paginationMetaData.totalCount),
         }}
       />
-    );
-  }
-  return (
-    <WrappedMessage
-      message={messages.assetsResultsCountTotal}
-      values={{
-        start: renderCount(paginationMetaData.start + 1),
-        end: renderCount(paginationMetaData.end),
-        total: renderCount(paginationMetaData.totalCount),
-      }}
-    />
+    </div>
   );
 };
 
