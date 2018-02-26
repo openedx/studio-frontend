@@ -114,7 +114,7 @@ export const search = (state = searchInitial, action) => {
       return {
         search: action.response.textSearch,
       };
-    case assetActions.sort.SEARCH_UPDATE_FAILURE:
+    case assetActions.search.SEARCH_UPDATE_FAILURE:
       return { ...state, ...action.previousState };
     default:
       return state;

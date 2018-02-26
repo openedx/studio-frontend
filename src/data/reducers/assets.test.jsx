@@ -296,6 +296,38 @@ describe('Assets Reducers', () => {
         });
       });
     });
+    describe('search reducer', () => {
+      it('returns correct search state on REQUEST_ASSETS_SUCCESS action', () => {
+        defaultState = reducers.searchInitial;
+
+        action = {
+          response: {
+            textSearch: 'edX',
+          },
+          type: assetActions.request.REQUEST_ASSETS_SUCCESS,
+        };
+
+        state = reducers.search(defaultState, action);
+
+        expect(state).toEqual({
+          search: action.response.textSearch,
+        });
+      });
+      it('returns correct previous search state on SEARCH_UPDATE_FAILURE action', () => {
+        defaultState = reducers.searchInitial;
+
+        action = {
+          previousState: {
+            search: '',
+          },
+          type: assetActions.search.SEARCH_UPDATE_FAILURE,
+        };
+
+        state = reducers.search(defaultState, action);
+
+        expect(state).toEqual(action.previousState);
+      });
+    });
     describe('status reducer', () => {
       defaultState = {
         metadata: {
