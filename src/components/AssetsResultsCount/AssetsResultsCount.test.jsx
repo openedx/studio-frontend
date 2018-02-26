@@ -55,7 +55,7 @@ describe('<AssetsResultsCount />', () => {
       const counts = wrapper.find('span.font-weight-bold');
       expect(counts.at(0).text()).toEqual('1');
       expect(counts.at(1).text()).toEqual('50');
-      expect(counts.at(2).text()).toEqual('1000');
+      expect(counts.at(2).text()).toEqual('1,000');
     });
     it('renders correct counts with filters applied', () => {
       wrapper.setProps({
@@ -75,7 +75,7 @@ describe('<AssetsResultsCount />', () => {
       const counts = wrapper.find('span.font-weight-bold');
       expect(counts.at(0).text()).toEqual('1');
       expect(counts.at(1).text()).toEqual('50');
-      expect(counts.at(2).text()).toEqual('1000');
+      expect(counts.at(2).text()).toEqual('1,000');
     });
   });
 });

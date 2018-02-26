@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { FormattedNumber } from 'react-intl';
 
 import edxBootstrap from '../../SFE.scss';
 import { hasSearchOrFilterApplied } from '../../utils/getAssetsFilters';
@@ -9,7 +10,7 @@ import messages from './displayMessages';
 
 const renderCount = count => (
   <span className={`${edxBootstrap['font-weight-bold']}`}>
-    {count}
+    <FormattedNumber value={count} />
   </span>
 );
 
