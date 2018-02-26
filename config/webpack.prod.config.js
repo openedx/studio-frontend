@@ -34,17 +34,6 @@ module.exports = Merge.smart(commonConfig, {
         },
       },
       {
-        test: /\.(js|jsx)$/,
-        include: [
-          path.resolve(__dirname, '../node_modules/react-intl/locale-data'),
-        ],
-        loader: 'file-loader',
-        options: {
-          name: '[name].[ext]',
-          outputPath: '/i18n/locale_data/',
-        },
-      },
-      {
         test: /(.scss|.css)$/,
         use: ExtractTextPlugin.extract({
           fallback: 'style-loader',
