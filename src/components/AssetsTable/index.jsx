@@ -430,7 +430,7 @@ export default class AssetsTable extends React.Component {
 
       currentAsset.urls = this.getCopyUrlButtons(
         currentAsset.display_name,
-        currentAsset.url,
+        currentAsset.portable_url,
         currentAsset.external_url,
       );
 
