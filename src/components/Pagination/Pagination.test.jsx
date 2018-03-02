@@ -5,7 +5,7 @@ import { mountWithIntl } from '../../utils/i18n/enzymeHelper';
 import Pagination from './index';
 
 const defaultProps = {
-  assetsListMetaData: {
+  assetsListMetadata: {
     page: 0,
     pageSize: 50,
     totalCount: 5000,
@@ -15,7 +15,7 @@ const defaultProps = {
 };
 
 const totalPages = Math.ceil(
-  defaultProps.assetsListMetaData.totalCount / defaultProps.assetsListMetaData.pageSize,
+  defaultProps.assetsListMetadata.totalCount / defaultProps.assetsListMetadata.pageSize,
 );
 
 describe('<Pagination />', () => {
@@ -50,14 +50,14 @@ describe('<Pagination />', () => {
     expect(updatePageSpy).toHaveBeenCalledWith(totalPages - 1, defaultProps.courseDetails);
   });
   it('changes the current page when assets list state updates', () => {
-    let currentPage = wrapper.props().assetsListMetaData.page;
+    let currentPage = wrapper.props().assetsListMetadata.page;
     let currentPageLink = pageItems.at(0).find('a');
 
     expect(currentPage).toEqual(0);
     expect(currentPageLink.prop('aria-label')).toContain('current page');
 
     wrapper.setProps({
-      assetsListMetaData: {
+      assetsListMetadata: {
         page: 1,
         pageSize: 50,
         totalCount: 5000,
@@ -65,7 +65,7 @@ describe('<Pagination />', () => {
     });
 
     pageItems = wrapper.find('.page-item');
-    currentPage = wrapper.props().assetsListMetaData.page;
+    currentPage = wrapper.props().assetsListMetadata.page;
     currentPageLink = pageItems.at(1).find('a');
 
     expect(currentPage).toEqual(1);
@@ -94,8 +94,8 @@ describe('<Pagination />', () => {
     beforeEach(() => {
       wrapper.setProps({
         ...defaultProps,
-        assetsListMetaData: {
-          ...defaultProps.assetsListMetaData,
+        assetsListMetadata: {
+          ...defaultProps.assetsListMetadata,
           page: 0,
         },
       });
@@ -118,8 +118,8 @@ describe('<Pagination />', () => {
     beforeEach(() => {
       wrapper.setProps({
         ...defaultProps,
-        assetsListMetaData: {
-          ...defaultProps.assetsListMetaData,
+        assetsListMetadata: {
+          ...defaultProps.assetsListMetadata,
           page: totalPages - 1,
         },
       });

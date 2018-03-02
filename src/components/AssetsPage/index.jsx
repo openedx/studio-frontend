@@ -43,8 +43,8 @@ export default class AssetsPage extends React.Component {
 
   getPageType = (props) => {
     const numberOfAssets = props.assetsList.length;
-    const filters = props.filtersMetaData.assetTypes;
-    const search = props.searchMetaData.search;
+    const filters = props.filtersMetadata.assetTypes;
+    const search = props.searchMetadata.search;
 
     if ('type' in props.status && props.status.type === assetActions.request.REQUESTING_ASSETS) {
       return this.state.pageType;
@@ -95,8 +95,8 @@ export default class AssetsPage extends React.Component {
                 <WrappedAssetsResultsCount />
               </div>
               <div className={`${edxBootstrap['col-md-4']} ${edxBootstrap['text-right']}`}>
-                {hasSearchOrFilterApplied(this.props.filtersMetaData.assetTypes,
-                  this.props.searchMetaData.search) &&
+                {hasSearchOrFilterApplied(this.props.filtersMetadata.assetTypes,
+                  this.props.searchMetadata.search) &&
                   <WrappedAssetsClearFiltersButton />
                 }
               </div>
@@ -118,10 +118,10 @@ export default class AssetsPage extends React.Component {
   );
 
   renderNoAssetsBody = () => (
-    <div>
+    <React.Fragment>
       <WrappedMessage message={messages.assetsPageNoAssetsNumFiles} tagName="h3" />
       <WrappedMessage message={messages.assetsPageNoAssetsMessage} tagName="h4" />
-    </div>
+    </React.Fragment>
   );
 
   renderNoAssetsPage = () => (
@@ -200,11 +200,11 @@ AssetsPage.propTypes = {
     revision: PropTypes.string,
   }).isRequired,
   // eslint-disable-next-line react/no-unused-prop-types
-  filtersMetaData: PropTypes.shape({
+  filtersMetadata: PropTypes.shape({
     assetTypes: PropTypes.object,
   }).isRequired,
   // eslint-disable-next-line react/no-unused-prop-types
-  searchMetaData: PropTypes.shape({
+  searchMetadata: PropTypes.shape({
     search: PropTypes.string,
   }).isRequired,
   getAssets: PropTypes.func.isRequired,

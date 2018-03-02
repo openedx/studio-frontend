@@ -5,7 +5,7 @@ import { clearAssetsStatus, deleteAsset, sortUpdate, toggleLockAsset } from '../
 
 const mapStateToProps = state => ({
   assetsList: state.assets,
-  assetsSortMetaData: state.metadata.sort,
+  assetsSortMetadata: state.metadata.sort,
   assetsStatus: state.metadata.status,
   courseDetails: state.studioDetails.course,
   courseFilesDocs: state.studioDetails.help_tokens.files,

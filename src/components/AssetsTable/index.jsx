@@ -91,8 +91,8 @@ export default class AssetsTable extends React.Component {
   }
 
   onSortClick(columnKey) {
-    const sortedColumn = this.props.assetsSortMetaData.sort;
-    const sortedDirection = this.props.assetsSortMetaData.direction;
+    const sortedColumn = this.props.assetsSortMetadata.sort;
+    const sortedDirection = this.props.assetsSortMetadata.direction;
 
     let newDirection = 'desc';
 
@@ -618,7 +618,7 @@ export default class AssetsTable extends React.Component {
 
 AssetsTable.propTypes = {
   assetsList: PropTypes.arrayOf(PropTypes.object).isRequired,
-  assetsSortMetaData: PropTypes.shape({
+  assetsSortMetadata: PropTypes.shape({
     sort: PropTypes.string,
     direction: PropTypes.string,
   }).isRequired,

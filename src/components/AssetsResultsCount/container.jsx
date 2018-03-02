@@ -3,9 +3,9 @@ import { connect } from 'react-redux';
 import AssetsResultsCount from '.';
 
 const mapStateToProps = state => ({
-  paginationMetaData: state.metadata.pagination,
-  filtersMetaData: state.metadata.filters,
-  searchMetaData: state.metadata.search,
+  paginationMetadata: state.metadata.pagination,
+  filtersMetadata: state.metadata.filters,
+  searchMetadata: state.metadata.search,
 });
 
 const WrappedAssetsResultsCount = connect(

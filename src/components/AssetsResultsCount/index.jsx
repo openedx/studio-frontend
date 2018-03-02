@@ -14,9 +14,9 @@ const renderCount = count => (
   </span>
 );
 
-const AssetsResultsCount = ({ paginationMetaData, filtersMetaData, searchMetaData }) => {
+const AssetsResultsCount = ({ paginationMetadata, filtersMetadata, searchMetadata }) => {
   let message = messages.assetsResultsCountTotal;
-  if (hasSearchOrFilterApplied(filtersMetaData.assetTypes, searchMetaData.search)) {
+  if (hasSearchOrFilterApplied(filtersMetadata.assetTypes, searchMetadata.search)) {
     message = messages.assetsResultsCountFiltered;
   }
 
@@ -25,9 +25,9 @@ const AssetsResultsCount = ({ paginationMetaData, filtersMetaData, searchMetaDat
       <WrappedMessage
         message={message}
         values={{
-          start: renderCount(paginationMetaData.start + 1),
-          end: renderCount(paginationMetaData.end),
-          total: renderCount(paginationMetaData.totalCount),
+          start: renderCount(paginationMetadata.start + 1),
+          end: renderCount(paginationMetadata.end),
+          total: renderCount(paginationMetadata.totalCount),
         }}
       />
     </div>
@@ -35,17 +35,17 @@ const AssetsResultsCount = ({ paginationMetaData, filtersMetaData, searchMetaDat
 };
 
 AssetsResultsCount.propTypes = {
-  paginationMetaData: PropTypes.shape({
+  paginationMetadata: PropTypes.shape({
     start: PropTypes.number,
     end: PropTypes.number,
     page: PropTypes.number,
     pageSize: PropTypes.number,
     totalCount: PropTypes.number,
   }).isRequired,
-  filtersMetaData: PropTypes.shape({
+  filtersMetadata: PropTypes.shape({
     assetTypes: PropTypes.object,
   }).isRequired,
-  searchMetaData: PropTypes.shape({
+  searchMetadata: PropTypes.shape({
     search: PropTypes.string,
   }).isRequired,
 };

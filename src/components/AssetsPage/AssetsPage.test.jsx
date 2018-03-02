@@ -12,12 +12,12 @@ let wrapper;
 const defaultProps = {
   assetsList: [],
   courseDetails,
-  filtersMetaData: {
+  filtersMetadata: {
     assetTypes: {
       edX: false,
     },
   },
-  searchMetaData: {
+  searchMetadata: {
     search: '',
   },
   status: {},
@@ -147,7 +147,7 @@ describe('<AssetsPage />', () => {
         assetsList: [{
           display_name: 'a.txt',
         }],
-        searchMetaData: {
+        searchMetadata: {
           search: 'edX',
         },
       });
@@ -230,7 +230,7 @@ describe('<AssetsPage />', () => {
   describe('without results', () => {
     beforeEach(() => {
       wrapper.setProps({
-        filtersMetaData: {
+        filtersMetadata: {
           assetTypes: {
             edX: true,
           },
@@ -273,7 +273,7 @@ describe('<AssetsPage />', () => {
       });
       it('noResultsBody for 2+ filters', () => {
         wrapper.setProps({
-          filtersMetaData: {
+          filtersMetadata: {
             assetTypes: {
               edX: true,
               dahlia: true,
@@ -288,7 +288,7 @@ describe('<AssetsPage />', () => {
       describe('AssetsClearFiltersButton', () => {
         beforeEach(() => {
           wrapper.setProps({
-            filtersMetaData: {
+            filtersMetadata: {
               assetTypes: {
                 edX: true,
               },
@@ -301,7 +301,7 @@ describe('<AssetsPage />', () => {
         });
         it('renders for 2+ filters', () => {
           wrapper.setProps({
-            filtersMetaData: {
+            filtersMetadata: {
               assetTypes: {
                 edX: true,
                 dahlia: true,

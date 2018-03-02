@@ -4,7 +4,7 @@ import Pagination from '.';
 import { pageUpdate } from '../../data/actions/assets';
 
 const mapStateToProps = state => ({
-  assetsListMetaData: state.metadata.pagination,
+  assetsListMetadata: state.metadata.pagination,
   courseDetails: state.studioDetails.course,
 });
 

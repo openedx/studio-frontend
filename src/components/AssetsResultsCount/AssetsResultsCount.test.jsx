@@ -7,9 +7,9 @@ import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
 import messages from './displayMessages';
 
 const defaultProps = {
-  paginationMetaData: { ...paginationInitial },
-  filtersMetaData: { ...filtersInitial },
-  searchMetaData: { ...searchInitial },
+  paginationMetadata: { ...paginationInitial },
+  filtersMetadata: { ...filtersInitial },
+  searchMetadata: { ...searchInitial },
 };
 
 let wrapper;
@@ -25,7 +25,7 @@ describe('<AssetsResultsCount />', () => {
     });
     it('renders correct counts with one asset', () => {
       wrapper.setProps({
-        paginationMetaData: {
+        paginationMetadata: {
           start: 0,
           end: 1,
           totalCount: 1,
@@ -42,7 +42,7 @@ describe('<AssetsResultsCount />', () => {
     });
     it('renders correct counts with many assets', () => {
       wrapper.setProps({
-        paginationMetaData: {
+        paginationMetadata: {
           start: 0,
           end: 50,
           totalCount: 1000,
@@ -59,12 +59,12 @@ describe('<AssetsResultsCount />', () => {
     });
     it('renders correct counts with filters applied', () => {
       wrapper.setProps({
-        paginationMetaData: {
+        paginationMetadata: {
           start: 0,
           end: 50,
           totalCount: 1000,
         },
-        searchMetaData: {
+        searchMetadata: {
           search: 'edX',
         },
       });

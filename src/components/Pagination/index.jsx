@@ -30,7 +30,7 @@ export default class Pagination extends React.Component {
     return (
       <React.Fragment>
         <WrappedMessage message={messages.paginationPrevious} />
-        {(this.props.assetsListMetaData.page === 0 && totalPages >= 0) &&
+        {(this.props.assetsListMetadata.page === 0 && totalPages >= 0) &&
           this.getDisabledScreenReaderText()}
       </React.Fragment>
     );
@@ -40,7 +40,7 @@ export default class Pagination extends React.Component {
     return (
       <React.Fragment>
         <WrappedMessage message={messages.paginationNext} />
-        {(this.props.assetsListMetaData.page === totalPages - 1 &&
+        {(this.props.assetsListMetadata.page === totalPages - 1 &&
           totalPages > 0) && this.getDisabledScreenReaderText()}
       </React.Fragment>
     );
@@ -56,7 +56,7 @@ export default class Pagination extends React.Component {
   }
 
   render() {
-    const { page, pageSize, totalCount } = this.props.assetsListMetaData;
+    const { page, pageSize, totalCount } = this.props.assetsListMetadata;
     const totalPages = Math.ceil(totalCount / pageSize);
 
     return (
@@ -87,7 +87,7 @@ export default class Pagination extends React.Component {
 }
 
 Pagination.propTypes = {
-  assetsListMetaData: PropTypes.shape({
+  assetsListMetadata: PropTypes.shape({
     start: PropTypes.number,
     end: PropTypes.number,
     page: PropTypes.number,

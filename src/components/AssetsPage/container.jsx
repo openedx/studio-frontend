@@ -9,8 +9,8 @@ const mapStateToProps = state => ({
   courseDetails: state.studioDetails.course,
   uploadSettings: state.studioDetails.upload_settings,
   status: state.metadata.status,
-  filtersMetaData: state.metadata.filters,
-  searchMetaData: state.metadata.search,
+  filtersMetadata: state.metadata.filters,
+  searchMetadata: state.metadata.search,
   searchSettings: state.studioDetails.search_settings,
 });
 
