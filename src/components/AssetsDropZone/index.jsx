@@ -105,6 +105,6 @@ AssetsDropZone.propTypes = {
 };
 
 AssetsDropZone.defaultProps = {
-  maxFileCount: 100,
+  maxFileCount: 1000,
   maxFileSizeMB: 10,
 };
