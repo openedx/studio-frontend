@@ -134,11 +134,11 @@ export default class AssetsPage extends React.Component {
   );
 
   renderNoResultsBody = () => (
-    <div>
+    <React.Fragment>
       <WrappedMessage message={messages.assetsPageNoResultsCountFiles} tagName="h3" />
       <WrappedMessage message={messages.assetsPageNoResultsMessage} tagName="h4" />
       <WrappedAssetsClearFiltersButton />
-    </div>
+    </React.Fragment>
   );
 
   renderNoResultsPage = () => (
