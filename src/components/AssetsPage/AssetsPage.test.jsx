@@ -47,6 +47,14 @@ const renderPaginationTest = () => {
   expect(wrapper.find('Connect(Pagination)')).toHaveLength(1);
 };
 
+const rendersAssetsResultsCountTest = () => {
+  expect(wrapper.find('Connect(AssetsResultsCount)')).toHaveLength(1);
+};
+
+const rendersAssetsClearFiltersButtonTest = () => {
+  expect(wrapper.find('Connect(AssetsClearFiltersButton)')).toHaveLength(1);
+};
+
 const normalAssetsPageRenderTest = () => {
   it('AssetsDropZone', () => {
     rendersAssetsDropZoneTest();
@@ -100,41 +108,23 @@ describe('<AssetsPage />', () => {
     });
   });
   describe('AssetsResultsCount', () => {
-    it('is hidden when disabled', () => {
-      wrapper = shallowWithIntl(
-        <AssetsPage
-          {...defaultProps}
-          searchSettings={{ enabled: false }}
-        />,
-      );
+    it('is hidden with no assets', () => {
       expect(wrapper.find('Connect(AssetsResultsCount)')).toHaveLength(0);
     });
-    it('is hidden when enabled and no assets', () => {
-      expect(wrapper.find('Connect(AssetsResultsCount)')).toHaveLength(0);
-    });
-    it('is visible when enabled and has assets', () => {
+    it('is visible with assets', () => {
       wrapper.setProps({
         assetsList: [{
           display_name: 'a.txt',
         }],
       });
-      expect(wrapper.find('Connect(AssetsResultsCount)')).toHaveLength(1);
+      rendersAssetsResultsCountTest();
     });
   });
   describe('AssetsClearFiltersButton', () => {
-    it('is hidden when disabled', () => {
-      wrapper = shallowWithIntl(
-        <AssetsPage
-          {...defaultProps}
-          searchSettings={{ enabled: false }}
-        />,
-      );
+    it('is hidden with no assets', () => {
       expect(wrapper.find('Connect(AssetsClearFiltersButton)')).toHaveLength(0);
     });
-    it('is hidden when enabled and no assets', () => {
-      expect(wrapper.find('Connect(AssetsClearFiltersButton)')).toHaveLength(0);
-    });
-    it('is hidden when enabled and has assets', () => {
+    it('is hidden with assets', () => {
       wrapper.setProps({
         assetsList: [{
           display_name: 'a.txt',
@@ -142,7 +132,7 @@ describe('<AssetsPage />', () => {
       });
       expect(wrapper.find('Connect(AssetsClearFiltersButton)')).toHaveLength(0);
     });
-    it('is visible when enabled and has assets and has search applied', () => {
+    it('is visible with assets and has search applied', () => {
       wrapper.setProps({
         assetsList: [{
           display_name: 'a.txt',
@@ -151,7 +141,7 @@ describe('<AssetsPage />', () => {
           search: 'edX',
         },
       });
-      expect(wrapper.find('Connect(AssetsClearFiltersButton)')).toHaveLength(1);
+      rendersAssetsClearFiltersButtonTest();
     });
   });
   describe('with assets', () => {
@@ -252,7 +242,7 @@ describe('<AssetsPage />', () => {
       it('noResultsBody for 1 filter', () => {
         const body = wrapper.find('.container .row .col-10');
 
-        expect(body.find(WrappedMessage).at(0).prop('message')).toEqual(messages.assetsPageNoResultsNumFiles);
+        expect(body.find(WrappedMessage).at(0).prop('message')).toEqual(messages.assetsPageNoResultsCountFiles);
         expect(body.find(WrappedMessage).at(1).prop('message')).toEqual(messages.assetsPageNoResultsMessage);
       });
 
@@ -282,7 +272,7 @@ describe('<AssetsPage />', () => {
         });
 
         const body = wrapper.find('.container .row .col-10');
-        expect(body.find(WrappedMessage).at(0).prop('message')).toEqual(messages.assetsPageNoResultsNumFiles);
+        expect(body.find(WrappedMessage).at(0).prop('message')).toEqual(messages.assetsPageNoResultsCountFiles);
         expect(body.find(WrappedMessage).at(1).prop('message')).toEqual(messages.assetsPageNoResultsMessage);
       });
       describe('AssetsClearFiltersButton', () => {

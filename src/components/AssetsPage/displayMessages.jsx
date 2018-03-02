@@ -1,8 +1,8 @@
 import { defineMessages } from 'react-intl';
 
 const messages = defineMessages({
-  assetsPageNoResultsNumFiles: {
-    id: 'assetsPageNoResultsNumFiles',
+  assetsPageNoResultsCountFiles: {
+    id: 'assetsPageNoResultsCountFiles',
     defaultMessage: '0 files',
     description: 'Title for a message displayed when no results are found.',
   },
@@ -10,11 +10,6 @@ const messages = defineMessages({
     id: 'assetsPageNoResultsMessage',
     defaultMessage: 'No files were found.',
     description: 'Message displayed in table when no results are found.',
-  },
-  assetsPageNoResultsClear: {
-    id: 'assetsPageNoResultsClear',
-    defaultMessage: 'Clear all filters',
-    description: 'Label for a button that clears all of the filters applied on the table.',
   },
   assetsPageNoAssetsNumFiles: {
     id: 'assetsPageNoAssetsNumFiles',

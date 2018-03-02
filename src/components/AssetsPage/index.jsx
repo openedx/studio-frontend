@@ -88,21 +88,17 @@ export default class AssetsPage extends React.Component {
         { this.renderAssetsFilters() }
       </div>
       <div className={edxBootstrap['col-10']}>
-        {this.props.searchSettings.enabled &&
-          <React.Fragment>
-            <div className={edxBootstrap.row}>
-              <div className={`${edxBootstrap['col-md-8']}`}>
-                <WrappedAssetsResultsCount />
-              </div>
-              <div className={`${edxBootstrap['col-md-4']} ${edxBootstrap['text-right']}`}>
-                {hasSearchOrFilterApplied(this.props.filtersMetadata.assetTypes,
-                  this.props.searchMetadata.search) &&
-                  <WrappedAssetsClearFiltersButton />
-                }
-              </div>
-            </div>
-          </React.Fragment>
-        }
+        <div className={edxBootstrap.row}>
+          <div className={`${edxBootstrap['col-md-8']}`}>
+            <WrappedAssetsResultsCount />
+          </div>
+          <div className={`${edxBootstrap['col-md-4']} ${edxBootstrap['text-right']}`}>
+            {hasSearchOrFilterApplied(this.props.filtersMetadata.assetTypes,
+              this.props.searchMetadata.search) &&
+              <WrappedAssetsClearFiltersButton />
+            }
+          </div>
+        </div>
         <div className={edxBootstrap.row}>
           <div className={edxBootstrap.col}>
             <WrappedAssetsTable />
@@ -139,7 +135,7 @@ export default class AssetsPage extends React.Component {
 
   renderNoResultsBody = () => (
     <div>
-      <WrappedMessage message={messages.assetsPageNoResultsNumFiles} tagName="h3" />
+      <WrappedMessage message={messages.assetsPageNoResultsCountFiles} tagName="h3" />
       <WrappedMessage message={messages.assetsPageNoResultsMessage} tagName="h4" />
       <WrappedAssetsClearFiltersButton />
     </div>
