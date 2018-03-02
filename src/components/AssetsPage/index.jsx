@@ -126,9 +126,7 @@ export default class AssetsPage extends React.Component {
         { this.renderAssetsDropZone() }
       </div>
       <div className={edxBootstrap['col-10']}>
-        <div className={edxBootstrap.row}>
-          { this.renderNoAssetsBody() }
-        </div>
+        { this.renderNoAssetsBody() }
       </div>
     </React.Fragment>
   );
@@ -148,9 +146,7 @@ export default class AssetsPage extends React.Component {
         { this.renderAssetsFilters() }
       </div>
       <div className={edxBootstrap['col-10']}>
-        <div className={edxBootstrap.row}>
-          { this.renderNoResultsBody() }
-        </div>
+        { this.renderNoResultsBody() }
       </div>
     </React.Fragment>
   );
