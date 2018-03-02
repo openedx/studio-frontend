@@ -169,7 +169,9 @@ export default class AssetsPage extends React.Component {
           {this.props.searchSettings.enabled &&
             <div className={edxBootstrap.row}>
               <div className={edxBootstrap['col-12']}>
-                <WrappedAssetsSearch />
+                {this.state.pageType === types.NORMAL &&
+                  <WrappedAssetsSearch />
+                }
               </div>
             </div>
           }

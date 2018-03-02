@@ -8,8 +8,8 @@ msgstr ""
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
 "X-Generator: react-intl-gettext 5.1.1\n"
-"POT-Creation-Date: 2018-03-02T19:50:46.155Z\n"
-"PO-Revision-Date: 2018-03-02T19:50:46.155Z\n"
+"POT-Creation-Date: 2018-03-02T22:31:34.824Z\n"
+"PO-Revision-Date: 2018-03-02T22:31:34.824Z\n"
 "Language: en\n"
 
 #. Title for link to full accessiblity policy.
@@ -335,60 +335,6 @@ msgstr "Search"
 msgctxt "assetsSearchSubmitLabel"
 msgid "Submit search"
 msgstr "Submit search"
-
-#. States that the action could not be completed and asks the user to refresh the page and try the action again
-# AssetsStatusAlert/displayMessages.json
-msgctxt "assetsStatusAlertGenericUpdateError"
-msgid "The action could not be completed. Refresh the page, and then try the action again."
-msgstr "The action could not be completed. Refresh the page, and then try the action again."
-
-#. States that an item could not be deleted
-# AssetsStatusAlert/displayMessages.json
-msgctxt "assetsStatusAlertCantDelete"
-msgid "Unable to delete {assetName}."
-msgstr "Unable to delete {assetName}."
-
-#. States that an item was successfully deleted
-# AssetsStatusAlert/displayMessages.json
-msgctxt "assetsStatusAlertDeleteSuccess"
-msgid "{assetName} has been deleted."
-msgstr "{assetName} has been deleted."
-
-#. States that files were successfully uploaded
-# AssetsStatusAlert/displayMessages.json
-msgctxt "assetsStatusAlertUploadSuccess"
-msgid "{uploaded_count} files successfully uploaded."
-msgstr "{uploaded_count} files successfully uploaded."
-
-#. States that the file upload operation is in progress
-# AssetsStatusAlert/displayMessages.json
-msgctxt "assetsStatusAlertUploadInProgress"
-msgid "{uploading_count} files uploading."
-msgstr "{uploading_count} files uploading."
-
-#. Error message shown when too many files are selected for upload
-# AssetsStatusAlert/displayMessages.json
-msgctxt "assetsStatusAlertTooManyFiles"
-msgid "The maximum number of files for an upload is {max_count}. No files were uploaded."
-msgstr "The maximum number of files for an upload is {max_count}. No files were uploaded."
-
-#. Error message shown when too much data is being uploaded
-# AssetsStatusAlert/displayMessages.json
-msgctxt "assetsStatusAlertTooMuchData"
-msgid "The maximum size for an upload is {max_size} MB. No files were uploaded."
-msgstr "The maximum size for an upload is {max_size} MB. No files were uploaded."
-
-#. Generic error message while uploading files
-# AssetsStatusAlert/displayMessages.json
-msgctxt "assetsStatusAlertGenericError"
-msgid "Error uploading {assetName}. Try again."
-msgstr "Error uploading {assetName}. Try again."
-
-#. States that there was a failure toggling an item's lock status
-# AssetsStatusAlert/displayMessages.json
-msgctxt "assetsStatusAlertFailedLock"
-msgid "Failed to toggle lock for {assetName}."
-msgstr "Failed to toggle lock for {assetName}."
 
 #. Label for column header
 # AssetsTable/displayMessages.json

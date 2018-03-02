@@ -103,7 +103,15 @@ describe('<AssetsPage />', () => {
       );
       expect(wrapper.find('Connect(AssetsSearch)')).toHaveLength(0);
     });
-    it('is visible when enabled', () => {
+    it('is hidden with no assets', () => {
+      expect(wrapper.find('Connect(AssetsSearch)')).toHaveLength(0);
+    });
+    it('is visible with assets', () => {
+      wrapper.setProps({
+        assetsList: [{
+          display_name: 'a.txt',
+        }],
+      });
       expect(wrapper.find('Connect(AssetsSearch)')).toHaveLength(1);
     });
   });
