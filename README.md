@@ -68,6 +68,54 @@ from your studio-frontend docker container's webpack-dev-server. If you make a
 change to a file that webpack is watching, the Studio page should hot-reload or
 auto-reload to reflect the changes.
 
+## Testing the Production Build Inside Devstack Studio
+
+The Webpack development build of studio-frontend is optimized for speeding up
+developement, but sometimes it is necessary to make sure that the production
+build works just like the development build. This is especially important when
+making changes to the Webpack configs.
+
+Sandboxes use the production webpack build (see section below), but they also
+take a long time to provision. You can more quickly test the production build in
+your local docker devstack by following these steps:
+
+1. If you have a `cms/envs/private.py` file in your devstack edx-platform
+   folder, then make sure the line `STUDIO_FRONTEND_CONTAINER_URL =
+   'http://localhost:18011'` is commented out.
+2. Reload your Studio server: `make studio-restart`.
+3. Run the production build of studio-frontend by running `make shell` and then
+   `npm run build` inside the docker container.
+4. Copy the production files over to your devstack Studio's static assets
+   folder by running this make command on your host machine in the
+   studio-frontend folder: `make copy-dist`.
+5. Run Studio's static asset pipeline: `make studio-static`.
+
+Your devstack Studio should now be using the production studio-frontend files
+built by your local checkout.
+
+## Testing a Branch on a Sandbox
+
+It is a good practice to test out any major changes to studio-frontend in a
+sandbox since it is much closer to a production environment than devstack. Once
+you have a branch of studio-frontend up for review:
+
+1. Create a new branch in edx-platform off master.
+2. Edit the `package.json` in that branch so that it will install
+   studio-frontend from your branch in review:
+
+    ```json
+    "@edx/studio-frontend": "edx/studio-frontend#your-branch-name",
+    ```
+
+3. Commit the change and push your edx-platform branch.
+4. Follow [this document on provisioning a
+   sandbox](https://openedx.atlassian.net/wiki/spaces/EdxOps/pages/13960183/Sandboxes)
+   using your edx-platform branch.
+
+The sandbox should automatically pull the studio-frontend branch, run the
+production webpack build, and then install the dist files into its static assets
+during provisioning.
+
 ## Releases
 
 Currently, the process for releasing a new version of our package is as follows:
