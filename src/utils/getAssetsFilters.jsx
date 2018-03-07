@@ -31,3 +31,7 @@ export const getFilterStateObjectFromArray = (enabledFilters) => {
 
   return filterState;
 };
+
+export const hasSearchOrFilterApplied = (filters, search) => (
+  Boolean(hasSelectedFilters(filters) || (search && search.length > 0))
+);

@@ -1,27 +1,33 @@
 import React from 'react';
-import { Button } from '@edx/paragon';
 
 import AssetsPage, { types } from './index';
 import { assetActions } from '../../data/constants/actionTypes';
 import courseDetails from '../../utils/testConstants';
 import { shallowWithIntl } from '../../utils/i18n/enzymeHelper';
+import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
+import messages from './displayMessages';
 
 let wrapper;
 
 const defaultProps = {
   assetsList: [],
   courseDetails,
-  filtersMetaData: {
+  filtersMetadata: {
     assetTypes: {
       edX: false,
     },
+  },
+  searchMetadata: {
+    search: '',
   },
   status: {},
   uploadSettings: {
     max_file_size_in_mbs: 1,
   },
+  searchSettings: {
+    enabled: true,
+  },
 
-  clearFilters: () => {},
   getAssets: () => {},
 };
 
@@ -41,6 +47,14 @@ const renderPaginationTest = () => {
   expect(wrapper.find('Connect(Pagination)')).toHaveLength(1);
 };
 
+const rendersAssetsResultsCountTest = () => {
+  expect(wrapper.find('Connect(AssetsResultsCount)')).toHaveLength(1);
+};
+
+const rendersAssetsClearFiltersButtonTest = () => {
+  expect(wrapper.find('Connect(AssetsClearFiltersButton)')).toHaveLength(1);
+};
+
 const normalAssetsPageRenderTest = () => {
   it('AssetsDropZone', () => {
     rendersAssetsDropZoneTest();
@@ -56,7 +70,7 @@ const normalAssetsPageRenderTest = () => {
   });
   it('with correct markup structure', () => {
     const page = wrapper.find('.container .row .col');
-    expect(page).toHaveLength(1);
+    expect(page).toHaveLength(3);
     const body = wrapper.find('.col-10');
 
     wrapper = page;
@@ -79,6 +93,65 @@ beforeEach(() => {
 });
 
 describe('<AssetsPage />', () => {
+  describe('AssetsSearch', () => {
+    it('is hidden when disabled', () => {
+      wrapper = shallowWithIntl(
+        <AssetsPage
+          {...defaultProps}
+          searchSettings={{ enabled: false }}
+        />,
+      );
+      expect(wrapper.find('Connect(AssetsSearch)')).toHaveLength(0);
+    });
+    it('is hidden with no assets', () => {
+      expect(wrapper.find('Connect(AssetsSearch)')).toHaveLength(0);
+    });
+    it('is visible with assets', () => {
+      wrapper.setProps({
+        assetsList: [{
+          display_name: 'a.txt',
+        }],
+      });
+      expect(wrapper.find('Connect(AssetsSearch)')).toHaveLength(1);
+    });
+  });
+  describe('AssetsResultsCount', () => {
+    it('is hidden with no assets', () => {
+      expect(wrapper.find('Connect(AssetsResultsCount)')).toHaveLength(0);
+    });
+    it('is visible with assets', () => {
+      wrapper.setProps({
+        assetsList: [{
+          display_name: 'a.txt',
+        }],
+      });
+      rendersAssetsResultsCountTest();
+    });
+  });
+  describe('AssetsClearFiltersButton', () => {
+    it('is hidden with no assets', () => {
+      expect(wrapper.find('Connect(AssetsClearFiltersButton)')).toHaveLength(0);
+    });
+    it('is hidden with assets', () => {
+      wrapper.setProps({
+        assetsList: [{
+          display_name: 'a.txt',
+        }],
+      });
+      expect(wrapper.find('Connect(AssetsClearFiltersButton)')).toHaveLength(0);
+    });
+    it('is visible with assets and has search applied', () => {
+      wrapper.setProps({
+        assetsList: [{
+          display_name: 'a.txt',
+        }],
+        searchMetadata: {
+          search: 'edX',
+        },
+      });
+      rendersAssetsClearFiltersButtonTest();
+    });
+  });
   describe('with assets', () => {
     beforeEach(() => {
       wrapper.setProps({
@@ -118,8 +191,8 @@ describe('<AssetsPage />', () => {
       it('noAssetsBody', () => {
         const body = wrapper.find('.container .row .col-10');
 
-        expect(body.find('h3').text()).toEqual('0 files in your course');
-        expect(body.find('h4').text()).toEqual('Enhance your course content by uploading files such as images and documents.');
+        expect(body.find(WrappedMessage).at(0).prop('message')).toEqual(messages.assetsPageNoAssetsNumFiles);
+        expect(body.find(WrappedMessage).at(1).prop('message')).toEqual(messages.assetsPageNoAssetsMessage);
       });
       it('with correct markup structure', () => {
         const page = wrapper.find('.container .row .col');
@@ -131,8 +204,8 @@ describe('<AssetsPage />', () => {
         rendersAssetsDropZoneTest(page);
 
         expect(body).toHaveLength(1);
-        expect(body.find('h3')).toHaveLength(1);
-        expect(body.find('h4')).toHaveLength(1);
+        expect(body.find(WrappedMessage).at(0).prop('tagName')).toEqual('h3');
+        expect(body.find(WrappedMessage).at(1).prop('tagName')).toEqual('h4');
       });
     });
     describe('has correct state', () => {
@@ -155,7 +228,7 @@ describe('<AssetsPage />', () => {
   describe('without results', () => {
     beforeEach(() => {
       wrapper.setProps({
-        filtersMetaData: {
+        filtersMetadata: {
           assetTypes: {
             edX: true,
           },
@@ -177,8 +250,8 @@ describe('<AssetsPage />', () => {
       it('noResultsBody for 1 filter', () => {
         const body = wrapper.find('.container .row .col-10');
 
-        expect(body.find('h3').text()).toEqual('0 files');
-        expect(body.find('h4').text()).toEqual('No files were found for this filter.');
+        expect(body.find(WrappedMessage).at(0).prop('message')).toEqual(messages.assetsPageNoResultsCountFiles);
+        expect(body.find(WrappedMessage).at(1).prop('message')).toEqual(messages.assetsPageNoResultsMessage);
       });
 
       it('with correct markup structure', () => {
@@ -193,12 +266,12 @@ describe('<AssetsPage />', () => {
         renderAssetsFiltersTest();
 
         expect(body).toHaveLength(1);
-        expect(body.find('h3')).toHaveLength(1);
-        expect(body.find('h4')).toHaveLength(1);
+        expect(body.find(WrappedMessage).at(0).prop('tagName')).toEqual('h3');
+        expect(body.find(WrappedMessage).at(1).prop('tagName')).toEqual('h4');
       });
       it('noResultsBody for 2+ filters', () => {
         wrapper.setProps({
-          filtersMetaData: {
+          filtersMetadata: {
             assetTypes: {
               edX: true,
               dahlia: true,
@@ -207,13 +280,13 @@ describe('<AssetsPage />', () => {
         });
 
         const body = wrapper.find('.container .row .col-10');
-        expect(body.find('h3').text()).toEqual('0 files');
-        expect(body.find('h4').text()).toEqual('No files were found for these filters.');
+        expect(body.find(WrappedMessage).at(0).prop('message')).toEqual(messages.assetsPageNoResultsCountFiles);
+        expect(body.find(WrappedMessage).at(1).prop('message')).toEqual(messages.assetsPageNoResultsMessage);
       });
-      describe('clear filters button', () => {
+      describe('AssetsClearFiltersButton', () => {
         beforeEach(() => {
           wrapper.setProps({
-            filtersMetaData: {
+            filtersMetadata: {
               assetTypes: {
                 edX: true,
               },
@@ -222,15 +295,11 @@ describe('<AssetsPage />', () => {
         });
         it('renders for 1 filter', () => {
           const body = wrapper.find('.container .row .col-10');
-          const clearFiltersButton = body.find(Button);
-
-          expect(clearFiltersButton).toHaveLength(1);
-          expect(clearFiltersButton.prop('buttonType')).toEqual('link');
-          expect(clearFiltersButton.prop('label')).toEqual('Clear filter');
+          expect(body.find('Connect(AssetsClearFiltersButton)')).toHaveLength(1);
         });
         it('renders for 2+ filters', () => {
           wrapper.setProps({
-            filtersMetaData: {
+            filtersMetadata: {
               assetTypes: {
                 edX: true,
                 dahlia: true,
@@ -239,36 +308,7 @@ describe('<AssetsPage />', () => {
           });
 
           const body = wrapper.find('.container .row .col-10');
-          const clearFiltersButton = body.find(Button);
-
-          expect(clearFiltersButton).toHaveLength(1);
-          expect(clearFiltersButton.prop('buttonType')).toEqual('link');
-          expect(clearFiltersButton.prop('label')).toEqual('Clear all filters');
-        });
-        it('calls clearFilters onClick', () => {
-          const clearFiltersMock = jest.fn();
-
-          wrapper = shallowWithIntl(
-            <AssetsPage
-              {...defaultProps}
-              clearFilters={clearFiltersMock}
-            />,
-          );
-
-          wrapper.setProps({
-            filtersMetaData: {
-              assetTypes: {
-                edX: true,
-              },
-            },
-          });
-
-          const body = wrapper.find('.container .row .col-10');
-          const clearFiltersButton = body.find(Button);
-
-          clearFiltersButton.simulate('click');
-
-          expect(clearFiltersMock).toHaveBeenCalledTimes(1);
+          expect(body.find('Connect(AssetsClearFiltersButton)')).toHaveLength(1);
         });
       });
     });

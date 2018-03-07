@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 
 import AssetsPage from '.';
-import { getAssets, clearFilters } from '../../data/actions/assets';
+import { getAssets } from '../../data/actions/assets';
 
 
 const mapStateToProps = state => ({
@@ -9,11 +9,12 @@ const mapStateToProps = state => ({
   courseDetails: state.studioDetails.course,
   uploadSettings: state.studioDetails.upload_settings,
   status: state.metadata.status,
-  filtersMetaData: state.metadata.filters,
+  filtersMetadata: state.metadata.filters,
+  searchMetadata: state.metadata.search,
+  searchSettings: state.studioDetails.search_settings,
 });
 
 const mapDispatchToProps = dispatch => ({
-  clearFilters: courseDetails => dispatch(clearFilters(courseDetails)),
   getAssets: (request, courseDetails) => dispatch(getAssets(request, courseDetails)),
 });
 

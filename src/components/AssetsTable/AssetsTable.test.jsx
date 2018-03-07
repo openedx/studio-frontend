@@ -46,7 +46,7 @@ const defaultProps = {
       external_url: null,
     },
   ],
-  assetsSortMetaData: {},
+  assetsSortMetadata: {},
   assetsStatus: {},
   courseDetails,
   courseFilesDocs: 'testUrl',
@@ -264,7 +264,7 @@ describe('<AssetsTable />', () => {
 
       it(`calls onSort function with ${sortProps.direction} click on ${sortProps.sort === 'date_added' ? 'same' : 'different'} column`, () => {
         const sortableAssetParameters = {
-          ...defaultProps.assetsSortMetaData,
+          ...defaultProps.assetsSortMetadata,
           ...sortProps,
         };
 
@@ -272,7 +272,7 @@ describe('<AssetsTable />', () => {
           <AssetsTable
             {...defaultProps}
             updateSort={updateSortSpy}
-            assetsSortMetaData={sortableAssetParameters}
+            assetsSortMetadata={sortableAssetParameters}
           />,
         );
 

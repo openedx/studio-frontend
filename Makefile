@@ -65,3 +65,6 @@ pull_translations: ## must be exactly this name for edx tooling support, see eco
 
 package-lock.validate:
 	git diff --name-only --exit-code package-lock.json
+
+copy-dist:
+	for f in dist/*; do docker cp $$f edx.devstack.studio:/edx/app/edxapp/edx-platform/node_modules/@edx/studio-frontend/dist/; done

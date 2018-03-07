@@ -1,0 +1,12 @@
+[
+  {
+    "id": "assetsSearchInputLabel",
+    "description": "Label for search input",
+    "defaultMessage": "Search"
+  },
+  {
+    "id": "assetsSearchSubmitLabel",
+    "description": "Label for search submit button that has a magnifying glass icon",
+    "defaultMessage": "Submit search"
+  }
+]
