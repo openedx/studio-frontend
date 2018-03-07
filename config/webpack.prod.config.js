@@ -13,6 +13,9 @@ module.exports = Merge.smart(commonConfig, {
   devtool: 'source-map',
   output: {
     filename: '[name].min.js',
+    // The webpack runtime will attach itself to window.studiofrontendJsonP instead of
+    // window.webpackJsonP so that it does not conflict with the platform's webpack runtime.
+    jsonpFunction: 'studiofrontendJsonP',
   },
   module: {
     rules: [
