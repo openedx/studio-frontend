@@ -4,10 +4,10 @@
 # Keivan Farzaneh <keivan.farzaneh@edulib.org>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: @edx/studio-frontend 1.2.0\n"
+"Project-Id-Version: @edx/studio-frontend 1.4.0\n"
 "Report-Msgid-Bugs-To: edx/studio-frontend\n"
-"POT-Creation-Date: 2018-02-09T20:54:36.515Z\n"
-"PO-Revision-Date: 2018-02-09T20:54:36.515Z\n"
+"POT-Creation-Date: 2018-03-02T22:31:34.824Z\n"
+"PO-Revision-Date: 2018-03-02T22:31:34.824Z\n"
 "Last-Translator: Keivan Farzaneh <keivan.farzaneh@edulib.org>, 2018\n"
 "Language-Team: French (Canada) (https://www.transifex.com/open-edx/teams/6205/fr_CA/)\n"
 "MIME-Version: 1.0\n"
@@ -351,6 +351,12 @@ msgctxt "accessibilityPolicyFormValidName"
 msgid "Enter a name."
 msgstr "Entrez un nom."
 
+#. Label for a button that clears all filters applied to a table.
+# AssetsClearFiltersButton/displayMessages.json
+msgctxt "assetsClearFiltersButtonLabel"
+msgid "Clear all filters"
+msgstr "Effacer les filtres"
+
 #. Upload label for the "Browse" button
 # AssetsDropZone/displayMessages.json
 msgctxt "assetsDropZoneBrowseLabel"
@@ -404,6 +410,60 @@ msgstr "Autre"
 msgctxt "assetsFiltersSectionLabel"
 msgid "Filter by File Type"
 msgstr "Filtrer par type de fichier"
+
+#. Title for a message displayed when no results are found.
+# AssetsPage/displayMessages.json
+msgctxt "assetsPageNoResultsCountFiles"
+msgid "0 files"
+msgstr "0 fichiers"
+
+#. Message displayed in table when no results are found.
+# AssetsPage/displayMessages.json
+msgctxt "assetsPageNoResultsMessage"
+msgid "No files were found."
+msgstr "Aucun fichier n'a été trouvé."
+
+#. Title for a message displayed when a course has no files to display in the
+#. table.
+# AssetsPage/displayMessages.json
+msgctxt "assetsPageNoAssetsNumFiles"
+msgid "0 files in your course"
+msgstr "0 fichier dans votre cours"
+
+#. Message displayed when a course has no files to display in the table.
+# AssetsPage/displayMessages.json
+msgctxt "assetsPageNoAssetsMessage"
+msgid ""
+"Enhance your course content by uploading files such as images and documents."
+msgstr ""
+"Améliorez le contenu de votre cours en téléchargeant des fichiers tels que "
+"des images et des documents."
+
+#. Message above a paginated table describing what subset of a filtered result
+#. set is currently visible.
+# AssetsResultsCount/displayMessages.json
+msgctxt "assetsResultsCountFiltered"
+msgid "Showing {start}-{end} out of {total} possible matches."
+msgstr "Affichage {start}-{end} de {total} correspondances possibles."
+
+#. Message above a paginated table of files describing what subset of all
+#. files is currently visible.
+# AssetsResultsCount/displayMessages.json
+msgctxt "assetsResultsCountTotal"
+msgid "Showing {start}-{end} out of {total} total files."
+msgstr "Affichage {start}-{end} de {total} fichiers au total."
+
+#. Label for search input
+# AssetsSearch/displayMessages.json
+msgctxt "assetsSearchInputLabel"
+msgid "Search"
+msgstr "Recherche"
+
+#. Label for search submit button that has a magnifying glass icon
+# AssetsSearch/displayMessages.json
+msgctxt "assetsSearchSubmitLabel"
+msgid "Submit search"
+msgstr "Soumettre votre recherche"
 
 #. Label for column header
 # AssetsTable/displayMessages.json
