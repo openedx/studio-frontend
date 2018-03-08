@@ -9,10 +9,10 @@
 # Fahrettin Perçin <fapercin90@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: @edx/studio-frontend 1.2.0\n"
+"Project-Id-Version: @edx/studio-frontend 1.4.0\n"
 "Report-Msgid-Bugs-To: edx/studio-frontend\n"
-"POT-Creation-Date: 2018-02-09T20:54:36.515Z\n"
-"PO-Revision-Date: 2018-02-09T20:54:36.515Z\n"
+"POT-Creation-Date: 2018-03-02T22:31:34.824Z\n"
+"PO-Revision-Date: 2018-03-02T22:31:34.824Z\n"
 "Last-Translator: Fahrettin Perçin <fapercin90@gmail.com>, 2018\n"
 "Language-Team: Turkish (Turkey) (https://www.transifex.com/open-edx/teams/6205/tr_TR/)\n"
 "MIME-Version: 1.0\n"
@@ -212,6 +212,9 @@ msgid ""
 "content on the CMS within your time constraints.  Such efforts may include, "
 "but are not limited to:"
 msgstr ""
+"edX, CMS'de zaman kısıtlarınız içinde içerik oluşturabilmeniz için derhal ve"
+" en iyi şekilde size yardımcı olacaktır.  Tüm bu çabalar, bunlarla sınırlı "
+"olmamak üzere şunları içerebilir:"
 
 #. Buy third-party software.
 # AccessibilityBody/displayMessages.json
@@ -220,6 +223,8 @@ msgid ""
 "Purchasing a third-party tool or software for use on an individual basis to "
 "assist your use of Studio;"
 msgstr ""
+"Studio kullanımınızda size yardımcı olacak üçüncü-taraf araç veya "
+"yazılımların satın alınması;"
 
 #. Hire a contractor.
 # AccessibilityBody/displayMessages.json
@@ -228,12 +233,14 @@ msgid ""
 "Engaging a trained independent contractor to provide real-time visual, "
 "verbal and physical assistance; or"
 msgstr ""
+"Size gerçek-zamanlı görsel, sözel ve fiziksel destek sağlayacak eğitimli bir"
+" sözleşmeli profesyoneli atamak; ya da"
 
 #. Make a technical fix.
 # AccessibilityBody/displayMessages.json
 msgctxt "a11yBodyCodeFix"
 msgid "Developing new code to implement a technical fix."
-msgstr "Teknik bir çözümü hayata geçirmek için yeni kodlar yazılıyor."
+msgstr "Teknik bir çözümü hayata geçirmek için yeni kodlar yazmak."
 
 #. Label for the email form field
 # AccessibilityPolicyForm/displayMessages.json
@@ -343,6 +350,12 @@ msgctxt "accessibilityPolicyFormValidName"
 msgid "Enter a name."
 msgstr "Bir isim girin."
 
+#. Label for a button that clears all filters applied to a table.
+# AssetsClearFiltersButton/displayMessages.json
+msgctxt "assetsClearFiltersButtonLabel"
+msgid "Clear all filters"
+msgstr "Tüm filtreleri temizle"
+
 #. Upload label for the "Browse" button
 # AssetsDropZone/displayMessages.json
 msgctxt "assetsDropZoneBrowseLabel"
@@ -396,6 +409,58 @@ msgstr "Diğer"
 msgctxt "assetsFiltersSectionLabel"
 msgid "Filter by File Type"
 msgstr "Dosya Türüne göre Filtrele"
+
+#. Title for a message displayed when no results are found.
+# AssetsPage/displayMessages.json
+msgctxt "assetsPageNoResultsCountFiles"
+msgid "0 files"
+msgstr "0 dosya"
+
+#. Message displayed in table when no results are found.
+# AssetsPage/displayMessages.json
+msgctxt "assetsPageNoResultsMessage"
+msgid "No files were found."
+msgstr "Dosya bulunamadı."
+
+#. Title for a message displayed when a course has no files to display in the
+#. table.
+# AssetsPage/displayMessages.json
+msgctxt "assetsPageNoAssetsNumFiles"
+msgid "0 files in your course"
+msgstr "Dersinizde 0 dosya var"
+
+#. Message displayed when a course has no files to display in the table.
+# AssetsPage/displayMessages.json
+msgctxt "assetsPageNoAssetsMessage"
+msgid ""
+"Enhance your course content by uploading files such as images and documents."
+msgstr "Ders içeriğinizi görsel ve belgeler yükleyerek zenginleştirin."
+
+#. Message above a paginated table describing what subset of a filtered result
+#. set is currently visible.
+# AssetsResultsCount/displayMessages.json
+msgctxt "assetsResultsCountFiltered"
+msgid "Showing {start}-{end} out of {total} possible matches."
+msgstr "Toplam {total} olası eşleşmeden {start}-{end} kadarı gösteriliyor."
+
+#. Message above a paginated table of files describing what subset of all
+#. files is currently visible.
+# AssetsResultsCount/displayMessages.json
+msgctxt "assetsResultsCountTotal"
+msgid "Showing {start}-{end} out of {total} total files."
+msgstr "Toplam {total} dosyadan {start}-{end} kadarı gösteriliyor."
+
+#. Label for search input
+# AssetsSearch/displayMessages.json
+msgctxt "assetsSearchInputLabel"
+msgid "Search"
+msgstr "Ara"
+
+#. Label for search submit button that has a magnifying glass icon
+# AssetsSearch/displayMessages.json
+msgctxt "assetsSearchSubmitLabel"
+msgid "Submit search"
+msgstr "Ara"
 
 #. Label for column header
 # AssetsTable/displayMessages.json
