@@ -4,10 +4,13 @@ import esData from 'react-intl/locale-data/es';
 import frData from 'react-intl/locale-data/fr';
 import zhData from 'react-intl/locale-data/zh';
 
+// PUT THESE BACK ONCE THEY EXIST AGAIN
+/*
 import './ar.json';
 import './es_419.json';
 import './fr.json';
 import './zh_CN.json';
+*/
 
 // Methodology: These languages (plus the default english) are the only ones that appear on edx.org
 // This was determined by inspecting the 'released_languages' method in the following file:
