@@ -18,6 +18,7 @@ import './zh_CN.json';
 //
 // Further, I hit the read replica in order to confirm the live values, which are currently:
 //    en, fr, zh-cn, es-419, ar
+// If these values change, please also update the pull_translations command in Makefile
 
 const localeDataMap = {
   'ar': arData,

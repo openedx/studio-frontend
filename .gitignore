@@ -5,4 +5,4 @@ npm-debug.log
 coverage
 
 dist/
-src/data/i18n/locales/tmp/
+src/data/i18n/default/src/
