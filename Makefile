@@ -61,7 +61,8 @@ i18n.pre_validate: | i18n.extract i18n.preprocess
 	git diff --exit-code ./src/data/i18n/default/transifex_input.json
 
 pull_translations: ## must be exactly this name for edx tooling support, see ecommerce-scripts/transifex/pull.py
-	tx pull -af --mode reviewed
+	# explicit list of languages defined here and in currentlySupportedLangs.jsx
+	tx pull -f --mode reviewed --language ar, fr, es_419, zh_CN
 
 package-lock.validate:
 	git diff --name-only --exit-code package-lock.json
