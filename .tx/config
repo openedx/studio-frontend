@@ -1,7 +1,7 @@
 [main]
 host = https://www.transifex.com
 
-[edx-platform.studio-frontend]
-file_filter = src/data/i18n/locales/po/<lang>.po
+[edx-platform.studio-frontend2]
+file_filter = src/data/i18n/locales/<lang>.json
 source_lang = en_US
-type = PO
+type = KEYVALUEJSON

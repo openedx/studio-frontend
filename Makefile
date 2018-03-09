@@ -61,7 +61,7 @@ i18n.pre_validate: | i18n.extract i18n.preprocess
 	git diff --exit-code -G "^(msgid|msgstr)" ## shoutout to edx/i18n-tools/blob/master/i18n/changed.py
 
 pull_translations: ## must be exactly this name for edx tooling support, see ecommerce-scripts/transifex/pull.py
-	./scripts/i18n_finalize.sh
+	tx pull -af --mode reviewed
 
 package-lock.validate:
 	git diff --name-only --exit-code package-lock.json
