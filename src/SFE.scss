@@ -50,3 +50,8 @@ button {
   background-color: inherit;
   cursor: pointer;
 }
+
+// remove macos searchfield styling from search inputs which interferes with our styling
+input[type="search"] {
+  appearance: none;
+}
