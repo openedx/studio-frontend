@@ -123,7 +123,7 @@ Currently, the process for releasing a new version of our package is as follows:
 1. Make your changes in a pull request. Bump the version in package.json according to [semver](https://semver.org/) as part of the pull request.
 2. Merge your pull request.
 3. Publish a [GitHub release](https://github.com/edx/studio-frontend/releases). Make sure to prefix the version number with `v`, as in `v2.3.4`.
-3. `git checkout master` and `git pull`. Ensure your current directory is cleaned, with no outstanding commits or files. As an extra precaution, you can `rm -rf node node_modules` and `npm install` prior to publishing.
+3. `git checkout master` and `git pull`. Ensure your current directory is cleaned, with no outstanding commits or files. As an extra precaution, you can `rm -rf node_modules`, `rm -rf dist/*` and `npm install` prior to publishing.
 4. Make sure that build production files in /dist will be included in the release by running `npm run build`.
 5. Be a member of the correct edX and npm orgs, and be logged in. All of @edx/educator-dahlia should be set up, and others shouldn't need to be publishing this package.
 6. Run `npm publish`.
