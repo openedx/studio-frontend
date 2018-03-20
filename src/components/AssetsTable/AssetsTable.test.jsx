@@ -420,7 +420,7 @@ describe('<AssetsTable />', () => {
       trashButtons = wrapper.find('button').filterWhere(button => button.hasClass('fa-trash'));
 
       modal = wrapper.find('[role="dialog"]');
-      closeButton = modal.find('button').filterWhere(button => button.text() === '×');
+      closeButton = modal.find('button').filterWhere(button => button.hasClass('p-1'));
     });
 
     it('moves from modal to trashcan on modal close', () => {

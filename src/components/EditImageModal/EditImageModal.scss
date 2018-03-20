@@ -1,0 +1,66 @@
+@import 'edx-bootstrap';
+
+.SFE-wrapper {
+  .modal {
+    overflow-y: scroll;
+  }
+
+  .modal.modal-open {
+    display: block;
+  }
+
+  .modal.modal-backdrop {
+    background-color: rgba(0,0,0,0.3);
+
+    // Fade for backdrop
+    &.fade { opacity: 0; }
+    &.show { opacity: 1; }
+  }
+
+  .modal-dialog {
+    max-width: 800px;
+  }
+
+  fieldset legend {
+    width: inherit;
+  }
+
+  fieldset {
+    @extend .mb-4;
+  }
+
+  img {
+    max-width: 100%;
+  }
+
+  .image-preview {
+    @extend .p-3;
+    max-width: 100%;
+    text-align: center;
+    background-color: theme-color('lightest');
+    color: theme-color('disabled');
+
+    @media (min-width: map-get($grid-breakpoints, 'sm')) {
+      $image-height: 200px;
+      height: $image-height;
+      line-height: $image-height - 15px;
+    }
+  }
+
+  .image-dimensions-x {
+    color: $gray-500;
+    padding-top: $spacer;
+    div {
+      text-align: center;
+    }
+  }
+
+  .or-fields {
+    @extend .py-3;
+
+    // selects the span of the wrapped message
+    span {
+      text-transform: uppercase;
+    }
+  }
+}

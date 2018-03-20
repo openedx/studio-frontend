@@ -1,6 +1,6 @@
 {
   "name": "@edx/studio-frontend",
-  "version": "1.6.3",
+  "version": "1.7.0",
   "description": "The frontend for the Open edX platform",
   "repository": "edx/studio-frontend",
   "scripts": {
@@ -15,7 +15,7 @@
   "license": "AGPL-3.0",
   "dependencies": {
     "@edx/edx-bootstrap": "^0.4.3",
-    "@edx/paragon": "2.4.3",
+    "@edx/paragon": "2.5.3",
     "babel-polyfill": "^6.26.0",
     "classnames": "^2.2.5",
     "copy-to-clipboard": "^3.0.8",
@@ -30,6 +30,9 @@
     "react-intl-translations-manager": "^5.0.1",
     "react-paginate": "^5.0.0",
     "react-redux": "^5.0.6",
+    "react-transition-group": "^2.2.1",
+    "reactifex": "0.0.2",
+    "reactstrap": "^4.8.0",
     "redux": "^3.7.2",
     "redux-devtools-extension": "^2.13.2",
     "redux-thunk": "^2.2.0",
@@ -97,6 +100,7 @@
       "/node_modules/",
       "/src/accessibilityIndex.jsx",
       "/src/index.jsx",
+      "src/editImageModalIndex.jsx",
       "/src/components/BackendStatusBanner/",
       "<rootDir>/src/.*/container.jsx",
       "/src/data/i18n/locales/",
