@@ -10,6 +10,8 @@ import CopyButton from '../CopyButton';
 import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
 import messages from './displayMessages';
 
+var isIE11 = !!window.MSInputMethodContext && !!document.documentMode;
+
 export default class AssetsTable extends React.Component {
   constructor(props) {
     super(props);
@@ -25,38 +27,45 @@ export default class AssetsTable extends React.Component {
         key: 'image_preview',
         columnSortable: false,
         hideHeader: true,
+        width: 'col-2',
       },
       display_name: {
         label: (<WrappedMessage message={messages.assetsTableNameLabel} />),
         key: 'display_name',
         columnSortable: true,
+        width: 'col-3',
       },
       content_type: {
         label: (<WrappedMessage message={messages.assetsTableTypeLable} />),
         key: 'content_type',
         columnSortable: true,
+        width: 'col-2',
       },
       date_added: {
         label: (<WrappedMessage message={messages.assetsTableDateLabel} />),
         key: 'date_added',
         columnSortable: true,
+        width: 'col-2',
       },
       urls: {
         label: (<WrappedMessage message={messages.assetsTableCopyLabel} />),
         key: 'urls',
         columnSortable: false,
+        width: 'col',
       },
       delete_asset: {
         label: (<WrappedMessage message={messages.assetsTableDeleteLabel} />),
         key: 'delete_asset',
         columnSortable: false,
         hideHeader: true,
+        width: 'col',
       },
       lock_asset: {
         label: (<WrappedMessage message={messages.assetsTableLockLabel} />),
         key: 'lock_asset',
         columnSortable: false,
         hideHeader: true,
+        width: 'col',
       },
     };
 
@@ -233,13 +242,24 @@ export default class AssetsTable extends React.Component {
 
   getTableColumns() {
     let columns = Object.keys(this.columns);
+    let expandedColumns = {}
 
     if (!this.props.isImagePreviewEnabled) {
       columns = columns.filter(column => column !== 'image_preview');
+      // expand columns to occupy the col-2 void
+      expandedColumns = {
+        content_type: {
+          width: 'col-3',
+        },
+        date_added: {
+          width: 'col-3',
+        },
+      }
     }
 
     return columns.map(columnKey => ({
       ...this.columns[columnKey],
+      ...expandedColumns[columnKey],
       onSort: () => this.onSortClick(columnKey),
     }));
   }
@@ -405,6 +425,7 @@ export default class AssetsTable extends React.Component {
             tableSortable
             defaultSortedColumn="date_added"
             defaultSortDirection="desc"
+            hasFixedColumnWidths={!isIE11}
           />
         </span>
         {this.renderModal()}
