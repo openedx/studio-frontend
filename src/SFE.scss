@@ -15,13 +15,13 @@
   cursor: inherit;
 }
 
-/* apply Chrome's default stylesheet so that Bootstrap has some browser-like styling to work with */
-@import 'chrome-default';
+/* apply Firefox's default stylesheet so that Bootstrap has some browser-like styling to work with */
+@import 'default';
 
 /* apply the edx-bootstrap theme */
 @import 'edx-bootstrap';
 
-/* apply the Bootstrap reboot (normalize.css) to convert Chrome default styling to some cross-browser baseline
+/* apply the Bootstrap reboot (normalize.css) to convert Firefox default styling to some cross-browser baseline
  * then, apply the Bootstrap component styling */
 @import '~bootstrap/scss/bootstrap';
 

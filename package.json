@@ -68,6 +68,7 @@
     "postcss-initial": "^2.0.0",
     "postcss-loader": "^2.0.10",
     "postcss-prepend-selector": "^0.3.1",
+    "postcss-pseudo-class-any-link": "^4.0.0",
     "postcss-strip-font-face": "^1.0.0",
     "raw-loader": "^0.5.1",
     "react-dev-utils": "^4.0.0",
@@ -98,7 +99,8 @@
       "/src/index.jsx",
       "/src/components/BackendStatusBanner/",
       "<rootDir>/src/.*/container.jsx",
-      "/src/data/i18n/locales/"
+      "/src/data/i18n/locales/",
+      "/src/utils/matches-prefixer.js"
     ],
     "transformIgnorePatterns": [
       "/node_modules/(?!(@edx/paragon)/).*/"
