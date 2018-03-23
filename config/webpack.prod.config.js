@@ -5,7 +5,6 @@ const Merge = require('webpack-merge');
 const path = require('path');
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const webpack = require('webpack');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 const commonConfig = require('./webpack.common.config.js');
 
@@ -87,15 +86,19 @@ module.exports = Merge.smart(commonConfig, {
       },
     ],
   },
+  optimization: {
+    runtimeChunk: 'single',
+    splitChunks: {
+      cacheGroups: {
+        commons: {
+          name: 'common',
+          chunks: 'initial',
+          minChunks: 2,
+        },
+      },
+    },
+  },
   plugins: [
-    new webpack.optimize.CommonsChunkPlugin({
-      name: 'vendor',
-      minChunks: module => module.context && module.context.includes('node_modules'),
-    }),
-    new webpack.optimize.CommonsChunkPlugin({
-      name: 'manifest',
-      minChunks: Infinity,
-    }),
     new ExtractTextPlugin({
       filename: '[name].min.css',
       allChunks: true,
@@ -106,6 +109,5 @@ module.exports = Merge.smart(commonConfig, {
         NODE_ENV: JSON.stringify(process.env.NODE_ENV),
       },
     }),
-    new UglifyJsPlugin({ sourceMap: true }),
   ],
 });
