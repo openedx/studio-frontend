@@ -59,6 +59,8 @@ module.exports = Merge.smart(commonConfig, {
                 plugins: () => [
                   /* eslint-disable global-require */
                   require('autoprefixer'),
+                  require('../src/utils/matches-prefixer.js'),
+                  require('postcss-pseudo-class-any-link'),
                   require('postcss-initial')(),
                   require('postcss-prepend-selector')({ selector: '#root.SFE ' }),
                   require('postcss-strip-font-face'),
