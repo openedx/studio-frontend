@@ -9,7 +9,6 @@ module.exports = {
     i18nMessages: path.resolve(__dirname, '../src/data/i18n/locales/currentlySupportedLangs.jsx'),
   },
   output: {
-    filename: '[name].js',
     path: path.resolve(__dirname, '../dist'),
   },
   resolve: {

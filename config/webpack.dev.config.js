@@ -10,6 +10,7 @@ const commonConfig = require('./webpack.common.config.js');
 const targetUrl = 'http://edx.devstack.studio:18010';
 
 module.exports = Merge.smart(commonConfig, {
+  mode: 'development',
   devtool: 'cheap-module-eval-source-map',
   module: {
     rules: [
