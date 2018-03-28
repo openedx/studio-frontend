@@ -10,7 +10,7 @@ import CopyButton from '../CopyButton';
 import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
 import messages from './displayMessages';
 
-var isIE11 = !!window.MSInputMethodContext && !!document.documentMode;
+const isIE11 = !!window.MSInputMethodContext && !!document.documentMode;
 
 export default class AssetsTable extends React.Component {
   constructor(props) {
@@ -242,7 +242,7 @@ export default class AssetsTable extends React.Component {
 
   getTableColumns() {
     let columns = Object.keys(this.columns);
-    let expandedColumns = {}
+    let expandedColumns = {};
 
     if (!this.props.isImagePreviewEnabled) {
       columns = columns.filter(column => column !== 'image_preview');
@@ -254,7 +254,7 @@ export default class AssetsTable extends React.Component {
         date_added: {
           width: 'col-3',
         },
-      }
+      };
     }
 
     return columns.map(columnKey => ({
