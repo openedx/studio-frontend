@@ -60,6 +60,15 @@ i18n.preprocess: ## gather all display strings into a single file
 i18n.pre_validate: | i18n.extract i18n.preprocess
 	git diff --exit-code ./src/data/i18n/default/transifex_input.json
 
+tx_url1 = https://www.transifex.com/api/2/project/edx-platform/resource/studio-frontend/translation/en/strings/
+tx_url2 = https://www.transifex.com/api/2/project/edx-platform/resource/studio-frontend/source/
+push_translations: | i18n.extract
+	# Transifex is set up to watch transifex_input.json, but that filetype lacks comments
+	./node_modules/reactifex/bash_scripts/get_hashed_strings.sh $(tx_url1)
+	$$(npm bin)/reactifex ./src/data/i18n/default/src/components/ --comments
+	./node_modules/reactifex/bash_scripts/put_comments.sh $(tx_url2)
+
+
 pull_translations: ## must be exactly this name for edx tooling support, see ecommerce-scripts/transifex/pull.py
 	# explicit list of languages defined here and in currentlySupportedLangs.jsx
 	tx pull -f --mode reviewed --language="ar,fr,es_419,zh_CN"

@@ -27,7 +27,8 @@ const AssetsResultsCount = ({ paginationMetadata, filtersMetadata, searchMetadat
         values={{
           start: renderCount(paginationMetadata.start + 1),
           end: renderCount(paginationMetadata.end),
-          total: renderCount(paginationMetadata.totalCount),
+          formatted_total: renderCount(paginationMetadata.totalCount),
+          total: paginationMetadata.totalCount,
         }}
       />
     </div>
