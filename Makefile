@@ -51,6 +51,10 @@ asset-page-flag: ## insert a waffle flag into local docker devstack
 i18n.docker: ## what devs should do from their host machines
 	docker exec -t dahlia.studio-frontend bash -c 'make i18n.extract && make i18n.preprocess'
 
+extract_translations: | i18n.extract ## tooling expects a target with this name
+	# every other repo is python, so we need to use this hook to npm install on jenkins
+	npm install
+
 i18n.extract: ## move display strings from displayMessages.jsx to displayMessages.json
 	npm run-script i18n_extract
 
@@ -67,7 +71,6 @@ push_translations: | i18n.extract
 	./node_modules/reactifex/bash_scripts/get_hashed_strings.sh $(tx_url1)
 	$$(npm bin)/reactifex ./src/data/i18n/default/src/components/ --comments
 	./node_modules/reactifex/bash_scripts/put_comments.sh $(tx_url2)
-
 
 pull_translations: ## must be exactly this name for edx tooling support, see ecommerce-scripts/transifex/pull.py
 	# explicit list of languages defined here and in currentlySupportedLangs.jsx
