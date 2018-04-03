@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 
 import { assetActions } from '../../data/constants/actionTypes';
 import { hasSearchOrFilterApplied } from '../../utils/getAssetsFilters';
-import edxBootstrap from '../../SFE.scss';
 import WrappedAssetsDropZone from '../AssetsDropZone/container';
 import WrappedAssetsTable from '../AssetsTable/container';
 import WrappedAssetsFilters from '../AssetsFilters/container';
@@ -110,34 +109,34 @@ export default class AssetsPage extends React.Component {
 
   renderAssetsPage = () => (
     <React.Fragment>
-      <div className={edxBootstrap.col}>
+      <div className="col">
         { this.renderAssetsDropZone() }
-        <div className={edxBootstrap['page-header']}>
+        <div className="page-header">
           <WrappedAssetsImagePreviewFilter />
         </div>
         { this.renderAssetsFilters() }
       </div>
-      <div className={edxBootstrap['col-10']}>
-        <div className={edxBootstrap.row}>
-          <div className={`${edxBootstrap['col-md-8']}`}>
+      <div className="col-10">
+        <div className="row">
+          <div className="col-md-8">
             <WrappedAssetsResultsCount />
           </div>
-          <div className={`${edxBootstrap['col-md-4']} ${edxBootstrap['text-right']}`}>
+          <div className="col-md-4 text-right">
             {hasSearchOrFilterApplied(this.props.filtersMetadata.assetTypes,
               this.props.searchMetadata.search) &&
               <WrappedAssetsClearFiltersButton />
             }
           </div>
         </div>
-        <div className={edxBootstrap.row}>
-          <div className={edxBootstrap.col}>
+        <div className="row">
+          <div className="col">
             <WrappedAssetsTable
               deleteButtonRefs={(button, asset) => { this.deleteButtonRefs[asset.id] = button; }}
             />
           </div>
         </div>
-        <div className={edxBootstrap.row}>
-          <div className={edxBootstrap.col}>
+        <div className="row">
+          <div className="col">
             <WrappedPagination />
           </div>
         </div>
@@ -154,10 +153,10 @@ export default class AssetsPage extends React.Component {
 
   renderNoAssetsPage = () => (
     <React.Fragment>
-      <div className={edxBootstrap.col}>
+      <div className="col">
         { this.renderAssetsDropZone() }
       </div>
-      <div className={edxBootstrap['col-10']}>
+      <div className="col-10">
         { this.renderNoAssetsBody() }
       </div>
     </React.Fragment>
@@ -173,18 +172,18 @@ export default class AssetsPage extends React.Component {
 
   renderNoResultsPage = () => (
     <React.Fragment>
-      <div className={edxBootstrap.col}>
+      <div className="col">
         { this.renderAssetsDropZone() }
         { this.renderAssetsFilters() }
       </div>
-      <div className={edxBootstrap['col-10']}>
+      <div className="col-10">
         { this.renderNoResultsBody() }
       </div>
     </React.Fragment>
   );
 
   renderSkeletonPage = () => (
-    <div className={edxBootstrap['col-2']}>
+    <div className="col-2">
       { this.renderAssetsDropZone() }
       { this.renderAssetsFilters() }
     </div>
@@ -193,9 +192,9 @@ export default class AssetsPage extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <div className={edxBootstrap.container}>
-          <div className={edxBootstrap.row}>
-            <div className={edxBootstrap['col-12']}>
+        <div className="container">
+          <div className="row">
+            <div className="col-12">
               <WrappedAssetsStatusAlert
                 statusAlertRef={(input) => { this.statusAlertRef = input; }}
                 onDeleteStatusAlertClose={this.onDeleteStatusAlertClose}
@@ -204,15 +203,15 @@ export default class AssetsPage extends React.Component {
             </div>
           </div>
           {this.props.searchSettings.enabled &&
-            <div className={edxBootstrap.row}>
-              <div className={edxBootstrap['col-12']}>
+            <div className="row">
+              <div className="col-12">
                 {this.state.pageType === types.NORMAL &&
                   <WrappedAssetsSearch />
                 }
               </div>
             </div>
           }
-          <div className={edxBootstrap.row}>
+          <div className="row">
             { this.getPage(this.state.pageType) }
           </div>
         </div>
