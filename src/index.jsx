@@ -12,6 +12,7 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { IntlProvider } from 'react-intl';
 
+import './SFE.scss';
 import WrappedAssetsPage from './components/AssetsPage/container';
 import BackendStatusBanner from './components/BackendStatusBanner';
 import store from './data/store';

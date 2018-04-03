@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 
 import messages from './displayMessages';
 import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
-import edxBootstrap from '../../SFE.scss';
 import styles from './AccessibilityBody.scss';
 
 const AccessibilityBody = (props) => {
@@ -19,7 +18,7 @@ const AccessibilityBody = (props) => {
   return (
     <div>
       <WrappedMessage message={messages.a11yBodyPageHeader}>
-        { displayText => <h2 className={edxBootstrap['page-header']}>{displayText}</h2> }
+        { displayText => <h2 className="page-header">{displayText}</h2> }
       </WrappedMessage>
       <WrappedMessage
         message={messages.a11yBodyIntroGraph}

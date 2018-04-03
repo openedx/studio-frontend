@@ -7,6 +7,7 @@ if ((typeof window !== 'undefined' && !window._babelPolyfill) ||
 /* eslint-enable global-require no-underscore-dangle */
 
 /* eslint-disable import/first */
+import './SFE.scss';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';

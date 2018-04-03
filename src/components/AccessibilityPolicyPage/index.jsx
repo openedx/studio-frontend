@@ -4,13 +4,10 @@ import PropTypes from 'prop-types';
 import AccessibilityBody from '../AccessibilityBody';
 import WrappedAccessibilityPolicyForm from '../AccessibilityPolicyForm';
 
-import edxBootstrap from '../../SFE.scss';
-// import styles from './AccessibilityPolicyPage.scss';
-
 const AccessibilityPolicyPage = props => (
-  <div className={edxBootstrap.container}>
-    <div className={edxBootstrap.row}>
-      <div className={edxBootstrap.col}>
+  <div className="container">
+    <div className="row">
+      <div className="col">
         <AccessibilityBody
           communityAccessibilityLink={props.communityAccessibilityLink}
           phoneNumber={props.phoneNumber}
