@@ -40,6 +40,7 @@ The following pages are served in the development:
 |----------------------|--------------------------------------------------|
 | Assets               | http://localhost:18011/assets.html               |
 | Accessibility Policy | http://localhost:18011/accessibilityPolicy.html  |
+| Edit Image Modal     | http://localhost:18011/editImageModal.html       |
 
 Notes:
 

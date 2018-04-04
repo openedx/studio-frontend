@@ -84,6 +84,12 @@ module.exports = Merge.smart(commonConfig, {
       filename: 'accessibilityPolicy.html',
       template: path.resolve(__dirname, '../public/index.html'),
     }),
+    new HtmlWebpackPlugin({
+      inject: true,
+      chunks: ['editImageModal'],
+      filename: 'editImageModal.html',
+      template: path.resolve(__dirname, '../public/index.html'),
+    }),
   ],
   devServer: {
     host: '0.0.0.0',
