@@ -51,9 +51,11 @@ asset-page-flag: ## insert a waffle flag into local docker devstack
 i18n.docker: ## what devs should do from their host machines
 	docker exec -t dahlia.studio-frontend bash -c 'make i18n.extract && make i18n.preprocess'
 
-extract_translations: | i18n.extract ## tooling expects a target with this name
-	# every other repo is python, so we need to use this hook to npm install on jenkins
+extract_translations: ## no prerequisites so we can control order of operations
+	echo "We have to define this target due to tooling assumptions"
+	echo "Also we have to npm install using this hook b/c there's no other place for it in the current setup"
 	npm install
+	npm run-script i18n_extract
 
 i18n.extract: ## move display strings from displayMessages.jsx to displayMessages.json
 	npm run-script i18n_extract
