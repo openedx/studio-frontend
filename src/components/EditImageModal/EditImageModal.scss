@@ -38,7 +38,6 @@
     max-width: 100%;
     text-align: center;
     background-color: theme-color('lightest');
-    color: theme-color('disabled');
 
     @media (min-width: map-get($grid-breakpoints, 'sm')) {
       $image-height: 200px;
