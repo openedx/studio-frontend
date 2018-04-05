@@ -303,7 +303,6 @@ export default class EditImageModal extends React.Component {
 
   getImage = () => (
     <img
-      // TODO: it's just presentational, right?
       alt=""
       src={this.getImageAssetSource()}
       onLoad={this.onImageLoad}
