@@ -102,6 +102,9 @@
   "editImageModalImageWidth": "Width",
   "editImageModalTitle": "Add or Edit Image",
   "editImageModalImageOrFields": "or",
+  "editImageModalImageNotFoundError": "Image could not be loaded from this URL",
+  "editImageModalImageNotFoundDangerIconDescription": "Error",
+  "editImageModalImageLoadingIcon": "Loading",
   "paginationButtonDisabled": "button is disabled",
   "paginationNext": "next",
   "paginationPrevious": "previous"

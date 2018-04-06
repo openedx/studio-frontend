@@ -10,6 +10,7 @@ if ((typeof window !== 'undefined' && !window._babelPolyfill) ||
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { IntlProvider } from 'react-intl';
+import 'custom-event-polyfill'; // needed for IE11
 
 import EditImageModal from './components/EditImageModal';
 import './SFE.scss';

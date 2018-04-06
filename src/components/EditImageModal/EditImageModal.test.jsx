@@ -30,7 +30,7 @@ const sampleImgData = {
 };
 sampleImgData.aspectRatio = sampleImgData.naturalWidth / sampleImgData.naturalHeight;
 
-const updateConsants = () => {
+const updateConstants = () => {
   wrapper.update();
   modalBody = wrapper.find('.modal-body');
   formContainer = modalBody.find('div.col form');
@@ -52,7 +52,7 @@ const updateConsants = () => {
 // use to remount the EditImageModal at the start of a test for a clean slate
 const resetWrapper = () => {
   wrapper = mountWithIntl(<EditImageModal />);
-  updateConsants();
+  updateConstants();
 };
 
 /*
@@ -60,7 +60,7 @@ const resetWrapper = () => {
   shallowWithIntl
 */
 describe('EditImageModal', () => {
-  updateConsants();
+  updateConstants();
 
   describe('renders', () => {
     describe('modal', () => {
@@ -390,7 +390,7 @@ describe('EditImageModal', () => {
         imageSource: sampleText,
       });
 
-      updateConsants();
+      updateConstants();
 
       expect(imageSourceURLInput.prop('value')).toEqual(sampleText);
       resetWrapper();
@@ -404,19 +404,42 @@ describe('EditImageModal', () => {
       resetWrapper();
     });
 
-    it('sets this.state.imageLoading to true with non-empty imageSource', () => {
+    it('sets this.state.imageLoading to true and displays spinner with non-empty imageSource', () => {
       imageSourceURLInput.find('input').simulate('change', { target: { value: sampleText } });
       imageSourceURLInput.find('input').simulate('blur');
 
       expect(wrapper.state('imageLoading')).toEqual(true);
+
+      updateConstants();
+      expect(imageSourceURLInput.find('.fa-spinner').length).toEqual(1);
+
       resetWrapper();
     });
 
-    it('sets this.state.imageLoading to false with empty imageSource', () => {
+    it('sets this.state.imageLoading to false and does not display spinner with empty imageSource', () => {
       imageSourceURLInput.find('input').simulate('change', { target: { value: '' } });
       imageSourceURLInput.find('input').simulate('blur');
 
       expect(wrapper.state('imageLoading')).toEqual(false);
+
+      updateConstants();
+      expect(imageSourceURLInput.find('.fa-spinner').length).toEqual(0);
+
+      resetWrapper();
+    });
+
+    it('sets this.state.imageLoading to false and does not display spinner when new imageSource value equals existing value', () => {
+      wrapper.setState({
+        imageSource: sampleText,
+      });
+      imageSourceURLInput.find('input').simulate('change', { target: { value: sampleText } });
+      imageSourceURLInput.find('input').simulate('blur');
+
+      expect(wrapper.state('imageLoading')).toEqual(false);
+
+      updateConstants();
+      expect(imageSourceURLInput.find('.fa-spinner').length).toEqual(0);
+
       resetWrapper();
     });
 
@@ -433,6 +456,30 @@ describe('EditImageModal', () => {
       const imagePreview = wrapper.find('img');
       expect(imagePreview.length).toEqual(1);
       expect(wrapper.find('img').prop('src')).toEqual(sampleText);
+
+      resetWrapper();
+    });
+
+    it('sets isValid to true and imageLoading to false when image preview loads successfully', () => {
+      imageSourceURLInput.find('input').simulate('change', { target: { value: sampleText } });
+      imageSourceURLInput.find('input').simulate('blur');
+
+      wrapper.find('img').simulate('load', { target: { ...sampleImgData } });
+
+      expect(wrapper.state('isImageValid')).toEqual(true);
+      expect(wrapper.state('imageLoading')).toEqual(false);
+
+      resetWrapper();
+    });
+
+    it('sets isValid to false and imageLoading to false when image preview load errors', () => {
+      imageSourceURLInput.find('input').simulate('change', { target: { value: sampleText } });
+      imageSourceURLInput.find('input').simulate('blur');
+
+      wrapper.find('img').simulate('error');
+
+      expect(wrapper.state('isImageValid')).toEqual(false);
+      expect(wrapper.state('imageLoading')).toEqual(false);
 
       resetWrapper();
     });
@@ -460,7 +507,7 @@ describe('EditImageModal', () => {
         imageDescription: sampleText,
       });
 
-      updateConsants();
+      updateConstants();
 
       expect(imageDescriptionInput.prop('value')).toEqual(sampleText);
       resetWrapper();
@@ -486,7 +533,7 @@ describe('EditImageModal', () => {
         isImageDecorative: true,
       });
 
-      updateConsants();
+      updateConstants();
       expect(imageDescriptionInputCheckBox.prop('checked')).toEqual(true);
 
       resetWrapper();
@@ -497,13 +544,13 @@ describe('EditImageModal', () => {
         isImageDecorative: true,
       });
 
-      updateConsants();
+      updateConstants();
       expect(imageDescriptionInput.prop('disabled')).toEqual(true);
 
       wrapper.setState({
         isImageDecorative: false,
       });
-      updateConsants();
+      updateConstants();
       expect(imageDescriptionInput.prop('disabled')).toEqual(false);
 
       resetWrapper();
@@ -544,7 +591,7 @@ describe('EditImageModal', () => {
         areProportionsLocked: true,
       });
 
-      updateConsants();
+      updateConstants();
       expect(imageDimensionsInputCheckBox.prop('checked')).toEqual(true);
 
       resetWrapper();
@@ -561,7 +608,7 @@ describe('EditImageModal', () => {
       it('height responds to width change', () => {
         imageDimensionsWidthInput.find('input').simulate('change', { target: { value: '50' } });
 
-        updateConsants();
+        updateConstants();
 
         // issue with props in asInput expecting a string even if type is number
         expect(wrapper.state('imageDimensions')).toEqual({
@@ -576,7 +623,7 @@ describe('EditImageModal', () => {
       it('width responds to height change', () => {
         imageDimensionsHeightInput.find('input').simulate('change', { target: { value: '400' } });
 
-        updateConsants();
+        updateConstants();
 
         // issue with props in asInput expecting a string even if type is number
         expect(wrapper.state('imageDimensions')).toEqual({
@@ -600,7 +647,7 @@ describe('EditImageModal', () => {
       it('height does not respond to width change', () => {
         imageDimensionsWidthInput.find('input').simulate('change', { target: { value: '50' } });
 
-        updateConsants();
+        updateConstants();
 
         // issue with props in asInput expecting a string even if type is number
         expect(wrapper.state('imageDimensions')).toEqual({
@@ -615,7 +662,7 @@ describe('EditImageModal', () => {
       it('width does not respond to height change', () => {
         imageDimensionsHeightInput.find('input').simulate('change', { target: { value: '400' } });
 
-        updateConsants();
+        updateConstants();
 
         // issue with props in asInput expecting a string even if type is number
         expect(wrapper.state('imageDimensions')).toEqual({

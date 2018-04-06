@@ -81,6 +81,21 @@ const messages = defineMessages({
     defaultMessage: 'or',
     description: 'Describes two choices,',
   },
+  editImageModalImageNotFoundError: {
+    id: 'editImageModalImageNotFoundError',
+    defaultMessage: 'Image could not be loaded from this URL',
+    description: 'Error message displayed below URL field input when user-entered URL did not load an image',
+  },
+  editImageModalImageNotFoundDangerIconDescription: {
+    id: 'editImageModalImageNotFoundDangerIconDescription',
+    defaultMessage: 'Error',
+    description: 'Screenreader-only text describing an error icon indicating that an image failed to load',
+  },
+  editImageModalImageLoadingIcon: {
+    id: 'editImageModalImageLoadingIcon',
+    defaultMessage: 'Loading',
+    description: 'Screenreader-only text describing a loading spinner indicating that an image is loading',
+  },
 });
 
 export default messages;

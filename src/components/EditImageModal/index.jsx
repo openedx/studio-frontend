@@ -1,10 +1,10 @@
-import 'font-awesome/css/font-awesome.min.css';
 import React from 'react';
 import classNames from 'classnames';
 import { Button, CheckBox, Icon, InputText, Modal } from '@edx/paragon';
+import FontAwesomeStyles from 'font-awesome/css/font-awesome.min.css';
 
 import messages from './displayMessages';
-import styles from './EditImageModal.scss';
+import './EditImageModal.scss';
 import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
 import rewriteStaticLinks from '../../utils/rewriteStaticLinks';
 
@@ -19,6 +19,7 @@ export default class EditImageModal extends React.Component {
       imageDescription: '',
       imageDimensions: {},
       isImageDecorative: false,
+      isImageValid: true,
       imageLoading: false,
       imageSource: '',
       imageStyle: '',
@@ -68,19 +69,22 @@ export default class EditImageModal extends React.Component {
         aspectRatio: img.naturalWidth / img.naturalHeight,
       },
       imageLoading: false,
+      isImageValid: true,
     });
   }
 
   onImageError = () => {
     this.setState({
+      imageDimensions: {},
       imageLoading: false,
+      isImageValid: false,
     });
   }
 
   onImageSourceBlur = (imageSource) => {
     this.setState({
       imageSource,
-      imageLoading: imageSource.length > 0,
+      imageLoading: imageSource.length > 0 && (this.state.imageSource !== imageSource),
     });
   }
 
@@ -174,6 +178,29 @@ export default class EditImageModal extends React.Component {
         type="text"
         value={this.state.imageSource}
         onBlur={this.onImageSourceBlur}
+        isValid={this.state.isImageValid}
+        validationMessage={<WrappedMessage message={messages.editImageModalImageNotFoundError} />}
+        themes={['danger']}
+        dangerIconDescription={
+          <WrappedMessage message={messages.editImageModalImageNotFoundDangerIconDescription} />
+        }
+        inputGroupAppend={this.state.imageLoading ? (
+          <div className="input-group-text">
+            <WrappedMessage message={messages.editImageModalImageLoadingIcon}>
+              { displayText => (
+                <Icon
+                  id="spinner"
+                  className={[
+                    FontAwesomeStyles.fa,
+                    FontAwesomeStyles['fa-spinner'],
+                    FontAwesomeStyles['fa-spin'],
+                  ]}
+                  screenReaderText={displayText}
+                />
+              )}
+            </WrappedMessage>
+          </div>
+        ) : null}
       />
     </div>
   );
@@ -312,13 +339,15 @@ export default class EditImageModal extends React.Component {
   );
 
   getImagePreviewPlaceholder = () => (
-    <div className={styles['image-preview']}><WrappedMessage message={messages.editImageModalImagePreviewText} /></div>
+    <div className="image-preview"><WrappedMessage message={messages.editImageModalImagePreviewText} /></div>
   );
 
 
   getImagePreview = () => (
     <React.Fragment>
-      <span><WrappedMessage message={messages.editImageModalImagePreviewText} /></span>
+      <div className="row">
+        <span><WrappedMessage message={messages.editImageModalImagePreviewText} /></span>
+      </div>
       {this.state.imageSource ? this.getImage() : this.getImagePreviewPlaceholder()}
     </React.Fragment>
   );
