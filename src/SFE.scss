@@ -45,6 +45,11 @@
   border-bottom: 1px solid theme-color(light);
 }
 
+.bullet-list {
+  @extend .list;
+  list-style-type: disc;
+}
+
 button {
   // override default of `buttonface` which varies in different browsers
   background-color: inherit;
@@ -74,4 +79,8 @@ input[type="search"] {
 // https://github.com/edx/paragon/blob/efd86c59fe6266b569939a2d5f526fce5f2ecafc/src/asInput/asInput.scss#L5-L7
 .fa-icon-spacing {
   padding: 0px 5px 0px 0px;
+}
+
+.list {
+  margin-left: $spacer * 2;
 }

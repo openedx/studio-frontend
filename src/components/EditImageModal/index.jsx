@@ -1,44 +1,61 @@
 import React from 'react';
-import { Button, CheckBox, Icon, InputText, Modal } from '@edx/paragon';
+import PropTypes from 'prop-types';
+import { Button, CheckBox, Icon, InputText, Modal, StatusAlert } from '@edx/paragon';
+import classNames from 'classnames';
 import FontAwesomeStyles from 'font-awesome/css/font-awesome.min.css';
 
 import messages from './displayMessages';
-import './EditImageModal.scss';
+import styles from './EditImageModal.scss';
 import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
 import rewriteStaticLinks from '../../utils/rewriteStaticLinks';
 
 const LOADING_SPINNER_DELAY = 1000; // in milliseconds
 
+const imageDescriptionID = 'imageDescription';
+const imageSourceID = 'imageSource';
+
+const initialEditImageModalState = {
+  areProportionsLocked: true,
+  baseAssetURL: '',
+  displayLoadingSpinner: false,
+  imageDescription: '',
+  imageDimensions: {},
+  isImageDecorative: false,
+  isImageLoaded: false,
+  isImageLoading: false,
+  isImageValid: true,
+  isStatusAlertOpen: false,
+  imageSource: '',
+  imageStyle: '',
+  open: false,
+  currentValidationMessages: {},
+};
 
 export default class EditImageModal extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      areProportionsLocked: true,
-      baseAssetURL: '',
-      displayLoadingSpinner: false,
-      imageDescription: '',
-      imageDimensions: {},
-      isImageDecorative: false,
-      isImageValid: true,
-      imageLoading: false,
-      imageSource: '',
-      imageStyle: '',
-      open: false,
-    };
+    this.state = { ...initialEditImageModalState };
 
+    this.getStatusAlert = this.getStatusAlert.bind(this);
+    this.getStatusAlertDialog = this.getStatusAlertDialog.bind(this);
     this.handleOpenModal = this.handleOpenModal.bind(this);
     this.onConstrainProportionsClick = this.onConstrainProportionsClick.bind(this);
+    this.onEditImageModalClose = this.onEditImageModalClose.bind(this);
     this.onImageDescriptionBlur = this.onImageDescriptionBlur.bind(this);
     this.onInsertImageButtonClick = this.onInsertImageButtonClick.bind(this);
     this.onImageIsDecorativeClick = this.onImageIsDecorativeClick.bind(this);
     this.onImageLoad = this.onImageLoad.bind(this);
     this.onImageSourceBlur = this.onImageSourceBlur.bind(this);
+    this.onStatusAlertClose = this.onStatusAlertClose.bind(this);
+    this.validateImageDescription = this.validateImageDescription.bind(this);
+    this.validateImageSource = this.validateImageSource.bind(this);
 
-    this.formRef = {};
+    this.formRef = null;
+    this.imageSourceInputRef = null;
     this.imgRef = null;
     this.modalWrapperRef = null;
+    this.statusAlertRef = null;
   }
 
   componentDidMount() {
@@ -52,6 +69,12 @@ export default class EditImageModal extends React.Component {
   onConstrainProportionsClick = (checked) => {
     this.setState({
       areProportionsLocked: checked,
+    });
+  }
+
+  onEditImageModalClose = () => {
+    this.setState({
+      open: false,
     });
   }
 
@@ -71,7 +94,8 @@ export default class EditImageModal extends React.Component {
         height: img.naturalHeight,
         aspectRatio: img.naturalWidth / img.naturalHeight,
       },
-      imageLoading: false,
+      isImageLoaded: true,
+      isImageLoading: false,
       isImageValid: true,
     });
   }
@@ -80,19 +104,36 @@ export default class EditImageModal extends React.Component {
     this.setState({
       displayLoadingSpinner: false,
       imageDimensions: {},
-      imageLoading: false,
+      isImageLoading: false,
       isImageValid: false,
+      isImageLoaded: false,
     });
   }
 
   onImageSourceBlur = (imageSource) => {
+    const isImageSourceEmpty = imageSource.length === 0;
+
+    /*
+      Because we do not render the img when image source is empty string, we cannot
+      rely on onImageError to be called, which typically would set imageDimensions,
+      isImageLoaded, and isImageValid correctly, so we have to do it here as well.
+      If the image source is not empty string, we allow onImageLoad or onImageError to
+      determine the value of these variables instead.
+    */
+    const imageDimensions = isImageSourceEmpty ? {} : this.state.imageDimensions;
+    const isImageLoaded = isImageSourceEmpty ? false : this.state.isImageLoaded;
+    const isImageValid = !isImageSourceEmpty && this.state.isImageValid;
+
     this.setState({
+      imageDimensions,
       imageSource,
-      imageLoading: imageSource.length > 0 && (this.state.imageSource !== imageSource),
+      isImageLoading: imageSource.length > 0 && (this.state.imageSource !== imageSource),
+      isImageLoaded,
+      isImageValid,
     });
 
     setTimeout(() => {
-      if (this.state.imageLoading) {
+      if (this.state.isImageLoading) {
         // show loading spinner when image is taking a long time to load
         this.setState({
           displayLoadingSpinner: true,
@@ -136,21 +177,52 @@ export default class EditImageModal extends React.Component {
   }
 
   onInsertImageButtonClick = () => {
-    this.formRef.dispatchEvent(new CustomEvent('submitForm',
-      {
-        bubbles: true,
-        detail: {
-          height: this.getDimensionStateOrNatural('height'),
-          width: this.getDimensionStateOrNatural('width'),
-          src: this.state.imageSource,
-          alt: this.state.isImageDecorative ? '' : this.state.imageDescription,
-          style: this.state.imageStyle,
-        },
-      },
-    ));
+    const isValidImageSource = this.validateImageSource();
+    const isValidImageDescription = this.validateImageDescription();
+    const isValidFormContent = isValidImageSource.isValid && isValidImageDescription.isValid;
+
+    const currentValidationMessages = {};
+
+    if (!isValidImageSource.isValid) {
+      currentValidationMessages[imageSourceID] = isValidImageSource.validationMessage;
+    }
+
+    if (!isValidImageDescription.isValid) {
+      currentValidationMessages[imageDescriptionID] = isValidImageDescription.validationMessage;
+    }
 
     this.setState({
-      open: false,
+      isStatusAlertOpen: !isValidFormContent,
+      currentValidationMessages,
+    });
+
+    if (isValidFormContent) {
+      this.formRef.dispatchEvent(new CustomEvent('submitForm',
+        {
+          bubbles: true,
+          detail: {
+            height: this.getDimensionStateOrNatural('height'),
+            width: this.getDimensionStateOrNatural('width'),
+            src: this.state.imageSource,
+            alt: this.state.isImageDecorative ? '' : this.state.imageDescription,
+            style: this.state.imageStyle,
+          },
+        },
+      ));
+
+      this.setState({
+        open: false,
+      });
+    } else {
+      this.statusAlertRef.focus();
+    }
+  }
+
+  onStatusAlertClose = () => {
+    this.imageSourceInputRef.focus();
+
+    this.setState({
+      isStatusAlertOpen: false,
     });
   }
 
@@ -175,7 +247,7 @@ export default class EditImageModal extends React.Component {
 
   getImageSourceInput = () => (
     <InputText
-      name="imageSourceURL"
+      name="imageSource"
       className={[]}
       label={<WrappedMessage message={messages.editImageModalImageSourceLabel} />}
       description={
@@ -186,10 +258,11 @@ export default class EditImageModal extends React.Component {
           }}
         />
       }
-      id="imageSourceURL"
+      id={imageSourceID}
       type="text"
       value={this.state.imageSource}
       onBlur={this.onImageSourceBlur}
+      inputRef={(input) => { this.imageSourceInputRef = input; }}
       isValid={this.state.isImageValid}
       validationMessage={<WrappedMessage message={messages.editImageModalImageNotFoundError} />}
       themes={['danger']}
@@ -226,8 +299,9 @@ export default class EditImageModal extends React.Component {
             message={messages.editImageModalImageDescriptionLabel}
           />
         }
+        describedBy={`#Error-${imageDescriptionID}`}
         description={this.getImageDescriptionDescription()}
-        id="imageDescription"
+        id={imageDescriptionID}
         type="text"
         value={this.state.imageDescription}
         disabled={this.state.isImageDecorative}
@@ -260,7 +334,7 @@ export default class EditImageModal extends React.Component {
           <a
             target="_blank"
             rel="noopener noreferrer"
-            href={'http://edx.readthedocs.io/projects/edx-partner-course-staff/en/latest/accessibility/best_practices_course_content_dev.html#use-best-practices-for-describing-images'}
+            href={this.props.courseImageAccessibilityDocs}
           >
             {displayText}
           </a>
@@ -342,6 +416,7 @@ export default class EditImageModal extends React.Component {
   getImage = () => (
     <img
       alt=""
+      className={classNames(styles['image-preview-image'], { invisible: !this.state.isImageLoaded })}
       src={this.getImageAssetSource()}
       onLoad={this.onImageLoad}
       onError={this.onImageError}
@@ -349,22 +424,69 @@ export default class EditImageModal extends React.Component {
     />
   );
 
+  /*
+    image is conditionally displayed so that onImageError is not called on initial
+    modal open, when image source is empty string
+  */
   getImagePreviewPlaceholder = () => (
-    <div className="image-preview"><WrappedMessage message={messages.editImageModalImagePreviewText} /></div>
+    <div className={styles['image-preview-placeholder']}>
+      <WrappedMessage message={messages.editImageModalImagePreviewText} >
+        {displayText =>
+          (<span className={classNames({ invisible: this.state.isImageLoaded })}>
+            {displayText}
+          </span>)}
+      </WrappedMessage>
+      { this.state.imageSource && this.getImage() }
+    </div>
   );
-
 
   getImagePreview = () => (
-    <React.Fragment>
-      <div className="row">
-        <span><WrappedMessage message={messages.editImageModalImagePreviewText} /></span>
+    // image preview is decorative
+    <div aria-hidden>
+      <WrappedMessage message={messages.editImageModalImagePreviewText} />
+      <div className={styles['image-preview-container']}>
+        {this.getImagePreviewPlaceholder()}
       </div>
-      {this.state.imageSource ? this.getImage() : this.getImagePreviewPlaceholder()}
-    </React.Fragment>
+    </div>
   );
+
+  getStatusAlertDialog = () => (
+    <div>
+      <WrappedMessage
+        message={messages.editImageModalFormErrorMissingFields}
+        tagName="div"
+      />
+      <div className="mt-3">
+        <ul className="bullet-list">
+          {(Object.keys(this.state.currentValidationMessages).reduce((accumulator, current) => {
+            const value = this.state.currentValidationMessages[current];
+
+            if (value) {
+              const errorMessage = <li key={`Error-${current}`}>{<a href={`#${current}`}>{value} </a>}</li>;
+              accumulator.push(errorMessage);
+            }
+
+            return accumulator;
+          }, [])
+          )}
+        </ul>
+      </div>
+    </div>
+  );
+
+  getStatusAlert = () => (
+    <StatusAlert
+      alertType="danger"
+      dialog={this.getStatusAlertDialog()}
+      onClose={this.onStatusAlertClose}
+      open={this.state.isStatusAlertOpen}
+      ref={(input) => { this.statusAlertRef = input; }}
+    />
+  )
 
   getModalBody = () => (
     <React.Fragment>
+      {this.getStatusAlert()}
       <div className="row">
         <div className="col-sm-4">
           {this.getImagePreview()}
@@ -394,6 +516,8 @@ export default class EditImageModal extends React.Component {
 
   handleOpenModal = (event) => {
     this.setState({
+      // reset state to initial and then add in overrides
+      ...initialEditImageModalState,
       baseAssetURL: event.detail.baseAssetUrl || '',
       imageDescription: event.detail.alt || '',
       imageDimensions: (event.detail.width && event.detail.height) ? {
@@ -404,8 +528,44 @@ export default class EditImageModal extends React.Component {
       imageSource: event.detail.src || '',
       imageStyle: event.detail.style || '',
       isImageDecorative: event.detail.alt === '',
+      // if existing img had a source, assume it could be loaded and show the image preview
+      isImageLoaded: !!event.detail.src,
       open: true,
     });
+  }
+
+  validateImageDescription = () => {
+    let feedback = { isValid: true };
+    const { imageDescription, isImageDecorative } = this.state;
+
+    if (!imageDescription && !isImageDecorative) {
+      feedback = {
+        isValid: false,
+        validationMessage:
+          (<WrappedMessage
+            message={messages.editImageModalFormValidImageDescription}
+          />),
+        dangerIconDescription: <WrappedMessage message={messages.editImageModalFormError} />,
+      };
+    }
+    return feedback;
+  }
+
+  validateImageSource = () => {
+    let feedback = { isValid: true };
+    const { imageSource, isImageValid } = this.state;
+
+    if (!imageSource || !isImageValid) {
+      feedback = {
+        isValid: false,
+        validationMessage:
+          (<WrappedMessage
+            message={messages.editImageModalFormValidImageSource}
+          />),
+        dangerIconDescription: <WrappedMessage message={messages.editImageModalFormError} />,
+      };
+    }
+    return feedback;
   }
 
   render = () => (
@@ -420,9 +580,13 @@ export default class EditImageModal extends React.Component {
           />
         }
         body={this.getModalBody()}
-        onClose={() => { }}
+        onClose={this.onEditImageModalClose}
         buttons={[this.getModalInsertImageButton()]}
       />
     </div>
   );
 }
+
+EditImageModal.propTypes = {
+  courseImageAccessibilityDocs: PropTypes.string.isRequired,
+};

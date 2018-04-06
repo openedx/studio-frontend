@@ -10,11 +10,13 @@ if ((typeof window !== 'undefined' && !window._babelPolyfill) ||
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { IntlProvider } from 'react-intl';
+import { Provider } from 'react-redux';
 import 'custom-event-polyfill'; // needed for IE11
 
-import EditImageModal from './components/EditImageModal';
 import './SFE.scss';
+import WrappedEditImageModal from './components/EditImageModal/container';
 import loadI18nDomData from './utils/i18n/loadI18nDomData';
+import store from './data/store';
 /* eslint-enable import/first */
 
 const i18nData = loadI18nDomData();
@@ -22,9 +24,11 @@ const i18nData = loadI18nDomData();
 
 const App = () => (
   <IntlProvider locale={i18nData.locale} messages={i18nData.messages}>
-    <div className="SFE-wrapper">
-      <EditImageModal />
-    </div>
+    <Provider store={store}>
+      <div className="SFE-wrapper">
+        <WrappedEditImageModal />
+      </div>
+    </Provider>
   </IntlProvider>
 );
 

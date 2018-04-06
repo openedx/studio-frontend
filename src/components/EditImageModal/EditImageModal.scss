@@ -1,74 +1,87 @@
 @import 'edx-bootstrap';
 
-.SFE-wrapper {
-  .modal {
-    overflow-y: scroll;
-  }
+.modal-body {
+  height: 400px;
+  overflow-y: scroll;
+}
 
-  .modal.modal-open {
-    display: block;
-  }
+.modal.modal-open {
+  display: block;
+}
 
-  .modal.modal-backdrop {
-    background-color: rgba(0,0,0,0.3);
+.modal.modal-backdrop {
+  background-color: rgba(0,0,0,0.3);
 
-    // Fade for backdrop
-    &.fade { opacity: 0; }
-    &.show { opacity: 1; }
-  }
+  // Fade for backdrop
+  &.fade { opacity: 0; }
+  &.show { opacity: 1; }
+}
 
   // Remove negative margins in Bootstrap v4.0.0 so the body does not extend outside the modal
-  .modal-body .row {
-    margin: 0;
-  }
+.modal-body .row {
+  margin: 0;
+}
 
-  .modal-dialog {
-    max-width: 800px;
-  }
+.modal-dialog {
+  max-width: $modal-lg;
+}
 
-  fieldset legend {
-    width: inherit;
-  }
+fieldset legend {
+  width: inherit;
+}
 
-  fieldset {
-    @extend .mb-4;
-  }
+fieldset {
+  @extend .mb-4;
+}
 
-  img {
-    max-width: 100%;
-  }
+.image-preview-container {
+  position: relative;
+  width: 100%;
+}
 
-  .image-preview {
-    @extend .p-3;
-    max-width: 100%;
+.image-preview-image {
+  max-height: 100%;
+  max-width: 100%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.image-preview-placeholder {
+  @extend .p-3;
+  max-width: 100%;
+  width: 100%;
+  text-align: center;
+  background-color: theme-color('lightest');
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  @media (min-width: map-get($grid-breakpoints, 'sm')) {
+    $image-height: 200px;
+    height: $image-height;
+    line-height: $image-height - 15px;
+  }
+}
+
+.image-dimensions-x {
+  color: $gray-500;
+  padding-top: $spacer;
+  div {
     text-align: center;
-    background-color: theme-color('lightest');
-
-    @media (min-width: map-get($grid-breakpoints, 'sm')) {
-      $image-height: 200px;
-      height: $image-height;
-      line-height: $image-height - 15px;
-    }
   }
+}
 
-  .image-dimensions-x {
-    color: $gray-500;
-    padding-top: $spacer;
-    div {
-      text-align: center;
-    }
+.or-fields {
+  @extend .py-3;
+
+  // selects the span of the wrapped message
+  span {
+    text-transform: uppercase;
   }
+}
 
-  .or-fields {
-    @extend .py-3;
-
-    // selects the span of the wrapped message
-    span {
-      text-transform: uppercase;
-    }
-  }
-
-  .invalid-feedback {
-    font-size: $font-size-base;
-  }
+.invalid-feedback {
+  font-size: $font-size-base;
 }

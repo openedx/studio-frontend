@@ -1,6 +1,26 @@
 import { defineMessages } from 'react-intl';
 
 const messages = defineMessages({
+  editImageModalFormError: {
+    id: 'editImageModalFormError',
+    defaultMessage: 'Error',
+    description: 'Screenreader-only text describing an error icon in a validation message',
+  },
+  editImageModalFormErrorMissingFields: {
+    id: 'editImageModalFormErrorMissingFields',
+    defaultMessage: 'Make sure to fill in all fields.',
+    description: 'Error message to instruct user to fill in all fields',
+  },
+  editImageModalFormValidImageDescription: {
+    id: 'editImageModalFormValidImageDescription',
+    defaultMessage: 'Add an image description or specify that the image is decorative only.',
+    description: 'Error message for when an invalid image description is entered into the form',
+  },
+  editImageModalFormValidImageSource: {
+    id: 'editImageModalFormValidImageSource',
+    defaultMessage: 'Make sure the image source is correct.',
+    description: 'Error message for when an invalid image source URL is entered into the form',
+  },
   editImageModalImageDescriptionDescription: {
     id: 'editImageModalImageDescriptionDescription',
     defaultMessage: 'Alternative text for users who cannot view the image, such as "The sky with clouds".',
@@ -85,11 +105,6 @@ const messages = defineMessages({
     id: 'editImageModalImageNotFoundError',
     defaultMessage: 'Make sure the image source is correct.',
     description: 'Error message displayed below URL field input when user-entered URL did not load an image',
-  },
-  editImageModalFormError: {
-    id: 'editImageModalFormError',
-    defaultMessage: 'Error',
-    description: 'Screenreader-only text describing an error icon in a validation message',
   },
   editImageModalImageLoadingIcon: {
     id: 'editImageModalImageLoadingIcon',
