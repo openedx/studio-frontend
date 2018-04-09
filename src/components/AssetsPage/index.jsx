@@ -202,15 +202,13 @@ export default class AssetsPage extends React.Component {
               />
             </div>
           </div>
-          {this.props.searchSettings.enabled &&
-            <div className="row">
-              <div className="col-12">
-                {this.state.pageType === types.NORMAL &&
-                  <WrappedAssetsSearch />
-                }
-              </div>
+          <div className="row">
+            <div className="col-12">
+              {this.state.pageType === types.NORMAL &&
+                <WrappedAssetsSearch />
+              }
             </div>
-          }
+          </div>
           <div className="row">
             { this.getPage(this.state.pageType) }
           </div>
@@ -252,9 +250,6 @@ AssetsPage.propTypes = {
   }).isRequired,
   uploadSettings: PropTypes.shape({
     max_file_size_in_mbs: PropTypes.number,
-  }).isRequired,
-  searchSettings: PropTypes.shape({
-    enabled: PropTypes.bool,
   }).isRequired,
   clearAssetDeletion: PropTypes.func.isRequired,
 };
