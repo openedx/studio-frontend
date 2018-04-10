@@ -14,7 +14,6 @@ const mapStateToProps = state => ({
   filtersMetadata: state.metadata.filters,
   uploadSettings: state.studioDetails.upload_settings,
   searchMetadata: state.metadata.search,
-  searchSettings: state.studioDetails.search_settings,
   status: state.metadata.status,
 });
 

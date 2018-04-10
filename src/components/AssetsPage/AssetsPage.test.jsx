@@ -26,9 +26,6 @@ const defaultProps = {
   uploadSettings: {
     max_file_size_in_mbs: 1,
   },
-  searchSettings: {
-    enabled: true,
-  },
   clearAssetDeletion: () => {},
   getAssets: () => {},
 };
@@ -96,15 +93,6 @@ beforeEach(() => {
 
 describe('<AssetsPage />', () => {
   describe('AssetsSearch', () => {
-    it('is hidden when disabled', () => {
-      wrapper = shallowWithIntl(
-        <AssetsPage
-          {...defaultProps}
-          searchSettings={{ enabled: false }}
-        />,
-      );
-      expect(wrapper.find('Connect(AssetsSearch)')).toHaveLength(0);
-    });
     it('is hidden with no assets', () => {
       expect(wrapper.find('Connect(AssetsSearch)')).toHaveLength(0);
     });
