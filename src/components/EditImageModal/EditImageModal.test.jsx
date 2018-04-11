@@ -405,30 +405,37 @@ describe('EditImageModal', () => {
     });
 
     it('sets this.state.imageLoading to true and displays spinner with non-empty imageSource', () => {
+      jest.useFakeTimers();
       imageSourceURLInput.find('input').simulate('change', { target: { value: sampleText } });
       imageSourceURLInput.find('input').simulate('blur');
 
       expect(wrapper.state('imageLoading')).toEqual(true);
 
+      jest.runAllTimers();
       updateConstants();
+      expect(wrapper.state('displayLoadingSpinner')).toEqual(true);
       expect(imageSourceURLInput.find('.fa-spinner').length).toEqual(1);
 
       resetWrapper();
     });
 
     it('sets this.state.imageLoading to false and does not display spinner with empty imageSource', () => {
+      jest.useFakeTimers();
       imageSourceURLInput.find('input').simulate('change', { target: { value: '' } });
       imageSourceURLInput.find('input').simulate('blur');
 
       expect(wrapper.state('imageLoading')).toEqual(false);
 
+      jest.runAllTimers();
       updateConstants();
+      expect(wrapper.state('displayLoadingSpinner')).toEqual(false);
       expect(imageSourceURLInput.find('.fa-spinner').length).toEqual(0);
 
       resetWrapper();
     });
 
     it('sets this.state.imageLoading to false and does not display spinner when new imageSource value equals existing value', () => {
+      jest.useFakeTimers();
       wrapper.setState({
         imageSource: sampleText,
       });
@@ -437,7 +444,9 @@ describe('EditImageModal', () => {
 
       expect(wrapper.state('imageLoading')).toEqual(false);
 
+      jest.runAllTimers();
       updateConstants();
+      expect(wrapper.state('displayLoadingSpinner')).toEqual(false);
       expect(imageSourceURLInput.find('.fa-spinner').length).toEqual(0);
 
       resetWrapper();
@@ -606,11 +615,10 @@ describe('EditImageModal', () => {
       });
 
       it('height responds to width change', () => {
-        imageDimensionsWidthInput.find('input').simulate('change', { target: { value: '50' } });
+        imageDimensionsWidthInput.find('input').simulate('change', { target: { value: 50 } });
 
         updateConstants();
 
-        // issue with props in asInput expecting a string even if type is number
         expect(wrapper.state('imageDimensions')).toEqual({
           width: 50,
           height: 100,
@@ -621,11 +629,10 @@ describe('EditImageModal', () => {
       });
 
       it('width responds to height change', () => {
-        imageDimensionsHeightInput.find('input').simulate('change', { target: { value: '400' } });
+        imageDimensionsHeightInput.find('input').simulate('change', { target: { value: 400 } });
 
         updateConstants();
 
-        // issue with props in asInput expecting a string even if type is number
         expect(wrapper.state('imageDimensions')).toEqual({
           width: 200,
           height: 400,
@@ -645,11 +652,10 @@ describe('EditImageModal', () => {
       });
 
       it('height does not respond to width change', () => {
-        imageDimensionsWidthInput.find('input').simulate('change', { target: { value: '50' } });
+        imageDimensionsWidthInput.find('input').simulate('change', { target: { value: 50 } });
 
         updateConstants();
 
-        // issue with props in asInput expecting a string even if type is number
         expect(wrapper.state('imageDimensions')).toEqual({
           width: 50,
           height: sampleImgData.naturalHeight,
@@ -660,11 +666,10 @@ describe('EditImageModal', () => {
       });
 
       it('width does not respond to height change', () => {
-        imageDimensionsHeightInput.find('input').simulate('change', { target: { value: '400' } });
+        imageDimensionsHeightInput.find('input').simulate('change', { target: { value: 400 } });
 
         updateConstants();
 
-        // issue with props in asInput expecting a string even if type is number
         expect(wrapper.state('imageDimensions')).toEqual({
           width: sampleImgData.naturalWidth,
           height: 400,

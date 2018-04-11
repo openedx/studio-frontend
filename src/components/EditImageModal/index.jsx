@@ -1,5 +1,4 @@
 import React from 'react';
-import classNames from 'classnames';
 import { Button, CheckBox, Icon, InputText, Modal } from '@edx/paragon';
 import FontAwesomeStyles from 'font-awesome/css/font-awesome.min.css';
 
@@ -7,6 +6,8 @@ import messages from './displayMessages';
 import './EditImageModal.scss';
 import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
 import rewriteStaticLinks from '../../utils/rewriteStaticLinks';
+
+const LOADING_SPINNER_DELAY = 1000; // in milliseconds
 
 
 export default class EditImageModal extends React.Component {
@@ -16,6 +17,7 @@ export default class EditImageModal extends React.Component {
     this.state = {
       areProportionsLocked: true,
       baseAssetURL: '',
+      displayLoadingSpinner: false,
       imageDescription: '',
       imageDimensions: {},
       isImageDecorative: false,
@@ -63,6 +65,7 @@ export default class EditImageModal extends React.Component {
     const img = event.target;
 
     this.setState({
+      displayLoadingSpinner: false,
       imageDimensions: {
         width: img.naturalWidth,
         height: img.naturalHeight,
@@ -75,6 +78,7 @@ export default class EditImageModal extends React.Component {
 
   onImageError = () => {
     this.setState({
+      displayLoadingSpinner: false,
       imageDimensions: {},
       imageLoading: false,
       isImageValid: false,
@@ -86,6 +90,15 @@ export default class EditImageModal extends React.Component {
       imageSource,
       imageLoading: imageSource.length > 0 && (this.state.imageSource !== imageSource),
     });
+
+    setTimeout(() => {
+      if (this.state.imageLoading) {
+        // show loading spinner when image is taking a long time to load
+        this.setState({
+          displayLoadingSpinner: true,
+        });
+      }
+    }, LOADING_SPINNER_DELAY);
   }
 
   onImageDescriptionBlur = (imageDescription) => {
@@ -161,48 +174,46 @@ export default class EditImageModal extends React.Component {
   }
 
   getImageSourceInput = () => (
-    <div className={classNames({ 'image-loading': this.state.imageLoading })}>
-      <InputText
-        name="imageSourceURL"
-        className={[]}
-        label={<WrappedMessage message={messages.editImageModalImageSourceLabel} />}
-        description={
-          <WrappedMessage
-            message={messages.editImageModalImageSourceDescription}
-            values={{
-              link: '"http://example.url.com/imageName.png"',
-            }}
-          />
-        }
-        id="imageSourceURL"
-        type="text"
-        value={this.state.imageSource}
-        onBlur={this.onImageSourceBlur}
-        isValid={this.state.isImageValid}
-        validationMessage={<WrappedMessage message={messages.editImageModalImageNotFoundError} />}
-        themes={['danger']}
-        dangerIconDescription={
-          <WrappedMessage message={messages.editImageModalImageNotFoundDangerIconDescription} />
-        }
-        inputGroupAppend={this.state.imageLoading ? (
-          <div className="input-group-text">
-            <WrappedMessage message={messages.editImageModalImageLoadingIcon}>
-              { displayText => (
-                <Icon
-                  id="spinner"
-                  className={[
-                    FontAwesomeStyles.fa,
-                    FontAwesomeStyles['fa-spinner'],
-                    FontAwesomeStyles['fa-spin'],
-                  ]}
-                  screenReaderText={displayText}
-                />
-              )}
-            </WrappedMessage>
-          </div>
-        ) : null}
-      />
-    </div>
+    <InputText
+      name="imageSourceURL"
+      className={[]}
+      label={<WrappedMessage message={messages.editImageModalImageSourceLabel} />}
+      description={
+        <WrappedMessage
+          message={messages.editImageModalImageSourceDescription}
+          values={{
+            link: '"http://example.url.com/imageName.png"',
+          }}
+        />
+      }
+      id="imageSourceURL"
+      type="text"
+      value={this.state.imageSource}
+      onBlur={this.onImageSourceBlur}
+      isValid={this.state.isImageValid}
+      validationMessage={<WrappedMessage message={messages.editImageModalImageNotFoundError} />}
+      themes={['danger']}
+      dangerIconDescription={
+        <WrappedMessage message={messages.editImageModalFormError} />
+      }
+      inputGroupAppend={this.state.displayLoadingSpinner ? (
+        <div className="input-group-text">
+          <WrappedMessage message={messages.editImageModalImageLoadingIcon}>
+            { displayText => (
+              <Icon
+                id="spinner"
+                className={[
+                  FontAwesomeStyles.fa,
+                  FontAwesomeStyles['fa-spinner'],
+                  FontAwesomeStyles['fa-spin'],
+                ]}
+                screenReaderText={displayText}
+              />
+            )}
+          </WrappedMessage>
+        </div>
+      ) : null}
+    />
   );
 
   getImageDescriptionInput = () => (
