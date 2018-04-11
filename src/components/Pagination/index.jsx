@@ -60,28 +60,34 @@ export default class Pagination extends React.Component {
     const totalPages = Math.ceil(totalCount / pageSize);
 
     return (
-      <nav aria-label="Assets Pagination Navigation">
-        <ReactPaginate
-          previousLabel={this.getPreviousLabel(totalPages)}
-          nextLabel={this.getNextLabel(totalPages)}
-          breakLabel={this.getBreakLabel()}
-          pageCount={totalPages}
-          forcePage={page}
-          marginPagesDisplayed={2}
-          pageRangeDisplayed={5}
-          onPageChange={this.onPageClick}
-          activeClassName={classNames(edxBootstrap.active)}
-          breakClassName={classNames(edxBootstrap['page-link'], edxBootstrap.disabled)}
-          containerClassName={classNames(edxBootstrap.pagination)}
-          disabledClassName={classNames(edxBootstrap.disabled)}
-          nextClassName={classNames(edxBootstrap.next)}
-          nextLinkClassName={classNames(edxBootstrap['page-link'])}
-          pageClassName={classNames(edxBootstrap['page-item'])}
-          pageLinkClassName={classNames(edxBootstrap['page-link'])}
-          previousClassName={classNames(edxBootstrap.previous)}
-          previousLinkClassName={classNames(edxBootstrap['page-link'])}
-        />
-      </nav>
+      <WrappedMessage message={messages.paginationAriaLabel}>
+        { paginationLabel =>
+          (
+            <nav aria-label={paginationLabel}>
+              <ReactPaginate
+                previousLabel={this.getPreviousLabel(totalPages)}
+                nextLabel={this.getNextLabel(totalPages)}
+                breakLabel={this.getBreakLabel()}
+                pageCount={totalPages}
+                forcePage={page}
+                marginPagesDisplayed={2}
+                pageRangeDisplayed={5}
+                onPageChange={this.onPageClick}
+                activeClassName={classNames(edxBootstrap.active)}
+                breakClassName={classNames(edxBootstrap['page-link'], edxBootstrap.disabled)}
+                containerClassName={classNames(edxBootstrap.pagination)}
+                disabledClassName={classNames(edxBootstrap.disabled)}
+                nextClassName={classNames(edxBootstrap.next)}
+                nextLinkClassName={classNames(edxBootstrap['page-link'])}
+                pageClassName={classNames(edxBootstrap['page-item'])}
+                pageLinkClassName={classNames(edxBootstrap['page-link'])}
+                previousClassName={classNames(edxBootstrap.previous)}
+                previousLinkClassName={classNames(edxBootstrap['page-link'])}
+              />
+            </nav>
+          )
+        }
+      </WrappedMessage>
     );
   }
 }

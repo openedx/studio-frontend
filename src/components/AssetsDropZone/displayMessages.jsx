@@ -1,6 +1,11 @@
 import { defineMessages } from 'react-intl';
 
 const messages = defineMessages({
+  assetsDropZoneAriaLabel: {
+    id: 'assetsDropZoneAriaLabel',
+    defaultMessage: 'Upload assets',
+    description: 'Aria label for screenreaders on the upload region of the page',
+  },
   assetsDropZoneBrowseLabel: {
     id: 'assetsDropZoneBrowseLabel',
     defaultMessage: 'Browse your computer',

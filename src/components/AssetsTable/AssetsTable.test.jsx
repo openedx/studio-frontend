@@ -109,12 +109,13 @@ describe('<AssetsTable />', () => {
         defaultColumns.filter(column => column.columnSortable).length,
       );
     });
-    it('correct hidden status of headings', () => {
-      // non-sortable, non-hidden columns (e.g. Copy URLs) may just have text in the heading,
-      // in which case they have no children, so we have an explicit check that the heading
-      // has a child
+    it('correct number of hidden of headings', () => {
+      // non-sortable, non-hidden columns (e.g. Copy URLs) will not have a sortable button
+      // but will have screenreader only text still within the header, validate that it is there
       expect(
-        wrapper.find('th').filterWhere(heading => heading.childAt(0).exists() && heading.childAt(0).html() === '<span class="sr-only"></span>'),
+        wrapper.find('th').filterWhere(heading => heading.childAt(0).exists() &&
+          !heading.childAt(0).html().includes('button') &&
+          heading.childAt(0).html().includes('<span class="sr-only">')),
       ).toHaveLength(
         defaultColumns.filter(column => column.hideHeader).length,
       );

@@ -240,6 +240,14 @@ export default class AssetsTable extends React.Component {
     this.props.deleteButtonRefs(ref, currentAsset);
   }
 
+  getTableCaption() {
+    return (
+      <span className="sr-only">
+        <WrappedMessage message={messages.assetsTableCaption} />
+      </span>
+    );
+  }
+
   getTableColumns() {
     let columns = Object.keys(this.columns);
     let expandedColumns = {};
@@ -418,6 +426,7 @@ export default class AssetsTable extends React.Component {
     return (
       <React.Fragment>
         <Table
+          caption={this.getTableCaption()}
           className={['table-responsive']}
           columns={this.getTableColumns()}
           data={this.addSupplementalTableElements(this.props.assetsList)}

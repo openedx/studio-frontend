@@ -12,8 +12,8 @@
 
 .no-image-preview {
   @extend .p-3;
-  background-color: theme-color('lightest');
-  color: theme-color('disabled');
+  background-color: theme-color('light');
+  color: theme-color('dark');
 }
 
 .table th span, .table td span {
