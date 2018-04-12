@@ -417,17 +417,15 @@ export default class AssetsTable extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <span className={classNames(styles['wrap-text'])}>
-          <Table
-            className={['table-responsive']}
-            columns={this.getTableColumns()}
-            data={this.addSupplementalTableElements(this.props.assetsList)}
-            tableSortable
-            defaultSortedColumn="date_added"
-            defaultSortDirection="desc"
-            hasFixedColumnWidths={!isIE11}
-          />
-        </span>
+        <Table
+          className={['table-responsive']}
+          columns={this.getTableColumns()}
+          data={this.addSupplementalTableElements(this.props.assetsList)}
+          tableSortable
+          defaultSortedColumn="date_added"
+          defaultSortDirection="desc"
+          hasFixedColumnWidths={!isIE11}
+        />
         {this.renderModal()}
         <span className="sr" aria-live="assertive" id="copy-status">
           {
