@@ -78,11 +78,11 @@ There are a few ways to utilize [`FormattedMessage`](https://github.com/yahoo/re
 ### Locale data
 
 [react-intl's docs explain this better than I can](https://github.com/yahoo/react-intl/wiki#loading-locale-data). Basically, you need to load a library-provided file and call [`addlocaleData`](https://github.com/yahoo/react-intl/wiki/API#addlocaledata) on it so that plurals, times, and numbers are formatted correctly. studio-frontend does that [here](https://github.com/edx/studio-frontend/blob/e3a535c482a8cc8e4c29acfc735278fc5a24500c/src/utils/i18n/loadI18nDomData.jsx#L10), using a given
-locale code to lookup the correct library-provided file in a map of supported languages.
+locale code to look up the correct library-provided file in a map of supported languages.
 
 ### Supported Languages
 
-We spent forever trying to make our setup such that each available (from react-intl) language was available to webpack separately, but ended up realizing that we need to enumerate the list of available (from edx) languages and package them all up in the studio-frontend bundle. This is deemed acceptable because the language list is fairly static, and there are only 5 of them including the default English. The exported languages (and their corresponding locales) are defined
+We spent forever trying to make our setup such that each available (from react-intl) language was available to webpack separately, but ended up realizing that we need to enumerate the list of available (from edX) languages and package them all up in the studio-frontend bundle. This is deemed acceptable because the language list is fairly static, and there are only 5 of them including the default English. The exported languages (and their corresponding locales) are defined
 [here](https://github.com/edx/studio-frontend/blob/e3a535c482a8cc8e4c29acfc735278fc5a24500c/src/data/i18n/locales/currentlySupportedLangs.jsx), you can read [this PR](https://github.com/edx/studio-frontend/pull/124) for more detail.
 
 As an aside, note that the translated message files live at `src/data/i18n/locales/` and are imported into the above file. These are updated by a weekly job, and are imported into the above `currentlySupportedLangs.jsx` so as to include them in our bundled distribution.
@@ -105,7 +105,7 @@ The solution we landed on is to have the django server grab the desired data fro
 
 pluralization - English only has "singular" and "plural" (or "not singular"); other languages such as Russian or Arabic have more than two options, depending on whether there exist zero, one, two, a few, or many items. If we do not handle these cases, a string as incorrect as `1 results` may be rendered in those languages.
 
-This problem is why we stopped using python-centric Transifex tools. react-intl, being part of FormatJS, handles [pluralizable strings in ICU format](https://formatjs.io/guides/message-syntax/#plural-format) quite well out-of-the-box. The problem for us initially came in when sending these files up to Transifex. Every previous edx project in Transifex used PO files to specify strings. For a hot sec, we were converting our js-defined messages into python-defined PO files, then the reverse on
+This problem is why we stopped using python-centric Transifex tools. react-intl, being part of FormatJS, handles [pluralizable strings in ICU format](https://formatjs.io/guides/message-syntax/#plural-format) quite well out-of-the-box. The problem for us initially came in when sending these files up to Transifex. Every previous edX project in Transifex used PO files to specify strings. For a hot sec, we were converting our js-defined messages into python-defined PO files, then the reverse on
 returning from transifex. However, this broke horribly when we got to pluralizable strings, since the conversion tools we were using were not built to handle that case.
 
 Instead of fixing the tool, we opted to keep things in JSON and use a [`KEYVALUEJSON` file](https://docs.transifex.com/formats/json). This works correctly and keeps plurals working (note that Transifex already had support for translators to pluralize), but it came at a cost. That file type is so simplified that it loses track of descriptions, which can be vital to helping a translator know the context of the string they're translating. To solve that, I again turned to reactifex.
@@ -121,6 +121,6 @@ Makefile](https://github.com/edx/studio-frontend/blob/e3a535c482a8cc8e4c29acfc73
 
 ### Jenkins Jobs
 
-There are only 2 things remaining that I haven't explained here - how do translated strings get pulled down from Transifex and updated in our repo, and how do we push comments to Transifex (given the fact that Transifex watches github for the main `KEYVALUEJSON` file? The answer in both cases is a weekly job. At edX, we run them in Jenkins, but it could be any type of cron job.
+There are only 2 things remaining that I haven't explained here - how do translated strings get pulled down from Transifex and updated in our repo, and how do we push comments to Transifex (given the fact that Transifex watches github for the main `KEYVALUEJSON` file)? The answer in both cases is a weekly job. At edX, we run them in Jenkins, but it could be any type of cron job.
 
 The full details of these jobs and their setup is well beyond the scope of this document, I'll document that in an internal wiki page later. Suffice it to say that the push job runs [these lines surrounding `make push_translations`](https://github.com/edx/studio-frontend/blob/e3a535c482a8cc8e4c29acfc735278fc5a24500c/Makefile#L69-L75), and the pull job runs [`make pull_translations`](https://github.com/edx/studio-frontend/blob/e3a535c482a8cc8e4c29acfc735278fc5a24500c/Makefile#L77-L79)
