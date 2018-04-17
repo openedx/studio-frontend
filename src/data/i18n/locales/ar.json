@@ -102,6 +102,9 @@
   "editImageModalImageWidth": "Width",
   "editImageModalTitle": "Add or Edit Image",
   "editImageModalImageOrFields": "or",
+  "editImageModalImageNotFoundError": "Make sure the image source is correct.",
+  "editImageModalFormError": "Error",
+  "editImageModalImageLoadingIcon": "Loading",
   "paginationButtonDisabled": "button is disabled",
   "paginationNext": "التالي",
   "paginationPrevious": "السابق"
