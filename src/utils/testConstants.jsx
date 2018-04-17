@@ -17,6 +17,7 @@ const copyUrl = 'animal';
 
 export const testAssetsList = [
   {
+    date_added: 'Jan 01, 2018 at 01:00 UTC',
     display_name: 'cat.jpg',
     id: 'cat.jpg',
     thumbnail,
@@ -25,6 +26,7 @@ export const testAssetsList = [
     external_url: copyUrl,
   },
   {
+    date_added: 'Jan 02, 2018 at 02:00 UTC',
     display_name: 'dog.png',
     id: 'dog.png',
     thumbnail,
@@ -33,6 +35,7 @@ export const testAssetsList = [
     external_url: null,
   },
   {
+    date_added: 'Jan 03, 2018 at 03:00 UTC',
     display_name: 'bird.json',
     id: 'bird.json',
     thumbnail: null,
@@ -41,6 +44,7 @@ export const testAssetsList = [
     external_url: copyUrl,
   },
   {
+    date_added: 'Jan 04, 2018 at 04:00 UTC',
     display_name: 'fish.doc',
     id: 'fish.doc',
     thumbnail: null,

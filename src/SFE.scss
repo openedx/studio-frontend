@@ -1,3 +1,5 @@
+@import 'utils/scss/focus';
+
 /* Note: Because postcss-prepend-selector is used in this project, all selectors defined in any CSS/SCSS file will have
  * "#root.SFE " prepended to them so that all styles here will be scoped to *only* the root div. */
 
@@ -53,7 +55,6 @@
 button {
   // override default of `buttonface` which varies in different browsers
   background-color: inherit;
-  cursor: pointer;
   &:focus{
     border-width: 2px;
   }
@@ -61,12 +62,7 @@ button {
 
 input {
   &:focus {
-    color: $input-focus-color;
-    background-color: $input-focus-bg;
-    border-color: $input-focus-border-color;
-    border-width: 2px;
-    outline: none;
-    box-shadow: $input-box-shadow, $input-btn-focus-box-shadow;
+    @include focus();
   }
 }
 

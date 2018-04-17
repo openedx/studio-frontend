@@ -348,6 +348,40 @@ describe('Assets Reducers', () => {
         expect(state).toEqual(action.previousState);
       });
     });
+
+    describe('select reducer', () => {
+      it('returns correct select state on SELECT_ASSET action', () => {
+        defaultState = reducers.selectInitial;
+
+        action = {
+          asset: 'asset',
+          type: assetActions.select.SELECT_ASSET,
+        };
+
+        state = reducers.select(defaultState, action);
+
+        expect(state).toEqual({
+          selectedAsset: action.asset,
+        });
+      });
+      it('returns correct select state on CLEAR_SELECTED_ASSET action', () => {
+        defaultState = {
+          ...reducers.selectInitial,
+          selectedAsset: 'asset',
+        };
+
+        action = {
+          type: assetActions.select.CLEAR_SELECTED_ASSET,
+        };
+
+        state = reducers.select(defaultState, action);
+
+        expect(state).toEqual({
+          selectedAsset: {},
+        });
+      });
+    });
+
     describe('status reducer', () => {
       defaultState = {
         metadata: {
