@@ -49,6 +49,7 @@ export const getAssets = (parameters, courseDetails) =>
 
     const requestParameters = {
       page: state.metadata.pagination.page,
+      pageSize: state.metadata.pagination.pageSize,
       assetTypes: state.metadata.filters.assetTypes,
       sort: state.metadata.sort.sort,
       direction: state.metadata.sort.direction,
@@ -318,7 +319,20 @@ export const uploadExceedMaxSize = maxFileSizeMB => ({
   maxFileSizeMB,
 });
 
+export const uploadInvalidFileType = () => ({
+  type: assetActions.upload.UPLOAD_INVALID_FILE_TYPE_ERROR,
+});
+
 export const updateImagePreview = enabled => ({
   type: assetActions.imagePreview.IMAGE_PREVIEW_UPDATE,
   enabled,
+});
+
+export const selectAsset = asset => ({
+  type: assetActions.select.SELECT_ASSET,
+  asset,
+});
+
+export const clearSelectedAsset = () => ({
+  type: assetActions.select.CLEAR_SELECTED_ASSET,
 });

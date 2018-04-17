@@ -1,3 +1,6 @@
 {
-    "extends": ["@commitlint/config-angular"]
+    "extends": ["@commitlint/config-angular"],
+    "rules": {
+        "footer-leading-blank": [0, "always"]
+    }
 }

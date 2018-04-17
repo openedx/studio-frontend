@@ -1,6 +1,21 @@
 import { defineMessages } from 'react-intl';
 
 const messages = defineMessages({
+  editImageModalAssetsListLoadingSpinner: {
+    id: 'editImageModalAssetsListLoadingSpinner',
+    defaultMessage: 'Loading spinner',
+    description: 'Description of a loading spinner image shown when files are loading.',
+  },
+  editImageModalAssetsListNoAssetsMessage: {
+    id: 'editImageModalAssetsListNoAssetsMessage',
+    defaultMessage: '0 images uploaded',
+    description: 'Message displayed when a course has no images to display in the list.',
+  },
+  editImageModalAssetsListNoResultsMessage: {
+    id: 'editImageModalAssetsListNoResultsMessage',
+    defaultMessage: '0 images found',
+    description: 'Message displayed in table when no image results are found.',
+  },
   editImageModalFormError: {
     id: 'editImageModalFormError',
     defaultMessage: 'Error',
@@ -96,10 +111,15 @@ const messages = defineMessages({
     defaultMessage: 'Width',
     description: 'Label for the text input box for an image\'s width,',
   },
-  editImageModalTitle: {
-    id: 'editImageModalTitle',
-    defaultMessage: 'Add or Edit Image',
-    description: 'Title of the modal used for adding or editing an image',
+  editImageModalInsertTitle: {
+    id: 'editImageModalInsertTitle',
+    defaultMessage: 'Add an Image',
+    description: 'Title of the modal used for adding an image',
+  },
+  editImageModalEditTitle: {
+    id: 'editImageModalEditTitle',
+    defaultMessage: 'Edit Image Settings',
+    description: 'Title of the modal used for editing image settings',
   },
   editImageModalImageOrFields: {
     id: 'editImageModalImageOrFields',
@@ -113,8 +133,18 @@ const messages = defineMessages({
   },
   editImageModalImageLoadingIcon: {
     id: 'editImageModalImageLoadingIcon',
-    defaultMessage: 'Loading',
-    description: 'Screenreader-only text describing a loading spinner indicating that an image is loading',
+    defaultMessage: 'Loading...',
+    description: 'Text displayed with a loading spinner icon indicating that an image is loading',
+  },
+  editImageModalNextPageButton: {
+    id: 'editImageModalNextPageButton',
+    defaultMessage: 'Next',
+    description: 'Button text to go to the next screen',
+  },
+  editImageModalPreviousPageButton: {
+    id: 'editImageModalPreviousPageButton',
+    defaultMessage: 'Back',
+    description: 'Button text to go to the previous screen',
   },
 });
 
