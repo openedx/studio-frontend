@@ -70,11 +70,13 @@ describe('Assets Action Creators', () => {
     const expectedAction = { response: 'response', type: assetActions.request.REQUEST_ASSETS_SUCCESS };
     expect(store.dispatch(actionCreators.requestAssetsSuccess('response'))).toEqual(expectedAction);
   });
+
   it('returns expected state from assetDeleteFailure', () => {
     const asset = testAssetsList[0];
     const expectedAction = { asset, type: assetActions.delete.DELETE_ASSET_FAILURE };
     expect(store.dispatch(actionCreators.deleteAssetFailure(asset))).toEqual(expectedAction);
   });
+
   it('returns expected state from getAssets success', () => {
     const requestParameters = {};
     const response = {
@@ -95,6 +97,7 @@ describe('Assets Action Creators', () => {
       expect(store.getActions()).toEqual(expectedActions);
     });
   });
+
   it('returns expected state from getAssets failure', () => {
     const requestParameters = {};
     const response = {
@@ -122,6 +125,7 @@ describe('Assets Action Creators', () => {
       expect(store.getActions()).toEqual(expectedActions);
     });
   });
+
   it('returns expected state from getAssets success when not last made request', () => {
     const requestParameters = {
       page: 10,
@@ -149,6 +153,7 @@ describe('Assets Action Creators', () => {
       expect(store.getActions()).toEqual(expectedActions);
     });
   });
+
   it('returns expected state from getAssets failure when not last made request', () => {
     const requestParameters = {
       page: 10,
@@ -177,6 +182,7 @@ describe('Assets Action Creators', () => {
       expect(store.getActions()).toEqual(expectedActions);
     });
   });
+
   it('returns expected state from filterUpdate success', () => {
     const filterParameter = 'Images';
 
@@ -208,6 +214,7 @@ describe('Assets Action Creators', () => {
         expect(store.getActions()).toEqual(expectedActions);
       });
   });
+
   it('returns expected state from filterUpdate failure', () => {
     const filterParameter = 'Images';
 
@@ -245,6 +252,7 @@ describe('Assets Action Creators', () => {
         expect(store.getActions()).toEqual(expectedActions);
       });
   });
+
   it('returns expected state from clearFilters success', () => {
     const newRequest = {
       ...filtersInitial,
@@ -272,6 +280,7 @@ describe('Assets Action Creators', () => {
       expect(store.getActions()).toEqual(expectedActions);
     });
   });
+
   it('returns expected state from clearFilters failure', () => {
     const response = {
       status: 400,
@@ -305,6 +314,7 @@ describe('Assets Action Creators', () => {
       expect(store.getActions()).toEqual(expectedActions);
     });
   });
+
   it('returns expected state from sortUpdate success', () => {
     const sortParameters = { sort: 'edX', direction: 'desc' };
 
@@ -335,6 +345,7 @@ describe('Assets Action Creators', () => {
       expect(store.getActions()).toEqual(expectedActions);
     });
   });
+
   it('returns expected state from sortUpdate failure', () => {
     const sortParameters = { sort: 'edX', direction: 'desc' };
 
@@ -371,6 +382,7 @@ describe('Assets Action Creators', () => {
       expect(store.getActions()).toEqual(expectedActions);
     });
   });
+
   it('returns expected state from searchUpdate success', () => {
     const searchParameters = { search: 'edX' };
 
@@ -401,6 +413,7 @@ describe('Assets Action Creators', () => {
       expect(store.getActions()).toEqual(expectedActions);
     });
   });
+
   it('returns expected state from searchUpdate failure', () => {
     const searchParameters = { search: 'edX' };
 
@@ -437,6 +450,7 @@ describe('Assets Action Creators', () => {
       expect(store.getActions()).toEqual(expectedActions);
     });
   });
+
   it('returns expected state from pageUpdate success', () => {
     const paginationParameters = { page: 10 };
 
@@ -466,6 +480,7 @@ describe('Assets Action Creators', () => {
         expect(store.getActions()).toEqual(expectedActions);
       });
   });
+
   it('returns expected state from pageUpdate failure', () => {
     const paginationParameters = { page: 10 };
 
@@ -502,6 +517,7 @@ describe('Assets Action Creators', () => {
       expect(store.getActions()).toEqual(expectedActions);
     });
   });
+
   it('returns expected state from deleteAsset success', () => {
     const response = {
       status: 204,
@@ -525,6 +541,7 @@ describe('Assets Action Creators', () => {
       expect(store.getActions()).toEqual(expectedActions);
     });
   });
+
   it('returns expected state from deleteAsset failure', () => {
     const response = {
       status: 400,
@@ -543,20 +560,24 @@ describe('Assets Action Creators', () => {
       expect(store.getActions()).toEqual(expectedActions);
     });
   });
+
   it('returns expected state from stageAssetDeletion', () => {
     const index = 0;
     const asset = testAssetsList[index];
     const expectedAction = { type: assetActions.delete.STAGE_ASSET_DELETION, asset, index };
     expect(store.dispatch(actionCreators.stageAssetDeletion(asset, index))).toEqual(expectedAction);
   });
+
   it('returns expected state from unstageAssetDeletion', () => {
     const expectedAction = { type: assetActions.delete.UNSTAGE_ASSET_DELETION };
     expect(store.dispatch(actionCreators.unstageAssetDeletion())).toEqual(expectedAction);
   });
+
   it('returns expected state from clearAssetsStatus', () => {
     const expectedAction = { type: assetActions.clear.CLEAR_ASSETS_STATUS };
     expect(store.dispatch(actionCreators.clearAssetsStatus())).toEqual(expectedAction);
   });
+
   it('returns expected state from toggleLockAsset success', () => {
     const response = {
       status: 200,
@@ -576,6 +597,7 @@ describe('Assets Action Creators', () => {
       expect(store.getActions()).toEqual(expectedActions);
     });
   });
+
   it('returns expected state from toggleLockAsset failure', () => {
     const response = {
       status: 400,
@@ -596,18 +618,22 @@ describe('Assets Action Creators', () => {
       expect(store.getActions()).toEqual(expectedActions);
     });
   });
+
   it('returns expected state from togglingLockAsset', () => {
     const expectedAction = { asset: 'asset', type: assetActions.lock.TOGGLING_LOCK_ASSET_SUCCESS };
     expect(store.dispatch(actionCreators.togglingLockAsset('asset'))).toEqual(expectedAction);
   });
+
   it('returns expected state from toggleLockAssetSuccess', () => {
     const expectedAction = { asset: 'asset', type: assetActions.lock.TOGGLE_LOCK_ASSET_SUCCESS };
     expect(store.dispatch(actionCreators.toggleLockAssetSuccess('asset'))).toEqual(expectedAction);
   });
+
   it('returns expected state from toggleLockAssetFailure', () => {
     const expectedAction = { asset: 'asset', response: 'response', type: assetActions.lock.TOGGLING_LOCK_ASSET_FAILURE };
     expect(store.dispatch(actionCreators.toggleLockAssetFailure('asset', 'response'))).toEqual(expectedAction);
   });
+
   it('returns expected state from uploadExceedMaxSize', () => {
     const expectedAction = {
       maxFileSizeMB: 23,
@@ -615,6 +641,7 @@ describe('Assets Action Creators', () => {
     };
     expect(store.dispatch(actionCreators.uploadExceedMaxSize(23))).toEqual(expectedAction);
   });
+
   it('returns expected state from uploadExceedMaxCount', () => {
     const expectedAction = {
       maxFileCount: 1,
@@ -622,18 +649,22 @@ describe('Assets Action Creators', () => {
     };
     expect(store.dispatch(actionCreators.uploadExceedMaxCount(1))).toEqual(expectedAction);
   });
+
   it('returns expected state from uploadAssetFailure', () => {
     const expectedAction = { asset: 'asset', response: 'response', type: assetActions.upload.UPLOAD_ASSET_FAILURE };
     expect(store.dispatch(actionCreators.uploadAssetFailure('asset', 'response'))).toEqual(expectedAction);
   });
+
   it('returns expected state from uploadAssetSuccess', () => {
     const expectedAction = { response: 'response', type: assetActions.upload.UPLOAD_ASSET_SUCCESS };
     expect(store.dispatch(actionCreators.uploadAssetSuccess('response'))).toEqual(expectedAction);
   });
+
   it('returns expected state from uploadingAssets', () => {
     const expectedAction = { count: 99, type: assetActions.upload.UPLOADING_ASSETS };
     expect(store.dispatch(actionCreators.uploadingAssets(99, 'response'))).toEqual(expectedAction);
   });
+
   it('returns expected state from uploadAssets success', () => {
     const assetsResponse = {
       status: 200,
@@ -669,6 +700,7 @@ describe('Assets Action Creators', () => {
       expect(store.getActions()).toEqual(expectedActions);
     });
   });
+
   it('returns expected state from uploadAssets failure', () => {
     const assetsResponse = {
       status: 400,
@@ -693,5 +725,15 @@ describe('Assets Action Creators', () => {
       // return of async actions
       expect(store.getActions()).toEqual(expectedActions);
     });
+  });
+
+  it('returns expected state from selectAsset', () => {
+    const expectedAction = { asset: 'asset', type: assetActions.select.SELECT_ASSET };
+    expect(store.dispatch(actionCreators.selectAsset('asset'))).toEqual(expectedAction);
+  });
+
+  it('returns expected state from clearSelectedAsset', () => {
+    const expectedAction = { type: assetActions.select.CLEAR_SELECTED_ASSET };
+    expect(store.dispatch(actionCreators.clearSelectedAsset('asset'))).toEqual(expectedAction);
   });
 });

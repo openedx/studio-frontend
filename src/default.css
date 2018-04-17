@@ -1942,37 +1942,6 @@ button {
   justify-items: inherit;
 }
 
-button:hover,
-input[type="color"]:hover,
-input[type="reset"]:hover,
-input[type="button"]:hover,
-input[type="submit"]:hover {
-  background-color: buttonhoverface;
-}
-
-button:hover,
-input[type="reset"]:hover,
-input[type="button"]:hover,
-input[type="submit"]:hover {
-  color: buttonhovertext;
-}
-
-button:active:hover,
-input[type="color"]:active:hover,
-input[type="reset"]:active:hover,
-input[type="button"]:active:hover,
-input[type="submit"]:active:hover {
-  border-style: inset;
-  background-color: ButtonFace;
-}
-
-button:active:hover,
-input[type="reset"]:active:hover,
-input[type="button"]:active:hover,
-input[type="submit"]:active:hover {
-  color: ButtonText;
-}
-
 button::focus-inner,
 input[type="color"]::focus-inner,
 input[type="reset"]::focus-inner,
@@ -2007,26 +1976,7 @@ select:disabled > button,
 select:disabled > button,
 input[type="submit"]:disabled:active,
 input[type="submit"]:disabled {
-  /* The sum of border and padding on block-start and block-end
-     must be the same here and for text inputs */
-  padding-block-start: 0px;
-  padding-inline-end: 8px;
-  padding-block-end: 0px;
-  padding-inline-start: 8px;
-  border: 2px outset ThreeDLightShadow;
   cursor: inherit;
-}
-
-button:disabled:active, button:disabled,
-input[type="reset"]:disabled:active,
-input[type="reset"]:disabled,
-input[type="button"]:disabled:active,
-input[type="button"]:disabled,
-select:disabled > button,
-select:disabled > button,
-input[type="submit"]:disabled:active,
-input[type="submit"]:disabled {
-  color: GrayText;
 }
 
  /*

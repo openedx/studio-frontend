@@ -23,7 +23,6 @@ export const paginationInitial = {
   start: 0,
   end: 0,
   page: 0,
-  pageSize: 50,
   totalCount: 0,
 };
 
@@ -45,6 +44,10 @@ export const requestInitial = {
   ...sortInitial,
   ...searchInitial,
   page: paginationInitial.page,
+};
+
+export const selectInitial = {
+  selectedAsset: {},
 };
 
 export const filters = (state = filtersInitial, action) => {
@@ -256,13 +259,27 @@ export const deletion = (state = deletionInitial, action) => {
   }
 };
 
+export const select = (state = selectInitial, action) => {
+  switch (action.type) {
+    case assetActions.select.SELECT_ASSET:
+      return {
+        selectedAsset: action.asset,
+      };
+    case assetActions.select.CLEAR_SELECTED_ASSET:
+      return selectInitial;
+    default:
+      return state;
+  }
+};
+
 export const metadata = combineReducers({
+  imagePreview,
+  deletion,
   filters,
   pagination,
+  search,
+  select,
   request,
   sort,
   status,
-  search,
-  deletion,
-  imagePreview,
 });
