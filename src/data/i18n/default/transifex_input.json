@@ -36,6 +36,7 @@
   "accessibilityPolicyFormValidMessage": "Enter a message.",
   "accessibilityPolicyFormValidName": "Enter a name.",
   "assetsClearFiltersButtonLabel": "Clear all filters",
+  "assetsDropZoneAriaLabel": "Upload assets",
   "assetsDropZoneBrowseLabel": "Browse your computer",
   "assetsDropZoneHeader": "Drag and Drop",
   "assetsDropZoneMaxFileSizeLabel": "Maximum file size: {maxFileSizeMB} MB",
@@ -68,6 +69,7 @@
   "assetsTableNameLabel": "Name",
   "assetsTableTypeLable": "Type",
   "assetsTableDateLabel": "Date Added",
+  "assetsTableCaption": "Assets Table",
   "assetsTableCopyLabel": "Copy URLs",
   "assetsTableDeleteLabel": "Delete Asset",
   "assetsTableLockLabel": "Lock Asset",
@@ -105,6 +107,7 @@
   "editImageModalImageNotFoundError": "Make sure the image source is correct.",
   "editImageModalFormError": "Error",
   "editImageModalImageLoadingIcon": "Loading",
+  "paginationAriaLabel": "Content pagination",
   "paginationButtonDisabled": "button is disabled",
   "paginationNext": "next",
   "paginationPrevious": "previous"

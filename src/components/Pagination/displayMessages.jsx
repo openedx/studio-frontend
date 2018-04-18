@@ -1,6 +1,11 @@
 import { defineMessages } from 'react-intl';
 
 const messages = defineMessages({
+  paginationAriaLabel: {
+    id: 'paginationAriaLabel',
+    defaultMessage: 'Content pagination',
+    description: 'Screen-reader text to label the nav region as pagination',
+  },
   paginationButtonDisabled: {
     id: 'paginationButtonDisabled',
     defaultMessage: 'button is disabled',

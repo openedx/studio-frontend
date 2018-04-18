@@ -35,53 +35,60 @@ export default class AssetsDropZone extends React.Component {
 
   render() {
     return (
-      <div>
-        <Dropzone
-          ref={this.setDropzonRef}
-          onDrop={this.onDrop}
-          className={styles['drop-zone']}
-          activeClassName={styles['drop-active']}
-          disableClick
-          maxSize={this.props.maxFileSizeMB * 1000000}
-          data-identifier="asset-drop-zone"
-        >
-          <p className={styles['upload-icon']} data-identifier="asset-drop-zone-icon">
-            <span
-              aria-hidden
-              className={classNames(FontAwesomeStyles.fa, FontAwesomeStyles['fa-cloud-upload'])}
-            />
-          </p>
-          <WrappedMessage message={messages.assetsDropZoneHeader}>
-            { displayText => (
-              <h2 data-identifier="asset-drop-zone-header">{displayText}</h2>
-            )}
-          </WrappedMessage>
-          <div className={styles['center-text']}>
-            <WrappedMessage message={messages.assetsDropZoneBrowseLabel} >
-              { displayText => (
-                <Button
-                  className={['btn', 'btn-outline-primary']}
-                  label={displayText}
-                  onClick={this.handleClick}
-                  data-identifier="asset-drop-zone-browse-button"
-                />
-              )}
-            </WrappedMessage>
-          </div>
-          <WrappedMessage
-            message={messages.assetsDropZoneMaxFileSizeLabel}
-            values={{
-              maxFileSizeMB: this.props.maxFileSizeMB,
-            }}
-          >
-            { displayText => (
-              <p data-identifier="asset-drop-zone-max-file-size-label">
-                {displayText}
-              </p>
-            )}
-          </WrappedMessage>
-        </Dropzone>
-      </div>
+      <WrappedMessage message={messages.assetsDropZoneAriaLabel}>
+        { regionLabel =>
+          (
+            <div role="region" aria-label={regionLabel}>
+              <Dropzone
+                ref={this.setDropzonRef}
+                onDrop={this.onDrop}
+                className={styles['drop-zone']}
+                activeClassName={styles['drop-active']}
+                disableClick
+                maxSize={this.props.maxFileSizeMB * 1000000}
+                data-identifier="asset-drop-zone"
+              >
+                <p className="upload-icon" data-identifier="asset-drop-zone-icon">
+                  <span
+                    aria-hidden
+                    className={classNames(FontAwesomeStyles.fa, FontAwesomeStyles['fa-cloud-upload'])}
+                  />
+                </p>
+                <WrappedMessage message={messages.assetsDropZoneHeader}>
+                  { displayText => (
+                    <h2 data-identifier="asset-drop-zone-header">{displayText}</h2>
+                  )}
+                </WrappedMessage>
+                <div className={styles['center-text']}>
+                  <WrappedMessage message={messages.assetsDropZoneBrowseLabel} >
+                    { displayText => (
+                      <Button
+                        className={['btn', 'btn-outline-primary']}
+                        label={displayText}
+                        onClick={this.handleClick}
+                        data-identifier="asset-drop-zone-browse-button"
+                        aria-describedby="asset-drop-zone-max-file-size-label"
+                      />
+                    )}
+                  </WrappedMessage>
+                </div>
+                <WrappedMessage
+                  message={messages.assetsDropZoneMaxFileSizeLabel}
+                  values={{
+                    maxFileSizeMB: this.props.maxFileSizeMB,
+                  }}
+                >
+                  { displayText => (
+                    <p aria-hidden id="asset-drop-zone-max-file-size-label" data-identifier="asset-drop-zone-max-file-size-label">
+                      {displayText}
+                    </p>
+                  )}
+                </WrappedMessage>
+              </Dropzone>
+            </div>
+          )
+        }
+      </WrappedMessage>
     );
   }
 }

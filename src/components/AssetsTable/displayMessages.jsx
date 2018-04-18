@@ -21,6 +21,11 @@ const messages = defineMessages({
     defaultMessage: 'Date Added',
     description: 'Label for column header',
   },
+  assetsTableCaption: {
+    id: 'assetsTableCaption',
+    defaultMessage: 'Assets Table',
+    description: 'Table specific caption for a high level description',
+  },
   assetsTableCopyLabel: {
     id: 'assetsTableCopyLabel',
     defaultMessage: 'Copy URLs',

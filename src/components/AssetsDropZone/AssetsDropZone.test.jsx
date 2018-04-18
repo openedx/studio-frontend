@@ -28,8 +28,8 @@ describe('<AssetsDropZone />', () => {
     it('contains file browser button', () => {
       expect(wrapper.find('button').text()).toEqual('Browse your computer');
     });
-    it('hides the icon from screen readers', () => {
-      expect(wrapper.find('[aria-hidden=true]').length).toBe(1);
+    it('hides the icon & upload file size from screen readers', () => {
+      expect(wrapper.find('[aria-hidden=true]').length).toBe(2);
     });
   });
 
