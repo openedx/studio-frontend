@@ -16,9 +16,8 @@
   color: theme-color('disabled');
 }
 
-.wrap-text {
-  overflow-wrap: break-all;
-  word-break: break-all;
+.table th span, .table td span {
+  word-wrap: break-word;
 }
 
 .table th button {
