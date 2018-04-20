@@ -91,8 +91,7 @@ export class AccessibilityPolicyForm extends React.Component {
               message={messages.accessibilityPolicyFormErrorMissingFields}
               tagName="div"
             />
-            <br />
-            <div>
+            <div className="mt-3">
               <ul className={styles['bullet-list']}>
                 {validationMessages.map((error, index) => {
                   let errorMessage = '';
