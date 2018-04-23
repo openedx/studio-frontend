@@ -1,6 +1,6 @@
 import React from 'react';
 
-import AssetsPage, { types } from './index';
+import AssetsPage, { TABLE_CONTENTS_ID, types } from './index';
 import { assetActions } from '../../data/constants//actionTypes';
 import courseDetails, { testAssetsList } from '../../utils/testConstants';
 import { shallowWithIntl } from '../../utils/i18n/enzymeHelper';
@@ -80,6 +80,14 @@ const normalAssetsPageRenderTest = () => {
     expect(body).toHaveLength(1);
     renderAssetsTableTest();
     renderPaginationTest();
+  });
+  it('renders skip link', () => {
+    const skipLink = wrapper.find(`a[href="#${TABLE_CONTENTS_ID}"]`);
+    const target = wrapper.find(`#${TABLE_CONTENTS_ID}`);
+    expect(skipLink).toHaveLength(1);
+    expect(skipLink.hasClass('sr-only-focusable')).toEqual(true);
+    expect(target).toHaveLength(1);
+    expect(target.find('Connect(AssetsTable)')).toHaveLength(1);
   });
 };
 

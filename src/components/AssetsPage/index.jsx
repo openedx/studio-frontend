@@ -22,6 +22,8 @@ export const types = {
   SKELETON: 'skeleton',
 };
 
+export const TABLE_CONTENTS_ID = 'table-contents';
+
 export default class AssetsPage extends React.Component {
   constructor(props) {
     super(props);
@@ -110,13 +112,19 @@ export default class AssetsPage extends React.Component {
   renderAssetsPage = () => (
     <React.Fragment>
       <div className="col">
+        <a
+          className="sr-only sr-only-focusable skip-link"
+          href={`#${TABLE_CONTENTS_ID}`}
+        >
+          <WrappedMessage message={messages.assetsPageSkipLink} />
+        </a>
         { this.renderAssetsDropZone() }
         <div className="page-header">
           <WrappedAssetsImagePreviewFilter />
         </div>
         { this.renderAssetsFilters() }
       </div>
-      <div className="col-10">
+      <div className="col-10" id={TABLE_CONTENTS_ID} tabIndex="-1">
         <div className="row">
           <div className="col-md-8">
             <WrappedAssetsResultsCount />
