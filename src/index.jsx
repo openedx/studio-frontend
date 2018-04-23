@@ -32,4 +32,5 @@ const App = () => (
   </IntlProvider>
 );
 
+console.log('take this eslint!')
 ReactDOM.render(<App />, document.getElementById('root'));
