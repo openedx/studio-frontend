@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, CheckBox, Icon, InputText, Modal, StatusAlert } from '@edx/paragon';
+import { Button, CheckBox, Fieldset, Icon, InputText, Modal, StatusAlert, Variant } from '@edx/paragon';
 import classNames from 'classnames';
 import FontAwesomeStyles from 'font-awesome/css/font-awesome.min.css';
 
@@ -12,7 +12,11 @@ import rewriteStaticLinks from '../../utils/rewriteStaticLinks';
 const LOADING_SPINNER_DELAY = 1000; // in milliseconds
 
 const imageDescriptionID = 'imageDescription';
+const imageDescriptionFieldsetID = 'imageDescriptionFieldset';
+const imageDimensionsFieldsetID = 'imageDimensionsFieldset';
+const imageHeightID = 'imageHeight';
 const imageSourceID = 'imageSource';
+const imageWidthID = 'imageWidth';
 
 const initialEditImageModalState = {
   areProportionsLocked: true,
@@ -24,6 +28,8 @@ const initialEditImageModalState = {
   isImageLoaded: false,
   isImageLoading: false,
   isImageValid: true,
+  isImageDescriptionValid: true,
+  isImageDimensionsValid: true,
   isStatusAlertOpen: false,
   imageSource: '',
   imageStyle: '',
@@ -179,7 +185,9 @@ export default class EditImageModal extends React.Component {
   onInsertImageButtonClick = () => {
     const isValidImageSource = this.validateImageSource();
     const isValidImageDescription = this.validateImageDescription();
-    const isValidFormContent = isValidImageSource.isValid && isValidImageDescription.isValid;
+    const isValidImageDimensions = this.validateImageDimensions();
+    const isValidFormContent = isValidImageSource.isValid && isValidImageDescription.isValid &&
+      isValidImageDimensions.isValid;
 
     const currentValidationMessages = {};
 
@@ -191,8 +199,15 @@ export default class EditImageModal extends React.Component {
       currentValidationMessages[imageDescriptionID] = isValidImageDescription.validationMessage;
     }
 
+    if (!isValidImageDimensions.isValid) {
+      currentValidationMessages[imageWidthID] = isValidImageDimensions.validationMessage;
+    }
+
     this.setState({
       isStatusAlertOpen: !isValidFormContent,
+      isImageValid: isValidImageSource.isValid,
+      isImageDescriptionValid: isValidImageDescription.isValid,
+      isImageDimensionsValid: isValidImageDimensions.isValid,
       currentValidationMessages,
     });
 
@@ -290,8 +305,16 @@ export default class EditImageModal extends React.Component {
   );
 
   getImageDescriptionInput = () => (
-    <fieldset className="border p-3">
-      <legend><WrappedMessage message={messages.editImageModalImageDescriptionLegend} /></legend>
+    <Fieldset
+      legend={<WrappedMessage message={messages.editImageModalImageDescriptionLegend} />}
+      id={imageDescriptionFieldsetID}
+      invalidMessage={<WrappedMessage message={messages.editImageModalFormValidImageDescription} />}
+      isValid={this.state.isImageDescriptionValid}
+      variant={{
+        status: Variant.status.DANGER,
+      }}
+      variantIconDescription={<WrappedMessage message={messages.editImageModalFormError} />}
+    >
       <InputText
         name="imageDescription"
         label={
@@ -324,7 +347,7 @@ export default class EditImageModal extends React.Component {
         checked={this.state.isImageDecorative}
         onChange={this.onImageIsDecorativeClick}
       />
-    </fieldset>
+    </Fieldset>
   );
 
   getLearnMoreLink = () => (
@@ -360,8 +383,16 @@ export default class EditImageModal extends React.Component {
   );
 
   getImageDimensionsInput = () => (
-    <fieldset className="border p-3">
-      <legend><WrappedMessage message={messages.editImageModalDimensionsLegend} /></legend>
+    <Fieldset
+      legend={<WrappedMessage message={messages.editImageModalDimensionsLegend} />}
+      id={imageDimensionsFieldsetID}
+      invalidMessage={<WrappedMessage message={messages.editImageModalFormValidImageDimensions} />}
+      isValid={this.state.isImageDimensionsValid}
+      variant={{
+        status: Variant.status.DANGER,
+      }}
+      variantIconDescription={<WrappedMessage message={messages.editImageModalFormError} />}
+    >
       <div className="form-row">
         <div className="col">
           <InputText
@@ -371,7 +402,7 @@ export default class EditImageModal extends React.Component {
                 message={messages.editImageModalImageWidthLabel}
               />
             }
-            id="imageWidth"
+            id={imageWidthID}
             type="number"
             value={'width' in this.state.imageDimensions ? this.state.imageDimensions.width : ''}
             onChange={this.onImageDimensionChange('width')}
@@ -382,7 +413,7 @@ export default class EditImageModal extends React.Component {
         </div>
         <div className="col">
           <InputText
-            name="imageHeight"
+            name={imageHeightID}
             label={
               <WrappedMessage
                 message={messages.editImageModalImageHeightLabel}
@@ -406,7 +437,7 @@ export default class EditImageModal extends React.Component {
         checked={this.state.areProportionsLocked}
         onChange={this.onConstrainProportionsClick}
       />
-    </fieldset>
+    </Fieldset>
   );
 
   getImageAssetSource = () => (
@@ -544,6 +575,33 @@ export default class EditImageModal extends React.Component {
         validationMessage:
           (<WrappedMessage
             message={messages.editImageModalFormValidImageDescription}
+          />),
+        dangerIconDescription: <WrappedMessage message={messages.editImageModalFormError} />,
+      };
+    }
+    return feedback;
+  }
+
+  isPositiveIntegerOrEmpty = (val) => {
+    if (val === '' || val === undefined) {
+      return true;
+    }
+    if (Number.isInteger(val) && val > 0) {
+      return true;
+    }
+    return false;
+  }
+
+  validateImageDimensions = () => {
+    let feedback = { isValid: true };
+    const { height, width } = this.state.imageDimensions;
+
+    if (!this.isPositiveIntegerOrEmpty(height) || !this.isPositiveIntegerOrEmpty(width)) {
+      feedback = {
+        isValid: false,
+        validationMessage:
+          (<WrappedMessage
+            message={messages.editImageModalFormValidImageDimensions}
           />),
         dangerIconDescription: <WrappedMessage message={messages.editImageModalFormError} />,
       };

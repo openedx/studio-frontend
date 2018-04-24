@@ -487,6 +487,25 @@ describe('EditImageModal', () => {
       resetWrapper();
     });
 
+    it('this.state.currentValidationMessages has correct validation message when invalid image dimensions submitted', () => {
+      wrapper.setState({
+        imageSource: sampleText,
+        imageDescription: sampleText,
+        imageDimensions: {
+          height: -100,
+          width: -100,
+        },
+      });
+
+      insertImageButton.simulate('click');
+
+      expect(wrapper.state('currentValidationMessages').imageWidth.props.message).toEqual(messages.editImageModalFormValidImageDimensions);
+      expect(wrapper.state('currentValidationMessages')).not.toHaveProperty('imageSource');
+      expect(wrapper.state('currentValidationMessages')).not.toHaveProperty('imageDescription');
+
+      resetWrapper();
+    });
+
     it('this.state.currentValidationMessages is empty when valid form submitted', () => {
       wrapper.setState({
         imageSource: sampleText,
@@ -502,6 +521,13 @@ describe('EditImageModal', () => {
     });
 
     it('status alert has correct validation messages when invalid form submitted', () => {
+      wrapper.setState({
+        imageDimensions: {
+          height: -100,
+          width: -100,
+        },
+      });
+
       insertImageButton.simulate('click');
 
       const statusAlert = wrapper.find(StatusAlert);
@@ -509,24 +535,33 @@ describe('EditImageModal', () => {
       expect(statusAlert.find(WrappedMessage).first().prop('message')).toEqual(messages.editImageModalFormErrorMissingFields);
 
       const statusAlertListBullets = statusAlert.find('div ul.bullet-list').find(WrappedMessage);
-      expect(statusAlertListBullets).toHaveLength(2);
+      expect(statusAlertListBullets).toHaveLength(3);
 
       expect(statusAlert.find('div ul.bullet-list').find(WrappedMessage).first().prop('message')).toEqual(messages.editImageModalFormValidImageSource);
       expect(statusAlert.find('div ul.bullet-list').find(WrappedMessage).at(1).prop('message')).toEqual(messages.editImageModalFormValidImageDescription);
+      expect(statusAlert.find('div ul.bullet-list').find(WrappedMessage).at(2).prop('message')).toEqual(messages.editImageModalFormValidImageDimensions);
 
       resetWrapper();
     });
 
     it('validation messages are hyperlinks that navigate to appropriate form elements', () => {
+      wrapper.setState({
+        imageDimensions: {
+          height: -100,
+          width: -100,
+        },
+      });
+
       insertImageButton.simulate('click');
 
       const statusAlert = wrapper.find(StatusAlert);
 
       const statusAlertListItems = statusAlert.find('div ul.bullet-list li a');
-      expect(statusAlertListItems).toHaveLength(2);
+      expect(statusAlertListItems).toHaveLength(3);
 
       expect(statusAlertListItems.first().prop('href')).toEqual('#imageSource');
       expect(statusAlertListItems.at(1).prop('href')).toEqual('#imageDescription');
+      expect(statusAlertListItems.at(2).prop('href')).toEqual('#imageWidth');
 
       resetWrapper();
     });
@@ -574,6 +609,49 @@ describe('EditImageModal', () => {
       closeStatusAlertButton.simulate('click');
 
       expect(document.activeElement).toEqual(wrapper.instance().imageSourceInputRef);
+
+      resetWrapper();
+    });
+  });
+
+  describe('Validation Messages', () => {
+    it('isValid states for each field is false if invalid form data submitted', () => {
+      wrapper.setState({
+        imageDimensions: {
+          height: -100,
+          width: -100,
+        },
+      });
+
+      insertImageButton.simulate('click');
+
+      expect(wrapper.state('isImageValid')).toEqual(false);
+      expect(wrapper.state('isImageDescriptionValid')).toEqual(false);
+      expect(wrapper.state('isImageDimensionsValid')).toEqual(false);
+      resetWrapper();
+    });
+
+    it('input and fieldsets show validation messages if invalid form data submitted', () => {
+      wrapper.setState({
+        imageDimensions: {
+          height: -100,
+          width: -100,
+        },
+      });
+
+      insertImageButton.simulate('click');
+
+      const imageSourceValidation = wrapper.find('#error-imageSource').find(WrappedMessage);
+      expect(imageSourceValidation).toHaveLength(2); // first is the danger icon description
+      expect(imageSourceValidation.at(1).prop('message')).toEqual(messages.editImageModalImageNotFoundError);
+
+      const imageDescriptionValidation = wrapper.find('#error-imageDescriptionFieldset').find(WrappedMessage);
+      expect(imageDescriptionValidation).toHaveLength(2);
+      expect(imageDescriptionValidation.at(1).prop('message')).toEqual(messages.editImageModalFormValidImageDescription);
+
+      const imageDimensionsValidation = wrapper.find('#error-imageDimensionsFieldset').find(WrappedMessage);
+      expect(imageDimensionsValidation).toHaveLength(2);
+      expect(imageDimensionsValidation.at(1).prop('message')).toEqual(messages.editImageModalFormValidImageDimensions);
 
       resetWrapper();
     });
