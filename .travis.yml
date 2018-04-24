@@ -30,7 +30,7 @@ jobs:
     - stage: Ship It 🚢
       env:
         - NAME=Publish
-      script: rm -rf dist/ && rm -rf node_modules/ && npm install && npm run build && semantic-release
+      script: semantic-release
 
 notifications:
   webhooks: https://www.travisbuddy.com/
