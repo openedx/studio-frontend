@@ -14,7 +14,7 @@ cache:
 stages:
   - PR checks ✅
   - name: Ship It 🚢
-    if: env(TRAVIS_BRANCH) = master
+    if: branch=master AND type=push
 jobs:
   include:
     - stage: PR checks ✅
