@@ -1,17 +1,36 @@
 language: node_js
-
 node_js:
   - 8.9.4
 
+branches:
+  only:
+    - master
+    - /v\d+\.\d+\.d+$/
+
 cache:
-  directory:
-    - studio-frontend/node_modules/
+  directories:
+    - "node_modules"
 
-script:
-  - make package-lock.validate
-  - make i18n.pre_validate
-  - npm run lint
-  - npm run test
+stages:
+  - PR checks ✅
+  - name: Ship It 🚢
+    if: env(TRAVIS_BRANCH) = master
+jobs:
+  include:
+    - stage: PR checks ✅
+      env:
+        - NAME=Unit Tests
+      script: npm run test
+      after_script:
+        - codecov
+    - stage: PR checks ✅
+      env:
+        - NAME=Validation Checks
+      script: ./.travis/validate_changes_for_merge.sh
+    - stage: Ship It 🚢
+      env:
+        - NAME=Publish
+      script: rm -rf dist/ && rm -rf node_modules/ && npm install && npm run build && semantic-release
 
-after_script:
-  - codecov
+notifications:
+  webhooks: https://www.travisbuddy.com/
