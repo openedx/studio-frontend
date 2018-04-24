@@ -21,6 +21,11 @@ const messages = defineMessages({
     defaultMessage: 'Enhance your course content by uploading files such as images and documents.',
     description: 'Message displayed when a course has no files to display in the table.',
   },
+  assetsPageSkipLink: {
+    id: 'assetsPageSkipLink',
+    defaultMessage: 'Skip to table contents',
+    description: 'Link text for a link that will skip user focus over table filters to table contents.',
+  },
 });
 
 export default messages;
