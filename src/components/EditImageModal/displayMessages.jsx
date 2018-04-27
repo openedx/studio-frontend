@@ -16,6 +16,11 @@ const messages = defineMessages({
     defaultMessage: 'Add an image description or specify that the image is decorative only.',
     description: 'Error message for when an invalid image description is entered into the form',
   },
+  editImageModalFormValidImageDimensions: {
+    id: 'editImageModalFormValidImageDimensions',
+    defaultMessage: 'Image dimensions must be positive numbers.',
+    description: 'Error message displayed when invalid image dimension values are entered into a form',
+  },
   editImageModalFormValidImageSource: {
     id: 'editImageModalFormValidImageSource',
     defaultMessage: 'Make sure the image source is correct.',

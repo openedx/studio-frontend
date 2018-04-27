@@ -92,6 +92,7 @@
   "editImageModalFormError": "Error",
   "editImageModalFormErrorMissingFields": "Make sure to fill in all fields.",
   "editImageModalFormValidImageDescription": "Add an image description or specify that the image is decorative only.",
+  "editImageModalFormValidImageDimensions": "Image dimensions must be positive numbers.",
   "editImageModalFormValidImageSource": "Make sure the image source is correct.",
   "editImageModalImageDescriptionDescription": "Alternative text for users who cannot view the image, such as \"The sky with clouds\".",
   "editImageModalImageDescriptionLabel": "Image Description (Alt Text)",

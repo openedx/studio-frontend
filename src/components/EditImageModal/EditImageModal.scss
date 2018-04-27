@@ -17,7 +17,7 @@
   &.show { opacity: 1; }
 }
 
-  // Remove negative margins in Bootstrap v4.0.0 so the body does not extend outside the modal
+// Remove negative margins in Bootstrap v4.0.0 so the body does not extend outside the modal
 .modal-body .row {
   margin: 0;
 }
@@ -26,13 +26,21 @@
   max-width: $modal-lg;
 }
 
-fieldset legend {
-  width: inherit;
+// --- Copied from: https://github.com/edx/paragon/blob/master/src/Fieldset/Fieldset.scss
+.paragon-fieldset {
+  @extend .mb-4;
+
+  fieldset legend {
+    width: auto;
+    margin-bottom: 0;
+  }
 }
 
-fieldset {
-  @extend .mb-4;
+.form-control.is-invalid.is-invalid-nodanger {
+  @include form-control-focus();
+  border-color: $input-border-color;
 }
+// ---
 
 .image-preview-container {
   position: relative;
