@@ -126,21 +126,14 @@ body {
 
 p, dl, multicol {
   display: block;
-  margin-block-start: 1em;
-  margin-block-end: 1em;
 }
 
 dd {
   display: block;
-  margin-inline-start: 40px;
 }
 
 blockquote, figure {
   display: block;
-  margin-block-start: 1em;
-  margin-block-end: 1em;
-  margin-inline-start: 40px;
-  margin-inline-end: 40px;
 }
 
 address {
@@ -155,10 +148,6 @@ center {
 
 blockquote[type=cite] {
   display: block;
-  margin-block-start: 1em;
-  margin-block-end: 1em;
-  margin-inline-start: 0;
-  margin-inline-end: 0;
   padding-inline-start: 1em;
   border-inline-start: solid;
   border-color: blue;
@@ -177,8 +166,6 @@ h1 {
   display: block;
   font-size: 2em;
   font-weight: bold;
-  margin-block-start: .67em;
-  margin-block-end: .67em;
 }
 
 h2,
@@ -187,8 +174,6 @@ h1 {
   display: block;
   font-size: 1.5em;
   font-weight: bold;
-  margin-block-start: .83em;
-  margin-block-end: .83em;
 }
 
 h3,
@@ -198,8 +183,6 @@ h1 {
   display: block;
   font-size: 1.17em;
   font-weight: bold;
-  margin-block-start: 1em;
-  margin-block-end: 1em;
 }
 
 h4,
@@ -210,8 +193,6 @@ h1 {
   display: block;
   font-size: 1.00em;
   font-weight: bold;
-  margin-block-start: 1.33em;
-  margin-block-end: 1.33em;
 }
 
 h5,
@@ -223,8 +204,6 @@ h1 {
   display: block;
   font-size: 0.83em;
   font-weight: bold;
-  margin-block-start: 1.67em;
-  margin-block-end: 1.67em;
 }
 
 h6,
@@ -237,8 +216,6 @@ h1 {
   display: block;
   font-size: 0.67em;
   font-weight: bold;
-  margin-block-start: 2.33em;
-  margin-block-end: 2.33em;
 }
 
 listing {
@@ -246,16 +223,12 @@ listing {
   font-family: fixed;
   font-size: medium;
   white-space: pre;
-  margin-block-start: 1em;
-  margin-block-end: 1em;
 }
 
 xmp, pre, plaintext {
   display: block;
   font-family: fixed;
   white-space: pre;
-  margin-block-start: 1em;
-  margin-block-end: 1em;
 }
 
 /* tables */
@@ -416,25 +389,6 @@ caption {
   text-align: center;
 }
 
-table[align="center"] > caption {
-  margin-inline-start: auto;
-  margin-inline-end: auto;
-}
-
-table[align="center"] > caption[align="left"]:dir(ltr) {
-  margin-inline-end: 0;
-}
-table[align="center"] > caption[align="left"]:dir(rtl) {
-  margin-inline-start: 0;
-}
-
-table[align="center"] > caption[align="right"]:dir(ltr) {
-  margin-inline-start: 0;
-}
-table[align="center"] > caption[align="right"]:dir(rtl) {
-  margin-inline-end: 0;
-}
-
 tr {
   display: table-row;
   vertical-align: inherit;
@@ -572,8 +526,6 @@ abbr[title], acronym[title] {
 ul, menu, dir {
   display: block;
   list-style-type: disc;
-  margin-block-start: 1em;
-  margin-block-end: 1em;
   padding-inline-start: 40px;
 }
 
@@ -584,24 +536,12 @@ menu[type="context"] {
 ol {
   display: block;
   list-style-type: decimal;
-  margin-block-start: 1em;
-  margin-block-end: 1em;
   padding-inline-start: 40px;
 }
 
 li {
   display: list-item;
   text-align: match-parent;
-}
-
-/* nested lists have no top/bottom margins */
-:matches(ul, ol, dir, menu, dl) ul,
-:matches(ul, ol, dir, menu, dl) ol,
-:matches(ul, ol, dir, menu, dl) dir,
-:matches(ul, ol, dir, menu, dl) menu,
-:matches(ul, ol, dir, menu, dl) dl {
-  margin-block-start: 0;
-  margin-block-end: 0;
 }
 
 /* 2 deep unordered lists use a circle */
@@ -627,10 +567,6 @@ li {
 hr {
   display: block;
   border: 1px inset;
-  margin-block-start: 0.5em;
-  margin-block-end: 0.5em;
-  margin-inline-start: auto;
-  margin-inline-end: auto;
   color: gray;
   float-edge: margin-box;
   box-sizing: content-box;
@@ -1432,8 +1368,6 @@ legend {
 
 fieldset {
   display: block;
-  margin-inline-start: 2px;
-  margin-inline-end: 2px;
   padding-block-start: 0.35em;
   padding-block-end: 0.75em;
   padding-inline-start: 0.625em;
@@ -1482,8 +1416,6 @@ input::placeholder {
 }
 
 textarea {
-  margin-block-start: 1px;
-  margin-block-end: 1px;
   border: 2px inset ThreeDLightShadow;
   /* The 1px inline padding is for parity with Win/IE */
   padding-inline-start: 1px;
@@ -1866,8 +1798,6 @@ input[type="color"]::color-swatch {
   height: 100%;
   min-width: 3px;
   min-height: 3px;
-  margin-inline-start: auto;
-  margin-inline-end: auto;
   box-sizing: border-box;
   border: 1px solid grey;
   display: block;
@@ -1885,21 +1815,12 @@ input[type="file"]:dir(rtl) > xul|label {
 input[type="radio"] {
   display: inline-block;
   appearance: radio;
-  margin-block-start: 3px;
-  margin-block-end: 0px;
-  margin-inline-start: 5px;
-  margin-inline-end: 3px;
 }
 
 /* check boxes */
 input[type="checkbox"] {
   display: inline-block;
   appearance: checkbox;
-  /* thallada: this was breaking the checkbox styling in Bootstrap v4.0.0 */
-  /* margin-block-start: 3px; */
-  /* margin-block-end: 3px; */
-  /* margin-inline-start: 4px; */
-  /* margin-inline-end: 3px; */
 }
 
 /* common features of radio buttons and check boxes */
@@ -2227,10 +2148,6 @@ input[type=range] {
   display: inline-block;
   inline-size: 12em;
   block-size: 1.3em;
-  margin-inline-start: 0.7em;
-  margin-inline-end: 0.7em;
-  margin-block-start: 0;
-  margin-block-end: 0;
   /* Override some rules that apply on all input types: */
   cursor: default;
   background: none;
@@ -2243,10 +2160,6 @@ input[type=range] {
 input[type=range][orient=block] {
   inline-size: 1.3em;
   block-size: 12em;
-  margin-inline-start: 0;
-  margin-inline-end: 0;
-  margin-block-start: 0.7em;
-  margin-block-end: 0.7em;
 }
 
 input[type=range][orient=horizontal] {
