@@ -1,0 +1,6 @@
+.skip-link {
+  &.sr-only-focusable:focus {
+    position: absolute;
+    top: -2em;
+  }
+}

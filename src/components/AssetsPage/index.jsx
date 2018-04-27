@@ -1,3 +1,4 @@
+import classNames from 'classnames';
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -14,6 +15,7 @@ import WrappedAssetsResultsCount from '../AssetsResultsCount/container';
 import WrappedAssetsClearFiltersButton from '../AssetsClearFiltersButton/container';
 import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
 import messages from './displayMessages';
+import styles from './AssetsPage.scss';
 
 export const types = {
   NO_ASSETS: 'noAssets',
@@ -111,42 +113,46 @@ export default class AssetsPage extends React.Component {
 
   renderAssetsPage = () => (
     <React.Fragment>
-      <div className="col">
-        <a
-          className="sr-only sr-only-focusable skip-link"
-          href={`#${TABLE_CONTENTS_ID}`}
-        >
-          <WrappedMessage message={messages.assetsPageSkipLink} />
-        </a>
-        { this.renderAssetsDropZone() }
-        <div className="page-header">
-          <WrappedAssetsImagePreviewFilter />
+      <div className="row">
+        <div className="col-10 offset-2">
+          <div className="row">
+            <div className="col-md-8">
+              <WrappedAssetsResultsCount />
+            </div>
+            <div className="col-md-4 text-right">
+              {hasSearchOrFilterApplied(this.props.filtersMetadata.assetTypes,
+                this.props.searchMetadata.search) &&
+                <WrappedAssetsClearFiltersButton />
+              }
+            </div>
+          </div>
         </div>
-        { this.renderAssetsFilters() }
       </div>
-      <div className="col-10" id={TABLE_CONTENTS_ID} tabIndex="-1">
-        <div className="row">
-          <div className="col-md-8">
-            <WrappedAssetsResultsCount />
+      <div className="row">
+        <div className="col">
+          <a
+            className={classNames('sr-only', 'sr-only-focusable', styles['skip-link'])}
+            href={`#${TABLE_CONTENTS_ID}`}
+          >
+            <WrappedMessage message={messages.assetsPageSkipLink} />
+          </a>
+          { this.renderAssetsDropZone() }
+          <div className="page-header">
+            <WrappedAssetsImagePreviewFilter />
           </div>
-          <div className="col-md-4 text-right">
-            {hasSearchOrFilterApplied(this.props.filtersMetadata.assetTypes,
-              this.props.searchMetadata.search) &&
-              <WrappedAssetsClearFiltersButton />
-            }
-          </div>
+          { this.renderAssetsFilters() }
         </div>
-        <div className="row">
-          <div className="col">
+        <div className="col-10" id={TABLE_CONTENTS_ID} tabIndex="-1">
+          <div className="row">
             <WrappedAssetsTable
               deleteButtonRefs={(button, asset) => { this.deleteButtonRefs[asset.id] = button; }}
             />
           </div>
         </div>
-        <div className="row">
-          <div className="col">
-            <WrappedPagination />
-          </div>
+      </div>
+      <div className="row">
+        <div className="col-10 offset-2">
+          <WrappedPagination />
         </div>
       </div>
     </React.Fragment>
@@ -160,14 +166,14 @@ export default class AssetsPage extends React.Component {
   );
 
   renderNoAssetsPage = () => (
-    <React.Fragment>
+    <div className="row">
       <div className="col">
         { this.renderAssetsDropZone() }
       </div>
       <div className="col-10">
         { this.renderNoAssetsBody() }
       </div>
-    </React.Fragment>
+    </div>
   );
 
   renderNoResultsBody = () => (
@@ -179,7 +185,7 @@ export default class AssetsPage extends React.Component {
   );
 
   renderNoResultsPage = () => (
-    <React.Fragment>
+    <div className="row">
       <div className="col">
         { this.renderAssetsDropZone() }
         { this.renderAssetsFilters() }
@@ -187,13 +193,15 @@ export default class AssetsPage extends React.Component {
       <div className="col-10">
         { this.renderNoResultsBody() }
       </div>
-    </React.Fragment>
+    </div>
   );
 
   renderSkeletonPage = () => (
-    <div className="col-2">
-      { this.renderAssetsDropZone() }
-      { this.renderAssetsFilters() }
+    <div className="row">
+      <div className="col-2">
+        { this.renderAssetsDropZone() }
+        { this.renderAssetsFilters() }
+      </div>
     </div>
   );
 
@@ -217,9 +225,7 @@ export default class AssetsPage extends React.Component {
               }
             </div>
           </div>
-          <div className="row">
-            { this.getPage(this.state.pageType) }
-          </div>
+          { this.getPage(this.state.pageType) }
         </div>
       </React.Fragment>
     );
