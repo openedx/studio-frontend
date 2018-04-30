@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { assetActions } from '../../data/constants/actionTypes';
+import { getPageType, pageTypes } from '../../utils/getAssetsPageType';
 import { hasSearchOrFilterApplied } from '../../utils/getAssetsFilters';
 import WrappedAssetsDropZone from '../AssetsDropZone/container';
 import WrappedAssetsTable from '../AssetsTable/container';
@@ -15,13 +15,6 @@ import WrappedAssetsClearFiltersButton from '../AssetsClearFiltersButton/contain
 import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
 import messages from './displayMessages';
 
-export const types = {
-  NO_ASSETS: 'noAssets',
-  NO_RESULTS: 'noResults',
-  NORMAL: 'normal',
-  SKELETON: 'skeleton',
-};
-
 export const TABLE_CONTENTS_ID = 'table-contents';
 
 export default class AssetsPage extends React.Component {
@@ -29,7 +22,7 @@ export default class AssetsPage extends React.Component {
     super(props);
 
     this.state = {
-      pageType: types.SKELETON,
+      pageType: pageTypes.SKELETON,
     };
 
     this.statusAlertRef = null;
@@ -46,9 +39,9 @@ export default class AssetsPage extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({
-      pageType: this.getPageType(nextProps),
-    });
+    this.setState(state => ({
+      pageType: getPageType(nextProps, state.pageType),
+    }));
   }
 
   onDeleteStatusAlertClose = () => {
@@ -69,30 +62,15 @@ export default class AssetsPage extends React.Component {
     return this.deleteButtonRefs[focusAsset.id];
   }
 
-  getPageType = (props) => {
-    const numberOfAssets = props.assetsList.length;
-    const filters = props.filtersMetadata.assetTypes;
-    const search = props.searchMetadata.search;
-
-    if ('type' in props.status && props.status.type === assetActions.request.REQUESTING_ASSETS) {
-      return this.state.pageType;
-    } else if (numberOfAssets > 0) {
-      return types.NORMAL;
-    } else if (numberOfAssets === 0 && hasSearchOrFilterApplied(filters, search)) {
-      return types.NO_RESULTS;
-    }
-    return types.NO_ASSETS;
-  }
-
   getPage = (type) => {
     switch (type) {
-      case types.NORMAL:
+      case pageTypes.NORMAL:
         return this.renderAssetsPage();
-      case types.NO_ASSETS:
+      case pageTypes.NO_ASSETS:
         return this.renderNoAssetsPage();
-      case types.NO_RESULTS:
+      case pageTypes.NO_RESULTS:
         return this.renderNoResultsPage();
-      case types.SKELETON:
+      case pageTypes.SKELETON:
         return this.renderSkeletonPage();
       default:
         throw new Error(`Unknown pageType ${type}.`);
@@ -153,10 +131,7 @@ export default class AssetsPage extends React.Component {
   );
 
   renderNoAssetsBody = () => (
-    <React.Fragment>
-      <WrappedMessage message={messages.assetsPageNoAssetsNumFiles} tagName="h3" />
-      <WrappedMessage message={messages.assetsPageNoAssetsMessage} tagName="h4" />
-    </React.Fragment>
+    <WrappedMessage message={messages.assetsPageNoAssetsMessage} tagName="h3" />
   );
 
   renderNoAssetsPage = () => (
@@ -172,8 +147,7 @@ export default class AssetsPage extends React.Component {
 
   renderNoResultsBody = () => (
     <React.Fragment>
-      <WrappedMessage message={messages.assetsPageNoResultsCountFiles} tagName="h3" />
-      <WrappedMessage message={messages.assetsPageNoResultsMessage} tagName="h4" />
+      <WrappedMessage message={messages.assetsPageNoResultsMessage} tagName="h3" />
       <WrappedAssetsClearFiltersButton />
     </React.Fragment>
   );
@@ -210,13 +184,14 @@ export default class AssetsPage extends React.Component {
               />
             </div>
           </div>
-          <div className="row">
-            <div className="col-12">
-              {this.state.pageType === types.NORMAL &&
+          {(this.state.pageType === pageTypes.NORMAL ||
+            this.state.pageType === pageTypes.NO_RESULTS) && (
+            <div className="row">
+              <div className="col-12">
                 <WrappedAssetsSearch />
-              }
+              </div>
             </div>
-          </div>
+          )}
           <div className="row">
             { this.getPage(this.state.pageType) }
           </div>

@@ -1,6 +1,21 @@
 import { defineMessages } from 'react-intl';
 
 const messages = defineMessages({
+  editImageModalAssetsListLoadingSpinner: {
+    id: 'editImageModalAssetsListLoadingSpinner',
+    defaultMessage: 'Loading spinner',
+    description: 'Description of a loading spinner image shown when files are loading.',
+  },
+  editImageModalAssetsListNoAssetsMessage: {
+    id: 'editImageModalAssetsListNoAssetsMessage',
+    defaultMessage: '0 images uploaded',
+    description: 'Message displayed when a course has no images to display in the list.',
+  },
+  editImageModalAssetsListNoResultsMessage: {
+    id: 'editImageModalAssetsListNoResultsMessage',
+    defaultMessage: '0 images found',
+    description: 'Message displayed in table when no image results are found.',
+  },
   editImageModalFormError: {
     id: 'editImageModalFormError',
     defaultMessage: 'Error',
@@ -118,8 +133,8 @@ const messages = defineMessages({
   },
   editImageModalImageLoadingIcon: {
     id: 'editImageModalImageLoadingIcon',
-    defaultMessage: 'Loading',
-    description: 'Screenreader-only text describing a loading spinner indicating that an image is loading',
+    defaultMessage: 'Loading...',
+    description: 'Text displayed with a loading spinner icon indicating that an image is loading',
   },
   editImageModalNextPageButton: {
     id: 'editImageModalNextPageButton',

@@ -1,7 +1,6 @@
 import classNames from 'classnames';
-import React from 'react';
 import PropTypes from 'prop-types';
-
+import React from 'react';
 
 import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
 import messages from './displayMessages';
@@ -27,8 +26,8 @@ export default class AssetsList extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     // if page has changed, reset the index of the selected index
-    if (this.props.assetsListMetadata.page !== nextProps.assetsListMetadata.page) {
-      if (nextProps.assetsListMetadata.page === this.state.selectedAssetPage) {
+    if (this.props.paginationMetadata.page !== nextProps.paginationMetadata.page) {
+      if (nextProps.paginationMetadata.page === this.state.selectedAssetPage) {
         this.setState({
           selectedAssetIndex: this.getSelectedAssetIndex(nextProps.assetsList,
             nextProps.selectedAsset),
@@ -55,7 +54,7 @@ export default class AssetsList extends React.Component {
   onAssetClick = (asset, index) => {
     this.setState({
       selectedAssetIndex: index,
-      selectedAssetPage: this.props.assetsListMetadata.page,
+      selectedAssetPage: this.props.paginationMetadata.page,
     });
 
     this.props.selectAsset(asset);
@@ -65,9 +64,8 @@ export default class AssetsList extends React.Component {
     // if no list item is selected, select first item on  listbox focus
     if (this.state.selectedAssetIndex === -1) {
       this.setState(
-        {
-          selectedAssetIndex: 0,
-          selectedAssetPage: this.props.assetsListMetadata.page,
+        { selectedAssetIndex: 0,
+          selectedAssetPage: this.props.paginationMetadata.page,
         },
         () => { this.props.selectAsset(this.props.assetsList[this.state.selectedAssetIndex]); },
       );
@@ -142,11 +140,11 @@ export default class AssetsList extends React.Component {
         // prevent scrolling entire modal body with arrow keys
         e.preventDefault();
 
-        if (this.state.selectedAssetIndex < this.props.assetsListMetadata.pageSize - 1) {
+        if (this.state.selectedAssetIndex < this.props.paginationMetadata.pageSize - 1) {
           this.setState(
             (state, props) => ({
               selectedAssetIndex: this.state.selectedAssetIndex + 1,
-              selectedAssetPage: props.assetsListMetadata.page,
+              selectedAssetPage: props.paginationMetadata.page,
             }),
             () => { this.props.selectAsset(this.props.assetsList[this.state.selectedAssetIndex]); },
           );
@@ -161,7 +159,7 @@ export default class AssetsList extends React.Component {
           this.setState(
             (state, props) => ({
               selectedAssetIndex: this.state.selectedAssetIndex - 1,
-              selectedAssetPage: props.assetsListMetadata.page,
+              selectedAssetPage: props.paginationMetadata.page,
             }),
             () => { this.props.selectAsset(this.props.assetsList[this.state.selectedAssetIndex]); },
           );
@@ -196,13 +194,6 @@ export default class AssetsList extends React.Component {
 
 AssetsList.propTypes = {
   assetsList: PropTypes.arrayOf(PropTypes.object).isRequired,
-  assetsListMetadata: PropTypes.shape({
-    start: PropTypes.number,
-    end: PropTypes.number,
-    page: PropTypes.number,
-    pageSize: PropTypes.number,
-    totalCount: PropTypes.number,
-  }).isRequired,
   courseDetails: PropTypes.shape({
     lang: PropTypes.string,
     url_name: PropTypes.string,
@@ -213,6 +204,13 @@ AssetsList.propTypes = {
     id: PropTypes.string,
     revision: PropTypes.string,
     base_url: PropTypes.string,
+  }).isRequired,
+  paginationMetadata: PropTypes.shape({
+    start: PropTypes.number,
+    end: PropTypes.number,
+    page: PropTypes.number,
+    pageSize: PropTypes.number,
+    totalCount: PropTypes.number,
   }).isRequired,
   selectAsset: PropTypes.func.isRequired,
   selectedAsset: PropTypes.shape({

@@ -1,18 +1,36 @@
 import { Button, CheckBox, Fieldset, Icon, InputText, Modal, StatusAlert, Variant } from '@edx/paragon';
 import classNames from 'classnames';
-import 'font-awesome/css/font-awesome.min.css';
+import { connect } from 'react-redux';
+import FontAwesomeStyles from 'font-awesome/css/font-awesome.min.css';
 import PropTypes from 'prop-types';
 import React from 'react';
 
 import { assetActions } from '../../data/constants/actionTypes';
+import AssetsResultsCount from '../AssetsResultsCount/index';
+import { getPageType, pageTypes } from '../../utils/getAssetsPageType';
 import messages from './displayMessages';
 import rewriteStaticLinks from '../../utils/rewriteStaticLinks';
 import styles from './EditImageModal.scss';
-import WrappedAssetsList from '../AssetsList/container';
+import WrappedAssetsClearSearchButton from '../AssetsClearSearchButton/container';
 import WrappedAssetsDropZone from '../AssetsDropZone/container';
+import WrappedAssetsList from '../AssetsList/container';
+import WrappedAssetsSearch from '../AssetsSearch/container';
 import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
 import WrappedPagination from '../Pagination/container';
 
+
+// Create an AssetsResultsCount that is not aware of the Images filter.
+// This is so that the message will initially say "out of N total files" instead of "out of N
+// possible matches".
+const WrappedAssetsResultsCount = connect((state) => {
+  const { Images, ...typesWithoutImages } = state.metadata.filters.assetTypes;
+  const filtersWithoutImages = { ...state.metadata.filters, assetTypes: typesWithoutImages };
+  return {
+    filtersMetadata: filtersWithoutImages,
+    paginationMetadata: state.metadata.pagination,
+    searchMetadata: state.metadata.search,
+  };
+})(AssetsResultsCount);
 
 const imageDescriptionID = 'imageDescription';
 const imageDescriptionFieldsetID = 'imageDescriptionFieldset';
@@ -22,6 +40,7 @@ const imageWidthID = 'imageWidth';
 
 const initialEditImageModalState = {
   areProportionsLocked: true,
+  assetsPageType: pageTypes.SKELETON,
   baseAssetURL: '',
   displayLoadingSpinner: false,
   imageDescription: '',
@@ -78,25 +97,26 @@ export default class EditImageModal extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    const newState = {};
     switch (this.props.assetsStatus.type) {
       case assetActions.upload.UPLOAD_ASSET_SUCCESS: {
         const uploadedAsset = this.props.assetsStatus.response.asset;
         this.props.selectAsset(uploadedAsset, 0);
-        this.setState({
-          pageNumber: 2,
-          imageSource: uploadedAsset.portable_url,
-        });
+        newState.pageNumber = 2;
+        newState.imageSource = uploadedAsset.portable_url;
         break;
       }
       default: {
         if (nextProps.selectedAsset.portable_url) {
-          this.setState({
-            imageSource: nextProps.selectedAsset.portable_url,
-          });
+          newState.imageSource = nextProps.selectedAsset.portable_url;
         }
         break;
       }
     }
+    this.setState(state => ({
+      ...newState,
+      assetsPageType: getPageType(nextProps, state.assetsPageType),
+    }));
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -555,6 +575,43 @@ export default class EditImageModal extends React.Component {
     return body;
   }
 
+  getImageSelectionModalBodyAssetsList = (type) => {
+    switch (type) {
+      case pageTypes.NORMAL:
+        return (<WrappedAssetsList />);
+      case pageTypes.NO_ASSETS:
+        return (
+          <div className="mt-3">
+            <WrappedMessage message={messages.editImageModalAssetsListNoAssetsMessage} tagName="h3" />
+          </div>
+        );
+      case pageTypes.NO_RESULTS:
+        return (
+          <React.Fragment>
+            <WrappedMessage message={messages.editImageModalAssetsListNoResultsMessage} tagName="h3" />
+            <WrappedAssetsClearSearchButton />
+          </React.Fragment>
+        );
+      case pageTypes.SKELETON:
+        return (
+          <div className="text-center mt-3">
+            <span className="fa-icon-spacing" aria-hidden>
+              <span
+                className={classNames([
+                  FontAwesomeStyles.fa,
+                  FontAwesomeStyles['fa-spinner'],
+                  FontAwesomeStyles['fa-spin'],
+                ])}
+              />
+            </span>
+            <WrappedMessage message={messages.editImageModalAssetsListLoadingSpinner} />
+          </div>
+        );
+      default:
+        throw new Error(`Unknown pageType ${type}.`);
+    }
+  }
+
   getImageSelectionModalBody = () => (
     <React.Fragment>
       <div className="row no-gutters">
@@ -578,15 +635,30 @@ export default class EditImageModal extends React.Component {
         </div>
       </div>
       <div className="row">
-        <div className="col">
-          <WrappedAssetsList />
+        <div className="col-6 order-2">
+          {(this.state.assetsPageType === pageTypes.NORMAL ||
+            this.state.assetsPageType === pageTypes.NO_RESULTS) && (
+            <WrappedAssetsSearch />
+          )}
+        </div>
+        <div className="col-6 order-1">
+          {this.state.assetsPageType === pageTypes.NORMAL && (
+            <WrappedAssetsResultsCount />
+          )}
         </div>
       </div>
-      <div className="row mt-3 no-gutters">
+      <div className="row">
         <div className="col">
-          <WrappedPagination />
+          {this.getImageSelectionModalBodyAssetsList(this.state.assetsPageType)}
         </div>
       </div>
+      {this.state.assetsPageType === pageTypes.NORMAL && (
+        <div className="row mt-3 no-gutters">
+          <div className="col">
+            <WrappedPagination />
+          </div>
+        </div>
+      )}
     </React.Fragment>
   );
 
@@ -670,9 +742,10 @@ export default class EditImageModal extends React.Component {
       isEventSourceEmpty = false;
     }
 
-    this.setState({
+    this.setState((state, props) => ({
       // reset state to initial and then add in overrides
       ...initialEditImageModalState,
+      assetsPageType: getPageType(props, state.assetsPageType),
       baseAssetURL: event.detail.baseAssetUrl || '',
       imageDescription: event.detail.alt || '',
       imageDimensions: (event.detail.width && event.detail.height) ? {
@@ -688,7 +761,7 @@ export default class EditImageModal extends React.Component {
       open: true,
       pageNumber: isEventSourceEmpty ? 1 : 2,
       shouldShowPreviousButton: isEventSourceEmpty,
-    });
+    }));
 
     if (this.props.assetsList.length === 0) {
       this.props.getAssets({ assetTypes: { Images: true }, pageSize: 4 }, this.props.courseDetails);

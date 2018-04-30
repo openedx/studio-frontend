@@ -1,24 +1,24 @@
-import React from 'react';
 import { Button } from '@edx/paragon';
+import React from 'react';
 
-import AssetsClearFiltersButton from './index';
+import AssetsClearSearchButton from './index';
 import courseDetails from '../../utils/testConstants';
+import messages from './displayMessages';
 import { shallowWithIntl } from '../../utils/i18n/enzymeHelper';
 import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
-import messages from './displayMessages';
 
 const defaultProps = {
-  clearFilters: () => {},
+  clearSearch: () => {},
   courseDetails,
 };
 
 let wrapper;
 
-describe('<AssetsClearFiltersButton />', () => {
+describe('<AssetsClearSearchButton />', () => {
   describe('renders', () => {
     beforeEach(() => {
       wrapper = shallowWithIntl(
-        <AssetsClearFiltersButton
+        <AssetsClearSearchButton
           {...defaultProps}
         />,
       );
@@ -28,17 +28,17 @@ describe('<AssetsClearFiltersButton />', () => {
       expect(button).toHaveLength(1);
 
       const label = button.dive().find(WrappedMessage).dive();
-      expect(label.prop('message')).toEqual(messages.assetsClearFiltersButtonLabel);
+      expect(label.prop('message')).toEqual(messages.assetsClearSearchButtonLabel);
     });
-    it('emits clearFilters action on click', () => {
-      const clearFiltersMock = jest.fn();
+    it('emits clearSearch action on click', () => {
+      const clearSearchMock = jest.fn();
 
-      wrapper.setProps({ clearFilters: clearFiltersMock });
+      wrapper.setProps({ clearSearch: clearSearchMock });
 
       const button = wrapper.find(Button);
       button.simulate('click');
 
-      expect(clearFiltersMock).toHaveBeenCalledTimes(1);
+      expect(clearSearchMock).toHaveBeenCalledTimes(1);
     });
   });
 });

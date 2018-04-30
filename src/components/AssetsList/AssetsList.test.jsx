@@ -7,14 +7,14 @@ import { mountWithIntl } from '../../utils/i18n/enzymeHelper';
 import { paginationInitial, selectInitial } from '../../data/reducers/assets';
 import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
 
-const assetsListMetadata = {
+const paginationMetadata = {
   ...paginationInitial,
   pageSize: 4,
 };
 
 const defaultProps = {
   assetsList: testAssetsList,
-  assetsListMetadata,
+  paginationMetadata,
   courseDetails,
   selectAsset: () => { },
   ...selectInitial,
@@ -81,7 +81,7 @@ describe('AssetsList', () => {
       });
 
       it('correct number of list items', () => {
-        expect(items).toHaveLength(defaultProps.assetsListMetadata.pageSize);
+        expect(items).toHaveLength(defaultProps.paginationMetadata.pageSize);
       });
 
       items.forEach((item, index) => {
@@ -187,7 +187,7 @@ describe('AssetsList', () => {
 
     it('this.state.selectedAssetIndex is reset to -1 on pageChange to not selectedAssetPage', () => {
       const newPaginationData = {
-        ...defaultProps.assetsListMetadata,
+        ...defaultProps.paginationMetadata,
         page: 1,
       };
 
@@ -196,7 +196,7 @@ describe('AssetsList', () => {
       });
 
       wrapper.setProps({
-        assetsListMetadata: newPaginationData,
+        paginationMetadata: newPaginationData,
       });
 
       expect(wrapper.state('selectedAssetIndex')).toEqual(-1);
@@ -214,23 +214,23 @@ describe('AssetsList', () => {
       expect(wrapper.state('selectedAssetIndex')).toEqual(assetIndex);
 
       let newPaginationData = {
-        ...defaultProps.assetsListMetadata,
+        ...defaultProps.paginationMetadata,
         page: 1,
       };
 
       wrapper.setProps({
-        assetsListMetadata: newPaginationData,
+        paginationMetadata: newPaginationData,
       });
 
       expect(wrapper.state('selectedAssetIndex')).toEqual(-1);
 
       newPaginationData = {
-        ...defaultProps.assetsListMetadata,
+        ...defaultProps.paginationMetadata,
         page: 0,
       };
 
       wrapper.setProps({
-        assetsListMetadata: newPaginationData,
+        paginationMetadata: newPaginationData,
 
       });
 
@@ -368,7 +368,7 @@ describe('AssetsList', () => {
     });
 
     describe('has a key handler', () => {
-      const lastSelectableIndex = defaultProps.assetsListMetadata.pageSize - 1;
+      const lastSelectableIndex = defaultProps.paginationMetadata.pageSize - 1;
 
       describe('arrow down', () => {
         it('arrow down increments this.state.selectedAssetIndex if last asset is not selected', () => {

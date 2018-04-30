@@ -4,13 +4,23 @@ import EditImageModal from '.';
 import { clearAssetsStatus, clearSelectedAsset, getAssets, pageUpdate, selectAsset } from '../../data/actions/assets';
 
 
-const mapStateToProps = state => ({
-  assetsStatus: state.metadata.status,
-  assetsList: state.assets,
-  courseDetails: state.studioDetails.course,
-  courseImageAccessibilityDocs: state.studioDetails.help_tokens.image_accessibility,
-  selectedAsset: state.metadata.select.selectedAsset,
-});
+// Create an EditImageModal that is not aware of the Images filter.
+// This is so that the page will display a "noAssets" list instead of a "noResults" list when the
+// course has no images.
+const mapStateToProps = (state) => {
+  const { Images, ...typesWithoutImages } = state.metadata.filters.assetTypes;
+  const filtersWithoutImages = { ...state.metadata.filters, assetTypes: typesWithoutImages };
+  return {
+    assetsList: state.assets,
+    assetsStatus: state.metadata.status,
+    courseDetails: state.studioDetails.course,
+    courseImageAccessibilityDocs: state.studioDetails.help_tokens.image_accessibility,
+    filtersMetadata: filtersWithoutImages,
+    searchMetadata: state.metadata.search,
+    selectedAsset: state.metadata.select.selectedAsset,
+    status: state.metadata.status,
+  };
+};
 
 const mapDispatchToProps = dispatch => ({
   clearAssetsStatus: () => dispatch(clearAssetsStatus()),
