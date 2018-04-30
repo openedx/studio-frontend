@@ -1,12 +1,8 @@
 @import 'edx-bootstrap';
 
-.modal-body {
-  height: 400px;
-  overflow-y: scroll;
-}
-
 .modal.modal-open {
   display: block;
+  overflow: scroll;
 }
 
 .modal.modal-backdrop {

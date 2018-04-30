@@ -44,6 +44,7 @@ export const requestInitial = {
   ...sortInitial,
   ...searchInitial,
   page: paginationInitial.page,
+  pageSize: paginationInitial.pageSize,
 };
 
 export const selectInitial = {
@@ -187,6 +188,10 @@ export const status = (state = {}, action) => {
     case assetActions.upload.UPLOAD_EXCEED_MAX_SIZE_ERROR:
       return {
         maxFileSizeMB: action.maxFileSizeMB,
+        type: action.type,
+      };
+    case assetActions.upload.UPLOAD_INVALID_FILE_TYPE_ERROR:
+      return {
         type: action.type,
       };
     case assetActions.upload.UPLOADING_ASSETS:
