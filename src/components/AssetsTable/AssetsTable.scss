@@ -22,9 +22,11 @@
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
   background-color: white;
   border: 1px solid #b2b2b2;
+  table-layout: fixed;
 }
 
 .table th span, .table td span {
+  overflow-wrap: break-word;
   word-wrap: break-word;
 }
 
@@ -34,6 +36,18 @@
 
 .table caption {
   padding: 0;
+}
+
+.table tbody tr td:first-child {
+  padding-left: 2rem;
+}
+
+.table thead th {
+  min-width: 12rem;
+
+  button {
+    padding: 0;
+  }
 }
 
 // TODO: figure out how to receive these styles from Paragon instead of this copy-and-paste

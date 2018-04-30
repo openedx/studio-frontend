@@ -219,7 +219,7 @@ export default class AssetsPage extends React.Component {
             </div>
           </div>
           <div className="row">
-            <div className="col-12">
+            <div className="col-12 p-0">
               {this.state.pageType === types.NORMAL &&
                 <WrappedAssetsSearch />
               }

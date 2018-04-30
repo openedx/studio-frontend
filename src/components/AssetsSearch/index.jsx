@@ -48,20 +48,22 @@ export default class AssetsSearch extends React.Component {
           label={<WrappedMessage message={messages.assetsSearchInputLabel} />}
           value={this.state.value}
           onChange={this.handleChange}
-        />
-        <Button
-          buttonType="primary"
-          type="submit"
-          label={
-            <WrappedMessage message={messages.assetsSearchSubmitLabel}>{
-              txt => (
-                <Icon
-                  className={[classNames(FontAwesomeStyles.fa, FontAwesomeStyles['fa-search'])]}
-                  screenReaderText={txt}
-                />
-              )
-            }</WrappedMessage>
-          }
+          inputGroupAppend={(
+            <Button
+              buttonType="primary"
+              type="submit"
+              label={
+                <WrappedMessage message={messages.assetsSearchSubmitLabel}>{
+                  txt => (
+                    <Icon
+                      className={[classNames(FontAwesomeStyles.fa, FontAwesomeStyles['fa-search'])]}
+                      screenReaderText={txt}
+                    />
+                  )
+                }</WrappedMessage>
+              }
+            />
+          )}
         />
       </form>
     );
