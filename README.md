@@ -151,7 +151,7 @@ We use JIRA for our issue tracker, not GitHub Issues. Please see our documentati
 
 ## How to Contribute
 
-Contributions are very welcome, but for legal reasons, you must submit a signed [individual contributor's agreement](http://code.edx.org/individual-contributor-agreement.pdf) before we can accept your contribution. See our [CONTRIBUTING](https://github.com/edx/edx-platform/blob/master/CONTRIBUTING.rst) file for more information -- it also contains guidelines for how to maintain high code quality, which will make your contribution more likely to be accepted.
+Contributions are very welcome, but for legal reasons, you must submit a signed [individual contributor's agreement](https://github.com/edx/edx-platform/blob/master/CONTRIBUTING.rst#step-1-sign-a-contribution-agreement) before we can accept your contribution. See our [CONTRIBUTING](https://github.com/edx/edx-platform/blob/master/CONTRIBUTING.rst) file for more information -- it also contains guidelines for how to maintain high code quality, which will make your contribution more likely to be accepted.
 
 
 ## Reporting Security Issues
