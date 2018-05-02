@@ -96,10 +96,15 @@ const messages = defineMessages({
     defaultMessage: 'Width',
     description: 'Label for the text input box for an image\'s width,',
   },
-  editImageModalTitle: {
-    id: 'editImageModalTitle',
-    defaultMessage: 'Add or Edit Image',
-    description: 'Title of the modal used for adding or editing an image',
+  editImageModalInsertTitle: {
+    id: 'editImageModalInsertTitle',
+    defaultMessage: 'Add an Image',
+    description: 'Title of the modal used for adding an image',
+  },
+  editImageModalEditTitle: {
+    id: 'editImageModalEditTitle',
+    defaultMessage: 'Edit Image Settings',
+    description: 'Title of the modal used for editing image settings',
   },
   editImageModalImageOrFields: {
     id: 'editImageModalImageOrFields',
@@ -115,6 +120,16 @@ const messages = defineMessages({
     id: 'editImageModalImageLoadingIcon',
     defaultMessage: 'Loading',
     description: 'Screenreader-only text describing a loading spinner indicating that an image is loading',
+  },
+  editImageModalNextPageButton: {
+    id: 'editImageModalNextPageButton',
+    defaultMessage: 'Next',
+    description: 'Button text to go to the next screen',
+  },
+  editImageModalPreviousPageButton: {
+    id: 'editImageModalPreviousPageButton',
+    defaultMessage: 'Back',
+    description: 'Button text to go to the previous screen',
   },
 });
 

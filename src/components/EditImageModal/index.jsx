@@ -35,6 +35,8 @@ const initialEditImageModalState = {
   imageStyle: '',
   open: false,
   currentValidationMessages: {},
+  pageNumber: 1,
+  shouldShowPreviousButton: false,
 };
 
 export default class EditImageModal extends React.Component {
@@ -49,23 +51,47 @@ export default class EditImageModal extends React.Component {
     this.onConstrainProportionsClick = this.onConstrainProportionsClick.bind(this);
     this.onEditImageModalClose = this.onEditImageModalClose.bind(this);
     this.onImageDescriptionBlur = this.onImageDescriptionBlur.bind(this);
-    this.onInsertImageButtonClick = this.onInsertImageButtonClick.bind(this);
     this.onImageIsDecorativeClick = this.onImageIsDecorativeClick.bind(this);
+    this.onInsertImageButtonClick = this.onInsertImageButtonClick.bind(this);
     this.onImageLoad = this.onImageLoad.bind(this);
     this.onImageSourceBlur = this.onImageSourceBlur.bind(this);
+    this.onNextPageButtonClick = this.onNextPageButtonClick.bind(this);
+    this.onPreviousPageButtonClick = this.onPreviousPageButtonClick.bind(this);
     this.onStatusAlertClose = this.onStatusAlertClose.bind(this);
     this.validateImageDescription = this.validateImageDescription.bind(this);
     this.validateImageSource = this.validateImageSource.bind(this);
+    // Create ref setters to minimize anonymous inline functions
+    this.setImageDescriptionInputRef = this.setImageDescriptionInputRef.bind(this);
+    this.setImageFormRef = this.setImageFormRef.bind(this);
+    this.setImagePreviewRef = this.setImagePreviewRef.bind(this);
+    this.setImageSourceInputRef = this.setImageSourceInputRef.bind(this);
+    this.setModalWrapperRef = this.setModalWrapperRef.bind(this);
+    this.setStatusAlertRef = this.setStatusAlertRef.bind(this);
+    this.setPreviousButtonRef = this.setPreviousButtonRef.bind(this);
 
-    this.formRef = null;
+    this.imageDescriptionInputRef = null;
+    this.imageFormRef = null;
     this.imageSourceInputRef = null;
     this.imgRef = null;
+    this.inputDescriptionRef = null;
     this.modalWrapperRef = null;
+    this.previousPageButtonRef = null;
     this.statusAlertRef = null;
   }
 
   componentDidMount() {
     this.modalWrapperRef.addEventListener('openModal', this.handleOpenModal);
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.pageNumber === 1 && prevState.pageNumber === 2) {
+      this.imageSourceInputRef.focus();
+    }
+
+    if (this.state.pageNumber === 2 && prevState.pageNumber === 1
+      && this.state.shouldShowPreviousButton) {
+      this.previousPageButtonRef.focus();
+    }
   }
 
   componentWillUnmount() {
@@ -182,6 +208,18 @@ export default class EditImageModal extends React.Component {
     };
   }
 
+  onNextPageButtonClick = () => {
+    this.setState({
+      pageNumber: 2,
+    });
+  }
+
+  onPreviousPageButtonClick = () => {
+    this.setState({
+      pageNumber: 1,
+    });
+  }
+
   onInsertImageButtonClick = () => {
     const isValidImageSource = this.validateImageSource();
     const isValidImageDescription = this.validateImageDescription();
@@ -212,7 +250,7 @@ export default class EditImageModal extends React.Component {
     });
 
     if (isValidFormContent) {
-      this.formRef.dispatchEvent(new CustomEvent('submitForm',
+      this.imageFormRef.dispatchEvent(new CustomEvent('submitForm',
         {
           bubbles: true,
           detail: {
@@ -234,11 +272,47 @@ export default class EditImageModal extends React.Component {
   }
 
   onStatusAlertClose = () => {
-    this.imageSourceInputRef.focus();
+    if (this.state.pageNumber === 1) {
+      this.imageSourceInputRef.focus();
+    } else if (this.state.pageNumber === 2) {
+      if (this.state.shouldShowPreviousButton) {
+        this.previousPageButtonRef.focus();
+      } else {
+        this.imageDescriptionInputRef.focus();
+      }
+    }
 
     this.setState({
       isStatusAlertOpen: false,
     });
+  }
+
+  setImageDescriptionInputRef(input) {
+    this.imageDescriptionInputRef = input;
+  }
+
+  setImageFormRef(input) {
+    this.imageFormRef = input;
+  }
+
+  setImagePreviewRef(input) {
+    this.imgRef = input;
+  }
+
+  setImageSourceInputRef(input) {
+    this.imageSourceInputRef = input;
+  }
+
+  setModalWrapperRef(input) {
+    this.modalWrapperRef = input;
+  }
+
+  setPreviousButtonRef(input) {
+    this.previousPageButtonRef = input;
+  }
+
+  setStatusAlertRef(input) {
+    this.statusAlertRef = input;
   }
 
   getNaturalDimension = (dimensionType) => {
@@ -277,7 +351,7 @@ export default class EditImageModal extends React.Component {
       type="text"
       value={this.state.imageSource}
       onBlur={this.onImageSourceBlur}
-      inputRef={(input) => { this.imageSourceInputRef = input; }}
+      inputRef={this.setImageSourceInputRef}
       isValid={this.state.isImageValid}
       validationMessage={<WrappedMessage message={messages.editImageModalImageNotFoundError} />}
       themes={['danger']}
@@ -329,6 +403,7 @@ export default class EditImageModal extends React.Component {
         value={this.state.imageDescription}
         disabled={this.state.isImageDecorative}
         onBlur={this.onImageDescriptionBlur}
+        inputRef={this.setImageDescriptionInputRef}
       />
       <div className="or-fields">
         <WrappedMessage
@@ -451,7 +526,7 @@ export default class EditImageModal extends React.Component {
       src={this.getImageAssetSource()}
       onLoad={this.onImageLoad}
       onError={this.onImageError}
-      ref={(input) => { this.imgRef = input; }}
+      ref={this.setImagePreviewRef}
     />
   );
 
@@ -511,20 +586,67 @@ export default class EditImageModal extends React.Component {
       dialog={this.getStatusAlertDialog()}
       onClose={this.onStatusAlertClose}
       open={this.state.isStatusAlertOpen}
-      ref={(input) => { this.statusAlertRef = input; }}
+      ref={this.setStatusAlertRef}
     />
   )
 
-  getModalBody = () => (
+  getModalHeader = () => {
+    let header;
+    if (this.state.pageNumber === 1) {
+      header = (
+        <WrappedMessage
+          message={messages.editImageModalInsertTitle}
+        />
+      );
+    } else if (this.state.pageNumber === 2) {
+      header = (
+        <WrappedMessage
+          message={messages.editImageModalEditTitle}
+        />
+      );
+    }
+    return (
+      <div aria-live="polite">
+        { header }
+      </div>
+    );
+  }
+
+  getModalBody = () => {
+    let body;
+    if (this.state.pageNumber === 1) {
+      body = this.getImageSelectionModalBody();
+    } else if (this.state.pageNumber === 2) {
+      body = this.getImageSettingsModalBody();
+    }
+    return body;
+  }
+
+  getImageSelectionModalBody = () => (
     <React.Fragment>
       {this.getStatusAlert()}
+      <div className="row">
+        <div className="col">
+          <form ref={this.setImageFormRef}>
+            {this.getImageSourceInput()}
+          </form>
+        </div>
+      </div>
+    </React.Fragment>
+  );
+
+  getImageSettingsModalBody = () => (
+    <React.Fragment>
+      {this.getStatusAlert()}
+      <div className="row">
+        {this.state.shouldShowPreviousButton && this.getPreviousPageButton()}
+      </div>
       <div className="row">
         <div className="col-sm-4">
           {this.getImagePreview()}
         </div>
         <div className="col">
-          <form ref={(input) => { this.formRef = input; }}>
-            {this.getImageSourceInput()}
+          <form ref={this.setImageFormRef}>
             {this.getImageDescriptionInput()}
             {this.getImageDimensionsInput()}
           </form>
@@ -533,7 +655,42 @@ export default class EditImageModal extends React.Component {
     </React.Fragment>
   );
 
-  getModalInsertImageButton = () => (
+  getModalButtons = () => {
+    let buttons;
+    if (this.state.pageNumber === 1) {
+      buttons = this.getNextPageButton();
+    } else if (this.state.pageNumber === 2) {
+      buttons = this.getInsertImageButton();
+    }
+    return buttons;
+  }
+
+  getNextPageButton = () => (
+    <Button
+      label={
+        <WrappedMessage
+          message={messages.editImageModalNextPageButton}
+        />
+      }
+      buttonType="primary"
+      onClick={this.onNextPageButtonClick}
+    />
+  );
+
+  getPreviousPageButton = () => (
+    <Button
+      label={
+        <WrappedMessage
+          message={messages.editImageModalPreviousPageButton}
+        />
+      }
+      buttonType="link"
+      onClick={this.onPreviousPageButtonClick}
+      inputRef={this.setPreviousButtonRef}
+    />
+  );
+
+  getInsertImageButton = () => (
     <Button
       label={
         <WrappedMessage
@@ -543,9 +700,15 @@ export default class EditImageModal extends React.Component {
       buttonType="primary"
       onClick={this.onInsertImageButtonClick}
     />
-  )
+  );
 
   handleOpenModal = (event) => {
+    const eventSource = event.detail.src;
+    let isEventSourceEmpty = true;
+    if (eventSource) {
+      isEventSourceEmpty = false;
+    }
+
     this.setState({
       // reset state to initial and then add in overrides
       ...initialEditImageModalState,
@@ -556,12 +719,14 @@ export default class EditImageModal extends React.Component {
         height: event.detail.height,
         aspectRatio: event.detail.width / event.detail.height,
       } : {},
-      imageSource: event.detail.src || '',
+      imageSource: eventSource || '',
       imageStyle: event.detail.style || '',
       isImageDecorative: event.detail.alt === '',
       // if existing img had a source, assume it could be loaded and show the image preview
-      isImageLoaded: !!event.detail.src,
+      isImageLoaded: !!eventSource,
       open: true,
+      pageNumber: isEventSourceEmpty ? 1 : 2,
+      shouldShowPreviousButton: isEventSourceEmpty,
     });
   }
 
@@ -628,18 +793,15 @@ export default class EditImageModal extends React.Component {
 
   render = () => (
     <div
-      ref={(input) => { this.modalWrapperRef = input; }}
+      ref={this.setModalWrapperRef}
     >
       <Modal
         open={this.state.open}
-        title={
-          <WrappedMessage
-            message={messages.editImageModalTitle}
-          />
-        }
+        title={this.getModalHeader()}
         body={this.getModalBody()}
+        closeText="Cancel"
         onClose={this.onEditImageModalClose}
-        buttons={[this.getModalInsertImageButton()]}
+        buttons={[this.getModalButtons()]}
       />
     </div>
   );
