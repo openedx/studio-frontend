@@ -6,8 +6,9 @@ import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
 import messages from './displayMessages';
 
 
-const AssetsClearFiltersButton = ({ clearFilters, courseDetails }) => (
+const AssetsClearFiltersButton = ({ className, clearFilters, courseDetails }) => (
   <Button
+    className={[className]}
     buttonType="link"
     onClick={() => clearFilters(courseDetails)}
     label={
@@ -17,6 +18,7 @@ const AssetsClearFiltersButton = ({ clearFilters, courseDetails }) => (
 );
 
 AssetsClearFiltersButton.propTypes = {
+  className: PropTypes.string,
   clearFilters: PropTypes.func.isRequired,
   courseDetails: PropTypes.shape({
     lang: PropTypes.string,
@@ -28,6 +30,10 @@ AssetsClearFiltersButton.propTypes = {
     id: PropTypes.string,
     revision: PropTypes.string,
   }).isRequired,
+};
+
+AssetsClearFiltersButton.defaultProps = {
+  className: '',
 };
 
 export default AssetsClearFiltersButton;

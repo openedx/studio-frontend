@@ -122,7 +122,7 @@ export default class AssetsPage extends React.Component {
             <div className="col-md-4 text-right">
               {hasSearchOrFilterApplied(this.props.filtersMetadata.assetTypes,
                 this.props.searchMetadata.search) &&
-                <WrappedAssetsClearFiltersButton />
+                <WrappedAssetsClearFiltersButton className="p-3" />
               }
             </div>
           </div>

@@ -45,5 +45,18 @@ describe('<AssetsClearFiltersButton />', () => {
 
       expect(clearFiltersMock).toHaveBeenCalledTimes(1);
     });
+    it('adds className prop value to button class attribute', () => {
+      const className = 'foo';
+
+      wrapper = mountWithIntl(
+        <AssetsClearFiltersButton
+          {...defaultProps}
+          className={className}
+        />,
+      );
+
+      const button = wrapper.find(Button);
+      expect(button.hasClass(className)).toEqual(true);
+    });
   });
 });
