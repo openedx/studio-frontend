@@ -1,0 +1,7 @@
+// This file contains all of the Sass styles specific to our HelloWorld component.
+// This import will pull in all of the Bootstrap Sass variables and mixins so that we can use them in this file.
+@import 'edx-bootstrap';
+
+.hello-world {
+  background: white;
+}

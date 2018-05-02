@@ -90,6 +90,14 @@ module.exports = Merge.smart(commonConfig, {
       filename: 'editImageModal.html',
       template: path.resolve(__dirname, '../public/index.html'),
     }),
+    // This instructs Webpack to create a new HTML page from a template that will include our
+    // HelloWorld app bundle
+    new HtmlWebpackPlugin({
+      inject: true,
+      chunks: ['helloWorld'],
+      filename: 'helloWorld.html',
+      template: path.resolve(__dirname, '../public/index.html'),
+    }),
   ],
   devServer: {
     host: '0.0.0.0',
