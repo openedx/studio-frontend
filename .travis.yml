@@ -6,6 +6,7 @@ branches:
   only:
     - master
     - /v\d+\.\d+\.d+$/
+    - feature/two-page-image-modal
 
 cache:
   directories:
@@ -26,7 +27,9 @@ jobs:
     - stage: PR checks ✅
       env:
         - NAME=Validation Checks
-      script: ./.travis/validate_changes_for_merge.sh
+      script:
+        - ./.travis/validate_changes_for_merge.sh
+        - git grep "feature/two-page-image-modal" -- .travis.yml && echo "please revert this commit before merging to master"
     - stage: Ship It 🚢
       env:
         - NAME=Publish
