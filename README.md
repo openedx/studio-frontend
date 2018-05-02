@@ -3,6 +3,7 @@
 [![Build Status](https://travis-ci.org/edx/studio-frontend.svg?branch=master)](https://travis-ci.org/edx/studio-frontend)
 [![npm](https://img.shields.io/npm/v/@edx/studio-frontend.svg)](https://www.npmjs.com/package/@edx/studio-frontend)
 [![npm](https://img.shields.io/npm/dt/@edx/studio-frontend.svg)](https://www.npmjs.com/package/@edx/studio-frontend)
+[![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 
 React front end for edX Studio
 
@@ -119,15 +120,15 @@ during provisioning.
 
 ## Releases
 
-Currently, the process for releasing a new version of our package is as follows:
+This all happens automagically on merges to master, hooray! There are just a few things to keep in mind:
 
-1. Make your changes in a pull request. Bump the version in package.json according to [semver](https://semver.org/) as part of the pull request.
-2. Merge your pull request.
-3. Publish a [GitHub release](https://github.com/edx/studio-frontend/releases). Make sure to prefix the version number with `v`, as in `v2.3.4`.
-3. `git checkout master` and `git pull`. Ensure your current directory is cleaned, with no outstanding commits or files. As an extra precaution, you can `rm -rf node_modules`, `rm -rf dist/*` and `npm install` prior to publishing.
-4. Make sure that build production files in /dist will be included in the release by running `npm run build`.
-5. Be a member of the correct edX and npm orgs, and be logged in. All of @edx/educator-dahlia should be set up, and others shouldn't need to be publishing this package.
-6. Run `npm publish`.
+### What is the latest version?
+
+Check [github](https://github.com/edx/studio-frontend/releases), [npm](https://www.npmjs.com/package/@edx/studio-frontend), or the npm badge at [the top of this README](https://github.com/edx/studio-frontend#studio-frontend). `package.json` no longer contains the correct version (on Github), as it creates an odd loop of "something merged to master, run `semantic-release`" -> "`semantic-release` modified `package.json`, better check that in and make a PR" -> "a PR merged to master, run `semantic-release`", etc. This is the [default behavior for `semantic-release`](https://github.com/semantic-release/semantic-release/blob/caribou/docs/support/FAQ.md#why-is-the-packagejsons-version-not-updated-in-my-repository).
+
+### Commit message linting
+
+In order for `semantic-release` to determine which release type (major/minor/patch) to make, commits must be formatted as specified by [these Angular conventions](https://github.com/angular/angular.js/blob/62e2ec18e65f15db4f52bb9f695a92799c58b5f1/DEVELOPERS.md#-git-commit-guidelines). TravisBuddy will let you know if anything is wrong before you merge your PR. It can be difficult at first, but eventually you get used to it and the added value of automatic releases is well worth it, in our opinions.
 
 
 ## Updating Latest Docker Image in Docker Hub
