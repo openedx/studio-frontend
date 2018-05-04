@@ -114,7 +114,7 @@
     "transformIgnorePatterns": [
       "/node_modules/(?!(@edx/paragon)/).*/"
     ],
-    "testPathIgnorePatterns" : [
+    "testPathIgnorePatterns": [
       "<rootDir>/src/components/EditImageModal/EditImageModal.test.jsx"
     ],
     "globals": {

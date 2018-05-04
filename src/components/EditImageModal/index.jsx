@@ -4,10 +4,12 @@ import 'font-awesome/css/font-awesome.min.css';
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import { assetActions } from '../../data/constants/actionTypes';
 import messages from './displayMessages';
 import rewriteStaticLinks from '../../utils/rewriteStaticLinks';
 import styles from './EditImageModal.scss';
 import WrappedAssetsList from '../AssetsList/container';
+import WrappedAssetsDropZone from '../AssetsDropZone/container';
 import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
 import WrappedPagination from '../Pagination/container';
 
@@ -76,10 +78,24 @@ export default class EditImageModal extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.selectedAsset.portable_url) {
-      this.setState({
-        imageSource: nextProps.selectedAsset.portable_url,
-      });
+    switch (this.props.assetsStatus.type) {
+      case assetActions.upload.UPLOAD_ASSET_SUCCESS: {
+        const uploadedAsset = this.props.assetsStatus.response.asset;
+        this.props.selectAsset(uploadedAsset, 0);
+        this.setState({
+          pageNumber: 2,
+          imageSource: uploadedAsset.portable_url,
+        });
+        break;
+      }
+      default: {
+        if (nextProps.selectedAsset.portable_url) {
+          this.setState({
+            imageSource: nextProps.selectedAsset.portable_url,
+          });
+        }
+        break;
+      }
     }
   }
 
@@ -546,6 +562,16 @@ export default class EditImageModal extends React.Component {
           {this.getStatusAlert()}
         </div>
       </div>
+      <div className="row mb-5">
+        <div className="col">
+          <WrappedAssetsDropZone
+            maxFileCount={1}
+            maxFileSizeMB={10}
+            acceptedFileTypes={'image/*'}
+            compactStyle
+          />
+        </div>
+      </div>
       <div className="row no-gutters">
         <div className="col">
           <h3>Select a previously uploaded image</h3>
@@ -734,6 +760,10 @@ export default class EditImageModal extends React.Component {
 
 EditImageModal.propTypes = {
   assetsList: PropTypes.arrayOf(PropTypes.object).isRequired,
+  assetsStatus: PropTypes.shape({
+    response: PropTypes.object,
+    type: PropTypes.string,
+  }).isRequired,
   clearSelectedAsset: PropTypes.func.isRequired,
   courseDetails: PropTypes.shape({
     lang: PropTypes.string,
@@ -748,6 +778,7 @@ EditImageModal.propTypes = {
   }).isRequired,
   courseImageAccessibilityDocs: PropTypes.string.isRequired,
   getAssets: PropTypes.func.isRequired,
+  selectAsset: PropTypes.func.isRequired,
   selectedAsset: PropTypes.shape({
     display_name: PropTypes.string,
     content_type: PropTypes.string,

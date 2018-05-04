@@ -319,6 +319,10 @@ export const uploadExceedMaxSize = maxFileSizeMB => ({
   maxFileSizeMB,
 });
 
+export const uploadInvalidFileType = () => ({
+  type: assetActions.upload.UPLOAD_INVALID_FILE_TYPE_ERROR,
+});
+
 export const updateImagePreview = enabled => ({
   type: assetActions.imagePreview.IMAGE_PREVIEW_UPDATE,
   enabled,

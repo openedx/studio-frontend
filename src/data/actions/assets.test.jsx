@@ -650,6 +650,13 @@ describe('Assets Action Creators', () => {
     expect(store.dispatch(actionCreators.uploadExceedMaxCount(1))).toEqual(expectedAction);
   });
 
+  it('returns expected state from uploadInvalidFileType', () => {
+    const expectedAction = {
+      type: assetActions.upload.UPLOAD_INVALID_FILE_TYPE_ERROR,
+    };
+    expect(store.dispatch(actionCreators.uploadInvalidFileType())).toEqual(expectedAction);
+  });
+
   it('returns expected state from uploadAssetFailure', () => {
     const expectedAction = { asset: 'asset', response: 'response', type: assetActions.upload.UPLOAD_ASSET_FAILURE };
     expect(store.dispatch(actionCreators.uploadAssetFailure('asset', 'response'))).toEqual(expectedAction);

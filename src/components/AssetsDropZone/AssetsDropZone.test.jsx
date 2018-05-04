@@ -8,6 +8,7 @@ const defaultProps = {
   uploadAssets: () => {},
   uploadExceedMaxCount: () => {},
   uploadExceedMaxSize: () => {},
+  uploadInvalidFileType: () => {},
   maxFileSizeMB: 87,
   maxFileCount: 3,
   courseDetails,
@@ -31,6 +32,17 @@ describe('<AssetsDropZone />', () => {
     it('hides the icon & upload file size from screen readers', () => {
       expect(wrapper.find('[aria-hidden=true]').length).toBe(2);
     });
+    it('non-compact version of the dropzone', () => {
+      const dropZoneID = '[data-identifier="asset-drop-zone"]';
+      expect(wrapper.find(dropZoneID).at(0).hasClass('drop-zone')).toEqual(true);
+    });
+    it('compact version of the dropzone', () => {
+      const dropZoneID = '[data-identifier="asset-drop-zone"]';
+      wrapper.setProps({
+        compactStyle: true,
+      });
+      expect(wrapper.find(dropZoneID).at(0).hasClass('drop-zone-compact')).toEqual(true);
+    });
   });
 
   describe('onDrop', () => {
@@ -42,13 +54,21 @@ describe('<AssetsDropZone />', () => {
       wrapper.instance().onDrop([{}], [{}, {}, {}]);
       expect(mockUploadExceedMaxCount).toBeCalled();
     });
-    it('call uploadExceedMaxSize() for any rejected files', () => {
+    it('call uploadExceedMaxSize() for too large rejected files', () => {
       const mockUploadExceedMaxSize = jest.fn();
       wrapper.setProps({
         uploadExceedMaxSize: mockUploadExceedMaxSize,
       });
-      wrapper.instance().onDrop([{}, {}], [{}]);
+      wrapper.instance().onDrop([{}, {}], [{ size: (wrapper.prop('maxFileSizeMB') + 1) * 1000000 }]);
       expect(mockUploadExceedMaxSize).toBeCalled();
+    });
+    it('call uploadInvalidFileType() for non-size rejected files', () => {
+      const mockUploadInvalidFileType = jest.fn();
+      wrapper.setProps({
+        uploadInvalidFileType: mockUploadInvalidFileType,
+      });
+      wrapper.instance().onDrop([{}, {}], [{}]);
+      expect(mockUploadInvalidFileType).toBeCalled();
     });
     it('call uploadAssets() for successful uploads', () => {
       const mockUploadAssets = jest.fn();

@@ -1,10 +1,11 @@
 import { connect } from 'react-redux';
 
 import EditImageModal from '.';
-import { clearSelectedAsset, getAssets, pageUpdate } from '../../data/actions/assets';
+import { clearAssetsStatus, clearSelectedAsset, getAssets, pageUpdate, selectAsset } from '../../data/actions/assets';
 
 
 const mapStateToProps = state => ({
+  assetsStatus: state.metadata.status,
   assetsList: state.assets,
   courseDetails: state.studioDetails.course,
   courseImageAccessibilityDocs: state.studioDetails.help_tokens.image_accessibility,
@@ -12,8 +13,10 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
+  clearAssetsStatus: () => dispatch(clearAssetsStatus()),
   clearSelectedAsset: () => dispatch(clearSelectedAsset()),
   getAssets: (request, courseDetails) => dispatch(getAssets(request, courseDetails)),
+  selectAsset: (asset, index) => dispatch(selectAsset(asset, index)),
   updatePage: (page, courseDetails) => dispatch(pageUpdate(page, courseDetails)),
 });
 
