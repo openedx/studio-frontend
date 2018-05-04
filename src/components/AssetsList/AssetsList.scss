@@ -1,0 +1,46 @@
+@import 'edx-bootstrap';
+@import 'utils/scss/focus';
+
+.assets-list-image-preview-container {
+  background-color: theme-color('light');
+  color: theme-color('dark');
+  text-align: center;
+}
+
+.assets-list-image-preview-image {
+  max-height: 100%;
+  max-width: 100%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+li span {
+  word-wrap: break-word;
+  width: 100%;
+}
+
+// from Bootstrap list-group-item class
+.list-header {
+  padding: $list-group-item-padding-y $list-group-item-padding-x;
+}
+
+.no-image-preview {
+  background-color: theme-color('light');
+  color: theme-color('dark');
+  width: 100%;
+  max-height: 100%;
+  max-width: 100%;
+  word-wrap: break-word;
+}
+
+ol {
+  &:focus {
+    @include focus();
+  }
+}
+
+.unbulleted-list-item {
+  list-style: none;
+}

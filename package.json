@@ -101,17 +101,21 @@
       "src/**/*.{js,jsx}"
     ],
     "coveragePathIgnorePatterns": [
-      "/node_modules/",
-      "/src/accessibilityIndex.jsx",
-      "/src/index.jsx",
-      "src/editImageModalIndex.jsx",
-      "/src/components/BackendStatusBanner/",
+      "<rootDir>/node_modules/",
+      "<rootDir>/src/accessibilityIndex.jsx",
+      "<rootDir>/src/index.jsx",
+      "<rootDir>/src/editImageModalIndex.jsx",
+      "<rootDir>/src/components/BackendStatusBanner/",
       "<rootDir>/src/.*/container.jsx",
-      "/src/data/i18n/locales/",
-      "/src/utils/matches-prefixer.js"
+      "<rootDir>/src/data/i18n/locales/",
+      "<rootDir>/src/utils/matches-prefixer.js",
+      "<rootDir>/src/components/EditImageModal/*"
     ],
     "transformIgnorePatterns": [
       "/node_modules/(?!(@edx/paragon)/).*/"
+    ],
+    "testPathIgnorePatterns": [
+      "<rootDir>/src/components/EditImageModal/EditImageModal.test.jsx"
     ],
     "globals": {
       "studioContext": {}

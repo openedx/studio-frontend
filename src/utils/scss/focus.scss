@@ -1,0 +1,6 @@
+@mixin focus() {
+    @include form-control-focus();
+    border-width: 2px;
+    outline: none;
+    box-shadow: $input-box-shadow, $input-btn-focus-box-shadow;
+}

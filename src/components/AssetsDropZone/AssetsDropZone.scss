@@ -4,12 +4,13 @@
   text-align: center;
 }
 
-.drop-zone {
-  outline: $dark dashed 1px;
-  padding: $spacer;
+.drop-zone-compact {
+  border: $dark dashed 1px;
+  padding: 0;
 
   button {
     white-space: normal;
+    margin-top: $spacer;
     margin-bottom: $spacer;
   }
 
@@ -17,6 +18,7 @@
     @extend .center-text;
     font-weight: $font-weight-bold;
     font-size: $font-size-lg;
+    margin-bottom: 0;
   }
 
   p {
@@ -25,12 +27,18 @@
   }
 }
 
+.drop-zone {
+  @extend .drop-zone-compact;
+
+  @media (min-width: map-get($grid-breakpoints, 'md')) {
+    padding: $spacer;
+    h2 {
+      margin-bottom: inherit;
+    }
+  }
+}
+
 .drop-active {
   outline: $dark dashed 2px;
   background-color: rgba($primary, 0.2);
-}
-
-p.upload-icon {
-  text-align: center;
-  font-size: $font-size-lg * 2;
 }

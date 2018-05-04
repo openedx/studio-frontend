@@ -3,7 +3,7 @@ import { Button } from '@edx/paragon';
 
 import AssetsClearFiltersButton from './index';
 import courseDetails from '../../utils/testConstants';
-import { mountWithIntl } from '../../utils/i18n/enzymeHelper';
+import { shallowWithIntl } from '../../utils/i18n/enzymeHelper';
 import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
 import messages from './displayMessages';
 
@@ -17,7 +17,7 @@ let wrapper;
 describe('<AssetsClearFiltersButton />', () => {
   describe('renders', () => {
     beforeEach(() => {
-      wrapper = mountWithIntl(
+      wrapper = shallowWithIntl(
         <AssetsClearFiltersButton
           {...defaultProps}
         />,
@@ -27,18 +27,13 @@ describe('<AssetsClearFiltersButton />', () => {
       const button = wrapper.find(Button);
       expect(button).toHaveLength(1);
 
-      const label = button.find(WrappedMessage);
+      const label = button.dive().find(WrappedMessage).dive();
       expect(label.prop('message')).toEqual(messages.assetsClearFiltersButtonLabel);
     });
     it('emits clearFilters action on click', () => {
       const clearFiltersMock = jest.fn();
 
-      wrapper = mountWithIntl(
-        <AssetsClearFiltersButton
-          {...defaultProps}
-          clearFilters={clearFiltersMock}
-        />,
-      );
+      wrapper.setProps({ clearFilters: clearFiltersMock });
 
       const button = wrapper.find(Button);
       button.simulate('click');
@@ -48,12 +43,7 @@ describe('<AssetsClearFiltersButton />', () => {
     it('adds className prop value to button class attribute', () => {
       const className = 'foo';
 
-      wrapper = mountWithIntl(
-        <AssetsClearFiltersButton
-          {...defaultProps}
-          className={className}
-        />,
-      );
+      wrapper.setProps({ className });
 
       const button = wrapper.find(Button);
       expect(button.hasClass(className)).toEqual(true);

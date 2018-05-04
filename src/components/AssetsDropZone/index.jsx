@@ -10,16 +10,23 @@ import messages from './displayMessages';
 import styles from './AssetsDropZone.scss';
 
 export default class AssetsDropZone extends React.Component {
-  constructor() {
+  constructor(props) {
     super();
     this.dropzoneRef = {};
+    this.dropZoneMaxFileSizeBytes = props.maxFileSizeMB * 1000000;
   }
 
   onDrop = (acceptedFiles, rejectedFiles) => {
     if (rejectedFiles.length + acceptedFiles.length > this.props.maxFileCount) {
       this.props.uploadExceedMaxCount(this.props.maxFileCount);
     } else if (rejectedFiles.length > 0) {
-      this.props.uploadExceedMaxSize(this.props.maxFileSizeMB);
+      // bubbling up error from the first rejected file in the list
+      const rejectedFile = rejectedFiles[0];
+      if (rejectedFile.size > this.dropZoneMaxFileSizeBytes) {
+        this.props.uploadExceedMaxSize(this.dropZoneMaxFileSizeBytes);
+      } else {
+        this.props.uploadInvalidFileType();
+      }
     } else {
       this.props.uploadAssets(acceptedFiles, this.props.courseDetails);
     }
@@ -40,20 +47,25 @@ export default class AssetsDropZone extends React.Component {
           (
             <div role="region" aria-label={regionLabel}>
               <Dropzone
-                ref={this.setDropzonRef}
-                onDrop={this.onDrop}
-                className={styles['drop-zone']}
+                accept={this.props.acceptedFileTypes}
                 activeClassName={styles['drop-active']}
-                disableClick
-                maxSize={this.props.maxFileSizeMB * 1000000}
+                className={this.props.compactStyle ? styles['drop-zone-compact'] : styles['drop-zone']}
                 data-identifier="asset-drop-zone"
+                disableClick
+                maxSize={this.dropZoneMaxFileSizeBytes}
+                onDrop={this.onDrop}
+                ref={this.setDropzonRef}
               >
-                <p className="upload-icon" data-identifier="asset-drop-zone-icon">
+                <div className={styles['center-text']} data-identifier="asset-drop-zone-icon">
                   <span
                     aria-hidden
-                    className={classNames(FontAwesomeStyles.fa, FontAwesomeStyles['fa-cloud-upload'])}
+                    className={classNames(
+                      styles['center-text'],
+                      FontAwesomeStyles.fa,
+                      FontAwesomeStyles['fa-cloud-upload'],
+                      FontAwesomeStyles['fa-3x'])}
                   />
-                </p>
+                </div>
                 <WrappedMessage message={messages.assetsDropZoneHeader}>
                   { displayText => (
                     <h2 data-identifier="asset-drop-zone-header">{displayText}</h2>
@@ -63,11 +75,11 @@ export default class AssetsDropZone extends React.Component {
                   <WrappedMessage message={messages.assetsDropZoneBrowseLabel} >
                     { displayText => (
                       <Button
+                        aria-describedby="asset-drop-zone-max-file-size-label"
                         className={['btn', 'btn-outline-primary']}
+                        data-identifier="asset-drop-zone-browse-button"
                         label={displayText}
                         onClick={this.handleClick}
-                        data-identifier="asset-drop-zone-browse-button"
-                        aria-describedby="asset-drop-zone-max-file-size-label"
                       />
                     )}
                   </WrappedMessage>
@@ -79,7 +91,12 @@ export default class AssetsDropZone extends React.Component {
                   }}
                 >
                   { displayText => (
-                    <p aria-hidden id="asset-drop-zone-max-file-size-label" data-identifier="asset-drop-zone-max-file-size-label">
+                    <p
+                      aria-hidden
+                      className={styles['center-text']}
+                      data-identifier="asset-drop-zone-max-file-size-label"
+                      id="asset-drop-zone-max-file-size-label"
+                    >
                       {displayText}
                     </p>
                   )}
@@ -94,9 +111,12 @@ export default class AssetsDropZone extends React.Component {
 }
 
 AssetsDropZone.propTypes = {
+  acceptedFileTypes: PropTypes.string,
+  compactStyle: PropTypes.bool,
   uploadAssets: PropTypes.func.isRequired,
   uploadExceedMaxCount: PropTypes.func.isRequired,
   uploadExceedMaxSize: PropTypes.func.isRequired,
+  uploadInvalidFileType: PropTypes.func.isRequired,
   maxFileCount: PropTypes.number,
   maxFileSizeMB: PropTypes.number,
   courseDetails: PropTypes.shape({
@@ -112,6 +132,8 @@ AssetsDropZone.propTypes = {
 };
 
 AssetsDropZone.defaultProps = {
+  acceptedFileTypes: undefined,
+  compactStyle: false,
   maxFileCount: 1000,
   maxFileSizeMB: 10,
 };

@@ -1,25 +1,46 @@
-import React from 'react';
-import PropTypes from 'prop-types';
 import { Button, CheckBox, Fieldset, Icon, InputText, Modal, StatusAlert, Variant } from '@edx/paragon';
 import classNames from 'classnames';
+import { connect } from 'react-redux';
 import FontAwesomeStyles from 'font-awesome/css/font-awesome.min.css';
+import PropTypes from 'prop-types';
+import React from 'react';
 
+import { assetActions } from '../../data/constants/actionTypes';
+import AssetsResultsCount from '../AssetsResultsCount/index';
+import { getPageType, pageTypes } from '../../utils/getAssetsPageType';
 import messages from './displayMessages';
-import styles from './EditImageModal.scss';
-import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
 import rewriteStaticLinks from '../../utils/rewriteStaticLinks';
+import styles from './EditImageModal.scss';
+import WrappedAssetsClearSearchButton from '../AssetsClearSearchButton/container';
+import WrappedAssetsDropZone from '../AssetsDropZone/container';
+import WrappedAssetsList from '../AssetsList/container';
+import WrappedAssetsSearch from '../AssetsSearch/container';
+import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
+import WrappedPagination from '../Pagination/container';
 
-const LOADING_SPINNER_DELAY = 1000; // in milliseconds
+
+// Create an AssetsResultsCount that is not aware of the Images filter.
+// This is so that the message will initially say "out of N total files" instead of "out of N
+// possible matches".
+const WrappedAssetsResultsCount = connect((state) => {
+  const { Images, ...typesWithoutImages } = state.metadata.filters.assetTypes;
+  const filtersWithoutImages = { ...state.metadata.filters, assetTypes: typesWithoutImages };
+  return {
+    filtersMetadata: filtersWithoutImages,
+    paginationMetadata: state.metadata.pagination,
+    searchMetadata: state.metadata.search,
+  };
+})(AssetsResultsCount);
 
 const imageDescriptionID = 'imageDescription';
 const imageDescriptionFieldsetID = 'imageDescriptionFieldset';
 const imageDimensionsFieldsetID = 'imageDimensionsFieldset';
 const imageHeightID = 'imageHeight';
-const imageSourceID = 'imageSource';
 const imageWidthID = 'imageWidth';
 
 const initialEditImageModalState = {
   areProportionsLocked: true,
+  assetsPageType: pageTypes.SKELETON,
   baseAssetURL: '',
   displayLoadingSpinner: false,
   imageDescription: '',
@@ -27,7 +48,6 @@ const initialEditImageModalState = {
   isImageDecorative: false,
   isImageLoaded: false,
   isImageLoading: false,
-  isImageValid: true,
   isImageDescriptionValid: true,
   isImageDimensionsValid: true,
   isStatusAlertOpen: false,
@@ -35,6 +55,8 @@ const initialEditImageModalState = {
   imageStyle: '',
   open: false,
   currentValidationMessages: {},
+  pageNumber: 1,
+  shouldShowPreviousButton: false,
 };
 
 export default class EditImageModal extends React.Component {
@@ -43,29 +65,69 @@ export default class EditImageModal extends React.Component {
 
     this.state = { ...initialEditImageModalState };
 
-    this.getStatusAlert = this.getStatusAlert.bind(this);
-    this.getStatusAlertDialog = this.getStatusAlertDialog.bind(this);
     this.handleOpenModal = this.handleOpenModal.bind(this);
     this.onConstrainProportionsClick = this.onConstrainProportionsClick.bind(this);
     this.onEditImageModalClose = this.onEditImageModalClose.bind(this);
     this.onImageDescriptionBlur = this.onImageDescriptionBlur.bind(this);
+    this.onImageDimensionChange = this.onImageDimensionChange.bind(this);
     this.onInsertImageButtonClick = this.onInsertImageButtonClick.bind(this);
     this.onImageIsDecorativeClick = this.onImageIsDecorativeClick.bind(this);
     this.onImageLoad = this.onImageLoad.bind(this);
-    this.onImageSourceBlur = this.onImageSourceBlur.bind(this);
+    this.onNextPageButtonClick = this.onNextPageButtonClick.bind(this);
+    this.onPreviousPageButtonClick = this.onPreviousPageButtonClick.bind(this);
     this.onStatusAlertClose = this.onStatusAlertClose.bind(this);
-    this.validateImageDescription = this.validateImageDescription.bind(this);
-    this.validateImageSource = this.validateImageSource.bind(this);
+    // Create ref setters to minimize anonymous inline functions
+    this.setImageDescriptionInputRef = this.setImageDescriptionInputRef.bind(this);
+    this.setImageFormRef = this.setImageFormRef.bind(this);
+    this.setImagePreviewRef = this.setImagePreviewRef.bind(this);
+    this.setModalWrapperRef = this.setModalWrapperRef.bind(this);
+    this.setStatusAlertRef = this.setStatusAlertRef.bind(this);
+    this.setPreviousButtonRef = this.setPreviousButtonRef.bind(this);
 
-    this.formRef = null;
-    this.imageSourceInputRef = null;
+    this.imageDescriptionInputRef = null;
+    this.imageFormRef = null;
     this.imgRef = null;
+    this.previousPageButtonRef = null;
     this.modalWrapperRef = null;
     this.statusAlertRef = null;
   }
 
   componentDidMount() {
     this.modalWrapperRef.addEventListener('openModal', this.handleOpenModal);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const newState = {};
+    switch (this.props.assetsStatus.type) {
+      case assetActions.upload.UPLOAD_ASSET_SUCCESS: {
+        const uploadedAsset = this.props.assetsStatus.response.asset;
+        this.props.selectAsset(uploadedAsset, 0);
+        newState.pageNumber = 2;
+        newState.imageSource = uploadedAsset.portable_url;
+        break;
+      }
+      default: {
+        if (nextProps.selectedAsset.portable_url) {
+          newState.imageSource = nextProps.selectedAsset.portable_url;
+        }
+        break;
+      }
+    }
+    this.setState(state => ({
+      ...newState,
+      assetsPageType: getPageType(nextProps, state.assetsPageType),
+    }));
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.pageNumber === 1 && prevState.pageNumber === 2) {
+      // TODO: add focus
+    }
+
+    if (this.state.pageNumber === 2 && prevState.pageNumber === 1
+      && this.state.shouldShowPreviousButton) {
+      this.previousPageButtonRef.focus();
+    }
   }
 
   componentWillUnmount() {
@@ -82,6 +144,8 @@ export default class EditImageModal extends React.Component {
     this.setState({
       open: false,
     });
+
+    this.resetImageSelection();
   }
 
   onImageIsDecorativeClick = (checked) => {
@@ -102,7 +166,6 @@ export default class EditImageModal extends React.Component {
       },
       isImageLoaded: true,
       isImageLoading: false,
-      isImageValid: true,
     });
   }
 
@@ -111,41 +174,8 @@ export default class EditImageModal extends React.Component {
       displayLoadingSpinner: false,
       imageDimensions: {},
       isImageLoading: false,
-      isImageValid: false,
       isImageLoaded: false,
     });
-  }
-
-  onImageSourceBlur = (imageSource) => {
-    const isImageSourceEmpty = imageSource.length === 0;
-
-    /*
-      Because we do not render the img when image source is empty string, we cannot
-      rely on onImageError to be called, which typically would set imageDimensions,
-      isImageLoaded, and isImageValid correctly, so we have to do it here as well.
-      If the image source is not empty string, we allow onImageLoad or onImageError to
-      determine the value of these variables instead.
-    */
-    const imageDimensions = isImageSourceEmpty ? {} : this.state.imageDimensions;
-    const isImageLoaded = isImageSourceEmpty ? false : this.state.isImageLoaded;
-    const isImageValid = !isImageSourceEmpty && this.state.isImageValid;
-
-    this.setState({
-      imageDimensions,
-      imageSource,
-      isImageLoading: imageSource.length > 0 && (this.state.imageSource !== imageSource),
-      isImageLoaded,
-      isImageValid,
-    });
-
-    setTimeout(() => {
-      if (this.state.isImageLoading) {
-        // show loading spinner when image is taking a long time to load
-        this.setState({
-          displayLoadingSpinner: true,
-        });
-      }
-    }, LOADING_SPINNER_DELAY);
   }
 
   onImageDescriptionBlur = (imageDescription) => {
@@ -182,18 +212,26 @@ export default class EditImageModal extends React.Component {
     };
   }
 
+  onNextPageButtonClick = () => {
+    if (this.isAssetSelected()) {
+      this.setState({
+        pageNumber: 2,
+      });
+    }
+  }
+
+  onPreviousPageButtonClick = () => {
+    this.setState({
+      pageNumber: 1,
+    });
+  }
+
   onInsertImageButtonClick = () => {
-    const isValidImageSource = this.validateImageSource();
     const isValidImageDescription = this.validateImageDescription();
     const isValidImageDimensions = this.validateImageDimensions();
-    const isValidFormContent = isValidImageSource.isValid && isValidImageDescription.isValid &&
-      isValidImageDimensions.isValid;
+    const isValidFormContent = isValidImageDescription.isValid && isValidImageDimensions.isValid;
 
     const currentValidationMessages = {};
-
-    if (!isValidImageSource.isValid) {
-      currentValidationMessages[imageSourceID] = isValidImageSource.validationMessage;
-    }
 
     if (!isValidImageDescription.isValid) {
       currentValidationMessages[imageDescriptionID] = isValidImageDescription.validationMessage;
@@ -205,14 +243,13 @@ export default class EditImageModal extends React.Component {
 
     this.setState({
       isStatusAlertOpen: !isValidFormContent,
-      isImageValid: isValidImageSource.isValid,
       isImageDescriptionValid: isValidImageDescription.isValid,
       isImageDimensionsValid: isValidImageDimensions.isValid,
       currentValidationMessages,
     });
 
     if (isValidFormContent) {
-      this.formRef.dispatchEvent(new CustomEvent('submitForm',
+      this.imageFormRef.dispatchEvent(new CustomEvent('submitForm',
         {
           bubbles: true,
           detail: {
@@ -228,17 +265,51 @@ export default class EditImageModal extends React.Component {
       this.setState({
         open: false,
       });
+
+      this.resetImageSelection();
     } else {
       this.statusAlertRef.focus();
     }
   }
 
   onStatusAlertClose = () => {
-    this.imageSourceInputRef.focus();
+    if (this.state.pageNumber === 1) {
+      // TODO: add focus
+    } else if (this.state.pageNumber === 2) {
+      if (this.state.shouldShowPreviousButton) {
+        this.previousPageButtonRef.focus();
+      } else {
+        this.imageDescriptionInputRef.focus();
+      }
+    }
 
     this.setState({
       isStatusAlertOpen: false,
     });
+  }
+
+  setImageDescriptionInputRef(input) {
+    this.imageDescriptionInputRef = input;
+  }
+
+  setImageFormRef(input) {
+    this.imageFormRef = input;
+  }
+
+  setImagePreviewRef(input) {
+    this.imgRef = input;
+  }
+
+  setModalWrapperRef(input) {
+    this.modalWrapperRef = input;
+  }
+
+  setPreviousButtonRef(input) {
+    this.previousPageButtonRef = input;
+  }
+
+  setStatusAlertRef(input) {
+    this.statusAlertRef = input;
   }
 
   getNaturalDimension = (dimensionType) => {
@@ -259,50 +330,6 @@ export default class EditImageModal extends React.Component {
     }
     return this.state.imageDimensions[dimensionType];
   }
-
-  getImageSourceInput = () => (
-    <InputText
-      name="imageSource"
-      className={[]}
-      label={<WrappedMessage message={messages.editImageModalImageSourceLabel} />}
-      description={
-        <WrappedMessage
-          message={messages.editImageModalImageSourceDescription}
-          values={{
-            link: '"http://example.url.com/imageName.png"',
-          }}
-        />
-      }
-      id={imageSourceID}
-      type="text"
-      value={this.state.imageSource}
-      onBlur={this.onImageSourceBlur}
-      inputRef={(input) => { this.imageSourceInputRef = input; }}
-      isValid={this.state.isImageValid}
-      validationMessage={<WrappedMessage message={messages.editImageModalImageNotFoundError} />}
-      themes={['danger']}
-      dangerIconDescription={
-        <WrappedMessage message={messages.editImageModalFormError} />
-      }
-      inputGroupAppend={this.state.displayLoadingSpinner ? (
-        <div className="input-group-text">
-          <WrappedMessage message={messages.editImageModalImageLoadingIcon}>
-            { displayText => (
-              <Icon
-                id="spinner"
-                className={[
-                  FontAwesomeStyles.fa,
-                  FontAwesomeStyles['fa-spinner'],
-                  FontAwesomeStyles['fa-spin'],
-                ]}
-                screenReaderText={displayText}
-              />
-            )}
-          </WrappedMessage>
-        </div>
-      ) : null}
-    />
-  );
 
   getImageDescriptionInput = () => (
     <Fieldset
@@ -329,6 +356,7 @@ export default class EditImageModal extends React.Component {
         value={this.state.imageDescription}
         disabled={this.state.isImageDecorative}
         onBlur={this.onImageDescriptionBlur}
+        inputRef={this.setImageDescriptionInputRef}
       />
       <div className="or-fields">
         <WrappedMessage
@@ -451,7 +479,7 @@ export default class EditImageModal extends React.Component {
       src={this.getImageAssetSource()}
       onLoad={this.onImageLoad}
       onError={this.onImageError}
-      ref={(input) => { this.imgRef = input; }}
+      ref={this.setImagePreviewRef}
     />
   );
 
@@ -467,7 +495,7 @@ export default class EditImageModal extends React.Component {
             {displayText}
           </span>)}
       </WrappedMessage>
-      { this.state.imageSource && this.getImage() }
+      {this.state.imageSource && this.getImage()}
     </div>
   );
 
@@ -511,20 +539,141 @@ export default class EditImageModal extends React.Component {
       dialog={this.getStatusAlertDialog()}
       onClose={this.onStatusAlertClose}
       open={this.state.isStatusAlertOpen}
-      ref={(input) => { this.statusAlertRef = input; }}
+      ref={this.setStatusAlertRef}
     />
   )
 
-  getModalBody = () => (
+  getModalHeader = () => {
+    let header;
+    if (this.state.pageNumber === 1) {
+      header = (
+        <WrappedMessage
+          message={messages.editImageModalInsertTitle}
+        />
+      );
+    } else if (this.state.pageNumber === 2) {
+      header = (
+        <WrappedMessage
+          message={messages.editImageModalEditTitle}
+        />
+      );
+    }
+    return (
+      <div aria-live="polite">
+        { header }
+      </div>
+    );
+  }
+
+  getModalBody = () => {
+    let body;
+    if (this.state.pageNumber === 1) {
+      body = this.getImageSelectionModalBody();
+    } else if (this.state.pageNumber === 2) {
+      body = this.getImageSettingsModalBody();
+    }
+    return body;
+  }
+
+  getImageSelectionModalBodyAssetsList = (type) => {
+    switch (type) {
+      case pageTypes.NORMAL:
+        return (<WrappedAssetsList />);
+      case pageTypes.NO_ASSETS:
+        return (
+          <div className="mt-3">
+            <WrappedMessage message={messages.editImageModalAssetsListNoAssetsMessage} tagName="h3" />
+          </div>
+        );
+      case pageTypes.NO_RESULTS:
+        return (
+          <React.Fragment>
+            <WrappedMessage message={messages.editImageModalAssetsListNoResultsMessage} tagName="h3" />
+            <WrappedAssetsClearSearchButton />
+          </React.Fragment>
+        );
+      case pageTypes.SKELETON:
+        return (
+          <div className="text-center mt-3">
+            <span className="fa-icon-spacing" aria-hidden>
+              <span
+                className={classNames([
+                  FontAwesomeStyles.fa,
+                  FontAwesomeStyles['fa-spinner'],
+                  FontAwesomeStyles['fa-spin'],
+                ])}
+              />
+            </span>
+            <WrappedMessage message={messages.editImageModalAssetsListLoadingSpinner} />
+          </div>
+        );
+      default:
+        throw new Error(`Unknown pageType ${type}.`);
+    }
+  }
+
+  getImageSelectionModalBody = () => (
+    <React.Fragment>
+      <div className="row no-gutters">
+        <div className="col">
+          {this.getStatusAlert()}
+        </div>
+      </div>
+      <div className="row mb-5">
+        <div className="col">
+          <WrappedAssetsDropZone
+            maxFileCount={1}
+            maxFileSizeMB={10}
+            acceptedFileTypes={'image/*'}
+            compactStyle
+          />
+        </div>
+      </div>
+      <div className="row no-gutters">
+        <div className="col">
+          <h3>Select a previously uploaded image</h3>
+        </div>
+      </div>
+      <div className="row">
+        <div className="col-6 order-2">
+          {(this.state.assetsPageType === pageTypes.NORMAL ||
+            this.state.assetsPageType === pageTypes.NO_RESULTS) && (
+            <WrappedAssetsSearch />
+          )}
+        </div>
+        <div className="col-6 order-1">
+          {this.state.assetsPageType === pageTypes.NORMAL && (
+            <WrappedAssetsResultsCount />
+          )}
+        </div>
+      </div>
+      <div className="row">
+        <div className="col">
+          {this.getImageSelectionModalBodyAssetsList(this.state.assetsPageType)}
+        </div>
+      </div>
+      {this.state.assetsPageType === pageTypes.NORMAL && (
+        <div className="row mt-3 no-gutters">
+          <div className="col">
+            <WrappedPagination />
+          </div>
+        </div>
+      )}
+    </React.Fragment>
+  );
+
+  getImageSettingsModalBody = () => (
     <React.Fragment>
       {this.getStatusAlert()}
+      <div className="row">
+        {this.state.shouldShowPreviousButton && this.getPreviousPageButton()}
+      </div>
       <div className="row">
         <div className="col-sm-4">
           {this.getImagePreview()}
         </div>
         <div className="col">
-          <form ref={(input) => { this.formRef = input; }}>
-            {this.getImageSourceInput()}
+          <form ref={this.setImageFormRef}>
             {this.getImageDescriptionInput()}
             {this.getImageDimensionsInput()}
           </form>
@@ -533,7 +682,43 @@ export default class EditImageModal extends React.Component {
     </React.Fragment>
   );
 
-  getModalInsertImageButton = () => (
+  getModalButtons = () => {
+    let buttons;
+    if (this.state.pageNumber === 1) {
+      buttons = this.getNextPageButton();
+    } else if (this.state.pageNumber === 2) {
+      buttons = this.getInsertImageButton();
+    }
+    return buttons;
+  }
+
+  getNextPageButton = () => (
+    <Button
+      label={
+        <WrappedMessage
+          message={messages.editImageModalNextPageButton}
+        />
+      }
+      buttonType="primary"
+      disabled={!this.isAssetSelected()}
+      onClick={this.onNextPageButtonClick}
+    />
+  );
+
+  getPreviousPageButton = () => (
+    <Button
+      label={
+        <WrappedMessage
+          message={messages.editImageModalPreviousPageButton}
+        />
+      }
+      buttonType="link"
+      onClick={this.onPreviousPageButtonClick}
+      inputRef={this.setPreviousButtonRef}
+    />
+  );
+
+  getInsertImageButton = () => (
     <Button
       label={
         <WrappedMessage
@@ -543,12 +728,24 @@ export default class EditImageModal extends React.Component {
       buttonType="primary"
       onClick={this.onInsertImageButtonClick}
     />
-  )
+  );
+
+  resetImageSelection = () => {
+    this.props.updatePage(0, this.props.courseDetails);
+    this.props.clearSelectedAsset();
+  }
 
   handleOpenModal = (event) => {
-    this.setState({
+    const eventSource = event.detail.src;
+    let isEventSourceEmpty = true;
+    if (eventSource) {
+      isEventSourceEmpty = false;
+    }
+
+    this.setState((state, props) => ({
       // reset state to initial and then add in overrides
       ...initialEditImageModalState,
+      assetsPageType: getPageType(props, state.assetsPageType),
       baseAssetURL: event.detail.baseAssetUrl || '',
       imageDescription: event.detail.alt || '',
       imageDimensions: (event.detail.width && event.detail.height) ? {
@@ -556,13 +753,19 @@ export default class EditImageModal extends React.Component {
         height: event.detail.height,
         aspectRatio: event.detail.width / event.detail.height,
       } : {},
-      imageSource: event.detail.src || '',
+      imageSource: eventSource || '',
       imageStyle: event.detail.style || '',
       isImageDecorative: event.detail.alt === '',
       // if existing img had a source, assume it could be loaded and show the image preview
-      isImageLoaded: !!event.detail.src,
+      isImageLoaded: !!eventSource,
       open: true,
-    });
+      pageNumber: isEventSourceEmpty ? 1 : 2,
+      shouldShowPreviousButton: isEventSourceEmpty,
+    }));
+
+    if (this.props.assetsList.length === 0) {
+      this.props.getAssets({ assetTypes: { Images: true }, pageSize: 4 }, this.props.courseDetails);
+    }
   }
 
   validateImageDescription = () => {
@@ -609,42 +812,55 @@ export default class EditImageModal extends React.Component {
     return feedback;
   }
 
-  validateImageSource = () => {
-    let feedback = { isValid: true };
-    const { imageSource, isImageValid } = this.state;
-
-    if (!imageSource || !isImageValid) {
-      feedback = {
-        isValid: false,
-        validationMessage:
-          (<WrappedMessage
-            message={messages.editImageModalFormValidImageSource}
-          />),
-        dangerIconDescription: <WrappedMessage message={messages.editImageModalFormError} />,
-      };
-    }
-    return feedback;
-  }
+  isAssetSelected = () => (this.props.selectedAsset
+    && Object.keys(this.props.selectedAsset).length !== 0);
 
   render = () => (
     <div
-      ref={(input) => { this.modalWrapperRef = input; }}
+      ref={this.setModalWrapperRef}
     >
       <Modal
         open={this.state.open}
-        title={
-          <WrappedMessage
-            message={messages.editImageModalTitle}
-          />
-        }
+        title={this.getModalHeader()}
         body={this.getModalBody()}
+        closeText="Cancel"
         onClose={this.onEditImageModalClose}
-        buttons={[this.getModalInsertImageButton()]}
+        buttons={[this.getModalButtons()]}
       />
     </div>
   );
 }
 
 EditImageModal.propTypes = {
+  assetsList: PropTypes.arrayOf(PropTypes.object).isRequired,
+  assetsStatus: PropTypes.shape({
+    response: PropTypes.object,
+    type: PropTypes.string,
+  }).isRequired,
+  clearSelectedAsset: PropTypes.func.isRequired,
+  courseDetails: PropTypes.shape({
+    lang: PropTypes.string,
+    url_name: PropTypes.string,
+    name: PropTypes.string,
+    display_course_number: PropTypes.string,
+    num: PropTypes.string,
+    org: PropTypes.string,
+    id: PropTypes.string,
+    revision: PropTypes.string,
+    base_url: PropTypes.string,
+  }).isRequired,
   courseImageAccessibilityDocs: PropTypes.string.isRequired,
+  getAssets: PropTypes.func.isRequired,
+  selectAsset: PropTypes.func.isRequired,
+  selectedAsset: PropTypes.shape({
+    display_name: PropTypes.string,
+    content_type: PropTypes.string,
+    url: PropTypes.string,
+    date_added: PropTypes.string,
+    id: PropTypes.string,
+    portable_url: PropTypes.string,
+    thumbnail: PropTypes.string,
+    external_url: PropTypes.string,
+  }).isRequired,
+  updatePage: PropTypes.func.isRequired,
 };

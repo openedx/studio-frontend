@@ -1,11 +1,12 @@
 import React from 'react';
 
-import AssetsPage, { TABLE_CONTENTS_ID, types } from './index';
-import { assetActions } from '../../data/constants//actionTypes';
+import { assetActions } from '../../data/constants/actionTypes';
+import AssetsPage, { TABLE_CONTENTS_ID } from './index';
 import courseDetails, { testAssetsList } from '../../utils/testConstants';
+import messages from './displayMessages';
+import { pageTypes } from '../../utils/getAssetsPageType';
 import { shallowWithIntl } from '../../utils/i18n/enzymeHelper';
 import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
-import messages from './displayMessages';
 
 let wrapper;
 
@@ -163,7 +164,7 @@ describe('<AssetsPage />', () => {
     });
     describe('has correct state', () => {
       it('pageType', () => {
-        expect(wrapper.state('pageType')).toEqual(types.NORMAL);
+        expect(wrapper.state('pageType')).toEqual(pageTypes.NORMAL);
       });
     });
     describe('has correct behavior', () => {
@@ -172,7 +173,7 @@ describe('<AssetsPage />', () => {
           assetsList: [],
         });
 
-        expect(wrapper.state('pageType')).toEqual(types.NO_ASSETS);
+        expect(wrapper.state('pageType')).toEqual(pageTypes.NO_ASSETS);
       });
     });
   });
@@ -189,8 +190,7 @@ describe('<AssetsPage />', () => {
       it('noAssetsBody', () => {
         const body = wrapper.find('.container .row .col-10');
 
-        expect(body.find(WrappedMessage).at(0).prop('message')).toEqual(messages.assetsPageNoAssetsNumFiles);
-        expect(body.find(WrappedMessage).at(1).prop('message')).toEqual(messages.assetsPageNoAssetsMessage);
+        expect(body.find(WrappedMessage).at(0).prop('message')).toEqual(messages.assetsPageNoAssetsMessage);
       });
       it('with correct markup structure', () => {
         const page = wrapper.find('.container .row .col');
@@ -203,12 +203,11 @@ describe('<AssetsPage />', () => {
 
         expect(body).toHaveLength(1);
         expect(body.find(WrappedMessage).at(0).prop('tagName')).toEqual('h3');
-        expect(body.find(WrappedMessage).at(1).prop('tagName')).toEqual('h4');
       });
     });
     describe('has correct state', () => {
       it('pageType', () => {
-        expect(wrapper.state('pageType')).toEqual(types.NO_ASSETS);
+        expect(wrapper.state('pageType')).toEqual(pageTypes.NO_ASSETS);
       });
     });
     describe('has correct behavior', () => {
@@ -219,7 +218,7 @@ describe('<AssetsPage />', () => {
           }],
         });
 
-        expect(wrapper.state('pageType')).toEqual(types.NORMAL);
+        expect(wrapper.state('pageType')).toEqual(pageTypes.NORMAL);
       });
     });
   });
@@ -248,8 +247,7 @@ describe('<AssetsPage />', () => {
       it('noResultsBody for 1 filter', () => {
         const body = wrapper.find('.container .row .col-10');
 
-        expect(body.find(WrappedMessage).at(0).prop('message')).toEqual(messages.assetsPageNoResultsCountFiles);
-        expect(body.find(WrappedMessage).at(1).prop('message')).toEqual(messages.assetsPageNoResultsMessage);
+        expect(body.find(WrappedMessage).at(0).prop('message')).toEqual(messages.assetsPageNoResultsMessage);
       });
 
       it('with correct markup structure', () => {
@@ -265,7 +263,6 @@ describe('<AssetsPage />', () => {
 
         expect(body).toHaveLength(1);
         expect(body.find(WrappedMessage).at(0).prop('tagName')).toEqual('h3');
-        expect(body.find(WrappedMessage).at(1).prop('tagName')).toEqual('h4');
       });
       it('noResultsBody for 2+ filters', () => {
         wrapper.setProps({
@@ -278,8 +275,7 @@ describe('<AssetsPage />', () => {
         });
 
         const body = wrapper.find('.container .row .col-10');
-        expect(body.find(WrappedMessage).at(0).prop('message')).toEqual(messages.assetsPageNoResultsCountFiles);
-        expect(body.find(WrappedMessage).at(1).prop('message')).toEqual(messages.assetsPageNoResultsMessage);
+        expect(body.find(WrappedMessage).at(0).prop('message')).toEqual(messages.assetsPageNoResultsMessage);
       });
       describe('AssetsClearFiltersButton', () => {
         beforeEach(() => {
@@ -312,7 +308,7 @@ describe('<AssetsPage />', () => {
     });
     describe('has correct state', () => {
       it('pageType', () => {
-        expect(wrapper.state('pageType')).toEqual(types.NO_RESULTS);
+        expect(wrapper.state('pageType')).toEqual(pageTypes.NO_RESULTS);
       });
     });
     describe('has correct behavior', () => {
@@ -323,7 +319,7 @@ describe('<AssetsPage />', () => {
           }],
         });
 
-        expect(wrapper.state('pageType')).toEqual(types.NORMAL);
+        expect(wrapper.state('pageType')).toEqual(pageTypes.NORMAL);
       });
     });
   });
@@ -338,7 +334,7 @@ describe('<AssetsPage />', () => {
     });
     describe('has correct state', () => {
       it('pageType', () => {
-        expect(wrapper.state('pageType')).toEqual(types.SKELETON);
+        expect(wrapper.state('pageType')).toEqual(pageTypes.SKELETON);
       });
     });
     describe('has correct behavior', () => {
@@ -349,7 +345,7 @@ describe('<AssetsPage />', () => {
           }],
         });
 
-        expect(wrapper.state('pageType')).toEqual(types.NORMAL);
+        expect(wrapper.state('pageType')).toEqual(pageTypes.NORMAL);
       });
     });
   });
