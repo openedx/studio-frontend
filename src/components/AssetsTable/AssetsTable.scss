@@ -43,11 +43,15 @@
 }
 
 .table thead th {
-  min-width: 12rem;
-
   button {
     padding: 0;
   }
+}
+
+// This gives the "Copy URLs" column header enough space so that it doesn't wrap and make the whole
+// header row too wide vertically.
+.table thead th:nth-child(5) {
+  min-width: $spacer * 12;
 }
 
 // TODO: figure out how to receive these styles from Paragon instead of this copy-and-paste
