@@ -1,7 +1,14 @@
 import { connect } from 'react-redux';
 
 import EditImageModal from '.';
-import { clearAssetsStatus, clearSelectedAsset, getAssets, pageUpdate, selectAsset } from '../../data/actions/assets';
+import {
+  clearAssetsStatus,
+  clearSelectedAsset,
+  getAssets,
+  pageUpdate,
+  searchUpdate,
+  selectAsset,
+} from '../../data/actions/assets';
 
 
 // Create an EditImageModal that is not aware of the Images filter.
@@ -24,6 +31,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = dispatch => ({
   clearAssetsStatus: () => dispatch(clearAssetsStatus()),
+  clearSearch: courseDetails => dispatch(searchUpdate('', courseDetails)),
   clearSelectedAsset: () => dispatch(clearSelectedAsset()),
   getAssets: (request, courseDetails) => dispatch(getAssets(request, courseDetails)),
   selectAsset: (asset, index) => dispatch(selectAsset(asset, index)),
