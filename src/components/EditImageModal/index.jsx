@@ -145,6 +145,7 @@ export default class EditImageModal extends React.Component {
       open: false,
     });
 
+    this.props.clearSearch(this.props.courseDetails);
     this.resetImageSelection();
   }
 
@@ -837,6 +838,7 @@ EditImageModal.propTypes = {
     response: PropTypes.object,
     type: PropTypes.string,
   }).isRequired,
+  clearSearch: PropTypes.func.isRequired,
   clearSelectedAsset: PropTypes.func.isRequired,
   courseDetails: PropTypes.shape({
     lang: PropTypes.string,
