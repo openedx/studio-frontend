@@ -130,6 +130,9 @@ Check [github](https://github.com/edx/studio-frontend/releases), [npm](https://w
 
 In order for `semantic-release` to determine which release type (major/minor/patch) to make, commits must be formatted as specified by [these Angular conventions](https://github.com/angular/angular.js/blob/62e2ec18e65f15db4f52bb9f695a92799c58b5f1/DEVELOPERS.md#-git-commit-guidelines). TravisBuddy will let you know if anything is wrong before you merge your PR. It can be difficult at first, but eventually you get used to it and the added value of automatic releases is well worth it, in our opinions.
 
+#### A note on merge messages
+
+Note that when you merge a PR to master (using a merge commit; we've disabled squash-n-merge), there are actually *2* commits that land on the master branch. The first is the one contained in your PR, which has been linted already. The other is the merge commit, which commitlint is smart enough to ignore due to [these regexes](https://github.com/marionebl/commitlint/blob/ddb470c4d45ccf6e2d5a82ce911b96594ccffb59/%40commitlint/is-ignored/src/index.js). The point here is that you should not change the default `Merge pull request <number> from <branch>` message on your merge commit, or else the master build will fail and we won't get a deploy.
 
 ## Updating Latest Docker Image in Docker Hub
 
