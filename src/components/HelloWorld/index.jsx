@@ -45,6 +45,7 @@ export default class HelloWorld extends React.Component {
         />
         <Button
           buttonType="primary"
+          id="open-modal-btn"
           label="Hello, world!"
           onClick={this.handleButtonClick}
         />
