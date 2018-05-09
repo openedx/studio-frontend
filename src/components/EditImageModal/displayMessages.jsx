@@ -136,6 +136,11 @@ const messages = defineMessages({
     defaultMessage: 'Loading...',
     description: 'Text displayed with a loading spinner icon indicating that an image is loading',
   },
+  editImageModalCancelButton: {
+    id: 'editImageModalCancelButton',
+    defaultMessage: 'Cancel',
+    description: 'Button text to close the modal',
+  },
   editImageModalNextPageButton: {
     id: 'editImageModalNextPageButton',
     defaultMessage: 'Next',

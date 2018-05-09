@@ -118,6 +118,7 @@
   "editImageModalImageOrFields": "or",
   "editImageModalImageNotFoundError": "Make sure the image source is correct.",
   "editImageModalImageLoadingIcon": "Loading...",
+  "editImageModalCancelButton": "Cancel",
   "editImageModalNextPageButton": "Next",
   "editImageModalPreviousPageButton": "Back",
   "paginationAriaLabel": "Content pagination",

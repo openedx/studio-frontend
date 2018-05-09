@@ -6,6 +6,8 @@ import React from 'react';
 import EditImageModal from './index';
 import { getMockStore } from '../../utils/testConstants';
 import messages from './displayMessages';
+import mockModalPortal from '../../utils/mockModalPortal';
+import mockQuerySelector from '../../utils/mockQuerySelector';
 import rewriteStaticLinks from '../../utils/rewriteStaticLinks';
 import { shallowWithIntl } from '../../utils/i18n/enzymeHelper';
 import WrappedEditImageModal from './container';
@@ -72,7 +74,15 @@ let editImageModal;
 
 describe('EditImageModal', () => {
   beforeEach(() => {
+    mockQuerySelector.init();
+    mockModalPortal.init();
+
     editImageModal = getEditImageModal(wrapper);
+  });
+
+  afterEach(() => {
+    mockModalPortal.reset();
+    mockQuerySelector.reset();
   });
 
   describe('page 1 renders', () => {
@@ -80,7 +90,8 @@ describe('EditImageModal', () => {
       it('a closed modal by default', () => {
         const modal = getModal(editImageModal);
         expect(modal.find('.modal')).toHaveLength(1);
-        expect(modal.find('.modal-open .modal-backdrop .show')).toHaveLength(0);
+        expect(modal.find('.modal.show')).toHaveLength(0);
+        expect(modal.find('.modal-backdrop.show')).toHaveLength(0);
       });
 
       it('an open modal when this.state.open is true', () => {
@@ -88,7 +99,8 @@ describe('EditImageModal', () => {
         const modal = getModal(editImageModal);
 
         expect(modal.find('.modal')).toHaveLength(1);
-        expect(modal.find('.modal .modal-open .modal-backdrop .show')).toHaveLength(1);
+        expect(modal.find('.modal.show')).toHaveLength(1);
+        expect(modal.find('.modal-backdrop.show')).toHaveLength(1);
       });
 
       it('modal title text', () => {

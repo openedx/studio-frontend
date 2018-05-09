@@ -53,18 +53,3 @@
 .table thead th:nth-child(5) {
   min-width: $spacer * 12;
 }
-
-// TODO: figure out how to receive these styles from Paragon instead of this copy-and-paste
-// (from: https://github.com/edx/paragon/blob/master/src/Modal/Modal.scss)
-
-.modal-open {
-  display: block;
-}
-
-.modal-backdrop {
-  background-color: rgba(0,0,0,0.3);
-
-  // Fade for backdrop
-  &.fade { opacity: 0; }
-  &.show { opacity: 1; }
-}

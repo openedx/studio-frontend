@@ -15,7 +15,7 @@
   "license": "AGPL-3.0",
   "dependencies": {
     "@edx/edx-bootstrap": "^1.0.0",
-    "@edx/paragon": "2.7.0",
+    "@edx/paragon": "3.0.5",
     "babel-polyfill": "^6.26.0",
     "classnames": "^2.2.5",
     "copy-to-clipboard": "^3.0.8",
@@ -32,7 +32,6 @@
     "react-paginate": "^5.0.0",
     "react-redux": "^5.0.6",
     "react-transition-group": "^2.2.1",
-    "reactstrap": "^4.8.0",
     "redux": "^3.7.2",
     "redux-devtools-extension": "^2.13.2",
     "redux-thunk": "^2.2.0",
@@ -108,7 +107,9 @@
       "<rootDir>/src/components/BackendStatusBanner/",
       "<rootDir>/src/.*/container.jsx",
       "<rootDir>/src/data/i18n/locales/",
-      "<rootDir>/src/utils/matches-prefixer.js"
+      "<rootDir>/src/utils/matches-prefixer.js",
+      "<rootDir>/src/utils/mockPortals.js",
+      "<rootDir>/src/utils/mockQuerySelector.js"
     ],
     "transformIgnorePatterns": [
       "/node_modules/(?!(@edx/paragon)/).*/"

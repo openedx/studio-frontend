@@ -11,6 +11,7 @@ import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
 import messages from './displayMessages';
 
 const isIE11 = !!window.MSInputMethodContext && !!document.documentMode;
+const modalWrapperID = 'modalWrapper';
 
 export default class AssetsTable extends React.Component {
   constructor(props) {
@@ -355,33 +356,30 @@ export default class AssetsTable extends React.Component {
 
   renderModal() {
     return (
-      <WrappedMessage message={messages.assetsTableCancel} >
-        {
-          displayText => (
-            <Modal
-              open={this.state.modalOpen}
-              title={(<WrappedMessage
-                message={messages.assetsTableDeleteObject}
-                values={{
-                  displayName: this.props.assetToDelete.display_name,
-                }}
-              />)}
-              body={this.renderModalBody()}
-              closeText={displayText}
-              onClose={this.closeModal}
-              buttons={[
-                <Button
-                  label={<WrappedMessage message={messages.assetsTablePermaDelete} />}
-                  buttonType="primary"
-                  onClick={this.deleteAsset}
-                  data-identifier="asset-confirm-delete-button"
-                />,
-              ]}
-              variant={{ status: Variant.status.WARNING }}
-            />
-          )
-        }
-      </WrappedMessage>
+      <div id={modalWrapperID}>
+        <Modal
+          open={this.state.modalOpen}
+          title={(<WrappedMessage
+            message={messages.assetsTableDeleteObject}
+            values={{
+              displayName: this.props.assetToDelete.display_name,
+            }}
+          />)}
+          body={this.renderModalBody()}
+          closeText={<WrappedMessage message={messages.assetsTableCancel} />}
+          onClose={this.closeModal}
+          buttons={[
+            <Button
+              label={<WrappedMessage message={messages.assetsTablePermaDelete} />}
+              buttonType="primary"
+              onClick={this.deleteAsset}
+              data-identifier="asset-confirm-delete-button"
+            />,
+          ]}
+          variant={{ status: Variant.status.WARNING }}
+          parentSelector={`#${modalWrapperID}`}
+        />
+      </div>
     );
   }
 

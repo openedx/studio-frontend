@@ -4,6 +4,7 @@ import AssetsTable from './index';
 import courseDetails, { testAssetsList } from '../../utils/testConstants';
 import { assetActions } from '../../data/constants/actionTypes';
 import { assetLoading } from '../../data/constants/loadingTypes';
+import mockQuerySelector from '../../utils/mockQuerySelector';
 import { mountWithIntl } from '../../utils/i18n/enzymeHelper';
 import AssetsStatusAlert from '../AssetsStatusAlert/index';
 
@@ -84,6 +85,12 @@ const numberOfWebButtons = defaultProps.assetsList.filter(asset => asset.externa
 let wrapper;
 
 describe('<AssetsTable />', () => {
+  beforeEach(() => {
+    mockQuerySelector.init();
+  });
+  afterEach(() => {
+    mockQuerySelector.reset();
+  });
   describe('renders', () => {
     beforeEach(() => {
       wrapper = mountWithIntl(
@@ -301,7 +308,7 @@ describe('<AssetsTable />', () => {
       trashButtons.at(0).simulate('click');
 
       modal = wrapper.find('[role="dialog"]');
-      expect(modal.hasClass('modal-open')).toEqual(true);
+      expect(modal.hasClass('show')).toEqual(true);
       expect(wrapper.state('modalOpen')).toEqual(true);
     });
     it('closes when Cancel button clicked; modalOpen state is false', () => {
@@ -463,11 +470,17 @@ describe('Lock Asset', () => {
   const getLockingButtons = () => wrapper.find('button > .fa-spinner');
 
   beforeEach(() => {
+    mockQuerySelector.init();
+
     wrapper = mountWithIntl(
       <AssetsTable
         {...defaultProps}
       />,
     );
+  });
+
+  afterEach(() => {
+    mockQuerySelector.reset();
   });
 
   it('renders icons and buttons', () => {
