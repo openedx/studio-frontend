@@ -4,6 +4,7 @@ import { Provider } from 'react-redux';
 import React from 'react';
 
 import EditImageModal from './index';
+import { assetActions } from '../../data/constants/actionTypes';
 import { getMockStore } from '../../utils/testConstants';
 import messages from './displayMessages';
 import mockModalPortal from '../../utils/mockModalPortal';
@@ -35,6 +36,9 @@ const getCloseStatusAlertButton = editImageModal =>
   (getStatusAlert(editImageModal).dive({ context: { store, intl } }).find(Button));
 const getInsertImageButton = editImageModal =>
   (getModalFooter(editImageModal).find(Button).first());
+const getNextButton = editImageModal =>
+  (getModalFooter(editImageModal).find(Button).first());
+const getPreviousButton = editImageModal => (getModalBody(editImageModal).find(Button));
 
 const getImageDescriptionFieldset = editImageModal =>
   (getFormContainer(editImageModal).find(Fieldset).at(0));
@@ -94,8 +98,8 @@ describe('EditImageModal', () => {
         expect(modal.find('.modal-backdrop.show')).toHaveLength(0);
       });
 
-      it('an open modal when this.state.open is true', () => {
-        editImageModal.setState({ open: true });
+      it('an open modal when this.state.isModalOpen is true', () => {
+        editImageModal.setState({ isModalOpen: true });
         const modal = getModal(editImageModal);
 
         expect(modal.find('.modal')).toHaveLength(1);
@@ -324,8 +328,8 @@ describe('EditImageModal', () => {
   });
 
   describe('Modal', () => {
-    it('this.state.open is false by default', () => {
-      expect(editImageModal.state('open')).toEqual(false);
+    it('this.state.isModalOpen is false by default', () => {
+      expect(editImageModal.state('isModalOpen')).toEqual(false);
     });
 
     it('modal is not open by default', () => {
@@ -351,7 +355,7 @@ describe('EditImageModal', () => {
       expect(editImageModal.state('imageSource')).toEqual('');
       expect(editImageModal.state('isImageDecorative')).toEqual(false);
       expect(editImageModal.state('isImageLoaded')).toEqual(false);
-      expect(editImageModal.state('open')).toEqual(true);
+      expect(editImageModal.state('isModalOpen')).toEqual(true);
     });
 
     it('handleOpenModal sets correct state for event with data (editing an image)', () => {
@@ -378,36 +382,128 @@ describe('EditImageModal', () => {
       expect(editImageModal.state('imageSource')).toEqual(sampleText);
       expect(editImageModal.state('isImageDecorative')).toEqual(false);
       expect(editImageModal.state('isImageLoaded')).toEqual(true);
-      expect(editImageModal.state('open')).toEqual(true);
+      expect(editImageModal.state('isModalOpen')).toEqual(true);
     });
 
-    it('onEditImageModalClose sets this.state.open to false', () => {
+    it('onEditImageModalClose sets this.state.isModalOpen to false', () => {
       editImageModal.setState({
         pageNumber: 2,
         shouldShowPreviousButton: true,
       });
 
       const focusSpy = jest.fn();
-
-      editImageModal.instance().statusAlertRef = {
+      editImageModal.instance().setModalWrapperRef({
+        dispatchEvent: jest.fn(),
+      });
+      editImageModal.instance().setStatusAlertRef({
         focus: focusSpy,
-      };
+      });
 
       const closeModalButton = getModal(editImageModal).find('.modal-footer').find(Button).first();
       closeModalButton.simulate('click');
 
-      expect(editImageModal.state('open')).toEqual(false);
+      expect(editImageModal.state('isModalOpen')).toEqual(false);
       expect(focusSpy).toHaveBeenCalledTimes(1);
     });
 
-    describe('Status Alert', () => {
+    describe('Status Alert: Page 1', () => {
       beforeEach(() => {
         const refMock = {
           focus: jest.fn(),
         };
 
-        editImageModal.instance().statusAlertRef = refMock;
-        editImageModal.instance().previousPageButtonRef = refMock;
+        editImageModal.instance().setDropZoneButtonRef(refMock);
+        editImageModal.instance().setStatusAlertRef(refMock);
+
+        editImageModal.setState({
+          pageNumber: 1,
+          shouldShowPreviousButton: true,
+        });
+      });
+
+      it('this.state.isStatusAlertOpen is false by default', () => {
+        expect(getStatusAlert(editImageModal).prop('open')).toEqual(false);
+        expect(editImageModal.state('isStatusAlertOpen')).toEqual(false);
+      });
+
+      it('opens statusAlert and focuses', () => {
+        const focusSpy = jest.fn();
+        editImageModal.instance().setStatusAlertRef({
+          focus: focusSpy,
+        });
+
+        editImageModal.setProps({
+          assetsStatus: {
+            type: assetActions.upload.UPLOAD_EXCEED_MAX_COUNT_ERROR,
+          },
+        });
+        const statusAlert = getStatusAlert(editImageModal);
+        expect(statusAlert.prop('open')).toEqual(true);
+
+        editImageModal.instance().componentDidUpdate({}, {});
+        expect(focusSpy).toHaveBeenCalledTimes(1);
+      });
+
+      it('displays statusAlert on too many files uploaded', () => {
+        editImageModal.setProps({
+          assetsStatus: {
+            type: assetActions.upload.UPLOAD_EXCEED_MAX_COUNT_ERROR,
+          },
+        });
+        const statusAlert = getStatusAlert(editImageModal);
+        expect(statusAlert.prop('open')).toEqual(true);
+        /*
+          Due to Enzyme issue #1213, we must wrap React Fragments in a div in order
+          to succesfully shallow them. Once Enzyme introduces support for React Fragments,
+          we can remove the extraneous div.
+        */
+        const statusAlertDialog =
+          shallowWithIntl(<div>{statusAlert.prop('dialog')}</div>).find(WrappedMessage);
+        expect(statusAlertDialog.prop('message')).toEqual(messages.editImageModalTooManyFiles);
+      });
+
+      it('displays statusAlert on invalid file type uploaded', () => {
+        editImageModal.setProps({
+          assetsStatus: {
+            type: assetActions.upload.UPLOAD_INVALID_FILE_TYPE_ERROR,
+          },
+        });
+        const statusAlert = getStatusAlert(editImageModal);
+        expect(statusAlert.prop('open')).toEqual(true);
+        /*
+          Due to Enzyme issue #1213, we must wrap React Fragments in a div in order
+          to succesfully shallow them. Once Enzyme introduces support for React Fragments,
+          we can remove the extraneous div.
+        */
+        const statusAlertDialog =
+          shallowWithIntl(<div>{statusAlert.prop('dialog')}</div>).find(WrappedMessage);
+        expect(statusAlertDialog.prop('message')).toEqual(messages.editImageModalInvalidFileType);
+      });
+
+      it('focus on page 1 is moved to dropZone browse button when status alert is closed', () => {
+        editImageModal.setProps({
+          assetsStatus: {
+            type: assetActions.upload.UPLOAD_INVALID_FILE_TYPE_ERROR,
+          },
+        });
+        const focusSpy = jest.fn();
+        editImageModal.instance().setDropZoneButtonRef({
+          focus: focusSpy,
+        });
+        getCloseStatusAlertButton(editImageModal).simulate('click');
+
+        expect(focusSpy).toHaveBeenCalledTimes(1);
+      });
+    });
+
+    describe('Status Alert: Page 2', () => {
+      beforeEach(() => {
+        const refMock = {
+          focus: jest.fn(),
+        };
+
+        editImageModal.instance().setPreviousButtonRef(refMock);
+        editImageModal.instance().setStatusAlertRef(refMock);
 
         editImageModal.setState({
           pageNumber: 2,
@@ -417,7 +513,6 @@ describe('EditImageModal', () => {
 
       it('this.state.isStatusAlertOpen is false by default', () => {
         expect(getStatusAlert(editImageModal).prop('open')).toEqual(false);
-        // TODO: pick one of these
         expect(editImageModal.state('isStatusAlertOpen')).toEqual(false);
       });
 
@@ -497,9 +592,9 @@ describe('EditImageModal', () => {
           imageDescription: sampleText,
         });
 
-        editImageModal.instance().imageFormRef = {
+        editImageModal.instance().setImageFormRef({
           dispatchEvent: jest.fn(),
-        };
+        });
 
         getInsertImageButton(editImageModal).simulate('click');
 
@@ -588,20 +683,12 @@ describe('EditImageModal', () => {
         expect(statusAlertListItems.at(0).find(WrappedMessage).prop('message')).toEqual(messages.editImageModalFormValidImageDimensions);
       });
 
-      // needs updated so that clicking next triggers the status alert
-      // TODO, what is focused on?
-      it('focus on page 1 is moved to <TODO: fill in> when status alert is closed', () => {
-        getInsertImageButton(editImageModal).simulate('click');
-
-        getCloseStatusAlertButton(editImageModal).simulate('click');
-      });
-
       it('focus on page 2 is moved to previous button when status alert is closed', () => {
         const focusSpy = jest.fn();
 
-        editImageModal.instance().previousPageButtonRef = {
+        editImageModal.instance().setPreviousButtonRef({
           focus: focusSpy,
-        };
+        });
 
         getInsertImageButton(editImageModal).simulate('click');
 
@@ -613,9 +700,9 @@ describe('EditImageModal', () => {
 
     describe('Validation Messages', () => {
       beforeEach(() => {
-        editImageModal.instance().statusAlertRef = {
+        editImageModal.instance().setStatusAlertRef({
           focus: jest.fn(),
-        };
+        });
 
         editImageModal.setState({
           pageNumber: 2,
@@ -659,6 +746,47 @@ describe('EditImageModal', () => {
         expect(imageDimensionsFieldset.prop('isValid')).toEqual(false);
         expect(imageDimensionsFieldset.prop('invalidMessage').props.message).toEqual(messages.editImageModalFormValidImageDimensions);
       });
+    });
+  });
+
+  describe('Upload Image', () => {
+    beforeEach(() => {
+      const refMock = {
+        focus: jest.fn(),
+      };
+
+      editImageModal.instance().setDropZoneButtonRef(refMock);
+      editImageModal.instance().setPreviousButtonRef(refMock);
+      editImageModal.instance().setStatusAlertRef(refMock);
+
+      editImageModal.setState({
+        pageNumber: 1,
+        shouldShowPreviousButton: true,
+      });
+    });
+
+    it('state updated correctly on upload success', () => {
+      const assetsStatusMock = {
+        type: assetActions.upload.UPLOAD_ASSET_SUCCESS,
+        response: {
+          asset: {
+            portable_url: 'foo',
+          },
+        },
+      };
+      const clearAssetsStatusSpy = jest.fn();
+      const selectAssetSpy = jest.fn();
+      editImageModal.setProps({
+        assetsStatus: assetsStatusMock,
+        clearAssetsStatus: clearAssetsStatusSpy,
+        selectAsset: selectAssetSpy,
+
+      });
+
+      expect(selectAssetSpy).toHaveBeenCalledTimes(1);
+      expect(selectAssetSpy).toHaveBeenCalledWith(assetsStatusMock.response.asset, 0);
+      expect(clearAssetsStatusSpy).toHaveBeenCalledTimes(1);
+      expect(editImageModal.state('pageNumber')).toEqual(2);
     });
   });
 
@@ -808,8 +936,9 @@ describe('EditImageModal', () => {
         focus: jest.fn(),
       };
 
-      editImageModal.instance().statusAlertRef = refMock;
-      editImageModal.instance().previousPageButtonRef = refMock;
+      editImageModal.instance().setImageDescriptionInputRef(refMock);
+      editImageModal.instance().setPreviousButtonRef(refMock);
+      editImageModal.instance().setStatusAlertRef(refMock);
 
       editImageModal.setState({
         pageNumber: 2,
@@ -1027,6 +1156,104 @@ describe('EditImageModal', () => {
     });
   });
 
+  describe('Next button', () => {
+    beforeEach(() => {
+      editImageModal.setState({
+        pageNumber: 1,
+        shouldShowPreviousButton: true,
+      });
+
+      editImageModal.setProps({
+        selectedAsset: {
+          portable_url: 'foo',
+        },
+      });
+      const refMock = {
+        focus: jest.fn(),
+      };
+
+      editImageModal.instance().setPreviousButtonRef(refMock);
+    });
+
+    it('goes to page 2', () => {
+      const clearAssetsStatusSpy = jest.fn();
+      editImageModal.setProps({
+        clearAssetsStatus: clearAssetsStatusSpy,
+      });
+
+      getNextButton(editImageModal).simulate('click');
+      editImageModal.update();
+
+      expect(editImageModal.state('isStatusAlertOpen')).toEqual(false);
+      expect(editImageModal.state('pageNumber')).toEqual(2);
+      expect(editImageModal.state('uploadErrorMessageBody')).toBeUndefined();
+      expect(clearAssetsStatusSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('focuses on Previous/Back button', () => {
+      const focusSpy = jest.fn();
+      editImageModal.instance().setPreviousButtonRef({
+        focus: focusSpy,
+      });
+
+      getNextButton(editImageModal).simulate('click');
+      editImageModal.update();
+
+      editImageModal.instance().componentDidUpdate({}, { pageNumber: 1 });
+      expect(focusSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('closes statusAlert', () => {
+      editImageModal.setProps({
+        assetsStatus: {
+          type: assetActions.upload.UPLOAD_EXCEED_MAX_COUNT_ERROR,
+        },
+      });
+      let statusAlert = getStatusAlert(editImageModal);
+      expect(statusAlert.prop('open')).toEqual(true);
+
+      getNextButton(editImageModal).simulate('click');
+      editImageModal.update();
+
+      statusAlert = getStatusAlert(editImageModal);
+      expect(statusAlert.prop('open')).toEqual(false);
+    });
+  });
+
+  describe('Previous/Back button', () => {
+    beforeEach(() => {
+      editImageModal.setState({
+        pageNumber: 2,
+        shouldShowPreviousButton: true,
+      });
+      const refMock = {
+        focus: jest.fn(),
+      };
+
+      editImageModal.instance().setDropZoneButtonRef(refMock);
+    });
+
+    it('goes to page 1', () => {
+      getPreviousButton(editImageModal).simulate('click');
+      editImageModal.update();
+
+      expect(editImageModal.state('pageNumber')).toEqual(1);
+    });
+
+    it('focuses on Upload button', () => {
+      const focusSpy = jest.fn();
+      editImageModal.instance().setDropZoneButtonRef({
+        focus: focusSpy,
+      });
+
+      getPreviousButton(editImageModal).simulate('click');
+      editImageModal.update();
+
+      editImageModal.instance().componentDidUpdate({}, { isModalOpen: true, pageNumber: 2 });
+      expect(focusSpy).toHaveBeenCalledTimes(1);
+    });
+  });
+
   describe('Insert Image button', () => {
     let validationMock;
     let dispatchEventSpy;
@@ -1039,9 +1266,9 @@ describe('EditImageModal', () => {
 
       dispatchEventSpy = jest.fn();
 
-      editImageModal.instance().imageFormRef = {
+      editImageModal.instance().setImageFormRef({
         dispatchEvent: dispatchEventSpy,
-      };
+      });
 
       /*
         Let's make form valid by default. The reason we mock the validation
@@ -1096,7 +1323,7 @@ describe('EditImageModal', () => {
 
     it('sends natural width in submitForm event if width is set to empty string/NaN (input cleared) ', () => {
       // set mocked imageRef data
-      editImageModal.instance().imgRef = { ...sampleImgData };
+      editImageModal.instance().setImageRef({ ...sampleImgData });
 
       getImageDimensionsWidthInput(editImageModal).simulate('blur', '');
 
@@ -1107,7 +1334,7 @@ describe('EditImageModal', () => {
 
     it('sends natural height in submitForm event if height is set to empty string/NaN (input cleared) ', () => {
       // set mocked imageRef data
-      editImageModal.instance().imgRef = { ...sampleImgData };
+      editImageModal.instance().setImageRef({ ...sampleImgData });
 
       getImageDimensionsHeightInput(editImageModal).simulate('blur', '');
 
@@ -1176,9 +1403,9 @@ describe('EditImageModal', () => {
     it('does not dispatch event if form is invalid', () => {
       validationMock.mockReturnValue({ isValid: false });
 
-      editImageModal.instance().statusAlertRef = {
+      editImageModal.instance().setStatusAlertRef({
         focus: jest.fn(),
-      };
+      });
 
       editImageModal.setState({
         imageDescription: '',

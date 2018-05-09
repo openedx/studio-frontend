@@ -83,7 +83,7 @@ describe('<AssetsDropZone />', () => {
   describe('Browser Button', () => {
     it('call dropzone open()', () => {
       const mockDropZoneOpen = jest.fn();
-      wrapper.instance().dropzoneRef.open = mockDropZoneOpen;
+      wrapper.instance().dropZoneRef.open = mockDropZoneOpen;
 
       const button = wrapper.find('button');
       button.simulate('click');
