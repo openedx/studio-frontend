@@ -108,14 +108,12 @@
       "<rootDir>/src/components/BackendStatusBanner/",
       "<rootDir>/src/.*/container.jsx",
       "<rootDir>/src/data/i18n/locales/",
-      "<rootDir>/src/utils/matches-prefixer.js",
-      "<rootDir>/src/components/EditImageModal/*"
+      "<rootDir>/src/utils/matches-prefixer.js"
     ],
     "transformIgnorePatterns": [
       "/node_modules/(?!(@edx/paragon)/).*/"
     ],
-    "testPathIgnorePatterns": [
-      "<rootDir>/src/components/EditImageModal/EditImageModal.test.jsx"
+    "testPathIgnorePatterns" : [
     ],
     "globals": {
       "studioContext": {}

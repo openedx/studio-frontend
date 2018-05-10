@@ -69,7 +69,7 @@ export default class EditImageModal extends React.Component {
     this.onConstrainProportionsClick = this.onConstrainProportionsClick.bind(this);
     this.onEditImageModalClose = this.onEditImageModalClose.bind(this);
     this.onImageDescriptionBlur = this.onImageDescriptionBlur.bind(this);
-    this.onImageDimensionChange = this.onImageDimensionChange.bind(this);
+    this.onImageDimensionBlur = this.onImageDimensionBlur.bind(this);
     this.onInsertImageButtonClick = this.onInsertImageButtonClick.bind(this);
     this.onImageIsDecorativeClick = this.onImageIsDecorativeClick.bind(this);
     this.onImageLoad = this.onImageLoad.bind(this);
@@ -185,7 +185,7 @@ export default class EditImageModal extends React.Component {
     });
   }
 
-  onImageDimensionChange = (dimensionType) => {
+  onImageDimensionBlur = (dimensionType) => {
     let aspectRatio;
     let newDimensionType;
 
@@ -434,7 +434,7 @@ export default class EditImageModal extends React.Component {
             id={imageWidthID}
             type="number"
             value={'width' in this.state.imageDimensions ? this.state.imageDimensions.width : ''}
-            onChange={this.onImageDimensionChange('width')}
+            onBlur={this.onImageDimensionBlur('width')}
           />
         </div>
         <div className="col-1 my-auto image-dimensions-x">
@@ -451,7 +451,7 @@ export default class EditImageModal extends React.Component {
             id="imageHeight"
             type="number"
             value={'height' in this.state.imageDimensions ? this.state.imageDimensions.height : ''}
-            onChange={this.onImageDimensionChange('height')}
+            onBlur={this.onImageDimensionBlur('height')}
           />
         </div>
       </div>
@@ -520,7 +520,6 @@ export default class EditImageModal extends React.Component {
         <ul className="bullet-list">
           {(Object.keys(this.state.currentValidationMessages).reduce((accumulator, current) => {
             const value = this.state.currentValidationMessages[current];
-
             if (value) {
               const errorMessage = <li key={`Error-${current}`}>{<a href={`#${current}`}>{value} </a>}</li>;
               accumulator.push(errorMessage);
