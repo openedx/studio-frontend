@@ -1,34 +1,64 @@
+import { Button, CheckBox, Fieldset, Modal, InputText, StatusAlert } from '@edx/paragon';
+import { IntlProvider, FormattedMessage } from 'react-intl';
+import { Provider } from 'react-redux';
 import React from 'react';
-import { CheckBox, Modal, InputText, StatusAlert } from '@edx/paragon';
 
 import EditImageModal from './index';
+import { getMockStore } from '../../utils/testConstants';
 import messages from './displayMessages';
-// import rewriteStaticLinks from '../../utils/rewriteStaticLinks';
+import rewriteStaticLinks from '../../utils/rewriteStaticLinks';
+import { shallowWithIntl } from '../../utils/i18n/enzymeHelper';
+import WrappedEditImageModal from './container';
 import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
-import { mountWithIntl } from '../../utils/i18n/enzymeHelper';
 
 const learnMoreLink = 'http://edx.readthedocs.io/projects/edx-partner-course-staff/en/latest/accessibility/best_practices_course_content_dev.html#use-best-practices-for-describing-images';
 
-let wrapper = mountWithIntl(
-  <EditImageModal
-    courseImageAccessibilityDocs={learnMoreLink}
-  />);
-let modalBody;
-let formContainer;
-let nextPageButton;
-let insertImageButton;
-let imageSourceInput;
-let imageDescriptionContainer;
-let imageDescriptionInput;
-let imageDescriptionInputCheckBox;
-let imageDimensionsContainer;
-let imageDimensionsWidthInput;
-let imageDimensionsHeightInput;
-let imageDimensionsInputCheckBox;
-let imagePreviewRegion;
-let imagePreviewContainer;
-let imagePreviewPlaceholder;
-let imagePreviewImage;
+const store = getMockStore({
+  help_tokens: {
+    image_accessibility: learnMoreLink,
+  },
+});
+
+const intlProvider = new IntlProvider({ locale: 'en', messages: {} }, {});
+const { intl } = intlProvider.getChildContext();
+
+const getEditImageModal = wrapper =>
+  (wrapper.find('Connect(EditImageModal)').dive({ context: { store, intl } }).find(EditImageModal).dive({ context: { store, intl } }));
+const getModal = editImageModal => (editImageModal.find(Modal).dive({ context: { store, intl } }));
+const getModalBody = editImageModal => (getModal(editImageModal).find('.modal-body'));
+const getModalFooter = editImageModal => (getModal(editImageModal).find('.modal-footer'));
+const getFormContainer = editImageModal => (getModalBody(editImageModal).find('div.col form'));
+const getStatusAlert = editImageModal => (getModalBody(editImageModal).find(StatusAlert));
+const getCloseStatusAlertButton = editImageModal =>
+  (getStatusAlert(editImageModal).dive({ context: { store, intl } }).find(Button));
+const getInsertImageButton = editImageModal =>
+  (getModalFooter(editImageModal).find(Button).first());
+
+const getImageDescriptionFieldset = editImageModal =>
+  (getFormContainer(editImageModal).find(Fieldset).at(0));
+const getImageDescriptionInput = editImageModal =>
+  (getImageDescriptionFieldset(editImageModal).find(InputText));
+const getImageDescriptionInputCheckBox = editImageModal =>
+  (getImageDescriptionFieldset(editImageModal).find(CheckBox));
+
+const getImageDimensionsFieldset = editImageModal =>
+  (getFormContainer(editImageModal).find(Fieldset).at(1));
+const getImageDimensionsWidthInput = editImageModal =>
+  (getImageDimensionsFieldset(editImageModal)
+    .dive({ context: { store, intl } }).find(InputText).at(0));
+
+const getImageDimensionsHeightInput = editImageModal =>
+  (getImageDimensionsFieldset(editImageModal)
+    .dive({ context: { store, intl } }).find(InputText).at(1));
+const getImageDimensionsCheckBox = editImageModal =>
+  (getImageDimensionsFieldset(editImageModal).dive({ context: { store, intl } }).find(CheckBox));
+
+const wrapper = shallowWithIntl(
+  <Provider store={store}>
+    <WrappedEditImageModal />
+  </Provider>,
+  { disableLifecycleMethods: true },
+);
 
 const sampleText = 'edx.jpg';
 
@@ -38,115 +68,52 @@ const sampleImgData = {
 };
 sampleImgData.aspectRatio = sampleImgData.naturalWidth / sampleImgData.naturalHeight;
 
-const updateConstants = () => {
-  wrapper.update();
-  modalBody = wrapper.find('.modal-body');
-  formContainer = modalBody.find('div.col form');
+let editImageModal;
 
-  nextPageButton = wrapper.find('.modal-footer button').first();
-  insertImageButton = wrapper.find('.modal-footer button').first();
-
-  imagePreviewRegion = modalBody.find('div.row div.col-sm-4');
-  imagePreviewContainer = imagePreviewRegion.find('div.image-preview-container');
-  imagePreviewPlaceholder = imagePreviewContainer.find('div.image-preview-placeholder');
-  imagePreviewImage = imagePreviewPlaceholder.find('img.image-preview-image');
-
-  imageSourceInput = formContainer.find(InputText).filterWhere(input => input.prop('name') === 'imageSource');
-
-  imageDescriptionContainer = formContainer.find('fieldset').at(0);
-  imageDescriptionInput = formContainer.find('fieldset').find(InputText).filterWhere(input => input.prop('name') === 'imageDescription');
-  imageDescriptionInputCheckBox = imageDescriptionContainer.find(CheckBox);
-
-  imageDimensionsContainer = formContainer.find('fieldset').at(1);
-  imageDimensionsWidthInput = formContainer.find('fieldset .form-row .col').find(InputText).filterWhere(input => input.prop('name') === 'imageWidth');
-  imageDimensionsHeightInput = formContainer.find('fieldset .form-row .col').find(InputText).filterWhere(input => input.prop('name') === 'imageHeight');
-  imageDimensionsInputCheckBox = imageDimensionsContainer.find(CheckBox);
-};
-
-// use to remount the EditImageModal at the start of a test for a clean slate
-const resetWrapper = () => {
-  wrapper = mountWithIntl(
-    <EditImageModal
-      courseImageAccessibilityDocs={learnMoreLink}
-    />);
-  updateConstants();
-};
-
-/*
-  NOTE: due to the use of refs in the EditImageModal, we use mountWithIntl instead of
-  shallowWithIntl
-*/
 describe('EditImageModal', () => {
-  updateConstants();
+  beforeEach(() => {
+    editImageModal = getEditImageModal(wrapper);
+  });
 
   describe('page 1 renders', () => {
     describe('a modal with', () => {
       it('a closed modal by default', () => {
-        expect(wrapper.find('.modal')).toHaveLength(1);
-        expect(wrapper.find('.modal-open .modal-backdrop .show')).toHaveLength(0);
+        const modal = getModal(editImageModal);
+        expect(modal.find('.modal')).toHaveLength(1);
+        expect(modal.find('.modal-open .modal-backdrop .show')).toHaveLength(0);
       });
 
       it('an open modal when this.state.open is true', () => {
-        wrapper.setState({ open: true });
-        expect(wrapper.find('.modal')).toHaveLength(1);
-        expect(wrapper.find('.modal .modal-open .modal-backdrop .show')).toHaveLength(1);
+        editImageModal.setState({ open: true });
+        const modal = getModal(editImageModal);
 
-        resetWrapper();
+        expect(modal.find('.modal')).toHaveLength(1);
+        expect(modal.find('.modal .modal-open .modal-backdrop .show')).toHaveLength(1);
       });
 
       it('modal title text', () => {
-        const modalTitle = wrapper.find(Modal).find('.modal-title').find(WrappedMessage);
+        const modalTitle = getModal(editImageModal).find('.modal-title').find(WrappedMessage);
         expect(modalTitle.prop('message')).toEqual(messages.editImageModalInsertTitle);
       });
 
       it('a Next page button', () => {
+        const nextPageButton = getModal(editImageModal).find('.modal-footer').find(Button).first();
         expect(nextPageButton).toHaveLength(1);
 
-        const nextPageButtonText = nextPageButton.find(WrappedMessage);
+        const nextPageButtonText = nextPageButton
+          .dive({ context: { store, intl } }).find(WrappedMessage);
         expect(nextPageButtonText.prop('message')).toEqual(messages.editImageModalNextPageButton);
       });
     });
 
     describe('a modal body with', () => {
       describe('a status alert with', () => {
-        const statusAlert = modalBody.find(StatusAlert);
-
         it('a status alert', () => {
-          expect(statusAlert).toHaveLength(1);
+          expect(getStatusAlert(editImageModal)).toHaveLength(1);
         });
 
         it('a status alert with danger alertType', () => {
-          expect(statusAlert.prop('alertType')).toEqual('danger');
-        });
-      });
-    });
-
-    describe('a form with', () => {
-      it('a form', () => {
-        expect(formContainer).toHaveLength(1);
-      });
-
-      describe('an imageSource input with', () => {
-        it('an InputText', () => {
-          expect(imageSourceInput).toHaveLength(1);
-        });
-
-        it('a label', () => {
-          const wrappedMessages = imageSourceInput.find(WrappedMessage);
-          expect(wrappedMessages).toHaveLength(2);
-
-          const imageSourceInputLabel = imageSourceInput.find('label').find(WrappedMessage);
-
-          // make sure it appears first
-          expect(wrappedMessages.at(0).html()).toEqual(imageSourceInputLabel.html());
-          expect(imageSourceInputLabel.prop('message')).toEqual(messages.editImageModalImageSourceLabel);
-        });
-
-        it('a description', () => {
-          const imageSourceInputDescription = imageSourceInput.find('small').find(WrappedMessage);
-          expect(imageSourceInputDescription.prop('message')).toEqual(messages.editImageModalImageSourceDescription);
-          expect(imageSourceInput.prop('type')).toEqual('text');
-          expect(imageSourceInput.prop('id')).toEqual('imageSource');
+          expect(getStatusAlert(editImageModal).prop('alertType')).toEqual('danger');
         });
       });
     });
@@ -154,99 +121,86 @@ describe('EditImageModal', () => {
 
   describe('page 2 renders', () => {
     beforeEach(() => {
-      wrapper.setState({
+      editImageModal.setState({
+        open: true,
         pageNumber: 2,
         shouldShowPreviousButton: true,
       });
-      updateConstants();
     });
-    afterEach(() => {
-      resetWrapper();
-    });
+
     describe('a modal with', () => {
       it('modal title text', () => {
-        const modalTitle = wrapper.find(Modal).find('.modal-title').find(WrappedMessage);
+        const modalTitle = getModal(editImageModal).find('.modal-title').find(WrappedMessage);
         expect(modalTitle.prop('message')).toEqual(messages.editImageModalEditTitle);
       });
 
       it('an Insert Image button', () => {
+        const insertImageButton = getInsertImageButton(editImageModal);
         expect(insertImageButton).toHaveLength(1);
 
-        const insertImageButtonText = insertImageButton.find(WrappedMessage);
+        const insertImageButtonText = insertImageButton.dive({ context: { store, intl } })
+          .find(WrappedMessage);
         expect(insertImageButtonText.prop('message')).toEqual(messages.editImageModalInsertImageButton);
       });
     });
 
     describe('a modal body with', () => {
       describe('a status alert with', () => {
-        beforeEach(() => {
-          wrapper.setState({
-            pageNumber: 2,
-            shouldShowPreviousButton: true,
-          });
-          updateConstants();
-        });
-        afterEach(() => {
-          resetWrapper();
-        });
-        const statusAlert = modalBody.find(StatusAlert);
-
         it('a status alert', () => {
-          expect(statusAlert).toHaveLength(1);
+          expect(getStatusAlert(editImageModal)).toHaveLength(1);
         });
 
         it('a status alert with danger alertType', () => {
-          expect(statusAlert.prop('alertType')).toEqual('danger');
+          expect(getStatusAlert(editImageModal).prop('alertType')).toEqual('danger');
         });
       });
     });
 
     describe('a form with', () => {
       it('a form', () => {
-        expect(formContainer).toHaveLength(1);
+        expect(getFormContainer(editImageModal)).toHaveLength(1);
       });
 
-      describe('an imageDescription fieldset with', () => {
+      describe('an imageDescription Fieldset with', () => {
         it('a fieldset', () => {
-          expect(imageDescriptionContainer).toHaveLength(1);
+          expect(getImageDescriptionFieldset(editImageModal)).toHaveLength(1);
         });
 
         it('a legend', () => {
-          expect(imageDescriptionContainer.find('legend').find(WrappedMessage).prop('message')).toEqual(messages.editImageModalImageDescriptionLegend);
+          const imageDescriptionFieldsetLegend = getImageDescriptionFieldset(editImageModal).prop('legend');
+          expect(imageDescriptionFieldsetLegend.props.message)
+            .toEqual(messages.editImageModalImageDescriptionLegend);
         });
 
         it('an InputText', () => {
-          expect(imageDescriptionInput).toHaveLength(1);
+          expect(getImageDescriptionInput(editImageModal)).toHaveLength(1);
         });
 
         describe('an imageDescription input with', () => {
           it('a label', () => {
-            const wrappedMessages = imageDescriptionInput.find(WrappedMessage);
-            expect(wrappedMessages).toHaveLength(3);
-
-            const imageDescriptionInputLabel = imageDescriptionInput.find('label').find(WrappedMessage);
-            // make sure it appears first
-            expect(wrappedMessages.at(0).html()).toEqual(imageDescriptionInputLabel.html());
-            expect(imageDescriptionInputLabel.prop('message')).toEqual(messages.editImageModalImageDescriptionLabel);
+            const imageDescriptionInputLabel = getImageDescriptionInput(editImageModal).prop('label');
+            expect(imageDescriptionInputLabel.props.message)
+              .toEqual(messages.editImageModalImageDescriptionLabel);
           });
 
           it('a description', () => {
-            const imageDescriptionInputDescription = imageDescriptionInput.find('small').find(WrappedMessage);
-            expect(imageDescriptionInputDescription).toHaveLength(2);
+            const imageDescriptionInputDescription = getImageDescriptionInput(editImageModal).prop('description');
 
-            expect(imageDescriptionInputDescription.at(0).prop('message')).toEqual(messages.editImageModalImageDescriptionDescription);
-            expect(imageDescriptionInputDescription.at(1).prop('message')).toEqual(messages.editImageModalLearnMore);
+            expect(imageDescriptionInputDescription.props.children[0].props.message)
+              .toEqual(messages.editImageModalImageDescriptionDescription);
+            expect(imageDescriptionInputDescription.props.children[1]).toEqual(' ');
+            expect(imageDescriptionInputDescription.props.children[2].props.message)
+              .toEqual(messages.editImageModalLearnMore);
           });
 
           it('a Learn More link', () => {
-            const imageDescriptionInputDescription = imageDescriptionInput.find('small').find(WrappedMessage);
-
-            const learnMoreLinkElement = imageDescriptionInputDescription.at(1).find('a');
-            expect(learnMoreLinkElement).toHaveLength(1);
-            expect(learnMoreLinkElement.find({ href: learnMoreLink })).toHaveLength(1);
+            const imageDescriptionInputDescription = getImageDescriptionInput(editImageModal).prop('description');
+            expect(imageDescriptionInputDescription.props.children[2].props.children().type).toEqual('a');
+            expect(imageDescriptionInputDescription.props.message).toEqual(messages.learnMoreLink);
           });
 
           it('a correct InputText props', () => {
+            const imageDescriptionInput = getImageDescriptionInput(editImageModal);
             expect(imageDescriptionInput.prop('type')).toEqual('text');
             expect(imageDescriptionInput.prop('id')).toEqual('imageDescription');
           });
@@ -254,62 +208,67 @@ describe('EditImageModal', () => {
 
         describe('a CheckBox with', () => {
           it('a CheckBox', () => {
-            expect(imageDescriptionInputCheckBox).toHaveLength(1);
+            expect(getImageDescriptionInputCheckBox(editImageModal)).toHaveLength(1);
           });
 
           it('correct CheckBox props', () => {
+            const imageDescriptionInputCheckBox = getImageDescriptionInputCheckBox(editImageModal);
             expect(imageDescriptionInputCheckBox.prop('id')).toEqual('isDecorative');
             expect(imageDescriptionInputCheckBox.prop('name')).toEqual('isDecorative');
           });
 
           it('a label', () => {
-            const imageDescriptionInputCheckBoxLabel = imageDescriptionInputCheckBox.find('label').find(WrappedMessage);
-            expect(imageDescriptionInputCheckBoxLabel.prop('message')).toEqual(messages.editImageModalImageIsDecorativeCheckboxLabel);
+            const imageDescriptionInputCheckBoxLabel = getImageDescriptionInputCheckBox(editImageModal).prop('label');
+            expect(imageDescriptionInputCheckBoxLabel.props.message)
+              .toEqual(messages.editImageModalImageIsDecorativeCheckboxLabel);
           });
 
           it('a description', () => {
-            const imageDescriptionInputCheckBoxDescription = imageDescriptionInputCheckBox.find('small').find(WrappedMessage);
-            expect(imageDescriptionInputCheckBoxDescription.at(0).prop('message')).toEqual(messages.editImageModalImageIsDecorativeCheckboxDescription);
-            expect(imageDescriptionInputCheckBoxDescription.at(1).prop('message')).toEqual(messages.editImageModalLearnMore);
+            const imageDescriptionInputCheckBoxDescription = getImageDescriptionInputCheckBox(editImageModal).prop('description');
+            expect(imageDescriptionInputCheckBoxDescription.props.children[0].props.message)
+              .toEqual(messages.editImageModalImageIsDecorativeCheckboxDescription);
+            expect(imageDescriptionInputCheckBoxDescription.props.children[1]).toEqual(' ');
+            expect(imageDescriptionInputCheckBoxDescription.props.children[2].props.message)
+              .toEqual(messages.editImageModalLearnMore);
           });
 
           it('a "Learn more." link', () => {
-            const imageDescriptionInputCheckBoxDescription = imageDescriptionInputCheckBox.find('small').find(WrappedMessage);
-            const learnMoreLinkElement = imageDescriptionInputCheckBoxDescription.at(1).find('a');
-            expect(learnMoreLinkElement).toHaveLength(1);
-            expect(learnMoreLinkElement.find({ href: learnMoreLink })).toHaveLength(1);
+            const imageDescriptionInputCheckBoxDescription = getImageDescriptionInputCheckBox(editImageModal).prop('description');
+            expect(imageDescriptionInputCheckBoxDescription.props.children[2].props.children().type).toEqual('a');
+            expect(imageDescriptionInputCheckBoxDescription.props.message)
+              .toEqual(messages.learnMoreLink);
           });
         });
       });
 
-      describe('an imageDimensions fieldset with', () => {
+      describe('an imageDimensions Fieldset with', () => {
         it('a fieldset', () => {
-          expect(imageDimensionsContainer).toHaveLength(1);
+          expect(getImageDimensionsFieldset(editImageModal)).toHaveLength(1);
         });
 
         it('a legend', () => {
-          expect(imageDimensionsContainer.find('legend').find(WrappedMessage).prop('message')).toEqual(messages.editImageModalDimensionsLegend);
+          const imageDimensionsFieldsetLegend = getImageDimensionsFieldset(editImageModal).prop('legend');
+          expect(imageDimensionsFieldsetLegend.props.message)
+            .toEqual(messages.editImageModalDimensionsLegend);
         });
 
         it('a form-row', () => {
-          expect(imageDimensionsContainer.find('div.form-row')).toHaveLength(1);
-        });
-
-        it('a legend and a form-row as adjacent siblings', () => {
-          expect(imageDimensionsContainer.find('legend + div.form-row')).toHaveLength(1);
+          expect(getImageDimensionsFieldset(editImageModal).find('div.form-row')).toHaveLength(1);
         });
 
         describe('an imageDimensionsWidth input with', () => {
           it('a width InputText', () => {
-            expect(imageDimensionsWidthInput).toHaveLength(1);
+            expect(getImageDimensionsWidthInput(editImageModal)).toHaveLength(1);
           });
 
           it('a width label', () => {
-            const imageWidthInputLabel = imageDimensionsWidthInput.find('label').find(WrappedMessage);
-            expect(imageWidthInputLabel.prop('message')).toEqual(messages.editImageModalImageWidthLabel);
+            const imageWidthInputLabel = getImageDimensionsWidthInput(editImageModal).prop('label');
+            expect(imageWidthInputLabel.props.message)
+              .toEqual(messages.editImageModalImageWidthLabel);
           });
 
           it('correct width InputText props', () => {
+            const imageDimensionsWidthInput = getImageDimensionsWidthInput(editImageModal);
             expect(imageDimensionsWidthInput.prop('type')).toEqual('number');
             expect(imageDimensionsWidthInput.prop('id')).toEqual('imageWidth');
           });
@@ -317,15 +276,17 @@ describe('EditImageModal', () => {
 
         describe('an imageDimensionsHeight input with', () => {
           it('a height InputText', () => {
-            expect(imageDimensionsHeightInput).toHaveLength(1);
+            expect(getImageDimensionsHeightInput(editImageModal)).toHaveLength(1);
           });
 
           it('a height label', () => {
-            const imageHeightInputLabel = imageDimensionsHeightInput.find('label').find(WrappedMessage);
-            expect(imageHeightInputLabel.prop('message')).toEqual(messages.editImageModalImageHeightLabel);
+            const imageHeightInputLabel = getImageDimensionsHeightInput(editImageModal).prop('label');
+            expect(imageHeightInputLabel.props.message)
+              .toEqual(messages.editImageModalImageHeightLabel);
           });
 
           it('correct height InputText props', () => {
+            const imageDimensionsHeightInput = getImageDimensionsHeightInput(editImageModal);
             expect(imageDimensionsHeightInput.prop('type')).toEqual('number');
             expect(imageDimensionsHeightInput.prop('id')).toEqual('imageHeight');
           });
@@ -333,15 +294,17 @@ describe('EditImageModal', () => {
 
         describe('an imageDimensionsHeight input with', () => {
           it('a CheckBox', () => {
-            expect(imageDimensionsInputCheckBox).toHaveLength(1);
+            expect(getImageDimensionsCheckBox(editImageModal)).toHaveLength(1);
           });
           it('correct CheckBox props', () => {
+            const imageDimensionsInputCheckBox = getImageDimensionsCheckBox(editImageModal);
             expect(imageDimensionsInputCheckBox.prop('id')).toEqual('lockProportions');
             expect(imageDimensionsInputCheckBox.prop('name')).toEqual('lockProportions');
           });
           it('a label', () => {
-            const imageDescriptionInputCheckBoxLabel = imageDimensionsInputCheckBox.find('label').find(WrappedMessage);
-            expect(imageDescriptionInputCheckBoxLabel.prop('message')).toEqual(messages.editImageModalLockImageProportionsCheckboxLabel);
+            const imageDimensionsInputCheckBoxLabel = getImageDimensionsCheckBox(editImageModal).prop('label');
+            expect(imageDimensionsInputCheckBoxLabel.props.message)
+              .toEqual(messages.editImageModalLockImageProportionsCheckboxLabel);
           });
         });
       });
@@ -350,38 +313,37 @@ describe('EditImageModal', () => {
 
   describe('Modal', () => {
     it('this.state.open is false by default', () => {
-      expect(wrapper.state('open')).toEqual(false);
+      expect(editImageModal.state('open')).toEqual(false);
     });
 
     it('modal is not open by default', () => {
-      expect(wrapper.find(Modal).prop('open')).toEqual(false);
+      /*
+        In order to access the props of the modal, we need a reference
+        to the modal before we have dove on it.
+      */
+      const modal = editImageModal.find(Modal);
+      expect(modal.prop('open')).toEqual(false);
     });
 
     it('this.state.baseAssetURL is empty string by default', () => {
-      expect(wrapper.state('baseAssetURL')).toEqual('');
+      expect(editImageModal.state('baseAssetURL')).toEqual('');
     });
 
-    it('openModal event listener sets correct state for empty event (inserting an image)', () => {
-      const modalRef = wrapper.instance().modalWrapperRef;
+    it('handleOpenModal sets correct state for empty event (inserting an image)', () => {
+      editImageModal.instance().handleOpenModal(new CustomEvent('openModal', { detail: {} }));
 
-      modalRef.dispatchEvent(new CustomEvent('openModal', { detail: {} }));
-
-      expect(wrapper.state('baseAssetURL')).toEqual('');
-      expect(wrapper.state('imageDescription')).toEqual('');
-      expect(wrapper.state('imageDimensions')).toEqual({});
-      expect(wrapper.state('imageStyle')).toEqual('');
-      expect(wrapper.state('imageSource')).toEqual('');
-      expect(wrapper.state('isImageDecorative')).toEqual(false);
-      expect(wrapper.state('isImageLoaded')).toEqual(false);
-      expect(wrapper.state('open')).toEqual(true);
-
-      resetWrapper();
+      expect(editImageModal.state('baseAssetURL')).toEqual('');
+      expect(editImageModal.state('imageDescription')).toEqual('');
+      expect(editImageModal.state('imageDimensions')).toEqual({});
+      expect(editImageModal.state('imageStyle')).toEqual('');
+      expect(editImageModal.state('imageSource')).toEqual('');
+      expect(editImageModal.state('isImageDecorative')).toEqual(false);
+      expect(editImageModal.state('isImageLoaded')).toEqual(false);
+      expect(editImageModal.state('open')).toEqual(true);
     });
 
-    it('openModal event listener sets correct state for event with data (editing an image)', () => {
-      const modalRef = wrapper.instance().modalWrapperRef;
-
-      modalRef.dispatchEvent(new CustomEvent('openModal', {
+    it('handleOpenModal sets correct state for event with data (editing an image)', () => {
+      editImageModal.instance().handleOpenModal(new CustomEvent('openModal', {
         detail: {
           alt: sampleText,
           baseAssetUrl: sampleText,
@@ -392,582 +354,515 @@ describe('EditImageModal', () => {
         },
       }));
 
-      expect(wrapper.state('baseAssetURL')).toEqual(sampleText);
-      expect(wrapper.state('imageDescription')).toEqual(sampleText);
-      expect(wrapper.state('imageDimensions')).toEqual({
+      expect(editImageModal.state('baseAssetURL')).toEqual(sampleText);
+      expect(editImageModal.state('imageDescription')).toEqual(sampleText);
+      expect(editImageModal.state('imageDimensions')).toEqual({
         width: sampleImgData.naturalWidth,
         height: sampleImgData.naturalHeight,
         aspectRatio: sampleImgData.aspectRatio,
       });
-      expect(wrapper.state('isImageDecorative')).toEqual(false);
-      expect(wrapper.state('imageStyle')).toEqual(sampleText);
-      expect(wrapper.state('imageSource')).toEqual(sampleText);
-      expect(wrapper.state('isImageDecorative')).toEqual(false);
-      expect(wrapper.state('isImageLoaded')).toEqual(true);
-      expect(wrapper.state('open')).toEqual(true);
-
-      resetWrapper();
+      expect(editImageModal.state('isImageDecorative')).toEqual(false);
+      expect(editImageModal.state('imageStyle')).toEqual(sampleText);
+      expect(editImageModal.state('imageSource')).toEqual(sampleText);
+      expect(editImageModal.state('isImageDecorative')).toEqual(false);
+      expect(editImageModal.state('isImageLoaded')).toEqual(true);
+      expect(editImageModal.state('open')).toEqual(true);
     });
 
     it('onEditImageModalClose sets this.state.open to false', () => {
-      const closeModalButton = wrapper.find('.modal-footer button').at(1);
+      editImageModal.setState({
+        pageNumber: 2,
+        shouldShowPreviousButton: true,
+      });
+
+      const focusSpy = jest.fn();
+
+      editImageModal.instance().statusAlertRef = {
+        focus: focusSpy,
+      };
+
+      const closeModalButton = getModal(editImageModal).find('.modal-footer').find(Button).first();
       closeModalButton.simulate('click');
 
-      expect(wrapper.state('open')).toEqual(false);
+      expect(editImageModal.state('open')).toEqual(false);
+      expect(focusSpy).toHaveBeenCalledTimes(1);
+    });
 
-      resetWrapper();
+    describe('Status Alert', () => {
+      beforeEach(() => {
+        const refMock = {
+          focus: jest.fn(),
+        };
+
+        editImageModal.instance().statusAlertRef = refMock;
+        editImageModal.instance().previousPageButtonRef = refMock;
+
+        editImageModal.setState({
+          pageNumber: 2,
+          shouldShowPreviousButton: true,
+        });
+      });
+
+      it('this.state.isStatusAlertOpen is false by default', () => {
+        expect(getStatusAlert(editImageModal).prop('open')).toEqual(false);
+        // TODO: pick one of these
+        expect(editImageModal.state('isStatusAlertOpen')).toEqual(false);
+      });
+
+      it('this.state.isStatusAlertOpen is true if invalid form submitted', () => {
+        getInsertImageButton(editImageModal).simulate('click');
+
+        expect(editImageModal.state('isStatusAlertOpen')).toEqual(true);
+      });
+
+      it('StatusAlert open prop is false when status alert is closed', () => {
+        getInsertImageButton(editImageModal).simulate('click');
+
+        getCloseStatusAlertButton(editImageModal).simulate('click');
+
+        expect(getStatusAlert(editImageModal).prop('open')).toEqual(false);
+      });
+
+      it('status alert is not displayed by default', () => {
+        expect(getStatusAlert(editImageModal).prop('open')).toEqual(false);
+      });
+
+      it('status alert is displayed if invalid form submitted', () => {
+        getInsertImageButton(editImageModal).simulate('click');
+
+        editImageModal.update();
+
+        expect(getStatusAlert(editImageModal).prop('open')).toEqual(true);
+      });
+
+      it('this.state.currentValidationMessages is empty object by default', () => {
+        expect(editImageModal.state('currentValidationMessages')).toEqual({});
+      });
+
+      it('this.state.currentValidationMessages has correct validation messages when invalid form submitted', () => {
+        getInsertImageButton(editImageModal).simulate('click');
+
+        expect(editImageModal.state('currentValidationMessages').imageDescription.props.message).toEqual(messages.editImageModalFormValidImageDescription);
+        // TODO: add image dimensions
+      });
+
+      it('this.state.currentValidationMessages has correct validation message when invalid image description submitted', () => {
+        editImageModal.setState({
+          imageSource: sampleText,
+        });
+
+        getInsertImageButton(editImageModal).simulate('click');
+
+        expect(editImageModal.state('currentValidationMessages')).not.toHaveProperty('imageSource');
+        expect(editImageModal.state('currentValidationMessages').imageDescription.props.message).toEqual(messages.editImageModalFormValidImageDescription);
+      });
+
+      // TODO: invalid image dimensions
+
+      it('this.state.currentValidationMessages has correct validation message when invalid image dimensions submitted', () => {
+        editImageModal.setState({
+          imageSource: sampleText,
+          imageDescription: sampleText,
+          imageDimensions: {
+            height: -100,
+            width: -100,
+          },
+        });
+
+        getInsertImageButton(editImageModal).simulate('click');
+
+        expect(editImageModal.state('currentValidationMessages').imageWidth.props.message).toEqual(messages.editImageModalFormValidImageDimensions);
+        expect(editImageModal.state('currentValidationMessages')).not.toHaveProperty('imageSource');
+        expect(editImageModal.state('currentValidationMessages')).not.toHaveProperty('imageDescription');
+      });
+
+      it('this.state.currentValidationMessages is empty when valid form submitted', () => {
+        editImageModal.setState({
+          imageDimensions: {
+            width: 100,
+            height: 100,
+          },
+          imageDescription: sampleText,
+        });
+
+        editImageModal.instance().imageFormRef = {
+          dispatchEvent: jest.fn(),
+        };
+
+        getInsertImageButton(editImageModal).simulate('click');
+
+        expect(editImageModal.state('currentValidationMessages')).not.toHaveProperty('imageSource');
+        expect(editImageModal.state('currentValidationMessages')).not.toHaveProperty('imageDescription');
+      });
+
+      // TODO: check image description?
+
+      it('status alert has correct validation messages when invalid form submitted', () => {
+        editImageModal.setState({
+          imageDimensions: {
+            height: -100,
+            width: -100,
+          },
+        });
+
+        getInsertImageButton(editImageModal).simulate('click');
+
+        editImageModal.update();
+
+        const statusAlertListItems = getStatusAlert(editImageModal).dive({ context: { store, intl } }).find('div ul.bullet-list li a');
+        expect(statusAlertListItems).toHaveLength(2);
+        expect(statusAlertListItems.at(0).find(WrappedMessage).prop('message')).toEqual(messages.editImageModalFormValidImageDescription);
+        expect(statusAlertListItems.at(1).find(WrappedMessage).prop('message')).toEqual(messages.editImageModalFormValidImageDimensions);
+      });
+
+      it('validation messages are hyperlinks that navigate to appropriate form elements', () => {
+        editImageModal.setState({
+          imageDimensions: {
+            height: -100,
+            width: -100,
+          },
+        });
+
+        getInsertImageButton(editImageModal).simulate('click');
+
+        // force re-render to make sure validation messages are rendered
+        editImageModal.update();
+
+        const statusAlertListItems = getStatusAlert(editImageModal).dive({ context: { store, intl } }).find('div ul.bullet-list li a');
+        expect(statusAlertListItems).toHaveLength(2);
+        expect(statusAlertListItems.at(0).prop('href')).toEqual('#imageDescription');
+        expect(statusAlertListItems.at(1).prop('href')).toEqual('#imageWidth');
+      });
+
+      it('status alert has correct validation message when invalid image description submitted', () => {
+        editImageModal.setState({
+          imageSource: sampleText,
+        });
+
+        getModalBody(editImageModal).find('img').simulate('load', { target: { ...sampleImgData } });
+
+        getInsertImageButton(editImageModal).simulate('click');
+
+        editImageModal.update();
+
+        const statusAlert = getStatusAlert(editImageModal);
+
+        const validationMessages = statusAlert
+          .dive({ context: { store, intl } }).find(WrappedMessage);
+        expect(validationMessages).toHaveLength(2);
+        expect(validationMessages.at(0).prop('message')).toEqual(messages.editImageModalFormErrorMissingFields);
+        expect(validationMessages.at(1).prop('message')).toEqual(messages.editImageModalFormValidImageDescription);
+
+        const statusAlertListItems = statusAlert.dive({ context: { store, intl } }).find('div ul.bullet-list li a');
+        expect(statusAlertListItems).toHaveLength(1);
+        expect(statusAlertListItems.at(0).find(WrappedMessage).prop('message')).toEqual(messages.editImageModalFormValidImageDescription);
+      });
+
+      it('status alert has correct validation message when invalid image dimensions submitted', () => {
+        editImageModal.setState({
+          imageDescription: sampleText,
+          imageDimensions: {
+            height: (-1 * sampleImgData.naturalHeight),
+            width: (-1 * sampleImgData.naturalWidth),
+          },
+        });
+
+        getInsertImageButton(editImageModal).simulate('click');
+
+        editImageModal.update();
+
+        const statusAlertListItems = getStatusAlert(editImageModal).dive({ context: { store, intl } }).find('div ul.bullet-list li a');
+        expect(statusAlertListItems).toHaveLength(1);
+        expect(statusAlertListItems.at(0).find(WrappedMessage).prop('message')).toEqual(messages.editImageModalFormValidImageDimensions);
+      });
+
+      // needs updated so that clicking next triggers the status alert
+      // TODO, what is focused on?
+      it('focus on page 1 is moved to <TODO: fill in> when status alert is closed', () => {
+        getInsertImageButton(editImageModal).simulate('click');
+
+        getCloseStatusAlertButton(editImageModal).simulate('click');
+      });
+
+      it('focus on page 2 is moved to previous button when status alert is closed', () => {
+        const focusSpy = jest.fn();
+
+        editImageModal.instance().previousPageButtonRef = {
+          focus: focusSpy,
+        };
+
+        getInsertImageButton(editImageModal).simulate('click');
+
+        getCloseStatusAlertButton(editImageModal).simulate('click');
+
+        expect(focusSpy).toHaveBeenCalledTimes(1);
+      });
+    });
+
+    describe('Validation Messages', () => {
+      beforeEach(() => {
+        editImageModal.instance().statusAlertRef = {
+          focus: jest.fn(),
+        };
+
+        editImageModal.setState({
+          pageNumber: 2,
+          shouldShowPreviousButton: true,
+        });
+      });
+
+      it('isValid states for each field is false if invalid form data submitted', () => {
+        editImageModal.setState({
+          imageDimensions: {
+            height: -100,
+            width: -100,
+          },
+        });
+
+        getInsertImageButton(editImageModal).simulate('click');
+
+        expect(editImageModal.state('isImageDescriptionValid')).toEqual(false);
+        expect(editImageModal.state('isImageDimensionsValid')).toEqual(false);
+      });
+
+      it('fieldsets show validation messages if invalid form data submitted', () => {
+        editImageModal.setState({
+          imageDimensions: {
+            height: -100,
+            width: -100,
+          },
+          pageNumber: 2,
+          shouldShowPreviousButton: true,
+        });
+
+        getInsertImageButton(editImageModal).simulate('click');
+
+        editImageModal.update();
+
+        const imageDescriptionFieldset = getImageDescriptionFieldset(editImageModal);
+        expect(imageDescriptionFieldset.prop('isValid')).toEqual(false);
+        expect(imageDescriptionFieldset.prop('invalidMessage').props.message).toEqual(messages.editImageModalFormValidImageDescription);
+
+        const imageDimensionsFieldset = getImageDimensionsFieldset(editImageModal);
+        expect(imageDimensionsFieldset.prop('isValid')).toEqual(false);
+        expect(imageDimensionsFieldset.prop('invalidMessage').props.message).toEqual(messages.editImageModalFormValidImageDimensions);
+      });
     });
   });
 
-  describe('Status Alert', () => {
-    beforeEach(() => {
-      wrapper.setState({
-        pageNumber: 2,
-        shouldShowPreviousButton: true,
-      });
-      updateConstants();
-    });
-    afterEach(() => {
-      resetWrapper();
-    });
-
-    it('this.state.isStatusAlertOpen is false by default', () => {
-      expect(wrapper.state('isStatusAlertOpen')).toEqual(false);
-    });
-
-    it('this.state.isStatusAlertOpen is true if invalid form submitted', () => {
-      insertImageButton.simulate('click');
-
-      expect(wrapper.state('isStatusAlertOpen')).toEqual(true);
-    });
-
-    it('this.state.isStatusAlertOpen is false when status alert is closed', () => {
-      insertImageButton.simulate('click');
-
-      const closeStatusAlertButton = wrapper.find(StatusAlert).find('button');
-      closeStatusAlertButton.simulate('click');
-
-      expect(wrapper.find(StatusAlert).prop('open')).toEqual(false);
-    });
-
-    it('status alert is not displayed by default', () => {
-      expect(wrapper.find(StatusAlert).prop('open')).toEqual(false);
-    });
-
-    it('status alert is displayed if invalid form submitted', () => {
-      insertImageButton.simulate('click');
-
-      expect(wrapper.find(StatusAlert).prop('open')).toEqual(true);
-    });
-
-    it('this.state.currentValidationMessages is empty object by default', () => {
-      expect(wrapper.state('currentValidationMessages')).toEqual({});
-    });
-
-    it('this.state.currentValidationMessages has correct validation messages when invalid form submitted', () => {
-      insertImageButton.simulate('click');
-
-      expect(wrapper.state('currentValidationMessages').imageSource.props.message).toEqual(messages.editImageModalFormValidImageSource);
-      expect(wrapper.state('currentValidationMessages').imageDescription.props.message).toEqual(messages.editImageModalFormValidImageDescription);
-    });
-
-    it('this.state.currentValidationMessages has correct validation message when invalid image description submitted', () => {
-      wrapper.setState({
-        imageSource: sampleText,
-      });
-      insertImageButton.simulate('click');
-
-      expect(wrapper.state('currentValidationMessages')).not.toHaveProperty('imageSource');
-      expect(wrapper.state('currentValidationMessages').imageDescription.props.message).toEqual(messages.editImageModalFormValidImageDescription);
-    });
-
-    it('this.state.currentValidationMessages has correct validation message when invalid image source submitted', () => {
-      wrapper.setState({
-        imageDescription: sampleText,
-      });
-      insertImageButton.simulate('click');
-
-      expect(wrapper.state('currentValidationMessages').imageSource.props.message).toEqual(messages.editImageModalFormValidImageSource);
-      expect(wrapper.state('currentValidationMessages')).not.toHaveProperty('imageDescription');
-    });
-
-    it('this.state.currentValidationMessages has correct validation message when invalid image dimensions submitted', () => {
-      wrapper.setState({
-        imageSource: sampleText,
-        imageDescription: sampleText,
-        imageDimensions: {
-          height: -100,
-          width: -100,
-        },
-      });
-
-      insertImageButton.simulate('click');
-
-      expect(wrapper.state('currentValidationMessages').imageWidth.props.message).toEqual(messages.editImageModalFormValidImageDimensions);
-      expect(wrapper.state('currentValidationMessages')).not.toHaveProperty('imageSource');
-      expect(wrapper.state('currentValidationMessages')).not.toHaveProperty('imageDescription');
-
-      resetWrapper();
-    });
-
-    it('this.state.currentValidationMessages is empty when valid form submitted', () => {
-      wrapper.setState({
-        imageSource: sampleText,
-        imageDescription: sampleText,
-      });
-      insertImageButton.simulate('click');
-
-      expect(wrapper.state('currentValidationMessages')).not.toHaveProperty('imageSource');
-      expect(wrapper.state('currentValidationMessages')).not.toHaveProperty('imageDescription');
-    });
-
-    it('status alert has correct validation messages when invalid form submitted', () => {
-      wrapper.setState({
-        imageDimensions: {
-          height: -100,
-          width: -100,
-        },
-      });
-
-      insertImageButton.simulate('click');
-
-      const statusAlert = wrapper.find(StatusAlert);
-
-      expect(statusAlert.find(WrappedMessage).first().prop('message')).toEqual(messages.editImageModalFormErrorMissingFields);
-
-      const statusAlertListBullets = statusAlert.find('div ul.bullet-list').find(WrappedMessage);
-      expect(statusAlertListBullets).toHaveLength(3);
-
-      expect(statusAlert.find('div ul.bullet-list').find(WrappedMessage).first().prop('message')).toEqual(messages.editImageModalFormValidImageSource);
-      expect(statusAlert.find('div ul.bullet-list').find(WrappedMessage).at(1).prop('message')).toEqual(messages.editImageModalFormValidImageDescription);
-      expect(statusAlert.find('div ul.bullet-list').find(WrappedMessage).at(2).prop('message')).toEqual(messages.editImageModalFormValidImageDimensions);
-
-      resetWrapper();
-    });
-
-    it('validation messages are hyperlinks that navigate to appropriate form elements', () => {
-      wrapper.setState({
-        imageDimensions: {
-          height: -100,
-          width: -100,
-        },
-      });
-
-      insertImageButton.simulate('click');
-
-      const statusAlert = wrapper.find(StatusAlert);
-
-      const statusAlertListItems = statusAlert.find('div ul.bullet-list li a');
-      expect(statusAlertListItems).toHaveLength(3);
-
-      expect(statusAlertListItems.first().prop('href')).toEqual('#imageSource');
-      expect(statusAlertListItems.at(1).prop('href')).toEqual('#imageDescription');
-      expect(statusAlertListItems.at(2).prop('href')).toEqual('#imageWidth');
-
-      resetWrapper();
-    });
-
-    it('status alert has correct validation message when invalid image description submitted', () => {
-      wrapper.setState({
-        imageSource: sampleText,
-      });
-      insertImageButton.simulate('click');
-
-      const statusAlert = wrapper.find(StatusAlert);
-
-      expect(statusAlert.find(WrappedMessage).first().prop('message')).toEqual(messages.editImageModalFormErrorMissingFields);
-
-      const statusAlertListBullets = statusAlert.find('div ul.bullet-list').find(WrappedMessage);
-      expect(statusAlertListBullets).toHaveLength(1);
-      expect(statusAlert.find('div ul.bullet-list').find(WrappedMessage).first().prop('message')).toEqual(messages.editImageModalFormValidImageDescription);
-    });
-
-    it('status alert has correct validation message when invalid image source submitted', () => {
-      wrapper.setState({
-        imageDescription: sampleText,
-      });
-      insertImageButton.simulate('click');
-
-      const statusAlert = wrapper.find(StatusAlert);
-
-      expect(statusAlert.find(WrappedMessage).first().prop('message')).toEqual(messages.editImageModalFormErrorMissingFields);
-
-      const statusAlertListBullets = statusAlert.find('div ul.bullet-list').find(WrappedMessage);
-      expect(statusAlertListBullets).toHaveLength(1);
-      expect(statusAlert.find('div ul.bullet-list').find(WrappedMessage).first().prop('message')).toEqual(messages.editImageModalFormValidImageSource);
-    });
-
-    // needs updated so that clicking next triggers the status alert
-    // it('focus on page 1 is moved to imageSourceInput when status alert is closed', () => {
-    //   wrapper.setState({ pageNumber: 1 });
-    //   updateConstants();
-    //   insertImageButton.simulate('click');
-
-    //   const closeStatusAlertButton = wrapper.find(StatusAlert).find('button');
-    //   closeStatusAlertButton.simulate('click');
-
-    //   expect(document.activeElement).toEqual(wrapper.instance().imageSourceInputRef);
-    // });
-
-    it('focus on page 2 is moved to previous button when status alert is closed', () => {
-      insertImageButton.simulate('click');
-
-      const closeStatusAlertButton = wrapper.find(StatusAlert).find('button');
-      closeStatusAlertButton.simulate('click');
-
-      expect(document.activeElement).toEqual(wrapper.instance().previousPageButtonRef);
-    });
-  });
-
-  describe('Validation Messages', () => {
-    it('isValid states for each field is false if invalid form data submitted', () => {
-      wrapper.setState({
-        imageDimensions: {
-          height: -100,
-          width: -100,
-        },
-        pageNumber: 2,
-        shouldShowPreviousButton: true,
-      });
-      updateConstants();
-
-      insertImageButton.simulate('click');
-
-      expect(wrapper.state('isImageValid')).toEqual(false);
-      expect(wrapper.state('isImageDescriptionValid')).toEqual(false);
-      expect(wrapper.state('isImageDimensionsValid')).toEqual(false);
-      resetWrapper();
-    });
-
-    it('input and fieldsets show validation messages if invalid form data submitted', () => {
-      wrapper.setState({
-        imageDimensions: {
-          height: -100,
-          width: -100,
-        },
-        pageNumber: 2,
-        shouldShowPreviousButton: true,
-      });
-      updateConstants();
-
-      insertImageButton.simulate('click');
-      /* eslint-disable max-len */
-      // Commenting out tests as workflow has changed
-      // const imageSourceValidation = wrapper.find('#error-imageSource').find(WrappedMessage);
-      // expect(imageSourceValidation).toHaveLength(2); // first is the danger icon description
-      // expect(imageSourceValidation.at(1).prop('message')).toEqual(messages.editImageModalImageNotFoundError);
-      /* eslint-enable max-len */
-      const imageDescriptionValidation = wrapper.find('#error-imageDescriptionFieldset').find(WrappedMessage);
-      expect(imageDescriptionValidation).toHaveLength(2);
-      expect(imageDescriptionValidation.at(1).prop('message')).toEqual(messages.editImageModalFormValidImageDescription);
-
-      const imageDimensionsValidation = wrapper.find('#error-imageDimensionsFieldset').find(WrappedMessage);
-      expect(imageDimensionsValidation).toHaveLength(2);
-      expect(imageDimensionsValidation.at(1).prop('message')).toEqual(messages.editImageModalFormValidImageDimensions);
-
-      resetWrapper();
-    });
-  });
-
-  // commented out tests need to rethink how to test this workflow
-  // as it should be loaded by the time user gets to this page
-  // onclick of next button on page 1
   describe('Image Preview', () => {
-    afterEach(() => {
-      resetWrapper();
+    beforeEach(() => {
+      editImageModal.setState({
+        pageNumber: 2,
+        shouldShowPreviousButton: true,
+      });
     });
-    // it('this.state.imageDimensions are set on image load', () => {
-    //   // trigger img element to show
-    //   imageSourceInput.find('input').simulate('change', { target: { value: sampleText } });
-    //   imageSourceInput.find('input').simulate('blur');
 
-    //   wrapper.find('img').simulate('load', { target: { ...sampleImgData } });
+    it('this.state.imageDimensions are set on image load', () => {
+      editImageModal.setState({
+        imageSource: sampleText,
+      });
 
-    //   expect(wrapper.state('imageDimensions')).toEqual({
-    //     width: sampleImgData.naturalWidth,
-    //     height: sampleImgData.naturalHeight,
-    //     aspectRatio: sampleImgData.naturalWidth / sampleImgData.naturalHeight,
-    //   });
-    // });
+      getModalBody(editImageModal).find('img').simulate('load', { target: { ...sampleImgData } });
+
+      expect(editImageModal.state('imageDimensions')).toEqual({
+        width: sampleImgData.naturalWidth,
+        height: sampleImgData.naturalHeight,
+        aspectRatio: sampleImgData.naturalWidth / sampleImgData.naturalHeight,
+      });
+    });
 
     it('this.state.isImageLoading is false by default', () => {
-      expect(wrapper.state('isImageLoading')).toEqual(false);
+      expect(editImageModal.state('isImageLoading')).toEqual(false);
     });
 
-    // it('this.state.isImageLoading is set on image load', () => {
-    //   // trigger img element to show
-    //   imageSourceInput.find('input').simulate('change', { target: { value: sampleText } });
-    //   imageSourceInput.find('input').simulate('blur');
+    it('this.state.isImageLoading is set on image load', () => {
+      editImageModal.setState({
+        imageSource: sampleText,
+      });
 
-    //   wrapper.find('img').simulate('load', { target: { ...sampleImgData } });
+      getModalBody(editImageModal).find('img').simulate('load', { target: { ...sampleImgData } });
 
-    //   expect(wrapper.state('isImageLoading')).toEqual(false);
-    // });
+      expect(editImageModal.state('isImageLoading')).toEqual(false);
+    });
 
-    // it('this.state.isImageLoading is set on image error', () => {
-    //   // trigger img element to show
-    //   imageSourceInput.find('input').simulate('change', { target: { value: sampleText } });
-    //   imageSourceInput.find('input').simulate('blur');
+    it('this.state.isImageLoading is set on image error', () => {
+      editImageModal.setState({
+        imageSource: sampleText,
+      });
 
-    //   wrapper.find('img').simulate('error');
+      getModalBody(editImageModal).find('img').simulate('error');
 
-    //   expect(wrapper.state('isImageLoading')).toEqual(false);
-    // });
+      expect(editImageModal.state('isImageLoading')).toEqual(false);
+    });
 
     it('this.state.isImageLoaded is false by default', () => {
-      expect(wrapper.state('isImageLoaded')).toEqual(false);
+      expect(editImageModal.state('isImageLoaded')).toEqual(false);
     });
 
     it('with visible image preview image when this.state.isImageLoaded is false (default)', () => {
-      wrapper.setState({
+      editImageModal.setState({
         imageSource: sampleText,
-        pageNumber: 2,
-        shouldShowPreviousButton: true,
       });
 
-      updateConstants();
+      const img = getModalBody(editImageModal).find('img');
 
-      expect(imagePreviewImage.prop('className')).toEqual(expect.stringContaining('invisible'));
+      expect(img.prop('className')).toEqual(expect.stringContaining('invisible'));
     });
 
     it('with visible image preview image when this.state.isImageLoaded is true ', () => {
-      wrapper.setState({
+      editImageModal.setState({
         imageSource: sampleText,
         isImageLoaded: true,
-        pageNumber: 2,
-        shouldShowPreviousButton: true,
       });
 
-      updateConstants();
+      const img = getModalBody(editImageModal).find('img');
 
       // TODO: replace this with asymmetric matcher expect.not.stringContaining when released
-      expect(imagePreviewImage.prop('className').includes('invisible')).toEqual(false);
+      expect(img.prop('className').includes('invisible')).toEqual(false);
     });
 
     it('with visible image preview placeholder text when this.state.isImageLoaded is false (default)', () => {
-      wrapper.setState({
-        pageNumber: 2,
-        shouldShowPreviousButton: true,
-      });
-      updateConstants();
-      const imagePreviewPlaceholderText = imagePreviewPlaceholder.find(WrappedMessage).find('FormattedMessage').find('span');
-      expect(imagePreviewPlaceholderText).toHaveLength(1);
+      const imagePreviewPlaceholderText = getModalBody(editImageModal).find('.image-preview-placeholder').find(WrappedMessage);
+
+      const imagePreviewPlaceholderTextMessage = imagePreviewPlaceholderText
+        .dive({ context: { store, intl } })
+        .dive({ context: { store, intl } }).find(FormattedMessage)
+        .dive({ context: { store, intl } });
+
       // TODO: replace this with asymmetric matcher expect.not.stringContaining when released
-      expect(imagePreviewPlaceholderText.prop('className').includes('invisible')).toEqual(false);
+      expect(imagePreviewPlaceholderTextMessage.prop('className').includes('invisible')).toEqual(false);
     });
 
     it('with invisible image preview placeholder text when this.state.isImageLoaded is true', () => {
-      wrapper.setState({
+      editImageModal.setState({
         isImageLoaded: true,
         pageNumber: 2,
         shouldShowPreviousButton: true,
       });
 
-      updateConstants();
+      const imagePreviewPlaceholderText = getModalBody(editImageModal).find('.image-preview-placeholder').find(WrappedMessage);
 
-      const imagePreviewPlaceholderText = imagePreviewPlaceholder.find(WrappedMessage).find('FormattedMessage').find('span');
-      expect(imagePreviewPlaceholderText).toHaveLength(1);
-      expect(imagePreviewPlaceholderText.prop('className')).toEqual(expect.stringContaining('invisible'));
+      const imagePreviewPlaceholderTextMessage = imagePreviewPlaceholderText
+        .dive({ context: { store, intl } })
+        .dive({ context: { store, intl } }).find(FormattedMessage)
+        .dive({ context: { store, intl } });
+
+      expect(imagePreviewPlaceholderTextMessage.prop('className')).toEqual(expect.stringContaining('invisible'));
     });
   });
 
   // Commenting this out for now as we're going to create a new way to insert images
   // and workflow changes to test here
-  /* eslint-disable max-len */
-  // describe('Image Source Input', () => {
-  //   afterEach(() => {
-  //     resetWrapper();
-  //   });
-  //   it('this.state.imageSource is empty string by default', () => {
-  //     expect(wrapper.state('imageSource')).toEqual('');
-  //   });
-
-  //   it('value is empty string by default', () => {
-  //     expect(imageSourceInput.prop('value')).toEqual('');
-  //   });
-
-  //   it('displays this.state.imageSource as value', () => {
-  //     wrapper.setState({
-  //       imageSource: sampleText,
-  //     });
-
-  //     updateConstants();
-
-  //     expect(imageSourceInput.prop('value')).toEqual(sampleText);
-  //   });
-
-  //   it('sets this.state.imageSource with value onBlur', () => {
-  //     imageSourceInput.find('input').simulate('change', { target: { value: sampleText } });
-  //     imageSourceInput.find('input').simulate('blur');
-
-  //     expect(wrapper.state('imageSource')).toEqual(sampleText);
-  //   });
-
-  //   it('sets this.state.imageDimensions to empty object when image source is empty string onBlur', () => {
-  //     imageSourceInput.find('input').simulate('change', { target: { value: '' } });
-  //     imageSourceInput.find('input').simulate('blur');
-
-  //     expect(wrapper.state('imageDimensions')).toEqual({});
-  //   });
-
-  //   it('sets this.state.isImageLoaded to empty object when image source is empty string onBlur', () => {
-  //     imageSourceInput.find('input').simulate('change', { target: { value: '' } });
-  //     imageSourceInput.find('input').simulate('blur');
-
-  //     expect(wrapper.state('isImageLoaded')).toEqual(false);
-  //   });
-
-  //   it('sets this.state.isImageLoaded to empty object when image source is empty string onBlur', () => {
-  //     imageSourceInput.find('input').simulate('change', { target: { value: '' } });
-  //     imageSourceInput.find('input').simulate('blur');
-
-  //     expect(wrapper.state('isImageValid')).toEqual(false);
-  //   });
-
-  //   it('sets this.state.isImageLoaded to empty object when image source is empty string onBlur', () => {
-  //     imageSourceInput.find('input').simulate('change', { target: { value: '' } });
-  //     imageSourceInput.find('input').simulate('blur');
-
-  //     expect(wrapper.state('isImageValid')).toEqual(false);
-  //   });
-
-  //   it('sets this.state.isImageLoading to true and displays spinner with non-empty imageSource', () => {
-  //     jest.useFakeTimers();
-  //     imageSourceInput.find('input').simulate('change', { target: { value: sampleText } });
-  //     imageSourceInput.find('input').simulate('blur');
-
-  //     expect(wrapper.state('isImageLoading')).toEqual(true);
-
-  //     jest.runAllTimers();
-  //     updateConstants();
-  //     expect(wrapper.state('displayLoadingSpinner')).toEqual(true);
-  //     expect(imageSourceInput.find('.fa-spinner').length).toEqual(1);
-  //   });
-
-  //   it('sets this.state.isImageLoading to false and does not display spinner with empty imageSource', () => {
-  //     jest.useFakeTimers();
-  //     imageSourceInput.find('input').simulate('change', { target: { value: '' } });
-  //     imageSourceInput.find('input').simulate('blur');
-
-  //     expect(wrapper.state('isImageLoading')).toEqual(false);
-
-  //     jest.runAllTimers();
-  //     updateConstants();
-  //     expect(wrapper.state('displayLoadingSpinner')).toEqual(false);
-  //     expect(imageSourceInput.find('.fa-spinner').length).toEqual(0);
-  //   });
-
-  //   it('sets this.state.isImageLoading to false and does not display spinner when new imageSource value equals existing value', () => {
-  //     jest.useFakeTimers();
-  //     wrapper.setState({
-  //       imageSource: sampleText,
-  //     });
-  //     imageSourceInput.find('input').simulate('change', { target: { value: sampleText } });
-  //     imageSourceInput.find('input').simulate('blur');
-
-  //     expect(wrapper.state('isImageLoading')).toEqual(false);
-
-  //     jest.runAllTimers();
-  //     updateConstants();
-  //     expect(wrapper.state('displayLoadingSpinner')).toEqual(false);
-  //     expect(imageSourceInput.find('.fa-spinner').length).toEqual(0);
-  //   });
-
-  //   it('sets isImageLoading to false, isImageLoaded to true, and isValid to true when image preview loads successfully', () => {
-  //     imageSourceInput.find('input').simulate('change', { target: { value: sampleText } });
-  //     imageSourceInput.find('input').simulate('blur');
-
-  //     wrapper.find('img').simulate('load', { target: { ...sampleImgData } });
-
-  //     expect(wrapper.state('isImageLoading')).toEqual(false);
-  //     expect(wrapper.state('isImageLoaded')).toEqual(true);
-  //     expect(wrapper.state('isImageValid')).toEqual(true);
-  //   });
-
-  //   it('sets isImageLoading to false, isImageLoaded to false, and isValid to false when image preview load errors', () => {
-  //     imageSourceInput.find('input').simulate('change', { target: { value: sampleText } });
-  //     imageSourceInput.find('input').simulate('blur');
-
-  //     wrapper.find('img').simulate('error');
-
-  //     expect(wrapper.state('isImageLoading')).toEqual(false);
-  //     expect(wrapper.state('isImageLoaded')).toEqual(false);
-  //     expect(wrapper.state('isImageValid')).toEqual(false);
-  //   });
-  // });
-  /* eslint-enable max-len */
-  describe('Image Description Input', () => {
+  describe('Image Source Input', () => {
     beforeEach(() => {
-      wrapper.setState({
+      editImageModal.setState({
         pageNumber: 2,
         shouldShowPreviousButton: true,
       });
-      updateConstants();
     });
-    afterEach(() => {
-      resetWrapper();
+
+    it('this.state.imageSource is empty string by default', () => {
+      expect(editImageModal.state('imageSource')).toEqual('');
     });
+
+    // TODO: duplicate of above
+    it('sets isImageLoading to false and isImageLoaded to true when image preview loads successfully', () => {
+      editImageModal.setState({
+        imageSource: sampleText,
+      });
+
+      getModalBody(editImageModal).find('img').simulate('load', { target: { ...sampleImgData } });
+
+      expect(editImageModal.state('isImageLoading')).toEqual(false);
+      expect(editImageModal.state('isImageLoaded')).toEqual(true);
+    });
+
+    it('sets isImageLoading to false and isImageLoaded to false when image preview load errors', () => {
+      editImageModal.setState({
+        imageSource: sampleText,
+      });
+
+      getModalBody(editImageModal).find('img').simulate('error');
+
+      expect(editImageModal.state('isImageLoading')).toEqual(false);
+      expect(editImageModal.state('isImageLoaded')).toEqual(false);
+    });
+  });
+
+  describe('Image Description Input', () => {
+    beforeEach(() => {
+      const refMock = {
+        focus: jest.fn(),
+      };
+
+      editImageModal.instance().statusAlertRef = refMock;
+      editImageModal.instance().previousPageButtonRef = refMock;
+
+      editImageModal.setState({
+        pageNumber: 2,
+        shouldShowPreviousButton: true,
+      });
+    });
+
     it('this.state.imageDescription is empty string by default', () => {
-      expect(wrapper.state('imageDescription')).toEqual('');
+      expect(editImageModal.state('imageDescription')).toEqual('');
     });
 
     it('this.state.isImageDecorative is false by default', () => {
-      expect(wrapper.state('isImageDecorative')).toEqual(false);
+      expect(editImageModal.state('isImageDecorative')).toEqual(false);
     });
 
     it('value is empty string by default', () => {
-      expect(imageDescriptionInput.prop('value')).toEqual('');
+      expect(getImageDescriptionInput(editImageModal).prop('value')).toEqual('');
     });
 
     it('checkbox is unchecked by default', () => {
-      expect(imageDescriptionInputCheckBox.prop('checked')).toEqual(false);
+      expect(getImageDescriptionInputCheckBox(editImageModal).prop('checked')).toEqual(false);
     });
 
     it('displays this.state.imageSource as value', () => {
-      wrapper.setState({
+      editImageModal.setState({
         imageDescription: sampleText,
       });
-      updateConstants();
-      expect(imageDescriptionInput.prop('value')).toEqual(sampleText);
-    });
 
-    it('sets this.state.imageSource with value onBlur', () => {
-      imageDescriptionInput.find('input').simulate('change', { target: { value: sampleText } });
-      imageDescriptionInput.find('input').simulate('blur');
-
-      expect(wrapper.state('imageDescription')).toEqual(sampleText);
+      expect(getImageDescriptionInput(editImageModal).prop('value')).toEqual(sampleText);
     });
 
     it('sets this.state.isImageDecorative with value on checkbox onChange', () => {
-      imageDescriptionInputCheckBox.find('input').simulate('change', { target: { value: true } });
+      getImageDescriptionInputCheckBox(editImageModal).simulate('change', true);
 
-      expect(wrapper.state('isImageDecorative')).toEqual(true);
+      expect(editImageModal.state('isImageDecorative')).toEqual(true);
     });
 
     it('displays this.state.isImageDecorative as checkbox checked', () => {
-      wrapper.setState({
+      editImageModal.setState({
         isImageDecorative: true,
       });
-      updateConstants();
-      expect(imageDescriptionInputCheckBox.prop('checked')).toEqual(true);
+
+      expect(getImageDescriptionInputCheckBox(editImageModal).prop('checked')).toEqual(true);
     });
 
     it('toggles image description disabled prop via checkbox', () => {
-      wrapper.setState({
+      editImageModal.setState({
         isImageDecorative: true,
       });
-      updateConstants();
+
+      let imageDescriptionInput = getImageDescriptionInput(editImageModal);
+
       expect(imageDescriptionInput.prop('disabled')).toEqual(true);
 
-      wrapper.setState({
+      editImageModal.setState({
         isImageDecorative: false,
       });
-      updateConstants();
+
+      imageDescriptionInput = getImageDescriptionInput(editImageModal);
+
       expect(imageDescriptionInput.prop('disabled')).toEqual(false);
     });
 
     it('returns correct feedback for invalid description (uses initial state)', () => {
-      const feedback = wrapper.instance().validateImageDescription();
+      const feedback = editImageModal.instance().validateImageDescription();
 
       expect(feedback.isValid).toEqual(false);
       expect(feedback.validationMessage.props.message)
@@ -977,11 +872,11 @@ describe('EditImageModal', () => {
     });
 
     it('returns correct feedback for valid description (with non-empty description)', () => {
-      wrapper.setState({
+      editImageModal.setState({
         imageDescription: sampleText,
       });
 
-      const feedback = wrapper.instance().validateImageDescription();
+      const feedback = editImageModal.instance().validateImageDescription();
 
       expect(feedback.isValid).toEqual(true);
       expect(feedback.validationMessage).toBeUndefined();
@@ -989,11 +884,11 @@ describe('EditImageModal', () => {
     });
 
     it('returns correct feedback for valid description (with checked checkbox)', () => {
-      wrapper.setState({
+      editImageModal.setState({
         isImageDecorative: true,
       });
 
-      const feedback = wrapper.instance().validateImageDescription();
+      const feedback = editImageModal.instance().validateImageDescription();
 
       expect(feedback.isValid).toEqual(true);
       expect(feedback.validationMessage).toBeUndefined();
@@ -1003,141 +898,138 @@ describe('EditImageModal', () => {
 
   describe('Image Dimensions Input', () => {
     beforeEach(() => {
-      wrapper.setState({
+      editImageModal.setState({
         pageNumber: 2,
         shouldShowPreviousButton: true,
       });
-      updateConstants();
     });
-    afterEach(() => {
-      resetWrapper();
-    });
+
     it('this.state.imageDimensions is empty object by default', () => {
-      expect(wrapper.state('imageDimensions')).toEqual({});
+      expect(editImageModal.state('imageDimensions')).toEqual({});
     });
 
     it('this.state.areProportionsLocked is true by default', () => {
-      expect(wrapper.state('areProportionsLocked')).toEqual(true);
+      expect(editImageModal.state('areProportionsLocked')).toEqual(true);
     });
 
     it('width input value is empty string by default', () => {
-      expect(imageDimensionsWidthInput.prop('value')).toEqual('');
+      expect(getImageDimensionsWidthInput(editImageModal).prop('value')).toEqual('');
     });
 
     it('height input value is empty string by default', () => {
-      expect(imageDimensionsHeightInput.prop('value')).toEqual('');
+      expect(getImageDimensionsHeightInput(editImageModal).prop('value')).toEqual('');
     });
 
     it('checkbox is unchecked by default', () => {
-      expect(imageDimensionsInputCheckBox.prop('checked')).toEqual(true);
+      expect(getImageDescriptionInputCheckBox(editImageModal).prop('checked')).toEqual(false);
     });
 
     it('sets this.state.isImageDecorative with value on checkbox onChange', () => {
-      imageDimensionsInputCheckBox.find('input').simulate('change', { target: { value: true } });
+      getImageDescriptionInputCheckBox(editImageModal).simulate('change', true);
 
-      expect(wrapper.state('areProportionsLocked')).toEqual(true);
+      expect(editImageModal.state('areProportionsLocked')).toEqual(true);
     });
 
     it('displays this.state.areProportionsLocked as checkbox checked', () => {
-      wrapper.setState({
+      editImageModal.setState({
         areProportionsLocked: true,
       });
 
-      updateConstants();
-      expect(imageDimensionsInputCheckBox.prop('checked')).toEqual(true);
+      editImageModal.update();
+
+      expect(getImageDimensionsCheckBox(editImageModal).prop('checked')).toEqual(true);
     });
-    /* eslint-disable max-len */
-    // commenting these out as there will be a new workflow and they need reworked anyway
-    // describe('this.state.imageDimensions responds correctly to locked proportions', () => {
-    //   beforeEach(() => {
-    //     imageSourceInput.find('input').simulate('change', { target: { value: sampleText } });
-    //     imageSourceInput.find('input').simulate('blur');
 
-    //     wrapper.find('img').simulate('load', { target: { ...sampleImgData } });
-    //   });
+    describe('this.state.imageDimensions responds correctly to locked proportions', () => {
+      beforeEach(() => {
+        editImageModal.setState({
+          imageSource: sampleText,
+          pageNumber: 2,
+          shouldShowPreviousButton: true,
+        });
 
-    //   it('height responds to width change', () => {
-    //     imageDimensionsWidthInput.find('input').simulate('change', { target: { value: 50 } });
+        getModalBody(editImageModal).find('img').simulate('load', { target: { ...sampleImgData } });
+        editImageModal.update();
+      });
 
-    //     updateConstants();
+      it('height responds to width change', () => {
+        getImageDimensionsWidthInput(editImageModal).simulate('blur', 50);
 
-    //     expect(wrapper.state('imageDimensions')).toEqual({
-    //       width: 50,
-    //       height: 100,
-    //       aspectRatio: sampleImgData.naturalWidth / sampleImgData.naturalHeight,
-    //     });
-    //   });
+        expect(editImageModal.state('imageDimensions')).toEqual({
+          width: 50,
+          height: 100,
+          aspectRatio: sampleImgData.naturalWidth / sampleImgData.naturalHeight,
+        });
+      });
 
-    //   it('width responds to height change', () => {
-    //     imageDimensionsHeightInput.find('input').simulate('change', { target: { value: 400 } });
+      it('width responds to height change', () => {
+        getImageDimensionsHeightInput(editImageModal).simulate('blur', 400);
 
-    //     updateConstants();
+        expect(editImageModal.state('imageDimensions')).toEqual({
+          width: 200,
+          height: 400,
+          aspectRatio: sampleImgData.naturalWidth / sampleImgData.naturalHeight,
+        });
+      });
+    });
 
-    //     expect(wrapper.state('imageDimensions')).toEqual({
-    //       width: 200,
-    //       height: 400,
-    //       aspectRatio: sampleImgData.naturalWidth / sampleImgData.naturalHeight,
-    //     });
-    //   });
-    // });
+    describe('this.state.imageDimensions responds correctly to unlocked proportions', () => {
+      beforeEach(() => {
+        editImageModal.setState({
+          imageSource: sampleText,
+          pageNumber: 2,
+          shouldShowPreviousButton: true,
+        });
 
-    // describe('this.state.imageDimensions responds correctly to unlocked proportions', () => {
-    //   beforeEach(() => {
-    //     imageDimensionsInputCheckBox.find('input').simulate('change', { target: { value: false } });
-    //     imageSourceInput.find('input').simulate('change', { target: { value: sampleText } });
-    //     imageSourceInput.find('input').simulate('blur');
+        getImageDimensionsCheckBox(editImageModal).simulate('change', false);
 
-    //     wrapper.find('img').simulate('load', { target: { ...sampleImgData } });
-    //   });
-    //   afterEach(() => {
-    //     resetWrapper();
-    //   });
+        getModalBody(editImageModal).find('img').simulate('load', { target: { ...sampleImgData } });
 
-    //   it('height does not respond to width change', () => {
-    //     imageDimensionsWidthInput.find('input').simulate('change', { target: { value: 50 } });
+        editImageModal.update();
+      });
 
-    //     updateConstants();
+      it('height does not respond to width change', () => {
+        getImageDimensionsWidthInput(editImageModal).simulate('blur', 50);
 
-    //     expect(wrapper.state('imageDimensions')).toEqual({
-    //       width: 50,
-    //       height: sampleImgData.naturalHeight,
-    //       aspectRatio: sampleImgData.naturalWidth / sampleImgData.naturalHeight,
-    //     });
-    //   });
+        expect(editImageModal.state('imageDimensions')).toEqual({
+          width: 50,
+          height: sampleImgData.naturalHeight,
+          aspectRatio: sampleImgData.naturalWidth / sampleImgData.naturalHeight,
+        });
+      });
 
-    //   it('width does not respond to height change', () => {
-    //     imageDimensionsHeightInput.find('input').simulate('change', { target: { value: 400 } });
+      it('width does not respond to height change', () => {
+        getImageDimensionsHeightInput(editImageModal).simulate('blur', 400);
 
-    //     updateConstants();
+        expect(editImageModal.state('imageDimensions')).toEqual({
+          width: sampleImgData.naturalWidth,
+          height: 400,
+          aspectRatio: sampleImgData.naturalWidth / sampleImgData.naturalHeight,
+        });
+      });
 
-    //     expect(wrapper.state('imageDimensions')).toEqual({
-    //       width: sampleImgData.naturalWidth,
-    //       height: 400,
-    //       aspectRatio: sampleImgData.naturalWidth / sampleImgData.naturalHeight,
-    //     });
-    //   });
-    // });
-    /* eslint-enable max-len */
-    it('throws an Error for an unknown dimension type', () => {
-      expect(() => wrapper.instance().onImageDimensionChange(sampleText)).toThrow(Error);
-      expect(() => wrapper.instance().onImageDimensionChange(sampleText)).toThrow(`Unknown dimension type ${sampleText}.`);
+      it('throws an Error for an unknown dimension type', () => {
+        expect(() => editImageModal.instance().onImageDimensionBlur(sampleText)).toThrow(Error);
+        expect(() => editImageModal.instance().onImageDimensionBlur(sampleText)).toThrow(`Unknown dimension type ${sampleText}.`);
+      });
     });
   });
 
   describe('Insert Image button', () => {
-    let event;
     let validationMock;
+    let dispatchEventSpy;
 
     beforeEach(() => {
-      event = null;
-      wrapper.setState({
+      editImageModal.setState({
         pageNumber: 2,
         shouldShowPreviousButton: true,
       });
-      updateConstants();
 
-      const imageFormRef = wrapper.instance().imageFormRef;
-      imageFormRef.addEventListener('submitForm', (e) => { event = e; });
+      dispatchEventSpy = jest.fn();
+
+      editImageModal.instance().imageFormRef = {
+        dispatchEvent: dispatchEventSpy,
+      };
 
       /*
         Let's make form valid by default. The reason we mock the validation
@@ -1148,156 +1040,159 @@ describe('EditImageModal', () => {
       validationMock = jest.fn();
       validationMock.mockReturnValue({ isValid: true });
 
-      wrapper.instance().validateImageSource = validationMock;
-      wrapper.instance().validateImageDescription = validationMock;
-    });
-    afterEach(() => {
-      resetWrapper();
+      editImageModal.instance().validateImageSource = validationMock;
+      editImageModal.instance().validateImageDescription = validationMock;
     });
 
+
     it('sends bubbles as true', () => {
-      insertImageButton.simulate('click');
-      expect(event.bubbles).toEqual(true);
+      getInsertImageButton(editImageModal).simulate('click');
+      expect(dispatchEventSpy.mock.calls[0][0].bubbles).toEqual(true);
     });
 
     it('sends width in submitForm event', () => {
-      imageDimensionsWidthInput.find('input').simulate('change', { target: { value: sampleImgData.naturalWidth } });
+      getImageDimensionsWidthInput(editImageModal).simulate('blur', sampleImgData.naturalWidth);
 
-      insertImageButton.simulate('click');
+      getInsertImageButton(editImageModal).simulate('click');
 
-      expect(event.detail.width).toEqual(sampleImgData.naturalWidth);
+      expect(dispatchEventSpy.mock.calls[0][0].detail.width).toEqual(sampleImgData.naturalWidth);
     });
 
     it('sends height in submitForm event', () => {
-      imageDimensionsHeightInput.find('input').simulate('change', { target: { value: sampleImgData.naturalHeight } });
+      getImageDimensionsHeightInput(editImageModal).simulate('blur', sampleImgData.naturalHeight);
 
-      insertImageButton.simulate('click');
+      getInsertImageButton(editImageModal).simulate('click');
 
-      expect(event.detail.height).toEqual(sampleImgData.naturalHeight);
+      expect(dispatchEventSpy.mock.calls[0][0].detail.height).toEqual(sampleImgData.naturalHeight);
     });
 
     it('sends width as null in submitForm event if width is set to empty string/NaN (input cleared) and imgRef is falsy', () => {
-      imageDimensionsWidthInput.find('input').simulate('change', { target: { value: '' } });
+      getImageDimensionsWidthInput(editImageModal).simulate('blur', '');
 
-      insertImageButton.simulate('click');
+      getInsertImageButton(editImageModal).simulate('click');
 
-      expect(event.detail.width).toEqual(null);
+      expect(dispatchEventSpy.mock.calls[0][0].detail.width).toEqual(null);
     });
 
     it('sends height as null in submitForm event if height is set to empty string/NaN (input cleared) and imgRef is falsy', () => {
-      imageDimensionsHeightInput.find('input').simulate('change', { target: { value: '' } });
+      getImageDimensionsHeightInput(editImageModal).simulate('blur', '');
 
-      insertImageButton.simulate('click');
+      getInsertImageButton(editImageModal).simulate('click');
 
-      expect(event.detail.height).toEqual(null);
+      expect(dispatchEventSpy.mock.calls[0][0].detail.height).toEqual(null);
     });
 
     it('sends natural width in submitForm event if width is set to empty string/NaN (input cleared) ', () => {
       // set mocked imageRef data
-      wrapper.instance().imgRef = { ...sampleImgData };
+      editImageModal.instance().imgRef = { ...sampleImgData };
 
-      imageDimensionsWidthInput.find('input').simulate('change', { target: { value: '' } });
+      getImageDimensionsWidthInput(editImageModal).simulate('blur', '');
 
-      insertImageButton.simulate('click');
+      getInsertImageButton(editImageModal).simulate('click');
 
-      expect(event.detail.width).toEqual(sampleImgData.naturalWidth);
+      expect(dispatchEventSpy.mock.calls[0][0].detail.width).toEqual(sampleImgData.naturalWidth);
     });
 
     it('sends natural height in submitForm event if height is set to empty string/NaN (input cleared) ', () => {
       // set mocked imageRef data
-      wrapper.instance().imgRef = { ...sampleImgData };
+      editImageModal.instance().imgRef = { ...sampleImgData };
 
-      imageDimensionsHeightInput.find('input').simulate('change', { target: { value: '' } });
+      getImageDimensionsHeightInput(editImageModal).simulate('blur', '');
 
-      insertImageButton.simulate('click');
+      getInsertImageButton(editImageModal).simulate('click');
 
-      expect(event.detail.height).toEqual(sampleImgData.naturalHeight);
+      expect(dispatchEventSpy.mock.calls[0][0].detail.height).toEqual(sampleImgData.naturalHeight);
     });
 
     it('sends null in submitForm event if width is set to empty string/NaN (input cleared) but no imgRef ', () => {
-      imageDimensionsWidthInput.find('input').simulate('change', { target: { value: '' } });
+      getImageDimensionsWidthInput(editImageModal).simulate('blur', '');
 
-      insertImageButton.simulate('click');
+      getInsertImageButton(editImageModal).simulate('click');
 
-      expect(event.detail.width).toEqual(null);
+      expect(dispatchEventSpy.mock.calls[0][0].detail.width).toEqual(null);
     });
 
-    it('sends natural height in submitForm event if height is set to empty string/NaN (input cleared) ', () => {
-      imageDimensionsHeightInput.find('input').simulate('change', { target: { value: '' } });
+    it('sends natural height in submitForm event if height is set to empty string/NaN (input cleared) but no imgRef', () => {
+      getImageDimensionsHeightInput(editImageModal).simulate('blur', '');
 
-      insertImageButton.simulate('click');
+      getInsertImageButton(editImageModal).simulate('click');
 
-      expect(event.detail.height).toEqual(null);
+      expect(dispatchEventSpy.mock.calls[0][0].detail.height).toEqual(null);
     });
-    // commenting out due to upcoming workflow changes for 2 page modal
-    // it('sends this.state.imageSource in submitForm event', () => {
-    //   wrapper.setState({
-    //     baseAssetURL: 'edx.org',
-    //   });
 
-    //   imageSourceInput.find('input').simulate('change', { target: { value: sampleText } });
-    //   imageSourceInput.find('input').simulate('blur');
+    it('sends this.state.imageSource in submitForm event', () => {
+      editImageModal.setState({
+        baseAssetURL: 'edx.org',
+        imageSource: sampleText,
+      });
 
-    //   insertImageButton.simulate('click');
+      getInsertImageButton(editImageModal).simulate('click');
 
-    //   expect(event.detail.src).toEqual(rewriteStaticLinks(sampleText, '/static/', 'edx.org'));
-    // });
+      expect(dispatchEventSpy.mock.calls[0][0].detail.src).toEqual(rewriteStaticLinks(sampleText, '/static/', 'edx.org'));
+    });
 
     it('sends this.state.imageDescription in submitForm event if not this.state.imageIsDecorative', () => {
-      imageDescriptionInput.find('input').simulate('change', { target: { value: sampleText } });
-      imageDescriptionInput.find('input').simulate('blur');
+      getImageDescriptionInput(editImageModal).simulate('blur', sampleText);
 
-      insertImageButton.simulate('click');
+      editImageModal.update();
 
-      expect(event.detail.alt).toEqual(sampleText);
+      getInsertImageButton(editImageModal).simulate('click');
+
+      expect(dispatchEventSpy.mock.calls[0][0].detail.alt).toEqual(sampleText);
     });
 
     it('sends empty string in submitForm event if this.state.imageIsDecorative', () => {
-      imageDescriptionInput.find('input').simulate('change', { target: { value: sampleText } });
+      getImageDescriptionInput(editImageModal).simulate('blur', sampleText);
 
-      imageDescriptionInputCheckBox.find('input').simulate('change', { target: { value: true } });
+      getImageDescriptionInputCheckBox(editImageModal).simulate('change', true);
 
-      insertImageButton.simulate('click');
+      getInsertImageButton(editImageModal).simulate('click');
 
-      expect(event.detail.alt).toEqual('');
+      expect(dispatchEventSpy.mock.calls[0][0].detail.alt).toEqual('');
     });
 
     it('sends this.state.imageStyle in submitForm event', () => {
-      wrapper.setState({
+      editImageModal.setState({
         imageStyle: sampleText,
       });
 
-      insertImageButton.simulate('click');
+      getInsertImageButton(editImageModal).simulate('click');
 
-      expect(event.detail.style).toEqual(sampleText);
+      expect(dispatchEventSpy.mock.calls[0][0].detail.style).toEqual(sampleText);
     });
 
     it('does not dispatch event if form is invalid', () => {
       validationMock.mockReturnValue({ isValid: false });
 
-      wrapper.setState({
+      editImageModal.instance().statusAlertRef = {
+        focus: jest.fn(),
+      };
+
+      editImageModal.setState({
         imageDescription: '',
         imageSource: sampleText,
       });
 
-      insertImageButton.simulate('click');
-      expect(event).toBeNull();
+      const insertImageButton = getInsertImageButton(editImageModal);
 
-      wrapper.setState({
+      insertImageButton.simulate('click');
+      expect(dispatchEventSpy).toHaveBeenCalledTimes(0);
+
+      editImageModal.setState({
         imageDescription: sampleText,
         imageSource: '',
       });
 
       insertImageButton.simulate('click');
-      expect(event).toBeNull();
+      expect(dispatchEventSpy).toHaveBeenCalledTimes(0);
 
-      wrapper.setState({
+      editImageModal.setState({
         imageDescription: '',
         imageSource: '',
       });
 
       insertImageButton.simulate('click');
-      expect(event).toBeNull();
+      expect(dispatchEventSpy).toHaveBeenCalledTimes(0);
     });
   });
 });

@@ -1,3 +1,10 @@
+import { applyMiddleware, combineReducers, createStore } from 'redux';
+import { composeWithDevTools } from 'redux-devtools-extension/logOnlyInProduction';
+import thunkMiddleware from 'redux-thunk';
+
+import accessibility from '../data/reducers/accessibility';
+import { assets, metadata } from '../data/reducers/assets';
+
 const courseDetails = {
   lang: 'en',
   url_name: 'course',
@@ -53,3 +60,33 @@ export const testAssetsList = [
     external_url: null,
   },
 ];
+
+/*
+  Use studioContextOptions to pass in any application specific context that is required,
+  aside from courseDetails.
+*/
+export const getMockStore = (studioContextOptions) => {
+  const studioContext = {
+
+    course: { ...courseDetails },
+    ...studioContextOptions,
+  };
+
+  const studioDetails = () => studioContext;
+
+  const rootReducer = combineReducers({
+    accessibility,
+    assets,
+    metadata,
+    studioDetails,
+  });
+
+  const store = createStore(
+    rootReducer,
+    composeWithDevTools(
+      applyMiddleware(thunkMiddleware),
+    ),
+  );
+
+  return store;
+};

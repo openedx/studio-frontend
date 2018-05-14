@@ -1,14 +1,17 @@
-import React from 'react';
+import { Button } from '@edx/paragon';
 import Enzyme from 'enzyme';
+import React from 'react';
 import CopyButton from './index';
 
-const { mount } = Enzyme;
+const { shallow } = Enzyme;
 
 const defaultProps = {
   label: 'I am a copy button!',
   onCopyLabel: 'Copied!',
   textToCopy: 'This is my copy text!',
 };
+
+const getButton = wrapper => wrapper.find(Button);
 
 describe('<CopyButton />', () => {
   let wrapper;
@@ -17,52 +20,57 @@ describe('<CopyButton />', () => {
   beforeEach(() => {
     jest.mock('copy-to-clipboard');
 
-    wrapper = mount(
+    wrapper = shallow(
       <CopyButton
         {...defaultProps}
       />,
     );
 
-    button = wrapper.find('button');
+    wrapper.instance().buttonRef = {
+      focus: jest.fn(),
+    };
+
+    button = getButton(wrapper);
   });
   describe('renders', () => {
     it('label with correct text', () => {
-      expect(button.matchesElement(<button>{defaultProps.label}</button>))
-        .toEqual(true);
+      expect(button.prop('label')).toEqual(defaultProps.label);
     });
+
     it('label with correct default onCopy text on click', () => {
       expect(button).toHaveLength(1);
-      button.at(0).simulate('click');
-      button = wrapper.find('button');
+      button.simulate('click');
 
-      expect(button.matchesElement(<button>{defaultProps.onCopyLabel}</button>))
-        .toEqual(true);
+      wrapper.update();
+      button = getButton(wrapper);
+
+      expect(button.prop('label')).toEqual(defaultProps.onCopyLabel);
     });
     it('label with correct text onBlur', () => {
-      button.at(0).simulate('click');
-      button = wrapper.find('button');
-      button.at(0).simulate('blur');
-      button = wrapper.find('button');
+      button.simulate('click');
+      button.simulate('blur');
 
-      expect(button.matchesElement(<button>{defaultProps.label}</button>))
-        .toEqual(true);
+      wrapper.update();
+      button = getButton(wrapper);
+
+      expect(button.prop('label')).toEqual(defaultProps.label);
     });
   });
+
   describe('state', () => {
     it('has correct initial state', () => {
       expect(wrapper.state('wasClicked')).toEqual(false);
     });
+
     it('state changes on click', () => {
-      button.at(0).simulate('click');
-      button = wrapper.find('button');
+      button.simulate('click');
 
       expect(wrapper.state('wasClicked')).toEqual(true);
     });
+
     it('state changes onBlur', () => {
-      button.at(0).simulate('click');
-      button = wrapper.find('button');
-      button.at(0).simulate('blur');
-      button = wrapper.find('button');
+      button.simulate('click');
+      button.simulate('blur');
 
       expect(wrapper.state('wasClicked')).toEqual(false);
     });
