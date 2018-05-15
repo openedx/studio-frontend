@@ -37,6 +37,7 @@ const imageDescriptionFieldsetID = 'imageDescriptionFieldset';
 const imageDimensionsFieldsetID = 'imageDimensionsFieldset';
 const imageHeightID = 'imageHeight';
 const imageWidthID = 'imageWidth';
+const modalWrapperID = 'modalWrapper';
 
 const initialEditImageModalState = {
   areProportionsLocked: true,
@@ -147,6 +148,11 @@ export default class EditImageModal extends React.Component {
 
     this.props.clearSearch(this.props.courseDetails);
     this.resetImageSelection();
+    this.modalWrapperRef.dispatchEvent(new CustomEvent('closeModal',
+      {
+        bubbles: true,
+      },
+    ));
   }
 
   onImageIsDecorativeClick = (checked) => {
@@ -818,14 +824,16 @@ export default class EditImageModal extends React.Component {
   render = () => (
     <div
       ref={this.setModalWrapperRef}
+      id={modalWrapperID}
     >
       <Modal
         open={this.state.open}
         title={this.getModalHeader()}
         body={this.getModalBody()}
-        closeText="Cancel"
+        closeText={<WrappedMessage message={messages.editImageModalCancelButton} />}
         onClose={this.onEditImageModalClose}
         buttons={[this.getModalButtons()]}
+        parentSelector={`#${modalWrapperID}`}
       />
     </div>
   );

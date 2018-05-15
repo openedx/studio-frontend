@@ -49,7 +49,10 @@ export default class AssetsDropZone extends React.Component {
               <Dropzone
                 accept={this.props.acceptedFileTypes}
                 activeClassName={styles['drop-active']}
-                className={this.props.compactStyle ? styles['drop-zone-compact'] : styles['drop-zone']}
+                className={classNames([
+                  this.props.compactStyle ? styles['drop-zone-compact'] : styles['drop-zone'],
+                  styles['center-text'],
+                ])}
                 data-identifier="asset-drop-zone"
                 disableClick
                 maxSize={this.dropZoneMaxFileSizeBytes}

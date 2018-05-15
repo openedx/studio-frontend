@@ -22,20 +22,21 @@ function nodeWithIntlProp(node) {
   return React.cloneElement(node, { intl });
 }
 
-export function shallowWithIntl(node, { context, disableLifecycleMethods } = {}) {
+export function shallowWithIntl(node, { context, ...otherOptions } = {}) {
   return shallow(
     nodeWithIntlProp(node),
     {
+      ...otherOptions,
       context: Object.assign({}, context, { intl }),
-      disableLifecycleMethods,
     },
   );
 }
 
-export function mountWithIntl(node, { context, childContextTypes } = {}) {
+export function mountWithIntl(node, { context, childContextTypes, ...otherOptions } = {}) {
   return mount(
     nodeWithIntlProp(node),
     {
+      ...otherOptions,
       context: Object.assign({}, context, { intl }),
       childContextTypes: Object.assign({}, { intl: intlShape }, childContextTypes),
     },

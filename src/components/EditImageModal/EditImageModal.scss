@@ -1,18 +1,5 @@
 @import 'edx-bootstrap';
 
-.modal.modal-open {
-  display: block;
-  overflow: scroll;
-}
-
-.modal.modal-backdrop {
-  background-color: rgba(0,0,0,0.3);
-
-  // Fade for backdrop
-  &.fade { opacity: 0; }
-  &.show { opacity: 1; }
-}
-
 // Remove negative margins in Bootstrap v4.0.0 so the body does not extend outside the modal
 .modal-body .row {
   margin: 0;
