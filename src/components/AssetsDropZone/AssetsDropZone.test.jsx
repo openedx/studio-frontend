@@ -1,7 +1,7 @@
 import React from 'react';
 
 import AssetsDropZone from './index';
-import courseDetails from '../../utils/testConstants';
+import { courseDetails } from '../../utils/testConstants';
 import { mountWithIntl } from '../../utils/i18n/enzymeHelper';
 
 const defaultProps = {

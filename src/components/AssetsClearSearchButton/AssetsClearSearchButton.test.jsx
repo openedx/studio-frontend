@@ -2,7 +2,7 @@ import { Button } from '@edx/paragon';
 import React from 'react';
 
 import AssetsClearSearchButton from './index';
-import courseDetails from '../../utils/testConstants';
+import { courseDetails } from '../../utils/testConstants';
 import messages from './displayMessages';
 import { shallowWithIntl } from '../../utils/i18n/enzymeHelper';
 import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';

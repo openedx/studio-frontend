@@ -1,7 +1,7 @@
 import React from 'react';
 
 import AssetsTable from './index';
-import courseDetails, { testAssetsList } from '../../utils/testConstants';
+import { courseDetails, testAssetsList } from '../../utils/testConstants';
 import { assetActions } from '../../data/constants/actionTypes';
 import { assetLoading } from '../../data/constants/loadingTypes';
 import mockQuerySelector from '../../utils/mockQuerySelector';
