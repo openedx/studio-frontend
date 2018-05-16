@@ -16,7 +16,7 @@ const AccessibilityBody = (props) => {
 
   /* eslint-disable max-len */
   return (
-    <div>
+<div>
       <WrappedMessage message={messages.a11yBodyPageHeader}>
         { displayText => <h2 className="page-header">{displayText}</h2> }
       </WrappedMessage>
