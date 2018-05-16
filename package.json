@@ -114,8 +114,7 @@
     "transformIgnorePatterns": [
       "/node_modules/(?!(@edx/paragon)/).*/"
     ],
-    "testPathIgnorePatterns" : [
-    ],
+    "testPathIgnorePatterns": [],
     "globals": {
       "studioContext": {}
     }
