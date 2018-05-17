@@ -43,6 +43,8 @@ const initialEditImageModalState = {
   areProportionsLocked: true,
   assetsPageType: pageTypes.SKELETON,
   baseAssetURL: '',
+  currentUploadErrorMessage: null,
+  currentValidationMessages: {},
   displayLoadingSpinner: false,
   imageDescription: '',
   imageDimensions: {},
@@ -51,11 +53,10 @@ const initialEditImageModalState = {
   isImageLoading: false,
   isImageDescriptionValid: true,
   isImageDimensionsValid: true,
+  isModalOpen: false,
   isStatusAlertOpen: false,
   imageSource: '',
   imageStyle: '',
-  open: false,
-  currentValidationMessages: {},
   pageNumber: 1,
   shouldShowPreviousButton: false,
 };
@@ -78,16 +79,18 @@ export default class EditImageModal extends React.Component {
     this.onPreviousPageButtonClick = this.onPreviousPageButtonClick.bind(this);
     this.onStatusAlertClose = this.onStatusAlertClose.bind(this);
     // Create ref setters to minimize anonymous inline functions
+    this.setDropZoneButtonRef = this.setDropZoneButtonRef.bind(this);
     this.setImageDescriptionInputRef = this.setImageDescriptionInputRef.bind(this);
     this.setImageFormRef = this.setImageFormRef.bind(this);
-    this.setImagePreviewRef = this.setImagePreviewRef.bind(this);
+    this.setImageRef = this.setImageRef.bind(this);
     this.setModalWrapperRef = this.setModalWrapperRef.bind(this);
-    this.setStatusAlertRef = this.setStatusAlertRef.bind(this);
     this.setPreviousButtonRef = this.setPreviousButtonRef.bind(this);
+    this.setStatusAlertRef = this.setStatusAlertRef.bind(this);
 
+    this.dropZoneButtonRef = null;
     this.imageDescriptionInputRef = null;
     this.imageFormRef = null;
-    this.imgRef = null;
+    this.imageRef = null;
     this.previousPageButtonRef = null;
     this.modalWrapperRef = null;
     this.statusAlertRef = null;
@@ -99,12 +102,24 @@ export default class EditImageModal extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     const newState = {};
-    switch (this.props.assetsStatus.type) {
+    switch (nextProps.assetsStatus.type) {
       case assetActions.upload.UPLOAD_ASSET_SUCCESS: {
-        const uploadedAsset = this.props.assetsStatus.response.asset;
-        this.props.selectAsset(uploadedAsset, 0);
+        const uploadedAsset = nextProps.assetsStatus.response.asset;
+        nextProps.selectAsset(uploadedAsset, 0);
+        nextProps.clearAssetsStatus();
+        newState.currentUploadErrorMessage = null;
+        newState.isStatusAlertOpen = false;
         newState.pageNumber = 2;
-        newState.imageSource = uploadedAsset.portable_url;
+        break;
+      }
+      case assetActions.upload.UPLOAD_EXCEED_MAX_COUNT_ERROR: {
+        newState.currentUploadErrorMessage = messages.editImageModalTooManyFiles;
+        newState.isStatusAlertOpen = true;
+        break;
+      }
+      case assetActions.upload.UPLOAD_INVALID_FILE_TYPE_ERROR: {
+        newState.currentUploadErrorMessage = messages.editImageModalInvalidFileType;
+        newState.isStatusAlertOpen = true;
         break;
       }
       default: {
@@ -121,14 +136,9 @@ export default class EditImageModal extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (this.state.pageNumber === 1 && prevState.pageNumber === 2) {
-      // TODO: add focus
-    }
-
-    if (this.state.pageNumber === 2 && prevState.pageNumber === 1
-      && this.state.shouldShowPreviousButton) {
-      this.previousPageButtonRef.focus();
-    }
+    this.didStatusAlertOpen(prevState);
+    this.wasNextButtonClicked(prevState);
+    this.wasPreviousButtonClicked(prevState);
   }
 
   componentWillUnmount() {
@@ -143,7 +153,7 @@ export default class EditImageModal extends React.Component {
 
   onEditImageModalClose = () => {
     this.setState({
-      open: false,
+      isModalOpen: false,
     });
 
     this.props.clearSearch(this.props.courseDetails);
@@ -222,13 +232,20 @@ export default class EditImageModal extends React.Component {
   onNextPageButtonClick = () => {
     if (this.isAssetSelected()) {
       this.setState({
+        currentUploadErrorMessage: null,
+        isStatusAlertOpen: false,
         pageNumber: 2,
       });
+      this.props.clearAssetsStatus();
     }
   }
 
   onPreviousPageButtonClick = () => {
     this.setState({
+      currentValidationMessages: {},
+      isImageDescriptionValid: true,
+      isImageDimensionsValid: true,
+      isStatusAlertOpen: false,
       pageNumber: 1,
     });
   }
@@ -270,7 +287,7 @@ export default class EditImageModal extends React.Component {
       ));
 
       this.setState({
-        open: false,
+        isModalOpen: false,
       });
 
       this.resetImageSelection();
@@ -281,7 +298,8 @@ export default class EditImageModal extends React.Component {
 
   onStatusAlertClose = () => {
     if (this.state.pageNumber === 1) {
-      // TODO: add focus
+      this.props.clearAssetsStatus();
+      this.dropZoneButtonRef.focus();
     } else if (this.state.pageNumber === 2) {
       if (this.state.shouldShowPreviousButton) {
         this.previousPageButtonRef.focus();
@@ -295,36 +313,40 @@ export default class EditImageModal extends React.Component {
     });
   }
 
-  setImageDescriptionInputRef(input) {
-    this.imageDescriptionInputRef = input;
+  setDropZoneButtonRef(ref) {
+    this.dropZoneButtonRef = ref;
   }
 
-  setImageFormRef(input) {
-    this.imageFormRef = input;
+  setImageDescriptionInputRef(ref) {
+    this.imageDescriptionInputRef = ref;
   }
 
-  setImagePreviewRef(input) {
-    this.imgRef = input;
+  setImageFormRef(ref) {
+    this.imageFormRef = ref;
   }
 
-  setModalWrapperRef(input) {
-    this.modalWrapperRef = input;
+  setImageRef(ref) {
+    this.imageRef = ref;
   }
 
-  setPreviousButtonRef(input) {
-    this.previousPageButtonRef = input;
+  setModalWrapperRef(ref) {
+    this.modalWrapperRef = ref;
   }
 
-  setStatusAlertRef(input) {
-    this.statusAlertRef = input;
+  setPreviousButtonRef(ref) {
+    this.previousPageButtonRef = ref;
+  }
+
+  setStatusAlertRef(ref) {
+    this.statusAlertRef = ref;
   }
 
   getNaturalDimension = (dimensionType) => {
-    if (this.imgRef) {
+    if (this.imageRef) {
       // if value is unparsable (NaN), reset to natural value
       const naturalDimensions = {
-        width: this.imgRef.naturalWidth,
-        height: this.imgRef.naturalHeight,
+        width: this.imageRef.naturalWidth,
+        height: this.imageRef.naturalHeight,
       };
       return naturalDimensions[dimensionType];
     }
@@ -486,7 +508,7 @@ export default class EditImageModal extends React.Component {
       src={this.getImageAssetSource()}
       onLoad={this.onImageLoad}
       onError={this.onImageError}
-      ref={this.setImagePreviewRef}
+      ref={this.setImageRef}
     />
   );
 
@@ -516,28 +538,42 @@ export default class EditImageModal extends React.Component {
     </div>
   );
 
-  getStatusAlertDialog = () => (
-    <div>
-      <WrappedMessage
-        message={messages.editImageModalFormErrorMissingFields}
-        tagName="div"
-      />
-      <div className="mt-3">
-        <ul className="bullet-list">
-          {(Object.keys(this.state.currentValidationMessages).reduce((accumulator, current) => {
-            const value = this.state.currentValidationMessages[current];
-            if (value) {
-              const errorMessage = <li key={`Error-${current}`}>{<a href={`#${current}`}>{value} </a>}</li>;
-              accumulator.push(errorMessage);
-            }
+  getStatusAlertDialog = () => {
+    let dialog;
 
-            return accumulator;
-          }, [])
-          )}
-        </ul>
-      </div>
-    </div>
-  );
+    if (this.state.pageNumber === 1) {
+      dialog = (
+        <React.Fragment>
+          {this.getUploadErrorStatusMessage()}
+        </React.Fragment>
+      );
+    } else if (this.state.pageNumber === 2) {
+      dialog = (
+        <div>
+          <WrappedMessage
+            message={messages.editImageModalFormErrorMissingFields}
+            tagName="div"
+          />
+          <div className="mt-3">
+            <ul className="bullet-list">
+              {(Object.keys(this.state.currentValidationMessages).reduce((accumulator, current) => {
+                const value = this.state.currentValidationMessages[current];
+
+                if (value) {
+                  const errorMessage = <li key={`Error-${current}`}>{<a href={`#${current}`}>{value} </a>}</li>;
+                  accumulator.push(errorMessage);
+                }
+
+                return accumulator;
+              }, [])
+              )}
+            </ul>
+          </div>
+        </div>
+      );
+    }
+    return dialog;
+  };
 
   getStatusAlert = () => (
     <StatusAlert
@@ -620,7 +656,7 @@ export default class EditImageModal extends React.Component {
 
   getImageSelectionModalBody = () => (
     <React.Fragment>
-      <div className="row no-gutters">
+      <div className="row">
         <div className="col">
           {this.getStatusAlert()}
         </div>
@@ -632,6 +668,7 @@ export default class EditImageModal extends React.Component {
             maxFileSizeMB={10}
             acceptedFileTypes={'image/*'}
             compactStyle
+            buttonRef={this.setDropZoneButtonRef}
           />
         </div>
       </div>
@@ -736,6 +773,20 @@ export default class EditImageModal extends React.Component {
     />
   );
 
+  getUploadErrorStatusMessage = () => {
+    let message;
+
+    if (this.state.currentUploadErrorMessage) {
+      message = (
+        <WrappedMessage
+          message={this.state.currentUploadErrorMessage}
+        />
+      );
+    }
+
+    return message;
+  };
+
   resetImageSelection = () => {
     this.props.updatePage(0, this.props.courseDetails);
     this.props.clearSelectedAsset();
@@ -764,7 +815,7 @@ export default class EditImageModal extends React.Component {
       isImageDecorative: event.detail.alt === '',
       // if existing img had a source, assume it could be loaded and show the image preview
       isImageLoaded: !!eventSource,
-      open: true,
+      isModalOpen: true,
       pageNumber: isEventSourceEmpty ? 1 : 2,
       shouldShowPreviousButton: isEventSourceEmpty,
     }));
@@ -791,16 +842,6 @@ export default class EditImageModal extends React.Component {
     return feedback;
   }
 
-  isPositiveIntegerOrEmpty = (val) => {
-    if (val === '' || val === undefined) {
-      return true;
-    }
-    if (Number.isInteger(val) && val > 0) {
-      return true;
-    }
-    return false;
-  }
-
   validateImageDimensions = () => {
     let feedback = { isValid: true };
     const { height, width } = this.state.imageDimensions;
@@ -818,8 +859,38 @@ export default class EditImageModal extends React.Component {
     return feedback;
   }
 
+  didStatusAlertOpen = (prevState) => {
+    if (this.state.isStatusAlertOpen && !prevState.isStatusAlertOpen) {
+      this.statusAlertRef.focus();
+    }
+  }
+
   isAssetSelected = () => (this.props.selectedAsset
     && Object.keys(this.props.selectedAsset).length !== 0);
+
+  isPositiveIntegerOrEmpty = (val) => {
+    if (val === '' || val === undefined) {
+      return true;
+    }
+    if (Number.isInteger(val) && val > 0) {
+      return true;
+    }
+    return false;
+  }
+
+  wasNextButtonClicked = (prevState) => {
+    if (this.state.pageNumber === 2 && prevState.pageNumber === 1
+      && this.state.shouldShowPreviousButton) {
+      this.previousPageButtonRef.focus();
+    }
+  }
+
+  wasPreviousButtonClicked = (prevState) => {
+    if (this.state.pageNumber === 1 && prevState.pageNumber === 2
+      && prevState.isModalOpen) {
+      this.dropZoneButtonRef.focus();
+    }
+  }
 
   render = () => (
     <div
@@ -827,7 +898,7 @@ export default class EditImageModal extends React.Component {
       id={modalWrapperID}
     >
       <Modal
-        open={this.state.open}
+        open={this.state.isModalOpen}
         title={this.getModalHeader()}
         body={this.getModalBody()}
         closeText={<WrappedMessage message={messages.editImageModalCancelButton} />}
@@ -845,6 +916,7 @@ EditImageModal.propTypes = {
     response: PropTypes.object,
     type: PropTypes.string,
   }).isRequired,
+  clearAssetsStatus: PropTypes.func.isRequired,
   clearSearch: PropTypes.func.isRequired,
   clearSelectedAsset: PropTypes.func.isRequired,
   courseDetails: PropTypes.shape({

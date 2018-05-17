@@ -151,6 +151,16 @@ const messages = defineMessages({
     defaultMessage: 'Back',
     description: 'Button text to go to the previous screen',
   },
+  editImageModalInvalidFileType: {
+    id: 'editImageModalInvalidFileType',
+    defaultMessage: 'Files must be images, such as .jpg, .png, and .tiff files. No files were uploaded.',
+    description: 'Error message shown when an invalid file is selected for upload',
+  },
+  editImageModalTooManyFiles: {
+    id: 'editImageModalTooManyFiles',
+    defaultMessage: 'Only one file may be uploaded at a time. No files were uploaded.',
+    description: 'Error message shown when too many files are selected for upload',
+  },
 });
 
 export default messages;

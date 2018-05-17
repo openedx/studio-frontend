@@ -12,7 +12,7 @@ import styles from './AssetsDropZone.scss';
 export default class AssetsDropZone extends React.Component {
   constructor(props) {
     super();
-    this.dropzoneRef = {};
+    this.dropZoneRef = {};
     this.dropZoneMaxFileSizeBytes = props.maxFileSizeMB * 1000000;
   }
 
@@ -32,12 +32,16 @@ export default class AssetsDropZone extends React.Component {
     }
   }
 
-  setDropzonRef = (node) => {
-    this.dropzoneRef = node;
+  setDropZoneRef = (ref) => {
+    this.dropZoneRef = ref;
+  }
+
+  setUploadButtonRef = (ref) => {
+    this.props.buttonRef(ref);
   }
 
   handleClick = () => {
-    this.dropzoneRef.open();
+    this.dropZoneRef.open();
   }
 
   render() {
@@ -57,7 +61,7 @@ export default class AssetsDropZone extends React.Component {
                 disableClick
                 maxSize={this.dropZoneMaxFileSizeBytes}
                 onDrop={this.onDrop}
-                ref={this.setDropzonRef}
+                ref={this.setDropZoneRef}
               >
                 <div className={styles['center-text']} data-identifier="asset-drop-zone-icon">
                   <span
@@ -83,6 +87,7 @@ export default class AssetsDropZone extends React.Component {
                         data-identifier="asset-drop-zone-browse-button"
                         label={displayText}
                         onClick={this.handleClick}
+                        inputRef={this.setUploadButtonRef}
                       />
                     )}
                   </WrappedMessage>
@@ -115,13 +120,8 @@ export default class AssetsDropZone extends React.Component {
 
 AssetsDropZone.propTypes = {
   acceptedFileTypes: PropTypes.string,
+  buttonRef: PropTypes.func,
   compactStyle: PropTypes.bool,
-  uploadAssets: PropTypes.func.isRequired,
-  uploadExceedMaxCount: PropTypes.func.isRequired,
-  uploadExceedMaxSize: PropTypes.func.isRequired,
-  uploadInvalidFileType: PropTypes.func.isRequired,
-  maxFileCount: PropTypes.number,
-  maxFileSizeMB: PropTypes.number,
   courseDetails: PropTypes.shape({
     lang: PropTypes.string,
     url_name: PropTypes.string,
@@ -132,10 +132,18 @@ AssetsDropZone.propTypes = {
     id: PropTypes.string,
     revision: PropTypes.string,
   }).isRequired,
+  maxFileCount: PropTypes.number,
+  maxFileSizeMB: PropTypes.number,
+  uploadAssets: PropTypes.func.isRequired,
+  uploadExceedMaxCount: PropTypes.func.isRequired,
+  uploadExceedMaxSize: PropTypes.func.isRequired,
+  uploadInvalidFileType: PropTypes.func.isRequired,
+
 };
 
 AssetsDropZone.defaultProps = {
   acceptedFileTypes: undefined,
+  buttonRef: () => {},
   compactStyle: false,
   maxFileCount: 1000,
   maxFileSizeMB: 10,
