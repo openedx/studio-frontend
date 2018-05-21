@@ -123,6 +123,8 @@
   "editImageModalPreviousPageButton": "Back",
   "editImageModalInvalidFileType": "Files must be images, such as .jpg, .png, and .tiff files. No files were uploaded.",
   "editImageModalTooManyFiles": "Only one file may be uploaded at a time. No files were uploaded.",
+  "helloWorld": "Hello, world!",
+  "helloWorldModalTitle": "Hello Modal",
   "paginationAriaLabel": "Content pagination",
   "paginationButtonDisabled": "button is disabled",
   "paginationNext": "next",

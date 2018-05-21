@@ -5,6 +5,11 @@ import { Button, Modal } from '@edx/paragon';
 import { mount } from 'enzyme';
 
 import HelloWorld from './index';
+import messages from './displayMessages';
+// This is a wrapper around Enzyme's mount() that makes it work with our internationalized
+// components
+import { mountWithIntl } from '../../utils/i18n/enzymeHelper';
+import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
 
 // This utility can mock `document.querySelector` during tests. We need this because Enzyme does
 // not operate on a real DOM so it does not support the function, which is used in the Paragon
@@ -21,7 +26,7 @@ describe('<HelloWorld />', () => {
     beforeEach(() => {
       mockQuerySelector.init();
       // Here we "mount" our component in Enzyme which simulates a render
-      wrapper = mount(<HelloWorld />);
+      wrapper = mountWithIntl(<HelloWorld />);
     });
 
     afterEach(() => {
@@ -32,7 +37,7 @@ describe('<HelloWorld />', () => {
     // This is our first actual test function. Test if the display message is inside the rendered
     // output.
     it('displays hello world text', () => {
-      expect(wrapper.text()).toEqual('Hello, world!');
+      expect(wrapper.text()).toEqual(messages.helloWorld.defaultMessage);
     });
 
     it('clicking button opens modal', () => {

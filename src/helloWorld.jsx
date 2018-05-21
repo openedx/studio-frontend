@@ -16,14 +16,24 @@ if ((typeof window !== 'undefined' && !window._babelPolyfill) ||
 import './SFE.scss'; // our global styles for all SFE pages/components (includes Bootstrap)
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { addLocaleData, IntlProvider } from 'react-intl';
+import enLocaleData from 'react-intl/locale-data/en';
 
 import HelloWorld from './components/HelloWorld';
 /* eslint-enable import/first */
 
+// Set-up internationalization, with the default being 'en'
+const locale = 'en';
+const messages = {};
+addLocaleData(enLocaleData);
+
+// IntlProvider: provides translated messages to child components
 const HelloWorldApp = () => (
-  <div className="SFE-wrapper">
-    <HelloWorld />
-  </div>
+  <IntlProvider locale={locale} messages={messages}>
+    <div className="SFE-wrapper">
+      <HelloWorld />
+    </div>
+  </IntlProvider>
 );
 
 // Renders our HelloWorldApp to a div on the page with the id "root"
