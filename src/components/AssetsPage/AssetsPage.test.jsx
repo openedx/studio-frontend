@@ -2,7 +2,7 @@ import React from 'react';
 
 import { assetActions } from '../../data/constants/actionTypes';
 import AssetsPage, { TABLE_CONTENTS_ID } from './index';
-import courseDetails, { testAssetsList } from '../../utils/testConstants';
+import { courseDetails, testAssetsList } from '../../utils/testConstants';
 import messages from './displayMessages';
 import { pageTypes } from '../../utils/getAssetsPageType';
 import { shallowWithIntl } from '../../utils/i18n/enzymeHelper';

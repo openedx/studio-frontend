@@ -5,7 +5,7 @@ import thunkMiddleware from 'redux-thunk';
 import accessibility from '../data/reducers/accessibility';
 import { assets, metadata } from '../data/reducers/assets';
 
-const courseDetails = {
+export const courseDetails = {
   lang: 'en',
   url_name: 'course',
   name: 'edX Demonstration Course',
@@ -16,8 +16,6 @@ const courseDetails = {
   revision: '',
   base_url: 'sfe',
 };
-
-export default courseDetails;
 
 const thumbnail = '/animal';
 const copyUrl = 'animal';

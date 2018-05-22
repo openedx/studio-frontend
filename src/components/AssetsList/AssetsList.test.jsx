@@ -1,7 +1,7 @@
 import React from 'react';
 
 import AssetsList from './index';
-import courseDetails, { testAssetsList } from '../../utils/testConstants';
+import { courseDetails, testAssetsList } from '../../utils/testConstants';
 import messages from './displayMessages';
 import { mountWithIntl } from '../../utils/i18n/enzymeHelper';
 import { paginationInitial, selectInitial } from '../../data/reducers/assets';

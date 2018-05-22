@@ -16,6 +16,11 @@ const messages = defineMessages({
     defaultMessage: '0 images found',
     description: 'Message displayed in table when no image results are found.',
   },
+  editImageModalCancelButton: {
+    id: 'editImageModalCancelButton',
+    defaultMessage: 'Cancel',
+    description: 'Button text to close the modal',
+  },
   editImageModalFormError: {
     id: 'editImageModalFormError',
     defaultMessage: 'Error',
@@ -35,11 +40,6 @@ const messages = defineMessages({
     id: 'editImageModalFormValidImageDimensions',
     defaultMessage: 'Image dimensions must be positive numbers.',
     description: 'Error message displayed when invalid image dimension values are entered into a form',
-  },
-  editImageModalFormValidImageSource: {
-    id: 'editImageModalFormValidImageSource',
-    defaultMessage: 'Make sure the image source is correct.',
-    description: 'Error message for when an invalid image source URL is entered into the form',
   },
   editImageModalImageDescriptionDescription: {
     id: 'editImageModalImageDescriptionDescription',
@@ -81,16 +81,6 @@ const messages = defineMessages({
     defaultMessage: 'Image Preview',
     description: 'Label for the image preview area',
   },
-  editImageModalImageSourceDescription: {
-    id: 'editImageModalImageSourceDescription',
-    defaultMessage: 'The Studio URL from the Files & Uploads page or an external URL, such as {link}.',
-    description: 'Description for the image source URL input, which asks for a URL from Studio or an external URL and gives an example of an external URL',
-  },
-  editImageModalImageSourceLabel: {
-    id: 'editImageModalImageSourceLabel',
-    defaultMessage: 'Image Source URL',
-    description: 'Label for the text input box for an image\'s source URL',
-  },
   editImageModalInsertImageButton: {
     id: 'editImageModalInsertImageButton',
     defaultMessage: 'Insert Image',
@@ -116,6 +106,11 @@ const messages = defineMessages({
     defaultMessage: 'Add an Image',
     description: 'Title of the modal used for adding an image',
   },
+  editImageModalInsertHeader: {
+    id: 'editImageModalInsertHeader',
+    defaultMessage: 'Select a previously uploaded image',
+    description: 'Header of the modal used for adding an image',
+  },
   editImageModalEditTitle: {
     id: 'editImageModalEditTitle',
     defaultMessage: 'Edit Image Settings',
@@ -125,21 +120,6 @@ const messages = defineMessages({
     id: 'editImageModalImageOrFields',
     defaultMessage: 'or',
     description: 'Describes two choices,',
-  },
-  editImageModalImageNotFoundError: {
-    id: 'editImageModalImageNotFoundError',
-    defaultMessage: 'Make sure the image source is correct.',
-    description: 'Error message displayed below URL field input when user-entered URL did not load an image',
-  },
-  editImageModalImageLoadingIcon: {
-    id: 'editImageModalImageLoadingIcon',
-    defaultMessage: 'Loading...',
-    description: 'Text displayed with a loading spinner icon indicating that an image is loading',
-  },
-  editImageModalCancelButton: {
-    id: 'editImageModalCancelButton',
-    defaultMessage: 'Cancel',
-    description: 'Button text to close the modal',
   },
   editImageModalNextPageButton: {
     id: 'editImageModalNextPageButton',
