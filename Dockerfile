@@ -3,6 +3,7 @@ FROM node:8.11
 USER root
 RUN apt-get update
 RUN apt-get install -y vim
+RUN npm i -g npm@5.8.0
 
 WORKDIR /prebuilt
 COPY package.json .
