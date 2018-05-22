@@ -1,13 +1,16 @@
 language: node_js
 node_js:
 - 8.11
+install:
+  - npm i -g npm@5.8.0
+  - npm ci
 branches:
   only:
   - master
   - "/v\\d+\\.\\d+\\.d+$/"
 cache:
   directories:
-  - node_modules
+  - "$HOME/.npm"
 stages:
 - PR checks ✅
 - name: "Ship It \U0001F6A2"
