@@ -88,8 +88,8 @@ const messages = defineMessages({
   },
   assetsTableDeleteObject: {
     id: 'assetsTableDeleteObject',
-    defaultMessage: 'Delete {displayName}',
-    description: 'Labels the button used to delete a given item',
+    defaultMessage: 'Delete File',
+    description: 'Heading on the modal used to delete a file',
   },
   assetsTableCancel: {
     id: 'assetsTableCancel',

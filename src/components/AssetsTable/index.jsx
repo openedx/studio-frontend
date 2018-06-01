@@ -406,7 +406,7 @@ export default class AssetsTable extends React.Component {
           message={messages.assetsTableDeleteWarning}
           tagName="p"
           values={{
-            displayName: <b>{this.props.assetToDelete.display_name}</b>,
+            displayName: <b className={styles['wrap-text']}>{this.props.assetToDelete.display_name}</b>,
           }}
         />
         <WrappedMessage
