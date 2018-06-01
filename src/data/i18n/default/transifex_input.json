@@ -85,7 +85,7 @@
   "assetsTableWebLink": "Web",
   "assetsTableCopiedStatus": "Copied",
   "assetsTableDetailedCopyLink": "{displayName} copy {label} URL",
-  "assetsTableDeleteObject": "Delete {displayName}",
+  "assetsTableDeleteObject": "Delete File",
   "assetsTableCancel": "Cancel",
   "assetsTablePermaDelete": "Permanently delete",
   "assetsTableLearnMore": "Learn more.",

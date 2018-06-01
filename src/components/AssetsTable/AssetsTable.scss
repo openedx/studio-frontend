@@ -48,6 +48,10 @@
   }
 }
 
+.wrap-text {
+  word-wrap: break-word;
+}
+
 // This gives the "Copy URLs" column header enough space so that it doesn't wrap and make the whole
 // header row too wide vertically.
 .table thead th:nth-child(5) {
