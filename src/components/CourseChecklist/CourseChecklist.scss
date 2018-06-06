@@ -1,0 +1,44 @@
+@import 'edx-bootstrap';
+
+$dark-color: theme-color("dark");
+$lightest-color: theme-color("primary");
+$primary-color: theme-color("primary");
+$success-color: theme-color("success");
+
+//complete checklist item style
+.checklist-item-complete {
+  box-shadow: -5px 0 0 0 $success-color;
+
+  &:hover {
+    box-shadow: -5px 0 0 0 $primary-color;
+  }
+}
+
+//incomplete checklist item style
+.checklist-item-incomplete {
+  box-shadow: -5px 0 0 0 $lightest-color;
+
+  .checklist-icon-incomplete {
+    color: $dark-color;
+  }
+
+  &:hover {
+    box-shadow: -5px 0 0 0 $primary-color;
+
+    .checklist-icon-incomplete {
+      color: $primary-color;
+    }
+  }
+}
+
+.font-large {
+  font-size: $font-size-lg;
+}
+
+.font-small {
+  font-size: $font-size-sm;
+}
+
+.font-extra-large {
+  font-size: 1.5*$font-size-base;
+}

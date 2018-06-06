@@ -1,4 +1,6 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
 import configureStore from 'redux-mock-store';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import fetchMock from 'fetch-mock';
 import thunk from 'redux-thunk';
 
@@ -6,7 +8,7 @@ import deepCopy from './utils';
 import endpoints from '../api/endpoints';
 import { assetActions } from '../../data/constants/actionTypes';
 import { deletionInitial, filtersInitial, paginationInitial, sortInitial, searchInitial, requestInitial } from '../reducers/assets';
-import { testAssetsList } from '../../utils/testConstants';
+import { testAssetsList, courseDetails } from '../../utils/testConstants';
 import * as actionCreators from './assets';
 
 
@@ -20,10 +22,6 @@ const initialState = {
     search: { ...searchInitial },
     deletion: { ...deletionInitial },
   },
-};
-
-const courseDetails = {
-  id: 'edX',
 };
 
 const assetsEndpoint = endpoints.assets;

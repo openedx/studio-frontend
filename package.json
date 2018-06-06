@@ -102,6 +102,8 @@
     "coveragePathIgnorePatterns": [
       "<rootDir>/node_modules/",
       "<rootDir>/src/accessibilityIndex.jsx",
+      "<rootDir>/src/courseHealthCheckIndex.jsx",
+      "<rootDir>/src/courseOutlineHealthCheckIndex.jsx",
       "<rootDir>/src/index.jsx",
       "<rootDir>/src/editImageModalIndex.jsx",
       "<rootDir>/src/components/BackendStatusBanner/",

@@ -90,6 +90,18 @@ module.exports = Merge.smart(commonConfig, {
       filename: 'editImageModal.html',
       template: path.resolve(__dirname, '../public/index.html'),
     }),
+    new HtmlWebpackPlugin({
+      inject: true,
+      chunks: ['courseHealthCheck'],
+      filename: 'courseHealthCheck.html',
+      template: path.resolve(__dirname, '../public/index.html'),
+    }),
+    new HtmlWebpackPlugin({
+      inject: true,
+      chunks: ['courseOutlineHealthCheck'],
+      filename: 'courseOutlineHealthCheck.html',
+      template: path.resolve(__dirname, '../public/index.html'),
+    }),
   ],
   devServer: {
     host: '0.0.0.0',

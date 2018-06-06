@@ -1,0 +1,27 @@
+@import 'edx-bootstrap';
+
+.status-checklist {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.status-checklist-label {
+  font-size: $font-size-base;
+  font-weight: inherit;
+  margin-right: ($spacer/4);
+  display: inline-block;
+  vertical-align: middle;
+  margin-bottom: 0;
+}
+
+.status-checklist-value {
+  font-size: smaller;
+  font-weight: 600;
+  display: inline-block;
+  vertical-align: middle;
+  margin-bottom: 0;
+}
+
+.text-info {
+  text-decoration: none;
+}
