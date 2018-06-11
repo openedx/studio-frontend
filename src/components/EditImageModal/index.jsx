@@ -687,7 +687,9 @@ export default class EditImageModal extends React.Component {
         </div>
         <div className="col-6 order-1">
           {this.state.assetsPageType === pageTypes.NORMAL && (
-            <WrappedAssetsResultsCount />
+            <div aria-hidden>
+              <WrappedAssetsResultsCount />
+            </div>
           )}
         </div>
       </div>
@@ -898,6 +900,14 @@ export default class EditImageModal extends React.Component {
       ref={this.setModalWrapperRef}
       id={modalWrapperID}
     >
+      <div
+        aria-atomic
+        aria-live={this.state.isModalOpen ? 'polite' : 'off'}
+        aria-relevant="text"
+        className="sr-only"
+      >
+        <WrappedAssetsResultsCount />
+      </div>
       <Modal
         open={this.state.isModalOpen}
         title={this.getModalHeader()}
