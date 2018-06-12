@@ -48,7 +48,7 @@ const renderPaginationTest = () => {
 };
 
 const rendersAssetsResultsCountTest = () => {
-  expect(wrapper.find('Connect(AssetsResultsCount)')).toHaveLength(1);
+  expect(wrapper.find('Connect(AssetsResultsCount)')).toHaveLength(2);
 };
 
 const rendersAssetsClearFiltersButtonTest = () => {
@@ -116,7 +116,7 @@ describe('<AssetsPage />', () => {
   });
   describe('AssetsResultsCount', () => {
     it('is hidden with no assets', () => {
-      expect(wrapper.find('Connect(AssetsResultsCount)')).toHaveLength(0);
+      expect(wrapper.find('Connect(AssetsResultsCount)')).toHaveLength(1);
     });
     it('is visible with assets', () => {
       wrapper.setProps({
