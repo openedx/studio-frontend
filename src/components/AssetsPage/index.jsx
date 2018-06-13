@@ -95,7 +95,9 @@ export default class AssetsPage extends React.Component {
         <div className="col-10 offset-2">
           <div className="row">
             <div className="col-md-8">
-              <WrappedAssetsResultsCount />
+              <div aria-hidden>
+                <WrappedAssetsResultsCount />
+              </div>
             </div>
             <div className="col-md-4 text-right">
               {hasSearchOrFilterApplied(this.props.filtersMetadata.assetTypes,
@@ -182,6 +184,14 @@ export default class AssetsPage extends React.Component {
   render() {
     return (
       <React.Fragment>
+        <div
+          aria-atomic
+          aria-live="polite"
+          aria-relevant="text"
+          className="sr-only"
+        >
+          <WrappedAssetsResultsCount />
+        </div>
         <div className="container">
           <div className="row">
             <div className="col-12">
