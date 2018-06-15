@@ -7,6 +7,10 @@
 
 React front end for edX Studio
 
+For an introduction to what this repo is and how it fits into the rest of the
+edX platform, read [Studio-frontend: Developing Frontend Separate from edX
+Platform](https://engineering.edx.org/studio-frontend-developing-frontend-separate-from-edx-platform-7c91d76c7360).
+
 ## Development
 
 Requirements:
@@ -143,6 +147,97 @@ If you are making changes to the Dockerfile or docker-compose.yml you may want t
 3. Run `docker push edxops/studio-frontend:latest`
 4. Check that "Last Updated" was updated here: https://hub.docker.com/r/edxops/studio-frontend/tags/
 
+## Adding a new app
+
+There's a bunch of boilerplate that needs to be created to set up a new
+studio-frontend app that can be independently embedded into a page in Studio.
+See the
+[openedx-workshop](https://github.com/edx/studio-frontend/compare/openedx-workshop)
+branch, which demonstrates setting up a very basic HelloWorld app.
+
+* Create a [new webpack
+  entry](https://github.com/edx/studio-frontend/compare/openedx-workshop#diff-56ee2db4e3db0c7354bb996b003e70beR12)
+* Add a [new
+  HtmlWebpackPlugin](https://github.com/edx/studio-frontend/compare/openedx-workshop#diff-d5d0cff71a84339db815178b7a3c23fcR95)
+  to create a new page in the development server to display the component.
+* Create a [new app root index
+  file](https://github.com/edx/studio-frontend/compare/openedx-workshop#diff-78a72e926d58cefa762dc661a8745f68R1)
+  which will initialize the app.
+* For any new components that the app will use, create a new folder under
+  `src/components/` with an upper camel case name.
+    * For each component, create [an
+      index.jsx](https://github.com/edx/studio-frontend/compare/openedx-workshop#diff-7fea6fccbbbbf8e8648b63713da96714R1)
+      to render the component.
+    * A [test
+      file](https://github.com/edx/studio-frontend/compare/openedx-workshop#diff-4cd7210c4c2b6f2c3b6b2a0c1b67b2e5R1)
+      named with a `.test.jsx` extension that uses Jest and Enzyme to unit test
+      the component.
+    * If the component contains any display strings, a
+      [displayMessages.jsx](https://github.com/edx/studio-frontend/compare/openedx-workshop#diff-e214e9bb31c5529b699ebb2e86be2cbfR1)
+      file.
+    * If the component needs any styling, a
+      [`.scss`](https://github.com/edx/studio-frontend/compare/openedx-workshop#diff-5ce63f6d51132465b6b5d8980cc3dfc8R1)
+      file.
+* To embed the app inside Studio:
+    * Update the [version of
+      studio-frontend](https://github.com/edx/edx-platform/blob/master/package.json)
+      in edx-platform.
+    * Include the component's built CSS and JS in a template using the
+      [`studiofrontend` Mako template
+      tag](https://github.com/edx/edx-platform/compare/openedx-workshop-sfe).
+
+## CSS
+
+CSS in studio-frontend is a bit tricky. Because components are embedded in
+existing Studio pages, we have to [isolate the
+CSS](https://engineering.edx.org/studio-frontend-developing-frontend-separate-from-edx-platform-7c91d76c7360#fdf0).
+This prevents Studio CSS affecting studio-frontend components and from
+studio-frontend CSS affecting the surrounding Studio page. However, there are a
+few key points to know about this:
+
+1. All studio-frontend styles are scoped to the `.SFE-wrapper` div.
+    * In a way, this div acts like the `<body>` element for the embedded
+      studio-frontend component.
+    * If any elements from studio-frontend are placed outside of this div, then
+      they will be unstyled (or only have Studio styles applied to them).
+2. Studio-frontend elements are [fully reset using a browser default
+   stylesheet](https://github.com/thallada/default-stylesheet/). So, weird
+   things will occasionally happen with the styling, because it is not a perfect
+   process.
+    * Use a browser dev tools style inspector to see what styles are being
+      applied. Remove styles from `default.css` if you think they might be
+      conflicting with other styling.
+    * E.g. for some reason, ordered lists appear as unordered. We still have not
+      figured that one out.
+3. Selectors that you write in studio-frontend `.scss` files will be prepended
+   with a selector to the wrapper div during the Webpack build process
+   (`#root.SFE .SFE-wrapper`). This is so that studio-frontend styles affect
+   only the contents of the embedded studio-frontend component and so that they
+   are [specific](https://developer.mozilla.org/en-US/docs/Web/CSS/Specificity)
+   enough that they override any Studio styling.
+4. The `edx-bootstrap.scss` file contains only the Bootstrap variables and mixin
+   definitions. This file is safe to `@import` into individual component `.scss`
+   files. It allows you to, for example, color an element using the primary
+   color defined in the current Bootstrap theme with the `$primary` variable.
+5. Only import `SFE.scss` in JavaScript at the root of a studio-frontend app.
+   This file contains all of the Bootstrap style definitions and the CSS reset.
+   There is a lot of CSS in the file, so we only want to import it once per app.
+6. We currently have CSS modules enabled in the Webpack
+   [css-loader](https://github.com/webpack-contrib/css-loader), but aren't
+   really using the features of it. CSS modules allows you to rename classname
+   selectors defined in the CSS to be more specific, but we currently have it
+   configured to leave the names alone. We found it simpler to just reference
+   Bootstrap classes with a plain string (e.g. `"col-1"` vs. `styles['col-1']`).
+    * CSS modules helps avoid class name collision between different components
+      on the same page. We haven't run into this issue with studio-frontend yet,
+      but we might want to consider using it in the future once we do.
+7. Make sure the font-awesome CSS is imported in JavaScript in the app root
+   index file.
+
+Ideally, studio-frontend should not need these CSS hacks. In the future,
+studio-frontend should control the full HTML page instead of being embedded in a
+Studio page shell. That way, studio-frontend components would be free from
+legacy Studio styles and would not need to apply any resets.
 
 ## Getting Help
 
