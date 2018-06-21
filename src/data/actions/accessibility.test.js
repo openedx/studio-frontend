@@ -1,4 +1,6 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
 import configureStore from 'redux-mock-store';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import fetchMock from 'fetch-mock';
 import thunk from 'redux-thunk';
 

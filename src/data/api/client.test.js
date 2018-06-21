@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
 import fetchMock from 'fetch-mock';
 
 import endpoints from './endpoints';
@@ -7,6 +8,8 @@ import {
   requestToggleLockAsset,
   postUploadAsset,
   postAccessibilityForm,
+  requestCourseBestPractices,
+  requestCourseLaunch,
 } from './client';
 
 const COURSE_ID = 'my-course-id';
@@ -122,5 +125,51 @@ describe('Accessibility Zendesk Client API', () => {
       },
     }));
     expect(fetchMock.called()).toBe(true);
+  });
+});
+
+describe('client API Course Best Practices', () => {
+  beforeEach(() => {
+    const courseBestPracticesEndpointRegex = new RegExp(`${endpoints.courseBestPractices}/${COURSE_ID}/`);
+    fetchMock.mock(courseBestPracticesEndpointRegex, 200);
+  });
+
+  afterEach(() => {
+    fetchMock.reset();
+  });
+
+  it('is called', () => {
+    requestCourseBestPractices(COURSE_ID, {});
+    expect(fetchMock.called()).toBe(true);
+  });
+
+  it('is called with query params', () => {
+    requestCourseBestPractices(COURSE_ID, { exclude_graded: true });
+
+    const actualUrl = fetchMock.lastUrl();
+    expect(actualUrl).toEqual(expect.stringContaining('exclude_graded=true'));
+  });
+});
+
+describe('client API Course Launch', () => {
+  beforeEach(() => {
+    const courseLaunchEndpointRegex = new RegExp(`${endpoints.courseLaunch}/${COURSE_ID}/`);
+    fetchMock.mock(courseLaunchEndpointRegex, 200);
+  });
+
+  afterEach(() => {
+    fetchMock.reset();
+  });
+
+  it('is called', () => {
+    requestCourseLaunch(COURSE_ID, {});
+    expect(fetchMock.called()).toBe(true);
+  });
+
+  it('is called with query params', () => {
+    requestCourseLaunch(COURSE_ID, { exclude_graded: true });
+
+    const actualUrl = fetchMock.lastUrl();
+    expect(actualUrl).toEqual(expect.stringContaining('exclude_graded=true'));
   });
 });

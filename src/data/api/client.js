@@ -111,3 +111,37 @@ export function postAccessibilityForm(formEmail, formFullName, formMessage) {
     },
   );
 }
+
+export function requestCourseBestPractices(courseId, params) {
+  const parameters = {
+    ...params,
+    all: true,
+  };
+
+  const requestString = Object.keys(parameters).reduce((memo, key) => { if (parameters[key]) { memo.push(`${key}=${parameters[key]}`); } return memo; }, []).join('&');
+  return fetch(
+    `${endpoints.courseBestPractices}/${courseId}/?${requestString}`, {
+      credentials: 'same-origin',
+      headers: {
+        Accept: 'application/json',
+      },
+    },
+  );
+}
+
+export function requestCourseLaunch(courseId, params) {
+  const parameters = {
+    ...params,
+    all: true,
+  };
+
+  const requestString = Object.keys(parameters).reduce((memo, key) => { if (parameters[key]) { memo.push(`${key}=${parameters[key]}`); } return memo; }, []).join('&');
+  return fetch(
+    `${endpoints.courseLaunch}/${courseId}/?${requestString}`, {
+      credentials: 'same-origin',
+      headers: {
+        Accept: 'application/json',
+      },
+    },
+  );
+}
