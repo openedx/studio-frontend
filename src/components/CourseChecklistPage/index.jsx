@@ -2,7 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { launchChecklist, bestPracticesChecklist } from '../../utils/CourseChecklist/courseChecklistData';
+import messages from './displayMessages';
 import WrappedCourseChecklist from '../CourseChecklist/container';
+import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
 
 export default class CourseChecklistPage extends React.Component {
   componentDidMount() {
@@ -13,18 +15,20 @@ export default class CourseChecklistPage extends React.Component {
   render() {
     const courseBestPracticesChecklist = (
       <WrappedCourseChecklist
-        dataHeading={bestPracticesChecklist.heading}
+        dataHeading={<WrappedMessage message={messages.bestPracticesChecklistLabel} />}
         dataList={bestPracticesChecklist.data}
         data={this.props.courseBestPracticesData}
+        idPrefix="bestPracticesChecklist"
       />
     );
 
     return (
       <React.Fragment>
         <WrappedCourseChecklist
-          dataHeading={launchChecklist.heading}
+          dataHeading={<WrappedMessage message={messages.launchChecklistLabel} />}
           dataList={launchChecklist.data}
           data={this.props.courseLaunchData}
+          idPrefix="launchChecklist"
         />
         {
           this.props.studioDetails.enable_quality ? courseBestPracticesChecklist : null

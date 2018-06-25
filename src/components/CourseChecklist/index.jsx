@@ -1,75 +1,152 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { Icon } from '@edx/paragon';
 import classNames from 'classnames';
+import { elementType } from 'airbnb-prop-types';
 import FontAwesomeStyles from 'font-awesome/css/font-awesome.min.css';
+import { Hyperlink, Icon } from '@edx/paragon';
+import PropTypes from 'prop-types';
+import React from 'react';
+
 import getFilteredChecklist from '../../utils/CourseChecklist/getFilteredChecklist';
 import getValidatedValue from '../../utils/CourseChecklist/getValidatedValue';
+import messages from './displayMessages';
 import styles from './CourseChecklist.scss';
+import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
 
 class CourseChecklist extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      headingID: '',
       checks: [],
-      totalChecks: 0,
+      totalCompletedChecks: 0,
       values: {},
     };
   }
 
   componentWillMount() {
     this.updateChecklistState(this.props);
-
-    if (this.props.dataHeading) {
-      this.setState({
-        headingID: `${this.props.dataHeading.split(/\s/).join('-')}-heading`,
-      });
-    }
   }
 
   componentWillReceiveProps(nextProps) {
     this.updateChecklistState(nextProps);
   }
 
+  getCompletionCountID = () => (`${this.props.idPrefix.split(/\s/).join('-')}-completion-count`);
+
   getHeading = () => (
-    <h3 className={classNames('font-weight-normal', styles['font-extra-large'])}>
-      <span id={this.state.headingID}>{this.props.dataHeading}</span>
+    <h3 aria-describedby={this.getCompletionCountID()} className={classNames('font-weight-normal', 'font-extra-large')}>
+      {this.props.dataHeading}
     </h3>
   )
 
-
   getCompletionCount = () => {
-    const totalChecks = Object.values(this.state.checks).length;
+    const totalCompletedChecks = Object.values(this.state.checks).length;
 
     return (
-      <div aria-describedby={this.state.headingID} className={classNames(styles['font-large'])} id={'completion-count'}>{`${this.state.totalChecks}/${totalChecks} completed`}</div>
+      <WrappedMessage
+        message={messages.completionCountLabel}
+        values={{ completed: this.state.totalCompletedChecks, total: totalCompletedChecks }}
+      >
+        {displayText =>
+          (<div
+            className="font-large"
+            id={this.getCompletionCountID()}
+          >
+            {displayText}
+          </div>)
+        }
+      </WrappedMessage>
     );
   }
 
-  getIconClassNames = (check) => {
-    const isComplete = this.state.values[check.id];
+  getCompletionIcon = (checkID) => {
+    const isCompleted = this.isCheckCompleted(checkID);
+    const message = isCompleted ? messages.completedItemLabel : messages.uncompletedItemLabel;
 
-    return isComplete ? classNames('fa-check-circle', 'text-success') : classNames('fa-circle-thin', styles['checklist-icon-incomplete']);
+    return (
+      <WrappedMessage message={message}>
+        {displayText => (
+          <Icon
+            className={[classNames(
+              'm-4 col-1',
+              FontAwesomeStyles.fa,
+              FontAwesomeStyles['fa-2x'],
+              this.getCompletionIconClassNames(isCompleted)),
+            ]}
+            id={`icon-${checkID}`}
+            screenReaderText={displayText}
+          />
+        )
+        }
+      </WrappedMessage>
+    );
   }
 
-  getListItems = () =>
-    (
-      this.state.checks.map((check) => {
-        const isComplete = this.state.values[check.id];
-        const itemColorClassName = isComplete ? styles['checklist-item-complete'] : styles['checklist-item-incomplete'];
-        return (
-          <div id={`checklist-item-${check.id}`} className={classNames('row no-gutters bg-white border my-1 py-4', itemColorClassName)} key={check.id}>
-            <Icon className={[classNames('m-4 col-1', FontAwesomeStyles.fa, FontAwesomeStyles['fa-2x'], this.getIconClassNames(check))]} id={`icon-${check.id}`} />
+  getCompletionIconClassNames = isCompleted => (
+    isCompleted ? ['fa-check-circle', 'text-success'] : ['fa-circle-thin', styles['checklist-icon-incomplete']]
+  );
+
+  getChecklistItemColorClassName = isCompleted => (
+    isCompleted ? styles['checklist-item-complete'] : styles['checklist-item-incomplete']
+  );
+
+  getShortDescription = checkID => (
+    <div className="font-large">
+      <WrappedMessage message={messages[`${checkID}ShortDescription`]} />
+    </div>
+  );
+
+  getLongDescription = checkID => (
+    <div className="font-small">
+      <WrappedMessage message={messages[`${checkID}LongDescription`]} />
+    </div>
+  )
+
+  getUpdateLinkDestination = (checkID) => {
+    switch (checkID) {
+      case 'welcomeMessage': return this.props.links.course_updates;
+      case 'gradingPolicy': return this.props.links.grading_policy;
+      case 'certificate': return this.props.links.certificates;
+      case 'courseDates': return `${this.props.links.settings}#schedule`;
+      default: return null;
+    }
+  }
+
+  getUpdateLink = checkID => (
+    <div className="col-1">
+      <Hyperlink
+        className={classNames(styles.btn, styles['btn-primary'], styles['checklist-item-link'])}
+        content={<WrappedMessage message={messages.updateLinkLabel} />}
+        destination={this.getUpdateLinkDestination(checkID)}
+      />
+    </div>
+  );
+
+  getListItems = () => (
+    this.state.checks.map((check) => {
+      const isCompleted = this.isCheckCompleted(check.id);
+
+      return (
+        <div
+          className={classNames(
+            'bg-white border my-1 py-4',
+            this.getChecklistItemColorClassName(isCompleted),
+            styles['checklist-item'])
+          }
+          id={`checklist-item-${check.id}`}
+          key={check.id}
+        >
+          <div className="row no-gutters">
+            {this.getCompletionIcon(check.id)}
             <div className="col">
-              <div className={classNames(styles['font-large'])}>{check.shortDescription}</div>
-              <div className={classNames(styles['font-small'])}>{check.longDescription}</div>
+              {this.getShortDescription(check.id)}
+              {this.getLongDescription(check.id)}
             </div>
+            {this.shouldShowUpdateLink(check.id) ? this.getUpdateLink(check.id) : null}
           </div>
-        );
-      })
-    );
+        </div>
+      );
+    })
+  );
 
   updateChecklistState(props) {
     if (Object.keys(props.data).length > 0) {
@@ -77,13 +154,13 @@ class CourseChecklist extends React.Component {
         props.dataList, props.data.is_self_paced);
 
       const values = {};
-      let totalChecks = 0;
+      let totalCompletedChecks = 0;
 
       checks.forEach((check) => {
         const value = getValidatedValue(props, check.id);
 
         if (value) {
-          totalChecks += 1;
+          totalCompletedChecks += 1;
         }
 
         values[check.id] = value;
@@ -91,9 +168,21 @@ class CourseChecklist extends React.Component {
 
       this.setState({
         checks,
-        totalChecks,
+        totalCompletedChecks,
         values,
       });
+    }
+  }
+
+  isCheckCompleted = checkID => (this.state.values[checkID])
+
+  shouldShowUpdateLink = (checkID) => {
+    switch (checkID) {
+      case 'welcomeMessage': return true;
+      case 'gradingPolicy': return true;
+      case 'certificate': return true;
+      case 'courseDates': return true;
+      default: return false;
     }
   }
 
@@ -110,7 +199,11 @@ class CourseChecklist extends React.Component {
             {this.getCompletionCount()}
           </div>
         </div>
-        {this.getListItems()}
+        <div className="row no-gutters">
+          <div className="col">
+            {this.getListItems()}
+          </div>
+        </div>
       </div>
     );
   }
@@ -170,7 +263,9 @@ CourseChecklist.propTypes = {
       is_self_paced: PropTypes.bool,
     }).isRequired,
   ]).isRequired,
-  dataHeading: PropTypes.string.isRequired,
+  dataHeading: elementType(WrappedMessage).isRequired,
   // eslint-disable-next-line react/no-unused-prop-types
   dataList: PropTypes.arrayOf(PropTypes.object).isRequired,
+  idPrefix: PropTypes.string.isRequired,
+  links: PropTypes.objectOf(PropTypes.string).isRequired,
 };

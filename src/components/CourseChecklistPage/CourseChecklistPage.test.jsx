@@ -3,8 +3,10 @@ import React from 'react';
 import { courseDetails } from '../../utils/testConstants';
 import CourseChecklistPage from '.';
 import { launchChecklist, bestPracticesChecklist } from '../../utils/CourseChecklist/courseChecklistData';
+import messages from './displayMessages';
 import { shallowWithIntl } from '../../utils/i18n/enzymeHelper';
 import WrappedCourseChecklist from '../CourseChecklist/container';
+import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
 
 let wrapper;
 
@@ -45,21 +47,23 @@ describe('CourseChecklistPage', () => {
 
             const checklist = wrapper.find(WrappedCourseChecklist).at(0);
 
-            expect(checklist.prop('dataHeading')).toEqual(launchChecklist.heading);
+            expect(checklist.prop('dataHeading')).toEqual(<WrappedMessage message={messages.launchChecklistLabel} />);
             expect(checklist.prop('dataList')).toEqual(launchChecklist.data);
             expect(checklist.prop('data')).toEqual(testCourseLaunchData);
+            expect(checklist.prop('idPrefix')).toEqual('launchChecklist');
           });
         });
 
-        describe('for the quality checklist with', () => {
+        describe('for the best practices checklist checklist with', () => {
           it('correct props', () => {
             wrapper = shallowWithIntl(<CourseChecklistPage {...defaultProps} />);
 
             const checklist = wrapper.find(WrappedCourseChecklist).at(1);
 
-            expect(checklist.prop('dataHeading')).toEqual(bestPracticesChecklist.heading);
+            expect(checklist.prop('dataHeading')).toEqual(<WrappedMessage message={messages.bestPracticesChecklistLabel} />);
             expect(checklist.prop('dataList')).toEqual(bestPracticesChecklist.data);
             expect(checklist.prop('data')).toEqual(testCourseBestPracticesData);
+            expect(checklist.prop('idPrefix')).toEqual('bestPracticesChecklist');
           });
         });
       });
@@ -89,9 +93,10 @@ describe('CourseChecklistPage', () => {
 
             const checklist = wrapper.find(WrappedCourseChecklist).at(0);
 
-            expect(checklist.prop('dataHeading')).toEqual(launchChecklist.heading);
+            expect(checklist.prop('dataHeading')).toEqual(<WrappedMessage message={messages.launchChecklistLabel} />);
             expect(checklist.prop('dataList')).toEqual(launchChecklist.data);
             expect(checklist.prop('data')).toEqual(testCourseLaunchData);
+            expect(checklist.prop('idPrefix')).toEqual('launchChecklist');
           });
         });
       });
