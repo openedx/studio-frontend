@@ -1,15 +1,17 @@
 @import 'edx-bootstrap';
+@import '~@edx/paragon/src/SearchField/SearchField';
+@import '~@edx/paragon/src/Pagination/Pagination';
 
-.form-inline {
-  margin-bottom: 0;
-}
+// .form-inline {
+//   margin-bottom: 0;
+// }
 
-.form-inline label {
-  margin-right: 1.0rem;
-  font-weight: 600;
-}
+// .form-inline label {
+//   margin-right: 1.0rem;
+//   font-weight: 600;
+// }
 
-.form-inline button {
-  margin-left: 1.0rem;
-  padding: 0.625rem 0.9rem;
-}
+// .form-inline button {
+//   margin-left: 1.0rem;
+//   padding: 0.625rem 0.9rem;
+// }

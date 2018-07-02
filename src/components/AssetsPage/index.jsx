@@ -1,6 +1,7 @@
 import classNames from 'classnames';
 import React from 'react';
 import PropTypes from 'prop-types';
+import { SearchField } from '@edx/paragon';
 
 import { getPageType, pageTypes } from '../../utils/getAssetsPageType';
 import { hasSearchOrFilterApplied } from '../../utils/getAssetsFilters';
@@ -9,10 +10,8 @@ import WrappedAssetsTable from '../AssetsTable/container';
 import WrappedAssetsFilters from '../AssetsFilters/container';
 import WrappedAssetsImagePreviewFilter from '../AssetsImagePreviewFilter/container';
 import WrappedPagination from '../Pagination/container';
-import WrappedAssetsSearch from '../AssetsSearch/container';
 import WrappedAssetsStatusAlert from '../AssetsStatusAlert/container';
 import WrappedAssetsResultsCount from '../AssetsResultsCount/container';
-import WrappedAssetsClearFiltersButton from '../AssetsClearFiltersButton/container';
 import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
 import messages from './displayMessages';
 import styles from './AssetsPage.scss';
@@ -25,6 +24,7 @@ export default class AssetsPage extends React.Component {
 
     this.state = {
       pageType: pageTypes.SKELETON,
+      seachValue: props.assetsSearch.search,
     };
 
     this.statusAlertRef = null;
@@ -79,6 +79,18 @@ export default class AssetsPage extends React.Component {
     }
   }
 
+  onAssetsSearchSubmit = () => {
+    this.props.updateSearch(this.state.value, this.props.courseDetails)
+  };
+
+  onAssetsSearchChange = (value) => {
+    this.setState({ value });
+
+    if (value === '') {
+      this.props.clearSearch(this.props.courseDetails);
+    }
+  }
+
   renderAssetsDropZone = () => (
     <WrappedAssetsDropZone
       maxFileSizeMB={this.props.uploadSettings.max_file_size_in_mbs}
@@ -89,6 +101,18 @@ export default class AssetsPage extends React.Component {
     <WrappedAssetsFilters />
   );
 
+  renderAssetsSearch = () => (
+    <SearchField
+      onSubmit={this.onAssetsSearchSubmit}
+      onChange={this.onAssetsSearchChange}
+      inputLabel={<WrappedMessage message={messages.assetsSearchInputLabel} />}
+      screenReaderText={{
+        clearButton: <WrappedMessage message={messages.assetsClearSearchButtonLabel} />,
+        searchButton: <WrappedMessage message={messages.assetsSearchSubmitLabel} />,
+      }}
+    />
+  )
+
   renderAssetsPage = () => (
     <React.Fragment>
       <div className="row">
@@ -98,12 +122,6 @@ export default class AssetsPage extends React.Component {
               <div aria-hidden>
                 <WrappedAssetsResultsCount />
               </div>
-            </div>
-            <div className="col-md-4 text-right">
-              {hasSearchOrFilterApplied(this.props.filtersMetadata.assetTypes,
-                this.props.searchMetadata.search) &&
-                <WrappedAssetsClearFiltersButton className="p-3" />
-              }
             </div>
           </div>
         </div>
@@ -204,12 +222,12 @@ export default class AssetsPage extends React.Component {
           </div>
           {(this.state.pageType === pageTypes.NORMAL ||
             this.state.pageType === pageTypes.NO_RESULTS) && (
-            <div className="row">
-              <div className="col-12 p-0">
-                <WrappedAssetsSearch />
+              <div className="row justify-content-end">
+                <div className="col-3 p-0">
+                  {this.renderAssetsSearch()}
+                </div>
               </div>
-            </div>
-          )}
+            )}
           {this.getPage(this.state.pageType)}
         </div>
       </React.Fragment>

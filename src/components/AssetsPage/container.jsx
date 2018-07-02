@@ -1,11 +1,12 @@
 import { connect } from 'react-redux';
 
 import AssetsPage from '.';
-import { clearAssetDeletion, getAssets } from '../../data/actions/assets';
+import { clearAssetDeletion, getAssets, searchUpdate } from '../../data/actions/assets';
 
 
 const mapStateToProps = state => ({
   assetsList: state.assets,
+  assetsSearch: state.metadata.search,
   assetsStatus: state.metadata.status,
   assetToDelete: state.metadata.deletion.assetToDelete,
   courseDetails: state.studioDetails.course,
@@ -19,7 +20,11 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   clearAssetDeletion: () => dispatch(clearAssetDeletion()),
+  clearSearch: courseDetails =>
+    dispatch(searchUpdate('', courseDetails)),
   getAssets: (request, courseDetails) => dispatch(getAssets(request, courseDetails)),
+  updateSearch: (searchValue, courseDetails) =>
+    dispatch(searchUpdate(searchValue, courseDetails)),
 });
 
 const WrappedAssetsPage = connect(

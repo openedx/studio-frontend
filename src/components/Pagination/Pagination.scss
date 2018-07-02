@@ -1,4 +1,5 @@
 @import 'edx-bootstrap';
+// @import '~@edx/paragon/src/Pagination/Pagination';
 
 .pagination {
   justify-content: center;
@@ -10,22 +11,22 @@
   }
 }
 
-.page-item {
-  min-width: 50px;
-  text-align: center;
-}
+// .page-item {
+//   min-width: 50px;
+//   text-align: center;
+// }
 
-.page-link {
-  text-align: center;
-}
+// .page-link {
+//   text-align: center;
+// }
 
-.disabled {
-  color: $pagination-disabled-color;
-  pointer-events: none;
-  background-color: $pagination-disabled-bg;
-  border-color: $pagination-disabled-border-color;
+// .disabled {
+//   color: $pagination-disabled-color;
+//   pointer-events: none;
+//   background-color: $pagination-disabled-bg;
+//   border-color: $pagination-disabled-border-color;
 
-  .page-link {
-    @extend .disabled;
-  }
-}
+//   .page-link {
+//     @extend .disabled;
+//   }
+// }

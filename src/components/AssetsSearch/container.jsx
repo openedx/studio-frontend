@@ -11,6 +11,9 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   updateSearch: (searchValue, courseDetails) =>
     dispatch(searchUpdate(searchValue, courseDetails)),
+  clearSearch: courseDetails =>
+    dispatch(searchUpdate('', courseDetails)),
+
 });
 
 const WrappedAssetsSearch = connect(

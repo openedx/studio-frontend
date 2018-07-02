@@ -1,3 +1,7 @@
+@import 'edx-bootstrap';
+@import '~@edx/paragon/src/SearchField/SearchField';
+@import '~@edx/paragon/src/Pagination/Pagination';
+
 .skip-link {
   &.sr-only-focusable:focus {
     position: absolute;
