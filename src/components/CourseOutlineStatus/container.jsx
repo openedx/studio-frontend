@@ -7,6 +7,7 @@ const mapStateToProps = state => ({
   studioDetails: state.studioDetails,
   courseBestPracticesData: state.courseChecklistData.courseBestPractices,
   courseLaunchData: state.courseChecklistData.courseLaunch,
+  loadingChecklists: state.courseChecklistData.loadingChecklists,
 });
 
 const mapDispatchToProps = dispatch => ({

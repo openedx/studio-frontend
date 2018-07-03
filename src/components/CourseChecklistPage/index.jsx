@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import { checklistLoading } from '../../data/constants/loadingTypes';
 import { launchChecklist, bestPracticesChecklist } from '../../utils/CourseChecklist/courseChecklistData';
 import messages from './displayMessages';
 import WrappedCourseChecklist from '../CourseChecklist/container';
@@ -12,54 +13,54 @@ export default class CourseChecklistPage extends React.Component {
     this.props.getCourseLaunch({ graded_only: true }, this.props.studioDetails.course);
   }
 
+
   render() {
+    const isCourseBestPracticeChecklistLoading =
+      this.props.loadingChecklists.includes(checklistLoading.COURSE_BEST_PRACTICES);
+
+    const isCourseLaunchChecklistLoading =
+      this.props.loadingChecklists.includes(checklistLoading.COURSE_LAUNCH);
+
     const courseBestPracticesChecklist = (
       <WrappedCourseChecklist
         dataHeading={<WrappedMessage message={messages.bestPracticesChecklistLabel} />}
         dataList={bestPracticesChecklist.data}
         data={this.props.courseBestPracticesData}
         idPrefix="bestPracticesChecklist"
+        isLoading={isCourseBestPracticeChecklistLoading}
       />
     );
 
     return (
-      <React.Fragment>
-        <WrappedCourseChecklist
-          dataHeading={<WrappedMessage message={messages.launchChecklistLabel} />}
-          dataList={launchChecklist.data}
-          data={this.props.courseLaunchData}
-          idPrefix="launchChecklist"
-        />
+      <div className="container">
+        <div className="row">
+          <div className="col">
+            <WrappedCourseChecklist
+              dataHeading={<WrappedMessage message={messages.launchChecklistLabel} />}
+              dataList={launchChecklist.data}
+              data={this.props.courseLaunchData}
+              idPrefix="launchChecklist"
+              isLoading={isCourseLaunchChecklistLoading}
+            />
+          </div>
+        </div>
         {
-          this.props.studioDetails.enable_quality ? courseBestPracticesChecklist : null
+          this.props.studioDetails.enable_quality ?
+            (
+              <div className="row ">
+                <div className="col">
+                  {courseBestPracticesChecklist}
+                </div>
+              </div>
+            )
+            : null
         }
-      </React.Fragment>
+      </div>
     );
   }
 }
 
 CourseChecklistPage.propTypes = {
-  studioDetails: PropTypes.shape({
-    course: PropTypes.shape({
-      base_url: PropTypes.string,
-      course_release_date: PropTypes.string,
-      display_course_number: PropTypes.string,
-      enable_quality: PropTypes.bool,
-      id: PropTypes.string,
-      is_course_self_paced: PropTypes.boolean,
-      lang: PropTypes.string,
-      name: PropTypes.string,
-      num: PropTypes.string,
-      org: PropTypes.string,
-      revision: PropTypes.string,
-      url_name: PropTypes.string,
-    }),
-    enable_quality: PropTypes.boolean,
-    help_tokens: PropTypes.objectOf(PropTypes.string),
-    lang: PropTypes.string,
-  }).isRequired,
-  getCourseBestPractices: PropTypes.func.isRequired,
-  getCourseLaunch: PropTypes.func.isRequired,
   courseBestPracticesData: PropTypes.shape({
     sections: PropTypes.shape({
       number_with_highlights: PropTypes.number,
@@ -96,4 +97,30 @@ CourseChecklistPage.propTypes = {
     }),
     is_self_paced: PropTypes.bool,
   }).isRequired,
+  getCourseBestPractices: PropTypes.func.isRequired,
+  getCourseLaunch: PropTypes.func.isRequired,
+  loadingChecklists: PropTypes.arrayOf(PropTypes.string),
+  studioDetails: PropTypes.shape({
+    course: PropTypes.shape({
+      base_url: PropTypes.string,
+      course_release_date: PropTypes.string,
+      display_course_number: PropTypes.string,
+      enable_quality: PropTypes.bool,
+      id: PropTypes.string,
+      is_course_self_paced: PropTypes.boolean,
+      lang: PropTypes.string,
+      name: PropTypes.string,
+      num: PropTypes.string,
+      org: PropTypes.string,
+      revision: PropTypes.string,
+      url_name: PropTypes.string,
+    }),
+    enable_quality: PropTypes.boolean,
+    help_tokens: PropTypes.objectOf(PropTypes.string),
+    lang: PropTypes.string,
+  }).isRequired,
+};
+
+CourseChecklistPage.defaultProps = {
+  loadingChecklists: [],
 };

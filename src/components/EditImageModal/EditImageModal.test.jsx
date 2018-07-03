@@ -168,7 +168,7 @@ describe('EditImageModal', () => {
               expect(header.prop('message')).toEqual(messages.editImageModalInsertHeader);
             });
 
-            it('a loading spinner', () => {
+            it('a loading icon', () => {
               const loadingSpinnerRegion = getModalBody(editImageModal).find('.text-center .mt-3');
               expect(loadingSpinnerRegion).toHaveLength(1);
 

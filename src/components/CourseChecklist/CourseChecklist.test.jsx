@@ -118,11 +118,40 @@ describe('CourseChecklist', () => {
 
       const completionCountSection = wrapper.find('.row .col').at(1).find(WrappedMessage);
 
-      const completionCount = completionCountSection.dive({ context: { intl } })
-        .dive({ context: { intl } }).find(FormattedMessage)
+      const completionCount = completionCountSection
+        .dive({ context: { intl } })
+        .dive({ context: { intl } })
+        .find(FormattedMessage)
         .dive({ context: { intl } });
 
       expect(completionCount.prop('id')).toEqual(getCompletionCountID());
+    });
+
+    it('a loading spinner when isLoading prop is true', () => {
+      wrapper = shallowWithIntl(<CourseChecklist {...defaultProps} />);
+
+      wrapper.setProps({
+        isLoading: true,
+      });
+
+      const heading = wrapper.find('h3').at(0);
+      expect(heading).toHaveLength(1);
+
+      const completionCountSection = wrapper.find('.row .col').at(1).find(WrappedMessage);
+      expect(completionCountSection).toHaveLength(0);
+
+      const loadingIconSection = wrapper.find('.row .col').at(2).find(WrappedMessage);
+      expect(loadingIconSection).toHaveLength(1);
+
+      const loadingIcon = loadingIconSection.dive({ context: { intl } })
+        .dive({ context: { intl } })
+        .find(FormattedMessage)
+        .dive({ context: { intl } })
+        .find(Icon);
+
+      expect(loadingIcon.prop('className')[0]).toEqual(expect.stringContaining('fa-spinner'));
+      expect(loadingIcon.prop('className')[0]).toEqual(expect.stringContaining('fa-spin'));
+      expect(loadingIcon.prop('className')[0]).toEqual(expect.stringContaining('fa-5x'));
     });
 
     describe('checks with', () => {

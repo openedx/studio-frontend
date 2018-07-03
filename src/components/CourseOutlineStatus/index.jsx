@@ -1,14 +1,18 @@
 import classNames from 'classnames';
+import FontAwesomeStyles from 'font-awesome/css/font-awesome.min.css';
 import { Hyperlink } from '@edx/paragon';
+import { Icon } from '@edx/paragon';
+import React from 'react';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import { trackEvent } from '../../utils/analytics';
+import { checklistLoading } from '../../data/constants/loadingTypes';
 import getFilteredChecklist from '../../utils/CourseChecklist/getFilteredChecklist';
 import getValidatedValue from '../../utils/CourseChecklist/getValidatedValue';
 import { launchChecklist, bestPracticesChecklist } from '../../utils/CourseChecklist/courseChecklistData';
 import messages from './displayMessages';
 import styles from './CourseOutlineStatus.scss';
+import { trackEvent } from '../../utils/analytics';
 import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
 
 export default class CourseOutlineStatus extends React.Component {
@@ -21,6 +25,8 @@ export default class CourseOutlineStatus extends React.Component {
       totalCourseBestPracticesChecks: 0,
       totalCourseLaunchChecks: 0,
     };
+
+    this.spinnerClasses = [FontAwesomeStyles.fa, FontAwesomeStyles['fa-spinner'], FontAwesomeStyles['fa-spin']];
   }
 
   componentWillMount() {
@@ -86,7 +92,20 @@ export default class CourseOutlineStatus extends React.Component {
     }
   }
 
-  render() {
+  getLoadingIcon = () => (
+    <WrappedMessage message={messages.loadingChecklistLabel}>
+      {displayText =>
+        (<div className="text-center">
+          <Icon
+            className={[classNames(...this.spinnerClasses)]}
+            screenReaderText={displayText}
+          />
+        </div>)
+      }
+    </WrappedMessage>
+  )
+
+  getHyperLink = () => {
     const {
       completedCourseBestPracticesChecks,
       completedCourseLaunchChecks,
@@ -103,34 +122,51 @@ export default class CourseOutlineStatus extends React.Component {
       totalCourseLaunchChecks;
 
     return (
+      <Hyperlink
+        className={classNames(styles['text-info'], styles['status-checklist-value'])}
+        content={
+          <WrappedMessage
+            message={messages.completionCountLabel}
+            values={{ completed: totalCompletedChecks, total: totalChecks }}
+          >
+            {displayText =>
+              (<span>
+                {displayText}
+              </span>)
+            }
+          </WrappedMessage>
+        }
+        destination={`/checklists/${this.props.studioDetails.course.id}`}
+        onClick={() => trackEvent(
+          'edx.bi.studio.course.checklist.accessed', {
+            category: 'click',
+            event_type: 'outline-access',
+            label: this.props.studioDetails.course.id,
+          },
+        )}
+      />
+    );
+  }
+
+  getBody() {
+    const isLoading =
+      this.props.loadingChecklists.includes(checklistLoading.COURSE_BEST_PRACTICES) ||
+      this.props.loadingChecklists.includes(checklistLoading.COURSE_LAUNCH);
+
+    return isLoading ?
+      this.getLoadingIcon() :
+      this.getHyperLink();
+  }
+
+  render() {
+    return (
       <React.Fragment>
         <div className={styles['status-checklist']}>
-
-          <h2 className={styles['status-checklist-label']}>Checklists</h2>
+          <h2 className={styles['status-checklist-label']}>
+            <WrappedMessage message={messages.checklistLabel} />
+          </h2>
           <div>
-            <Hyperlink
-              className={classNames(styles['text-info'], styles['status-checklist-value'])}
-              content={
-                <WrappedMessage
-                  message={messages.completionCountLabel}
-                  values={{ completed: totalCompletedChecks, total: totalChecks }}
-                >
-                  {displayText =>
-                    (<span>
-                      {displayText}
-                    </span>)
-                  }
-                </WrappedMessage>
-              }
-              destination={`/checklists/${this.props.studioDetails.course.id}`}
-              onClick={() => trackEvent(
-                'edx.bi.studio.course.checklist.accessed', {
-                  category: 'click',
-                  event_type: 'outline-access',
-                  label: this.props.studioDetails.course.id,
-                },
-              )}
-            />
+            {this.getBody()}
           </div>
         </div>
       </React.Fragment>
@@ -139,27 +175,6 @@ export default class CourseOutlineStatus extends React.Component {
 }
 
 CourseOutlineStatus.propTypes = {
-  studioDetails: PropTypes.shape({
-    course: PropTypes.shape({
-      base_url: PropTypes.string,
-      course_release_date: PropTypes.string,
-      display_course_number: PropTypes.string,
-      enable_quality: PropTypes.bool,
-      id: PropTypes.string,
-      is_course_self_paced: PropTypes.boolean,
-      lang: PropTypes.string,
-      name: PropTypes.string,
-      num: PropTypes.string,
-      org: PropTypes.string,
-      revision: PropTypes.string,
-      url_name: PropTypes.string,
-    }),
-    enable_quality: PropTypes.boolean,
-    help_tokens: PropTypes.objectOf(PropTypes.string),
-    lang: PropTypes.string,
-  }).isRequired,
-  getCourseBestPractices: PropTypes.func.isRequired,
-  getCourseLaunch: PropTypes.func.isRequired,
   courseBestPracticesData: PropTypes.shape({
     sections: PropTypes.shape({
       number_with_highlights: PropTypes.number,
@@ -196,4 +211,30 @@ CourseOutlineStatus.propTypes = {
     }),
     is_self_paced: PropTypes.bool,
   }).isRequired,
+  getCourseBestPractices: PropTypes.func.isRequired,
+  getCourseLaunch: PropTypes.func.isRequired,
+  loadingChecklists: PropTypes.arrayOf(PropTypes.string),
+  studioDetails: PropTypes.shape({
+    course: PropTypes.shape({
+      base_url: PropTypes.string,
+      course_release_date: PropTypes.string,
+      display_course_number: PropTypes.string,
+      enable_quality: PropTypes.bool,
+      id: PropTypes.string,
+      is_course_self_paced: PropTypes.boolean,
+      lang: PropTypes.string,
+      name: PropTypes.string,
+      num: PropTypes.string,
+      org: PropTypes.string,
+      revision: PropTypes.string,
+      url_name: PropTypes.string,
+    }),
+    enable_quality: PropTypes.boolean,
+    help_tokens: PropTypes.objectOf(PropTypes.string),
+    lang: PropTypes.string,
+  }).isRequired,
+};
+
+CourseOutlineStatus.defaultProps = {
+  loadingChecklists: [],
 };

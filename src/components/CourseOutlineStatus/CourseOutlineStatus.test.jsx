@@ -2,12 +2,17 @@ import { Hyperlink } from '@edx/paragon';
 import { IntlProvider, FormattedMessage } from 'react-intl';
 import React from 'react';
 
-import CourseOutlineStatus from './';
+import { checklistLoading } from '../../data/constants/loadingTypes';
 import { courseDetails } from '../../utils/testConstants';
+import CourseOutlineStatus from './';
 import getFilteredChecklist from '../../utils/CourseChecklist/getFilteredChecklist';
 import getValidatedValue from '../../utils/CourseChecklist/getValidatedValue';
+import { Icon } from '@edx/paragon';
+import { IntlProvider, FormattedMessage } from 'react-intl';
 import { launchChecklist, bestPracticesChecklist } from '../../utils/CourseChecklist/courseChecklistData';
+import messages from './displayMessages';
 import { shallowWithIntl } from '../../utils/i18n/enzymeHelper';
+import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
 
 // generating test checklist to avoid relying on actual data
 const testChecklistData = ['a', 'b', 'c', 'd'].reduce(((accumulator, currentValue) => {
@@ -91,7 +96,7 @@ describe('CourseOutlineStatus', () => {
 
       const header = wrapper.find('h2');
       expect(header).toHaveLength(1);
-      expect(header.text()).toEqual('Checklists');
+      expect(header.find(WrappedMessage).prop('message')).toEqual(messages.checklistLabel);
     });
 
     it('a Hyperlink with correct href', () => {
@@ -100,6 +105,69 @@ describe('CourseOutlineStatus', () => {
       const checklistsLink = wrapper.find(Hyperlink);
       expect(checklistsLink).toHaveLength(1);
       expect(checklistsLink.prop('destination')).toEqual(`/checklists/${defaultProps.studioDetails.course.id}`);
+    });
+
+    it('a loading icon instead of anchor when course launch is loading', () => {
+      wrapper.setProps({
+        loadingChecklists: [checklistLoading.COURSE_LAUNCH],
+      });
+
+      const anchor = wrapper.find('a');
+      expect(anchor).toHaveLength(0);
+
+      const loadingIconSection = wrapper.find(WrappedMessage).at(1);
+      expect(loadingIconSection).toHaveLength(1);
+
+      const loadingIcon = loadingIconSection.dive({ context: { intl } })
+        .dive({ context: { intl } })
+        .find(FormattedMessage)
+        .dive({ context: { intl } })
+        .find(Icon);
+
+      expect(loadingIcon.prop('className')[0]).toEqual(expect.stringContaining('fa-spinner'));
+      expect(loadingIcon.prop('className')[0]).toEqual(expect.stringContaining('fa-spin'));
+    });
+
+    it('a loading icon instead of an anchor when course best practices is loading', () => {
+      wrapper.setProps({
+        loadingChecklists: [checklistLoading.COURSE_BEST_PRACTICES],
+      });
+
+      const anchor = wrapper.find('a');
+      expect(anchor).toHaveLength(0);
+
+      const loadingIconSection = wrapper.find(WrappedMessage).at(1);
+      expect(loadingIconSection).toHaveLength(1);
+
+      const loadingIcon = loadingIconSection.dive({ context: { intl } })
+        .dive({ context: { intl } })
+        .find(FormattedMessage)
+        .dive({ context: { intl } })
+        .find(Icon);
+
+      expect(loadingIcon.prop('className')[0]).toEqual(expect.stringContaining('fa-spinner'));
+      expect(loadingIcon.prop('className')[0]).toEqual(expect.stringContaining('fa-spin'));
+    });
+
+    it('a loading icon instead of an anchor when both course launch and course best practices are loading', () => {
+      wrapper.setProps({
+        loadingChecklists: [checklistLoading.COURSE_BEST_PRACTICES, checklistLoading.COURSE_LAUNCH],
+      });
+
+      const anchor = wrapper.find('a');
+      expect(anchor).toHaveLength(0);
+
+      const loadingIconSection = wrapper.find(WrappedMessage).at(1);
+      expect(loadingIconSection).toHaveLength(1);
+
+      const loadingIcon = loadingIconSection.dive({ context: { intl } })
+        .dive({ context: { intl } })
+        .find(FormattedMessage)
+        .dive({ context: { intl } })
+        .find(Icon);
+
+      expect(loadingIcon.prop('className')[0]).toEqual(expect.stringContaining('fa-spinner'));
+      expect(loadingIcon.prop('className')[0]).toEqual(expect.stringContaining('fa-spin'));
     });
 
     describe('if enable_quality prop is true', () => {

@@ -53,6 +53,7 @@ describe('Course Checklist Action Creators', () => {
 
     fetchMock.once(`begin:${courseBestPracticesEndpoint}`, response);
     const expectedActions = [
+      { type: courseChecklistActions.request.REQUESTING_COURSE_BEST_PRACTICES },
       { type: courseChecklistActions.request.REQUEST_COURSE_BEST_PRACTICES_SUCCESS, response },
     ];
     return store.dispatch(actionCreators.getCourseBestPractices(requestParameters, courseDetails))
@@ -73,6 +74,7 @@ describe('Course Checklist Action Creators', () => {
 
     fetchMock.once(`begin:${courseBestPracticesEndpoint}`, response);
     const expectedActions = [
+      { type: courseChecklistActions.request.REQUESTING_COURSE_BEST_PRACTICES },
       {
         type: courseChecklistActions.request.REQUEST_COURSE_BEST_PRACTICES_FAILURE,
         response: errorResponse,
@@ -113,6 +115,7 @@ describe('Course Checklist Action Creators', () => {
 
     fetchMock.once(`begin:${courseLaunchEndpoint}`, response);
     const expectedActions = [
+      { type: courseChecklistActions.request.REQUESTING_COURSE_LAUNCH },
       { type: courseChecklistActions.request.REQUEST_COURSE_LAUNCH_SUCCESS, response },
     ];
     return store.dispatch(actionCreators.getCourseLaunch(requestParameters, courseDetails))
@@ -133,6 +136,7 @@ describe('Course Checklist Action Creators', () => {
 
     fetchMock.once(`begin:${courseLaunchEndpoint}`, response);
     const expectedActions = [
+      { type: courseChecklistActions.request.REQUESTING_COURSE_LAUNCH },
       {
         type: courseChecklistActions.request.REQUEST_COURSE_LAUNCH_FAILURE,
         response: errorResponse,

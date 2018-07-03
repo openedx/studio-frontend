@@ -131,6 +131,11 @@ const messages = defineMessages({
     defaultMessage: 'uncompleted',
     description: 'Label that describes an uncompleted task',
   },
+  loadingChecklistLabel: {
+    id: 'loadingChecklistLabel',
+    defaultMessage: 'Loading',
+    description: 'Label telling the user that a checklist is loading',
+  },
 });
 
 export default messages;
