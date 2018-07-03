@@ -1,17 +1,17 @@
 import * as clientApi from '../api/client';
 import { courseChecklistActions } from '../constants/actionTypes';
 
-export const requestCourseQualitySuccess = response => ({
-  type: courseChecklistActions.request.REQUEST_COURSE_QUALITY_SUCCESS,
+export const requestCourseBestPracticesSuccess = response => ({
+  type: courseChecklistActions.request.REQUEST_COURSE_BEST_PRACTICES_SUCCESS,
   response,
 });
 
-export const requestCourseQualityFailure = response => ({
-  type: courseChecklistActions.request.REQUEST_COURSE_QUALITY_FAILURE,
+export const requestCourseBestPracticesFailure = response => ({
+  type: courseChecklistActions.request.REQUEST_COURSE_BEST_PRACTICES_FAILURE,
   response,
 });
 
-export const getCourseQuality = (parameters, courseDetails) =>
+export const getCourseBestPractices = (parameters, courseDetails) =>
   dispatch => (
     clientApi.requestCourseBestPractices(courseDetails.id, { ...parameters })
       .then((response) => {
@@ -21,24 +21,24 @@ export const getCourseQuality = (parameters, courseDetails) =>
         throw new Error(response);
       })
       .then(json => (
-        dispatch(requestCourseQualitySuccess(json))
+        dispatch(requestCourseBestPracticesSuccess(json))
       ))
       .catch(error => (
-        dispatch(requestCourseQualityFailure(error))
+        dispatch(requestCourseBestPracticesFailure(error))
       ))
   );
 
-export const requestCourseValidationSuccess = response => ({
-  type: courseChecklistActions.request.REQUEST_COURSE_VALIDATION_SUCCESS,
+export const requestCourseLaunchSuccess = response => ({
+  type: courseChecklistActions.request.REQUEST_COURSE_LAUNCH_SUCCESS,
   response,
 });
 
-export const requestCourseValidationFailure = response => ({
-  type: courseChecklistActions.request.REQUEST_COURSE_VALIDATION_FAILURE,
+export const requestCourseLaunchFailure = response => ({
+  type: courseChecklistActions.request.REQUEST_COURSE_LAUNCH_FAILURE,
   response,
 });
 
-export const getCourseValidation = (parameters, courseDetails) =>
+export const getCourseLaunch = (parameters, courseDetails) =>
   dispatch => (
     clientApi.requestCourseLaunch(courseDetails.id, { ...parameters })
       .then((response) => {
@@ -48,9 +48,9 @@ export const getCourseValidation = (parameters, courseDetails) =>
         throw new Error(response);
       })
       .then(json => (
-        dispatch(requestCourseValidationSuccess(json))
+        dispatch(requestCourseLaunchSuccess(json))
       ))
       .catch(error => (
-        dispatch(requestCourseValidationFailure(error))
+        dispatch(requestCourseLaunchFailure(error))
       ))
   );

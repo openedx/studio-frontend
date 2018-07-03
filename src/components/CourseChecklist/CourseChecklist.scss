@@ -2,13 +2,40 @@
 @import "~bootstrap/scss/_buttons";
 @import "~bootstrap/scss/utilities/_screenreaders";
 
-$light-color: theme-color("light");
 $lightest-color: theme-color("lightest");
 $primary-color: theme-color("primary");
 $success-color: theme-color("success");
 
+.assignment-list-item {
+  list-style: none;
+  display: inline-block;
+
+  &:after { 
+    content: ","; 
+  }
+
+  &:last-child {
+    &:after {
+       content: ""; 
+    }
+  }
+}
+
+.assignment-list {
+  display: inline;
+  padding-inline-start: map-get($spacers, 3);
+}
+
 .checklist-item-link {
   text-decoration: none;
+}
+
+.checklist-item {
+  &:not(:hover) {
+    .checklist-item-link {
+      @include sr_only();
+    }  
+  }
 }
 
 //complete checklist item style
@@ -25,7 +52,7 @@ $success-color: theme-color("success");
   box-shadow: -5px 0 0 0 $lightest-color;
 
   .checklist-icon-incomplete {
-    color: $light-color;
+    color: $gray-600;
   }
 
   &:hover {
@@ -35,4 +62,8 @@ $success-color: theme-color("success");
       color: $primary-color;
     }
   }
+}
+
+.comment-icon {
+  color: $gray-400;
 }

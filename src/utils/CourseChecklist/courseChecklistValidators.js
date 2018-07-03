@@ -3,7 +3,7 @@ export const hasWelcomeMessage = updates => (
 );
 
 export const hasGradingPolicy = grades => (
-  grades.sum_of_weights === 1
+  parseFloat(grades.sum_of_weights.toPrecision(2), 10) === 1.0
 );
 
 export const hasCertificate = certificates => (
@@ -17,9 +17,9 @@ export const hasDates = dates => (
 export const hasAssignmentDeadlines = (assignments, dates) => {
   if (!hasDates(dates)) {
     return false;
-  } else if (assignments.num_with_dates !== assignments.num_with_dates_after_start) {
+  } else if (assignments.assignments_with_dates_before_start.length > 0) {
     return false;
-  } else if (assignments.num_with_dates !== assignments.num_with_dates_before_end) {
+  } else if (assignments.assignments_with_dates_after_end.length > 0) {
     return false;
   }
 
@@ -53,7 +53,7 @@ export const hasDiverseSequences = (subsections) => {
     return ((subsections.num_with_one_block_type / subsections.total_visible) < 0.2);
   }
 
-  return true;
+  return false;
 };
 
 export const hasWeeklyHighlights = sections => (

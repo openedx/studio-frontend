@@ -61,8 +61,8 @@ let wrapper;
 
 const defaultProps = {
   studioDetails: { course: courseDetails, enable_quality: true },
-  getCourseQuality: () => { },
-  getCourseValidation: () => { },
+  getCourseBestPractices: () => { },
+  getCourseLaunch: () => { },
   courseBestPracticesData: {},
   courseLaunchData: {},
   enable_quality: true,
@@ -134,36 +134,36 @@ describe('CourseOutlineStatus', () => {
   });
 
   describe('behaves', () => {
-    it('calls getCourseQuality prop on mount', () => {
-      const getCourseQualitySpy = jest.fn();
+    it('calls getCourseBestPractices prop on mount', () => {
+      const getCourseBestPracticesSpy = jest.fn();
 
       const props = {
         ...defaultProps,
-        getCourseQuality: getCourseQualitySpy,
+        getCourseBestPractices: getCourseBestPracticesSpy,
       };
 
       wrapper = shallowWithIntl(<CourseOutlineStatus {...props} />);
 
-      expect(getCourseQualitySpy).toHaveBeenCalledTimes(1);
-      expect(getCourseQualitySpy).toHaveBeenCalledWith(
+      expect(getCourseBestPracticesSpy).toHaveBeenCalledTimes(1);
+      expect(getCourseBestPracticesSpy).toHaveBeenCalledWith(
         { exclude_graded: true },
         defaultProps.studioDetails.course,
       );
     });
 
-    it('calls getCourseValidation prop on mount', () => {
+    it('calls getCourseLaunch prop on mount', () => {
       const getCourseValidationSpy = jest.fn();
 
       const props = {
         ...defaultProps,
-        getCourseValidation: getCourseValidationSpy,
+        getCourseLaunch: getCourseValidationSpy,
       };
 
       wrapper = shallowWithIntl(<CourseOutlineStatus {...props} />);
 
       expect(getCourseValidationSpy).toHaveBeenCalledTimes(1);
       expect(getCourseValidationSpy).toHaveBeenCalledWith(
-        {},
+        { graded_only: true },
         defaultProps.studioDetails.course,
       );
     });

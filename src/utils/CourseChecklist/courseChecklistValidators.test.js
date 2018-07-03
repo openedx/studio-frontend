@@ -16,6 +16,10 @@ describe('courseCheckValidators utility functions', () => {
       expect(validators.hasGradingPolicy({ sum_of_weights: 1 })).toEqual(true);
     });
 
+    it('returns true when sum of weights is not 1 due to floating point approximation (1.00004)', () => {
+      expect(validators.hasGradingPolicy({ sum_of_weights: 1.00004 })).toEqual(true);
+    });
+
     it('returns false when sum of weights is not 1', () => {
       expect(validators.hasGradingPolicy({ sum_of_weights: 2 })).toEqual(false);
     });
@@ -65,9 +69,8 @@ describe('courseCheckValidators utility functions', () => {
     it('returns true when a course run has start and end date and all assignments are within range', () => {
       expect(validators.hasAssignmentDeadlines(
         {
-          num_with_dates: 10,
-          num_with_dates_after_start: 10,
-          num_with_dates_before_end: 10,
+          assignments_with_dates_before_start: 0,
+          assignments_with_dates_after_end: 0,
         },
         {
           has_start_date: true,
@@ -88,9 +91,8 @@ describe('courseCheckValidators utility functions', () => {
     it('returns false when a course run has start and end date and assignments before start', () => {
       expect(validators.hasAssignmentDeadlines(
         {
-          num_with_dates: 10,
-          num_with_dates_after_start: 5,
-          num_with_dates_before_end: 10,
+          assignments_with_dates_before_start: ['test'],
+          assignments_with_dates_after_end: 0,
         },
         {
           has_start_date: true,
@@ -102,9 +104,8 @@ describe('courseCheckValidators utility functions', () => {
     it('returns false when a course run has start and end date and assignments after end', () => {
       expect(validators.hasAssignmentDeadlines(
         {
-          num_with_dates: 10,
-          num_with_dates_after_start: 10,
-          num_with_dates_before_end: 5,
+          assignments_with_dates_before_start: 0,
+          assignments_with_dates_after_end: ['test'],
         },
         {
           has_start_date: true,
@@ -158,6 +159,11 @@ describe('courseCheckValidators utility functions', () => {
 
     it('returns false if >= 20% of visible subsections have more than one block type', () => {
       expect(validators.hasDiverseSequences({ total_visible: 10, num_with_one_block_type: 3 }))
+        .toEqual(false);
+    });
+
+    it('return false if < 0 visible subsections', () => {
+      expect(validators.hasDiverseSequences({ total_visible: -1, num_with_one_block_type: 1 }))
         .toEqual(false);
     });
   });
