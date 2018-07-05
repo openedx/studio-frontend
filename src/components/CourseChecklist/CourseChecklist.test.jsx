@@ -1,13 +1,17 @@
-import { Icon } from '@edx/paragon';
+import { Icon, Hyperlink } from '@edx/paragon';
+import { IntlProvider, FormattedMessage } from 'react-intl';
 import React from 'react';
 
 import CourseChecklist from '.';
 import getFilteredChecklist from '../../utils/CourseChecklist/getFilteredChecklist';
 import getValidatedValue from '../../utils/CourseChecklist/getValidatedValue';
+import messages from './displayMessages';
 import { shallowWithIntl } from '../../utils/i18n/enzymeHelper';
+import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
+
 
 // generating test checklist to avoid relying on actual data
-const testChecklistData = ['a', 'b', 'c', 'd'].reduce(((accumulator, currentValue) => { accumulator.push({ id: currentValue, shortDescription: currentValue, longDescription: currentValue }); return accumulator; }), []);
+const testChecklistData = ['welcomeMessage', 'gradingPolicy', 'certificate', 'courseDates', 'assignmentDeadlines'].reduce(((accumulator, currentValue) => { accumulator.push({ id: currentValue }); return accumulator; }), []);
 
 /**
  * generating test validated values to mock the implementation
@@ -36,6 +40,9 @@ getFilteredChecklist.mockImplementation(
   dataList => (dataList),
 );
 
+const intlProvider = new IntlProvider({ locale: 'en', messages: {} }, {});
+const { intl } = intlProvider.getChildContext();
+
 let wrapper;
 
 const testData = {
@@ -46,9 +53,18 @@ const testData = {
 
 const defaultProps = {
   data: testData,
-  dataHeading: 'test',
+  dataHeading: <WrappedMessage message="test" />,
   dataList: testChecklistData,
+  idPrefix: 'test',
+  links: {
+    course_updates: 'welcomeMessageTest',
+    grading_policy: 'gradingPolicyTest',
+    certificates: 'certificatesTest',
+    settings: 'settingsTest',
+  },
 };
+
+const getCompletionCountID = () => (`${defaultProps.idPrefix.split(/\s/).join('-')}-completion-count`);
 
 describe('CourseChecklist', () => {
   describe('renders', () => {
@@ -58,14 +74,14 @@ describe('CourseChecklist', () => {
       const heading = wrapper.find('h3').at(0);
       expect(heading).toHaveLength(1);
 
-      expect(heading.text()).toEqual(defaultProps.dataHeading);
+      expect(heading.containsMatchingElement(defaultProps.dataHeading)).toEqual(true);
     });
 
     it('a heading with correct props', () => {
       wrapper = shallowWithIntl(<CourseChecklist {...defaultProps} />);
 
       const heading = wrapper.find('h3');
-      expect(heading.find('span').prop('id')).toEqual(`${defaultProps.dataHeading}-heading`);
+      expect(heading.prop('aria-describedby')).toEqual(getCompletionCountID());
     });
 
     it('completion count text', () => {
@@ -74,16 +90,24 @@ describe('CourseChecklist', () => {
       const completed = Object.values(validatedValues).filter(value => value).length;
       const total = Object.values(validatedValues).length;
 
-      const completionCount = wrapper.find('#completion-count');
+      const completionCount = wrapper.find('.row .col').at(1).find(WrappedMessage);
+
       expect(completionCount).toHaveLength(1);
-      expect(completionCount.text()).toEqual(`${completed}/${total} completed`);
+      expect(completionCount.prop('message')).toEqual(messages.completionCountLabel);
+      expect(completionCount.prop('values').completed).toEqual(completed);
+      expect(completionCount.prop('values').total).toEqual(total);
     });
 
     it('a completion count with correct props', () => {
       wrapper = shallowWithIntl(<CourseChecklist {...defaultProps} />);
 
-      const completionCount = wrapper.find('#completion-count');
-      expect(completionCount.prop('aria-describedby')).toEqual(`${defaultProps.dataHeading}-heading`);
+      const completionCountSection = wrapper.find('.row .col').at(1).find(WrappedMessage);
+
+      const completionCount = completionCountSection.dive({ context: { intl } })
+        .dive({ context: { intl } }).find(FormattedMessage)
+        .dive({ context: { intl } });
+
+      expect(completionCount.prop('id')).toEqual(getCompletionCountID());
     });
 
     describe('checks with', () => {
@@ -95,7 +119,7 @@ describe('CourseChecklist', () => {
       });
 
       testChecklistData.forEach((check) => {
-        describe(`check with id ${check.id}`, () => {
+        describe(`check with id '${check.id}'`, () => {
           wrapper = shallowWithIntl(<CourseChecklist {...defaultProps} />);
           const checkItem = wrapper.find(`#checklist-item-${check.id}`);
 
@@ -104,7 +128,13 @@ describe('CourseChecklist', () => {
           });
 
           it('has correct icon', () => {
-            const icon = checkItem.find(Icon);
+            const iconSection = checkItem.find(WrappedMessage).at(0);
+
+            const icon = iconSection.dive({ context: { intl } })
+              .dive({ context: { intl } })
+              .find(FormattedMessage)
+              .dive({ context: { intl } })
+              .find(Icon);
 
             expect(icon).toHaveLength(1);
             expect(icon.prop('id')).toEqual(`icon-${check.id}`);
@@ -124,12 +154,40 @@ describe('CourseChecklist', () => {
 
           it('has correct short description', () => {
             expect(checkItem
-              .containsMatchingElement(<div>{check.shortDescription}</div>)).toEqual(true);
+              .containsMatchingElement(<div><WrappedMessage message={messages[`${check.id}ShortDescription`]} /></div>)).toEqual(true);
           });
 
           it('has correct long description', () => {
             expect(checkItem
-              .containsMatchingElement(<div>{check.longDescription}</div>)).toEqual(true);
+              .containsMatchingElement(<div><WrappedMessage message={messages[`${check.id}longDescription`]} /></div>)).toEqual(true);
+          });
+
+          describe('has correct link', () => {
+            const shouldShowLink = wrapper.instance().shouldShowUpdateLink(check.id);
+
+            if (shouldShowLink) {
+              it('with a Hyperlink', () => {
+                const updateLink = checkItem.find(Hyperlink);
+
+                expect(updateLink).toHaveLength(1);
+              });
+
+              it('a Hyperlink with correct props', () => {
+                const updateLink = checkItem.find(Hyperlink);
+                expect(updateLink.prop('className')).toEqual(expect.stringContaining('btn'));
+                expect(updateLink.prop('className')).toEqual(expect.stringContaining('btn-primary'));
+                expect(updateLink.prop('className')).toEqual(expect.stringContaining('checklist-item-link'));
+
+                const updateLinkContent = shallowWithIntl(updateLink.prop('content'), { context: { intl } });
+                expect(updateLinkContent.prop('message')).toEqual(messages.updateLinkLabel);
+              });
+            } else {
+              it('without a Hyperlink', () => {
+                const updateLink = checkItem.find(Hyperlink);
+
+                expect(updateLink).toHaveLength(0);
+              });
+            }
           });
         });
       });
@@ -139,25 +197,30 @@ describe('CourseChecklist', () => {
   describe('behaves', () => {
     const emptyProps = {
       data: {},
-      dataHeading: '',
+      dataHeading: <WrappedMessage message="" />,
       dataList: [],
+      idPrefix: '',
+      links: {
+        course_updates: '',
+        grading_policy: '',
+        certificates: '',
+        settings: '',
+      },
     };
 
     it('has correct intitial state', () => {
       wrapper = shallowWithIntl(<CourseChecklist {...emptyProps} />);
 
-      expect(wrapper.state('headingID')).toEqual('');
       expect(wrapper.state('checks')).toEqual([]);
-      expect(wrapper.state('totalChecks')).toEqual(0);
+      expect(wrapper.state('totalCompletedChecks')).toEqual(0);
       expect(wrapper.state('values')).toEqual({});
     });
 
     it('has correct state after componentWillMount', () => {
       wrapper = shallowWithIntl(<CourseChecklist {...defaultProps} />);
 
-      expect(wrapper.state('headingID')).toEqual(`${defaultProps.dataHeading.split(/\s/).join('-')}-heading`);
       expect(wrapper.state('checks')).toEqual(defaultProps.dataList);
-      expect(wrapper.state('totalChecks')).toEqual(Object.values(validatedValues).filter(value => value).length);
+      expect(wrapper.state('totalCompletedChecks')).toEqual(Object.values(validatedValues).filter(value => value).length);
       expect(wrapper.state('values')).toEqual(validatedValues);
     });
 
@@ -168,10 +231,13 @@ describe('CourseChecklist', () => {
         ...defaultProps,
       });
 
-      expect(wrapper.state('headingID')).toEqual('');
       expect(wrapper.state('checks')).toEqual(defaultProps.dataList);
-      expect(wrapper.state('totalChecks')).toEqual(Object.values(validatedValues).filter(value => value).length);
+      expect(wrapper.state('totalCompletedChecks')).toEqual(Object.values(validatedValues).filter(value => value).length);
       expect(wrapper.state('values')).toEqual(validatedValues);
+    });
+
+    it('getUpdateLinkDestination returns null for unknown checklist item', () => {
+      expect(wrapper.instance().getUpdateLinkDestination('test')).toBeNull();
     });
   });
 });

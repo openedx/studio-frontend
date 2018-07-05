@@ -1,9 +1,15 @@
 @import 'edx-bootstrap';
+@import "~bootstrap/scss/_buttons";
+@import "~bootstrap/scss/utilities/_screenreaders";
 
-$dark-color: theme-color("dark");
+$light-color: theme-color("light");
 $lightest-color: theme-color("lightest");
 $primary-color: theme-color("primary");
 $success-color: theme-color("success");
+
+.checklist-item-link {
+  text-decoration: none;
+}
 
 //complete checklist item style
 .checklist-item-complete {
@@ -19,7 +25,7 @@ $success-color: theme-color("success");
   box-shadow: -5px 0 0 0 $lightest-color;
 
   .checklist-icon-incomplete {
-    color: $dark-color;
+    color: $light-color;
   }
 
   &:hover {
@@ -29,16 +35,4 @@ $success-color: theme-color("success");
       color: $primary-color;
     }
   }
-}
-
-.font-large {
-  font-size: $font-size-lg;
-}
-
-.font-small {
-  font-size: $font-size-sm;
-}
-
-.font-extra-large {
-  font-size: 1.5*$font-size-base;
 }

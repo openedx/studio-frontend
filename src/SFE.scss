@@ -137,3 +137,15 @@ input[type="search"] {
 .modal-footer {
   flex: 0 0 auto;
 }
+
+.font-small {
+  font-size: $font-size-sm;
+}
+
+.font-large {
+  font-size: $font-size-lg;
+}
+
+.font-extra-large {
+  font-size: 1.5*$font-size-base;
+}
