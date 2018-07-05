@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import CourseChecklist from '.';
 
 const mapStateToProps = state => ({
-  links: state.studioDetails.links,
+  studioDetails: state.studioDetails,
 });
 
 const mapDispatchToProps = () => ({});

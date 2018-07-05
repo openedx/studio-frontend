@@ -3,6 +3,7 @@ import { IntlProvider, FormattedMessage, FormattedNumber } from 'react-intl';
 import React from 'react';
 
 import CourseChecklist from '.';
+import { courseDetails } from '../../utils/testConstants';
 import getFilteredChecklist from '../../utils/CourseChecklist/getFilteredChecklist';
 import getValidatedValue from '../../utils/CourseChecklist/getValidatedValue';
 import messages from './displayMessages';
@@ -43,6 +44,10 @@ getFilteredChecklist.mockImplementation(
 const intlProvider = new IntlProvider({ locale: 'en', messages: {} }, {});
 const { intl } = intlProvider.getChildContext();
 
+global.analytics = {
+  track: () => {},
+};
+
 let wrapper;
 
 const testData = {
@@ -61,12 +66,16 @@ const defaultProps = {
   dataHeading: <WrappedMessage message="test" />,
   dataList: testChecklistData,
   idPrefix: 'test',
-  links: {
-    certificates: 'certificatesTest',
-    course_outline: 'courseOutlineTest',
-    course_updates: 'welcomeMessageTest',
-    grading_policy: 'gradingPolicyTest',
-    settings: 'settingsTest',
+  studioDetails: {
+    course: courseDetails,
+    enable_quality: true,
+    links: {
+      certificates: 'certificatesTest',
+      course_outline: 'courseOutlineTest',
+      course_updates: 'welcomeMessageTest',
+      grading_policy: 'gradingPolicyTest',
+      settings: 'settingsTest',
+    },
   },
 };
 
@@ -368,9 +377,23 @@ describe('CourseChecklist', () => {
               content === assignmentsWithDatesBeforeStart[0].display_name).toEqual(true);
 
             const destination = assignmentLink.prop('destination');
-            expect(destination === `${defaultProps.links.course_outline}#${assignmentsWithDatesAfterEnd[0].id}` ||
-              destination === `${defaultProps.links.course_outline}#${assignmentsWithDatesBeforeStart[0].id}`).toEqual(true);
+            expect(destination === `${defaultProps.studioDetails.links.course_outline}#${assignmentsWithDatesAfterEnd[0].id}` ||
+              destination === `${defaultProps.studioDetails.links.course_outline}#${assignmentsWithDatesBeforeStart[0].id}`).toEqual(true);
           });
+        });
+
+        it('calls trackEvent when an assignment Hyperlink is clicked', () => {
+          const comment = wrapper.find('#checklist-item-assignmentDeadlines').find('[data-identifier="comment"]');
+
+          const assignmentList = comment.find('ul');
+          const assignments = assignmentList.find('li');
+
+          const assignmentLink = assignments.find(Hyperlink).at(0);
+          const trackEventSpy = jest.fn();
+          global.analytics.track = trackEventSpy;
+
+          assignmentLink.simulate('click');
+          expect(trackEventSpy).toHaveBeenCalledTimes(1);
         });
       });
     });
@@ -382,11 +405,16 @@ describe('CourseChecklist', () => {
       dataHeading: <WrappedMessage message="" />,
       dataList: [],
       idPrefix: '',
-      links: {
-        course_updates: '',
-        grading_policy: '',
-        certificates: '',
-        settings: '',
+      studioDetails: {
+        course: courseDetails,
+        enable_quality: true,
+        links: {
+          certificates: '',
+          course_outline: '',
+          course_updates: '',
+          grading_policy: '',
+          settings: '',
+        },
       },
     };
 
@@ -424,6 +452,17 @@ describe('CourseChecklist', () => {
 
     it('getCommentSection returns null for unknown checklist item id', () => {
       expect(wrapper.instance().getCommentSection('test')).toBeNull();
+    });
+
+    it('calls trackEvent when an update link is clicked', () => {
+      wrapper = shallowWithIntl(<CourseChecklist {...defaultProps} />);
+
+      const updateLink = wrapper.find(Hyperlink).at(0);
+      const trackEventSpy = jest.fn();
+      global.analytics.track = trackEventSpy;
+
+      updateLink.simulate('click');
+      expect(trackEventSpy).toHaveBeenCalledTimes(1);
     });
   });
 });
