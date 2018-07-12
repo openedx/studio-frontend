@@ -29,23 +29,23 @@ describe('Course Checklist Action Creators', () => {
     fetchMock.restore();
   });
 
-  it('returns expected state from requestCourseQualitySuccess', () => {
+  it('returns expected state from requestCourseBestPracticesSuccess', () => {
     response = 'response';
     const expectedAction =
-    { type: courseChecklistActions.request.REQUEST_COURSE_QUALITY_SUCCESS, response };
-    expect(store.dispatch(actionCreators.requestCourseQualitySuccess(response)))
+    { type: courseChecklistActions.request.REQUEST_COURSE_BEST_PRACTICES_SUCCESS, response };
+    expect(store.dispatch(actionCreators.requestCourseBestPracticesSuccess(response)))
       .toEqual(expectedAction);
   });
 
-  it('returns expected state from requestCourseQualityFailure', () => {
+  it('returns expected state from requestCourseBestPracticesFailure', () => {
     response = 'response';
     const expectedAction =
-      { type: courseChecklistActions.request.REQUEST_COURSE_QUALITY_FAILURE, response };
-    expect(store.dispatch(actionCreators.requestCourseQualityFailure(response)))
+      { type: courseChecklistActions.request.REQUEST_COURSE_BEST_PRACTICES_FAILURE, response };
+    expect(store.dispatch(actionCreators.requestCourseBestPracticesFailure(response)))
       .toEqual(expectedAction);
   });
 
-  it('returns expected state from getCourseQuality success', () => {
+  it('returns expected state from getCourseBestPractices success', () => {
     const requestParameters = {};
     response = {
       success: 'Success',
@@ -53,16 +53,16 @@ describe('Course Checklist Action Creators', () => {
 
     fetchMock.once(`begin:${courseBestPracticesEndpoint}`, response);
     const expectedActions = [
-      { type: courseChecklistActions.request.REQUEST_COURSE_QUALITY_SUCCESS, response },
+      { type: courseChecklistActions.request.REQUEST_COURSE_BEST_PRACTICES_SUCCESS, response },
     ];
-    return store.dispatch(actionCreators.getCourseQuality(requestParameters, courseDetails))
+    return store.dispatch(actionCreators.getCourseBestPractices(requestParameters, courseDetails))
       .then(() => {
         // return of async actions
         expect(store.getActions()).toEqual(expectedActions);
       });
   });
 
-  it('returns expected state from getCourseQuality failure', () => {
+  it('returns expected state from getCourseBestPractices failure', () => {
     const requestParameters = {};
     response = {
       status: 400,
@@ -74,38 +74,38 @@ describe('Course Checklist Action Creators', () => {
     fetchMock.once(`begin:${courseBestPracticesEndpoint}`, response);
     const expectedActions = [
       {
-        type: courseChecklistActions.request.REQUEST_COURSE_QUALITY_FAILURE,
+        type: courseChecklistActions.request.REQUEST_COURSE_BEST_PRACTICES_FAILURE,
         response: errorResponse,
       },
     ];
 
     store = mockStore(initialState);
-    return store.dispatch(actionCreators.getCourseQuality(requestParameters, courseDetails))
+    return store.dispatch(actionCreators.getCourseBestPractices(requestParameters, courseDetails))
       .then(() => {
       // return of async actions
         expect(store.getActions()).toEqual(expectedActions);
       });
   });
 
-  it('returns expected state from requestCourseValidationSuccess', () => {
+  it('returns expected state from requestCourseLaunchSuccess', () => {
     response = 'response';
 
     const expectedAction =
-      { type: courseChecklistActions.request.REQUEST_COURSE_VALIDATION_SUCCESS, response };
-    expect(store.dispatch(actionCreators.requestCourseValidationSuccess(response)))
+      { type: courseChecklistActions.request.REQUEST_COURSE_LAUNCH_SUCCESS, response };
+    expect(store.dispatch(actionCreators.requestCourseLaunchSuccess(response)))
       .toEqual(expectedAction);
   });
 
-  it('returns expected state from requestCourseValidationFailure', () => {
+  it('returns expected state from requestCourseLaunchFailure', () => {
     response = 'response';
 
     const expectedAction =
-      { type: courseChecklistActions.request.REQUEST_COURSE_VALIDATION_FAILURE, response };
-    expect(store.dispatch(actionCreators.requestCourseValidationFailure(response)))
+      { type: courseChecklistActions.request.REQUEST_COURSE_LAUNCH_FAILURE, response };
+    expect(store.dispatch(actionCreators.requestCourseLaunchFailure(response)))
       .toEqual(expectedAction);
   });
 
-  it('returns expected state from getCourseValidation success', () => {
+  it('returns expected state from getCourseLaunch success', () => {
     const requestParameters = {};
     response = {
       success: 'Success',
@@ -113,16 +113,16 @@ describe('Course Checklist Action Creators', () => {
 
     fetchMock.once(`begin:${courseLaunchEndpoint}`, response);
     const expectedActions = [
-      { type: courseChecklistActions.request.REQUEST_COURSE_VALIDATION_SUCCESS, response },
+      { type: courseChecklistActions.request.REQUEST_COURSE_LAUNCH_SUCCESS, response },
     ];
-    return store.dispatch(actionCreators.getCourseValidation(requestParameters, courseDetails))
+    return store.dispatch(actionCreators.getCourseLaunch(requestParameters, courseDetails))
       .then(() => {
         // return of async actions
         expect(store.getActions()).toEqual(expectedActions);
       });
   });
 
-  it('returns expected state from getCourseValidation failure', () => {
+  it('returns expected state from getCourseLaunch failure', () => {
     const requestParameters = {};
     response = {
       status: 400,
@@ -134,13 +134,13 @@ describe('Course Checklist Action Creators', () => {
     fetchMock.once(`begin:${courseLaunchEndpoint}`, response);
     const expectedActions = [
       {
-        type: courseChecklistActions.request.REQUEST_COURSE_VALIDATION_FAILURE,
+        type: courseChecklistActions.request.REQUEST_COURSE_LAUNCH_FAILURE,
         response: errorResponse,
       },
     ];
 
     store = mockStore(initialState);
-    return store.dispatch(actionCreators.getCourseValidation(requestParameters, courseDetails))
+    return store.dispatch(actionCreators.getCourseLaunch(requestParameters, courseDetails))
       .then(() => {
       // return of async actions
         expect(store.getActions()).toEqual(expectedActions);

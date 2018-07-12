@@ -29,8 +29,8 @@ export default class CourseOutlineStatus extends React.Component {
   }
 
   componentDidMount() {
-    this.props.getCourseQuality({ exclude_graded: true }, this.props.studioDetails.course);
-    this.props.getCourseValidation({}, this.props.studioDetails.course);
+    this.props.getCourseBestPractices({ exclude_graded: true }, this.props.studioDetails.course);
+    this.props.getCourseLaunch({ graded_only: true }, this.props.studioDetails.course);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -103,8 +103,7 @@ export default class CourseOutlineStatus extends React.Component {
         <div className={styles['status-checklist']}>
           <h2 className={styles['status-checklist-label']}>Checklists</h2>
           <div>
-            <a href={`/checklists/${this.props.studioDetails.course.id}`} className={classNames(styles['text-info'], styles['status-checklist-value'])}>{totalCompleteChecks}/{totalChecks} complete</a>
-          </div>
+            <a href={`/checklists/${this.props.studioDetails.course.id}`} className={classNames(styles['text-info'], styles['status-checklist-value'])}>{totalCompleteChecks}/{totalChecks} complete</a>          </div>
         </div>
       </React.Fragment>
     );
@@ -131,8 +130,8 @@ CourseOutlineStatus.propTypes = {
     help_tokens: PropTypes.objectOf(PropTypes.string),
     lang: PropTypes.string,
   }).isRequired,
-  getCourseQuality: PropTypes.func.isRequired,
-  getCourseValidation: PropTypes.func.isRequired,
+  getCourseBestPractices: PropTypes.func.isRequired,
+  getCourseLaunch: PropTypes.func.isRequired,
   courseBestPracticesData: PropTypes.shape({
     sections: PropTypes.shape({
       number_with_highlights: PropTypes.number,

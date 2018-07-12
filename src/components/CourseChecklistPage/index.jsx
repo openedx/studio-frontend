@@ -8,8 +8,8 @@ import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
 
 export default class CourseChecklistPage extends React.Component {
   componentDidMount() {
-    this.props.getCourseQuality({ exclude_graded: true }, this.props.studioDetails.course);
-    this.props.getCourseValidation({}, this.props.studioDetails.course);
+    this.props.getCourseBestPractices({ exclude_graded: true }, this.props.studioDetails.course);
+    this.props.getCourseLaunch({ graded_only: true }, this.props.studioDetails.course);
   }
 
   render() {
@@ -58,8 +58,8 @@ CourseChecklistPage.propTypes = {
     help_tokens: PropTypes.objectOf(PropTypes.string),
     lang: PropTypes.string,
   }).isRequired,
-  getCourseQuality: PropTypes.func.isRequired,
-  getCourseValidation: PropTypes.func.isRequired,
+  getCourseBestPractices: PropTypes.func.isRequired,
+  getCourseLaunch: PropTypes.func.isRequired,
   courseBestPracticesData: PropTypes.shape({
     sections: PropTypes.shape({
       number_with_highlights: PropTypes.number,

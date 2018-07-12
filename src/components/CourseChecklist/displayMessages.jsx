@@ -21,6 +21,11 @@ const messages = defineMessages({
     defaultMessage: 'Establish your grading policy, including assignment types and passing score. All assignments add up to 100%.',
     description: 'Description for a section that prompts a user to enter a grading policy for a course',
   },
+  gradingPolicyComment: {
+    id: 'gradingPolicyComment',
+    defaultMessage: 'Your current grading policy adds up to {percent}%.',
+    description: 'Description for a section that displays a course\'s grading policy total',
+  },
   certificateShortDescription: {
     id: 'certificateShortDescription',
     defaultMessage: 'Enable Your Certificate',
@@ -50,6 +55,11 @@ const messages = defineMessages({
     id: 'assignmentDeadlinesLongDescription',
     defaultMessage: 'Ensure all assignment deadlines are between course start and end dates.',
     description: 'Description for a section that prompts a user to enter course assignment deadlines',
+  },
+  assignmentDeadlinesComment: {
+    id: 'assignmentDeadlinesComment',
+    defaultMessage: 'The following assignments have deadlines that do not fall between course start and end date:',
+    description: 'Description for a section that displays which assignments are outside of a course\'s start and end date',
   },
   videoDurationShortDescription: {
     id: 'videoDurationShortDescription',

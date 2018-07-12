@@ -7,11 +7,11 @@ let state;
 
 describe('Course Checklist Reducers', () => {
   describe('courseBestPractices reducer', () => {
-    it('returns correct state for REQUEST_COURSE_QUALITY_SUCCESS action', () => {
+    it('returns correct state for REQUEST_COURSE_BEST_PRACTICES_SUCCESS action', () => {
       defaultState = {};
 
       action = {
-        type: courseChecklistActions.request.REQUEST_COURSE_QUALITY_SUCCESS,
+        type: courseChecklistActions.request.REQUEST_COURSE_BEST_PRACTICES_SUCCESS,
         response: 'response',
       };
 
@@ -22,11 +22,11 @@ describe('Course Checklist Reducers', () => {
   });
 
   describe('courseLaunch reducer', () => {
-    it('returns correct state for REQUEST_COURSE_VALIDATION_SUCCESS action', () => {
+    it('returns correct state for REQUEST_COURSE_LAUNCH_SUCCESS action', () => {
       defaultState = {};
 
       action = {
-        type: courseChecklistActions.request.REQUEST_COURSE_VALIDATION_SUCCESS,
+        type: courseChecklistActions.request.REQUEST_COURSE_LAUNCH_SUCCESS,
         response: 'response',
       };
 

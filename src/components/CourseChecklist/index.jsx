@@ -1,6 +1,7 @@
 import classNames from 'classnames';
 import { elementType } from 'airbnb-prop-types';
 import FontAwesomeStyles from 'font-awesome/css/font-awesome.min.css';
+import { FormattedNumber } from 'react-intl';
 import { Hyperlink, Icon } from '@edx/paragon';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -65,16 +66,17 @@ class CourseChecklist extends React.Component {
     return (
       <WrappedMessage message={message}>
         {displayText => (
-          <Icon
-            className={[classNames(
-              'm-4 col-1',
-              FontAwesomeStyles.fa,
-              FontAwesomeStyles['fa-2x'],
-              this.getCompletionIconClassNames(isCompleted)),
-            ]}
-            id={`icon-${checkID}`}
-            screenReaderText={displayText}
-          />
+          <div className="text-center">
+            <Icon
+              className={[classNames(
+                FontAwesomeStyles.fa,
+                FontAwesomeStyles['fa-2x'],
+                this.getCompletionIconClassNames(isCompleted)),
+              ]}
+              id={`icon-${checkID}`}
+              screenReaderText={displayText}
+            />
+          </div>
         )
         }
       </WrappedMessage>
@@ -114,7 +116,7 @@ class CourseChecklist extends React.Component {
   getUpdateLink = checkID => (
     <div className="col-1">
       <Hyperlink
-        className={classNames(styles.btn, styles['btn-primary'], styles['checklist-item-link'])}
+        className={classNames('px-3', styles.btn, styles['btn-primary'], styles['checklist-item-link'])}
         content={<WrappedMessage message={messages.updateLinkLabel} />}
         destination={this.getUpdateLinkDestination(checkID)}
       />
@@ -124,29 +126,140 @@ class CourseChecklist extends React.Component {
   getListItems = () => (
     this.state.checks.map((check) => {
       const isCompleted = this.isCheckCompleted(check.id);
+      const shouldShowCommentSection = this.shouldShowCommentSection(check.id);
 
       return (
         <div
           className={classNames(
-            'bg-white border my-1 py-4',
+            'bg-white border my-2',
+            { 'pt-4': shouldShowCommentSection, 'py-4': !shouldShowCommentSection },
             this.getChecklistItemColorClassName(isCompleted),
             styles['checklist-item'])
           }
           id={`checklist-item-${check.id}`}
           key={check.id}
         >
-          <div className="row no-gutters">
-            {this.getCompletionIcon(check.id)}
+          <div className="align-items-center no-gutters row">
+            <div className="col-1">
+              {this.getCompletionIcon(check.id)}
+            </div>
             <div className="col">
               {this.getShortDescription(check.id)}
               {this.getLongDescription(check.id)}
             </div>
             {this.shouldShowUpdateLink(check.id) ? this.getUpdateLink(check.id) : null}
           </div>
+          {shouldShowCommentSection ? this.getCommentSection(check.id) : null}
         </div>
       );
     })
   );
+
+  getCommentSectionIcon = () => (
+    <div className="text-center">
+      <Icon
+        className={[classNames(
+          FontAwesomeStyles.fa,
+          FontAwesomeStyles['fa-lg'],
+          FontAwesomeStyles['fa-comment'],
+          styles['comment-icon'],
+        )]
+        }
+      />
+    </div>
+  );
+
+  getGradingPolicyCommentSection = () => (
+    this.getComment(
+      <WrappedMessage
+        message={messages.gradingPolicyComment}
+        values={{
+          percent: <FormattedNumber
+            maximumFractionDigits={2}
+            minimumFractionDigits={2}
+            value={(this.props.data.grades.sum_of_weights * 100).toFixed(2)}
+          />,
+        }}
+      />,
+    )
+  );
+
+  getAssignmentDeadlineCommentSection = () => {
+    const gradedAssignmentsOutsideDateRange = [].concat(
+      this.props.data.assignments.assignments_with_dates_before_start,
+      this.props.data.assignments.assignments_with_dates_after_end,
+    );
+
+    const message = (
+      <React.Fragment>
+        <WrappedMessage message={messages.assignmentDeadlinesComment} />
+        <ul className={styles['assignment-list']}>
+          {
+            gradedAssignmentsOutsideDateRange.map(assignment => (
+              <li className={classNames(styles['assignment-list-item'], 'pr-2')} key={assignment.id}>
+                <Hyperlink content={assignment.display_name} destination={`${this.props.links.course_outline}#${assignment.id}`} />
+              </li>
+            ))
+          }
+        </ul>
+      </React.Fragment>
+    );
+
+    return this.getComment(message);
+  }
+
+  getCommentSection = (checkID) => {
+    switch (checkID) {
+      case 'gradingPolicy': return this.getGradingPolicyCommentSection();
+      case 'assignmentDeadlines': return this.getAssignmentDeadlineCommentSection();
+      default: return null;
+    }
+  }
+
+  getComment = comment => (
+    <div className={classNames('align-items-center no-gutters border-top mt-4 row')} data-identifier="comment">
+      <div className="col-1">
+        {this.getCommentSectionIcon()}
+      </div>
+      <div className="col my-4 font-small">
+        {comment}
+      </div>
+    </div>
+  )
+
+  isCheckCompleted = checkID => (this.state.values[checkID])
+
+  shouldShowUpdateLink = (checkID) => {
+    switch (checkID) {
+      case 'welcomeMessage': return true;
+      case 'gradingPolicy': return true;
+      case 'certificate': return true;
+      case 'courseDates': return true;
+      default: return false;
+    }
+  }
+
+  shouldShowGradingPolicyCommentSection = () => (
+    Object.keys(this.props.data).length > 0 && this.props.data.grades.sum_of_weights !== 1
+  )
+
+  shouldShowAssignmentDeadlinesCommentSection = () => (
+    Object.keys(this.props.data).length > 0 &&
+    (
+      this.props.data.assignments.assignments_with_dates_before_start.length > 0 ||
+      this.props.data.assignments.assignments_with_dates_after_end.length > 0
+    )
+  )
+
+  shouldShowCommentSection = (checkID) => {
+    if (checkID === 'gradingPolicy' && this.shouldShowGradingPolicyCommentSection()) {
+      return true;
+    } else if (checkID === 'assignmentDeadlines' && this.shouldShowAssignmentDeadlinesCommentSection()) {
+      return true;
+    }
+
+    return false;
+  }
 
   updateChecklistState(props) {
     if (Object.keys(props.data).length > 0) {
@@ -171,18 +284,6 @@ class CourseChecklist extends React.Component {
         totalCompletedChecks,
         values,
       });
-    }
-  }
-
-  isCheckCompleted = checkID => (this.state.values[checkID])
-
-  shouldShowUpdateLink = (checkID) => {
-    switch (checkID) {
-      case 'welcomeMessage': return true;
-      case 'gradingPolicy': return true;
-      case 'certificate': return true;
-      case 'courseDates': return true;
-      default: return false;
     }
   }
 
@@ -242,9 +343,8 @@ CourseChecklist.propTypes = {
       assignments: PropTypes.shape({
         total_number: PropTypes.number,
         total_visible: PropTypes.number,
-        num_with_dates_before_end: PropTypes.number,
-        num_with_dates: PropTypes.number,
-        num_with_dates_after_start: PropTypes.number,
+        assignments_with_dates_before_start: PropTypes.array,
+        assignments_with_dates_after_end: PropTypes.array,
       }),
       dates: PropTypes.shape({
         has_start_date: PropTypes.bool,

@@ -1,5 +1,5 @@
 import { Icon, Hyperlink } from '@edx/paragon';
-import { IntlProvider, FormattedMessage } from 'react-intl';
+import { IntlProvider, FormattedMessage, FormattedNumber } from 'react-intl';
 import React from 'react';
 
 import CourseChecklist from '.';
@@ -46,8 +46,13 @@ const { intl } = intlProvider.getChildContext();
 let wrapper;
 
 const testData = {
-  data: {
-    is_self_paced: true,
+  assignments: {
+    assignments_with_dates_after_end: [],
+    assignments_with_dates_before_start: [],
+  },
+  is_self_paced: true,
+  grades: {
+    sum_of_weights: 1,
   },
 };
 
@@ -57,9 +62,10 @@ const defaultProps = {
   dataList: testChecklistData,
   idPrefix: 'test',
   links: {
+    certificates: 'certificatesTest',
+    course_outline: 'courseOutlineTest',
     course_updates: 'welcomeMessageTest',
     grading_policy: 'gradingPolicyTest',
-    certificates: 'certificatesTest',
     settings: 'settingsTest',
   },
 };
@@ -192,6 +198,182 @@ describe('CourseChecklist', () => {
         });
       });
     });
+
+    describe('welcomeMessage check with', () => {
+      it('no comment section', () => {
+        wrapper = shallowWithIntl(<CourseChecklist {...defaultProps} />);
+        const comment = wrapper.find('#checklist-item-welcomeMessage').find('[data-identifier="comment"]');
+
+        expect(comment).toHaveLength(0);
+      });
+    });
+    describe('gradingPolicy check with', () => {
+      it('no comment section if sum of weights is equal to 1', () => {
+        wrapper = shallowWithIntl(<CourseChecklist {...defaultProps} />);
+        const comment = wrapper.find('#checklist-item-gradingPolicy').find('[data-identifier="comment"]');
+
+        expect(comment).toHaveLength(0);
+      });
+
+      describe('a comment section with', () => {
+        const sumOfWeights = 0.5;
+
+        beforeEach(() => {
+          wrapper = shallowWithIntl(<CourseChecklist {...defaultProps} />);
+
+          const newProps = {
+            ...defaultProps,
+          };
+          newProps.data.grades.sum_of_weights = sumOfWeights;
+
+          wrapper.setProps({
+            newProps,
+          });
+        });
+
+        it('a comment section if sum of weights is not equal to 1', () => {
+          const comment = wrapper.find('#checklist-item-gradingPolicy').find('[data-identifier="comment"]');
+
+          expect(comment).toHaveLength(1);
+        });
+
+        it('a comment section with a comment icon', () => {
+          const comment = wrapper.find('#checklist-item-gradingPolicy').find('[data-identifier="comment"]');
+
+          const icon = comment.find(Icon);
+
+          expect(icon).toHaveLength(1);
+        });
+
+        it('a comment section with correct props', () => {
+          const comment = wrapper.find('#checklist-item-gradingPolicy').find('[data-identifier="comment"]');
+
+          const icon = comment.find(Icon);
+
+          expect(icon.prop('className')[0]).toEqual(expect.stringContaining('fa'));
+          expect(icon.prop('className')[0]).toEqual(expect.stringContaining('fa-lg'));
+          expect(icon.prop('className')[0]).toEqual(expect.stringContaining('fa-comment'));
+          expect(icon.prop('className')[0]).toEqual(expect.stringContaining('comment'));
+        });
+
+        it('a comment section with correct message', () => {
+          const comment = wrapper.find('#checklist-item-gradingPolicy').find('[data-identifier="comment"]');
+
+          const message = comment.find(WrappedMessage);
+
+          expect(message).toHaveLength(1);
+          expect(message.prop('message')).toEqual(messages.gradingPolicyComment);
+          expect(message.prop('values').percent).toEqual(
+            <FormattedNumber
+              maximumFractionDigits={2}
+              minimumFractionDigits={2}
+              value={(sumOfWeights * 100).toFixed(2)}
+            />,
+          );
+        });
+      });
+    });
+    describe('certificate check with', () => {
+      it('no comment section', () => {
+        wrapper = shallowWithIntl(<CourseChecklist {...defaultProps} />);
+        const comment = wrapper.find('#checklist-item-certificate').find('[data-identifier="comment"]');
+
+        expect(comment).toHaveLength(0);
+      });
+    });
+    describe('courseDates check with', () => {
+      it('no comment section', () => {
+        wrapper = shallowWithIntl(<CourseChecklist {...defaultProps} />);
+        const comment = wrapper.find('#checklist-item-courseDates').find('[data-identifier="comment"]');
+
+        expect(comment).toHaveLength(0);
+      });
+    });
+    describe('assignmentDeadlines check with', () => {
+      it('no comment section if assignments with dates before start and after end are empty', () => {
+        wrapper = shallowWithIntl(<CourseChecklist {...defaultProps} />);
+        const comment = wrapper.find('#checklist-item-assignmentDeadlines').find('[data-identifier="comment"]');
+
+        expect(comment).toHaveLength(0);
+      });
+
+      describe('a comment section with', () => {
+        const assignmentsWithDatesAfterEnd = [{ display_name: 'test1', id: 'test1' }];
+        const assignmentsWithDatesBeforeStart = [{ display_name: 'test2', id: 'test2' }];
+
+        beforeEach(() => {
+          wrapper = shallowWithIntl(<CourseChecklist {...defaultProps} />);
+
+          const newProps = {
+            ...defaultProps,
+          };
+          newProps.data.assignments.assignments_with_dates_after_end =
+            assignmentsWithDatesAfterEnd;
+          newProps.data.assignments.assignments_with_dates_before_start =
+            assignmentsWithDatesBeforeStart;
+
+          wrapper.setProps({
+            newProps,
+          });
+        });
+
+        it('a comment if assignments with dates before start and after end are not empty', () => {
+          const comment = wrapper.find('#checklist-item-assignmentDeadlines').find('[data-identifier="comment"]');
+
+          expect(comment).toHaveLength(1);
+        });
+
+        it('a comment section with a comment icon', () => {
+          const comment = wrapper.find('#checklist-item-assignmentDeadlines').find('[data-identifier="comment"]');
+
+          const icon = comment.find(Icon);
+
+          expect(icon).toHaveLength(1);
+        });
+
+        it('a comment section with correct props', () => {
+          const comment = wrapper.find('#checklist-item-assignmentDeadlines').find('[data-identifier="comment"]');
+
+          const icon = comment.find(Icon);
+
+          expect(icon.prop('className')[0]).toEqual(expect.stringContaining('fa'));
+          expect(icon.prop('className')[0]).toEqual(expect.stringContaining('fa-lg'));
+          expect(icon.prop('className')[0]).toEqual(expect.stringContaining('fa-comment'));
+          expect(icon.prop('className')[0]).toEqual(expect.stringContaining('comment'));
+        });
+
+        it('a comment section with correct message', () => {
+          const comment = wrapper.find('#checklist-item-assignmentDeadlines').find('[data-identifier="comment"]');
+
+          const message = comment.find(WrappedMessage);
+
+          expect(message).toHaveLength(1);
+          expect(message.prop('message')).toEqual(messages.assignmentDeadlinesComment);
+        });
+
+        it('a comment section message with a Hyperlink for each assignment', () => {
+          const comment = wrapper.find('#checklist-item-assignmentDeadlines').find('[data-identifier="comment"]');
+
+          const assignmentList = comment.find('ul');
+          expect(assignmentList).toHaveLength(1);
+
+          const assignments = assignmentList.find('li');
+          expect(assignments).toHaveLength(
+            assignmentsWithDatesAfterEnd.length + assignmentsWithDatesBeforeStart.length,
+          );
+
+          assignments.find(Hyperlink).forEach((assignmentLink) => {
+            const content = assignmentLink.prop('content');
+            expect(content === assignmentsWithDatesAfterEnd[0].display_name ||
+              content === assignmentsWithDatesBeforeStart[0].display_name).toEqual(true);
+
+            const destination = assignmentLink.prop('destination');
+            expect(destination === `${defaultProps.links.course_outline}#${assignmentsWithDatesAfterEnd[0].id}` ||
+              destination === `${defaultProps.links.course_outline}#${assignmentsWithDatesBeforeStart[0].id}`).toEqual(true);
+          });
+        });
+      });
+    });
   });
 
   describe('behaves', () => {
@@ -236,8 +418,12 @@ describe('CourseChecklist', () => {
       expect(wrapper.state('values')).toEqual(validatedValues);
     });
 
-    it('getUpdateLinkDestination returns null for unknown checklist item', () => {
+    it('getUpdateLinkDestination returns null for unknown checklist item id', () => {
       expect(wrapper.instance().getUpdateLinkDestination('test')).toBeNull();
+    });
+
+    it('getCommentSection returns null for unknown checklist item id', () => {
+      expect(wrapper.instance().getCommentSection('test')).toBeNull();
     });
   });
 });

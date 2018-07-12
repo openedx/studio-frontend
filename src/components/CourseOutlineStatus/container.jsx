@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 
 import CourseOutlineStatus from '.';
-import { getCourseQuality, getCourseValidation } from '../../data/actions/courseChecklist';
+import { getCourseBestPractices, getCourseLaunch } from '../../data/actions/courseChecklist';
 
 const mapStateToProps = state => ({
   studioDetails: state.studioDetails,
@@ -10,10 +10,10 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  getCourseQuality: (parameters, courseDetails) =>
-    dispatch(getCourseQuality(parameters, courseDetails)),
-  getCourseValidation: (parameters, courseDetails) =>
-    dispatch(getCourseValidation(parameters, courseDetails)),
+  getCourseBestPractices: (parameters, courseDetails) =>
+    dispatch(getCourseBestPractices(parameters, courseDetails)),
+  getCourseLaunch: (parameters, courseDetails) =>
+    dispatch(getCourseLaunch(parameters, courseDetails)),
 });
 
 const WrappedCourseOutlineStatus = connect(
