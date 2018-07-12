@@ -701,7 +701,6 @@ export default class EditImageModal extends React.Component {
       {this.state.assetsPageType === pageTypes.NORMAL && (
         <div className="row mt-3 no-gutters">
           <div className="col">
-            <WrappedPagination />
           </div>
         </div>
       )}

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import ReactPaginate from 'react-paginate';
-import { Pagination } from '@edx/paragon';
+// import ReactPaginate from 'react-paginate';
+import { Pagination as ParagonPagination } from '@edx/paragon';
 
 import classNames from 'classnames';
 import paginationStyles from './Pagination.scss';
@@ -9,7 +9,7 @@ import edxBootstrap from '../../SFE.scss';
 import messages from './displayMessages';
 import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
 
-export default class Pagination2 extends React.Component {
+export default class Pagination extends React.Component {
   constructor(props) {
     super(props);
     this.onPageClick = this.onPageClick.bind(this);
@@ -17,7 +17,7 @@ export default class Pagination2 extends React.Component {
 
   onPageClick(page) {
     console.log(page);
-    this.props.updatePage(page, this.props.courseDetails);
+    this.props.updatePage(page-1, this.props.courseDetails);
   }
 
   getDisabledScreenReaderText() {
@@ -62,23 +62,24 @@ export default class Pagination2 extends React.Component {
     const totalPages = Math.ceil(totalCount / pageSize);
 
     return (
-      <Pagination
+      <ParagonPagination
+        currentPage={page + 1}
         onPageSelect={this.onPageClick}
         pageCount={totalPages}
-        paginationLabel="Hi"
+        paginationLabel={<WrappedMessage message={messages.paginationAriaLabel} />}
         buttonLabels={{
-          previous: "Previous",
-          next: "Next",
-          page: "Page",
-          currentPage: "current page",
-          pageOfCount: "of",
+          previous: <WrappedMessage message={messages.paginationPrevious} />,
+          next: <WrappedMessage message={messages.paginationNext} />,
+          page: <WrappedMessage message={messages.paginationPage} />,
+          currentPage: <WrappedMessage message={messages.paginationCurrentPage} />,
+          pageOfCount: <WrappedMessage message={messages.paginationOf} />,
         }}
       />
     );
   }
 }
 
-Pagination2.propTypes = {
+Pagination.propTypes = {
   assetsListMetadata: PropTypes.shape({
     start: PropTypes.number,
     end: PropTypes.number,
