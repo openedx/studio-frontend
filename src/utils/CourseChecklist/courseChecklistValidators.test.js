@@ -78,9 +78,22 @@ describe('courseCheckValidators utility functions', () => {
         },
       )).toEqual(true);
     });
+
     it('returns false when a course run has no start and no end date', () => {
       expect(validators.hasAssignmentDeadlines(
         {},
+        {
+          has_start_date: false,
+          has_end_date: false,
+        },
+      )).toEqual(false);
+    });
+
+    it('returns false when a course has start and end date and no assignments', () => {
+      expect(validators.hasAssignmentDeadlines(
+        {
+          total_number: 0,
+        },
         {
           has_start_date: false,
           has_end_date: false,
@@ -179,12 +192,24 @@ describe('courseCheckValidators utility functions', () => {
   });
 
   describe('hasShortUnitDepth', () => {
-    it('returns true when course run has number of blocks <= 3', () => {
-      expect(validators.hasShortUnitDepth({ num_blocks: 2 })).toEqual(true);
+    it('returns true when course run has median number of blocks <= 3', () => {
+      const units = {
+        num_blocks: {
+          median: 3,
+        },
+      };
+
+      expect(validators.hasShortUnitDepth(units)).toEqual(true);
     });
 
-    it('returns false when course run has number of blocks > 3', () => {
-      expect(validators.hasShortUnitDepth({ num_blocks: 4 })).toEqual(false);
+    it('returns false when course run has median number of blocks > 3', () => {
+      const units = {
+        num_blocks: {
+          median: 4,
+        },
+      };
+
+      expect(validators.hasShortUnitDepth(units)).toEqual(false);
     });
   });
 });
