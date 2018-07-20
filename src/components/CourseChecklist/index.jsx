@@ -129,7 +129,7 @@ class CourseChecklist extends React.Component {
     <div className="font-small">
       <WrappedMessage message={messages[`${checkID}LongDescription`]} />
     </div>
-  )
+  );
 
   getUpdateLinkDestination = (checkID) => {
     switch (checkID) {

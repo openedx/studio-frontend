@@ -6,8 +6,8 @@ const messages = defineMessages({
     defaultMessage: '{completed}/{total} completed',
     description: 'Label that describes how many tasks have been completed out of a total number of tasks',
   },
-  checklistLabel: {
-    id: 'checklistLabel',
+  checklistsStatusLabel: {
+    id: 'checklistsStatusLabel',
     defaultMessage: 'Checklists',
     description: 'Label for a section that describes a checklist',
   },
@@ -25,6 +25,26 @@ const messages = defineMessages({
     id: 'loadingIconLabel',
     defaultMessage: 'Loading',
     description: 'Label for a loading icon',
+  },
+  startDateStatusLabel: {
+    id: 'startDateStatusLabel',
+    defaultMessage: 'Start Date',
+    description: 'Header text for a section that describe\'s the date a course starts',
+  },
+  pacingTypeStatusLabel: {
+    id: 'pacingTypeStatusLabel',
+    defaultMessage: 'Pacing Type',
+    description: 'Header text for a section that describe\'s the pacing type of a course',
+  },
+  pacingTypeInstructorPaced: {
+    id: 'pacingTypeInstructorPaced',
+    defaultMessage: 'Instructor-Paced',
+    description: 'Text that describe\'s a course that follows a schedule set by an instructor',
+  },
+  pacingTypeSelfPaced: {
+    id: 'pacingTypeSelfPaced',
+    defaultMessage: 'Self-Paced',
+    description: 'Text that describe\'s a course that does not have a set schedule',
   },
 });
 
