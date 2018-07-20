@@ -6,6 +6,7 @@ import { Hyperlink, Icon } from '@edx/paragon';
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import { trackEvent } from '../../utils/analytics';
 import getFilteredChecklist from '../../utils/CourseChecklist/getFilteredChecklist';
 import getValidatedValue from '../../utils/CourseChecklist/getValidatedValue';
 import messages from './displayMessages';
@@ -21,6 +22,9 @@ class CourseChecklist extends React.Component {
       totalCompletedChecks: 0,
       values: {},
     };
+
+    this.onAssignmentHyperlinkClick = this.onAssignmentHyperlinkClick.bind(this);
+    this.onCheckUpdateHyperlinkClick = this.onCheckUpdateHyperlinkClick.bind(this);
   }
 
   componentWillMount() {
@@ -29,6 +33,26 @@ class CourseChecklist extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     this.updateChecklistState(nextProps);
+  }
+
+  onAssignmentHyperlinkClick = (assignmentID) => {
+    trackEvent(
+      'edx.bi.studio.course.checklist.invalid-assignment.clicked', {
+        category: 'click',
+        event_type: `invalid-assignment-${assignmentID}`,
+        label: this.props.studioDetails.course.id,
+      },
+    );
+  }
+
+  onCheckUpdateHyperlinkClick = (checkID) => {
+    trackEvent(
+      'edx.bi.studio.course.checklist.update.clicked', {
+        category: 'click',
+        event_type: `update-${checkID}`,
+        label: this.props.studioDetails.course.id,
+      },
+    );
   }
 
   getCompletionCountID = () => (`${this.props.idPrefix.split(/\s/).join('-')}-completion-count`);
@@ -105,10 +129,10 @@ class CourseChecklist extends React.Component {
 
   getUpdateLinkDestination = (checkID) => {
     switch (checkID) {
-      case 'welcomeMessage': return this.props.links.course_updates;
-      case 'gradingPolicy': return this.props.links.grading_policy;
-      case 'certificate': return this.props.links.certificates;
-      case 'courseDates': return `${this.props.links.settings}#schedule`;
+      case 'welcomeMessage': return this.props.studioDetails.links.course_updates;
+      case 'gradingPolicy': return this.props.studioDetails.links.grading_policy;
+      case 'certificate': return this.props.studioDetails.links.certificates;
+      case 'courseDates': return `${this.props.studioDetails.links.settings}#schedule`;
       default: return null;
     }
   }
@@ -119,6 +143,7 @@ class CourseChecklist extends React.Component {
         className={classNames('px-3', styles.btn, styles['btn-primary'], styles['checklist-item-link'])}
         content={<WrappedMessage message={messages.updateLinkLabel} />}
         destination={this.getUpdateLinkDestination(checkID)}
+        onClick={() => this.onCheckUpdateHyperlinkClick(checkID)}
       />
     </div>
   );
@@ -197,7 +222,11 @@ class CourseChecklist extends React.Component {
           {
             gradedAssignmentsOutsideDateRange.map(assignment => (
               <li className={classNames(styles['assignment-list-item'], 'pr-2')} key={assignment.id}>
-                <Hyperlink content={assignment.display_name} destination={`${this.props.links.course_outline}#${assignment.id}`} />
+                <Hyperlink
+                  content={assignment.display_name}
+                  destination={`${this.props.studioDetails.links.course_outline}#${assignment.id}`}
+                  onClick={() => this.onAssignmentHyperlinkClick(assignment.id)}
+                />
               </li>
             ))
           }
@@ -367,5 +396,24 @@ CourseChecklist.propTypes = {
   // eslint-disable-next-line react/no-unused-prop-types
   dataList: PropTypes.arrayOf(PropTypes.object).isRequired,
   idPrefix: PropTypes.string.isRequired,
-  links: PropTypes.objectOf(PropTypes.string).isRequired,
+  studioDetails: PropTypes.shape({
+    course: PropTypes.shape({
+      base_url: PropTypes.string,
+      course_release_date: PropTypes.string,
+      display_course_number: PropTypes.string,
+      enable_quality: PropTypes.bool,
+      id: PropTypes.string,
+      is_course_self_paced: PropTypes.boolean,
+      lang: PropTypes.string,
+      name: PropTypes.string,
+      num: PropTypes.string,
+      org: PropTypes.string,
+      revision: PropTypes.string,
+      url_name: PropTypes.string,
+    }),
+    enable_quality: PropTypes.boolean,
+    help_tokens: PropTypes.objectOf(PropTypes.string),
+    lang: PropTypes.string,
+    links: PropTypes.objectOf(PropTypes.string),
+  }).isRequired,
 };

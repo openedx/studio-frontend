@@ -1,6 +1,8 @@
+import { Hyperlink } from '@edx/paragon';
+import { IntlProvider, FormattedMessage } from 'react-intl';
 import React from 'react';
-import CourseOutlineStatus from './';
 
+import CourseOutlineStatus from './';
 import { courseDetails } from '../../utils/testConstants';
 import getFilteredChecklist from '../../utils/CourseChecklist/getFilteredChecklist';
 import getValidatedValue from '../../utils/CourseChecklist/getValidatedValue';
@@ -8,7 +10,14 @@ import { launchChecklist, bestPracticesChecklist } from '../../utils/CourseCheck
 import { shallowWithIntl } from '../../utils/i18n/enzymeHelper';
 
 // generating test checklist to avoid relying on actual data
-const testChecklistData = ['a', 'b', 'c', 'd'].reduce(((accumulator, currentValue) => { accumulator.push({ id: currentValue, shortDescription: currentValue, longDescription: currentValue }); return accumulator; }), []);
+const testChecklistData = ['a', 'b', 'c', 'd'].reduce(((accumulator, currentValue) => {
+  accumulator.push({
+    id: currentValue,
+    shortDescription: currentValue,
+    longDescription: currentValue,
+  });
+  return accumulator;
+}), []);
 const testChecklist = {
   heading: 'test',
   data: testChecklistData,
@@ -57,15 +66,22 @@ getFilteredChecklist.mockImplementation(
   dataList => (dataList),
 );
 
+const intlProvider = new IntlProvider({ locale: 'en', messages: {} }, {});
+const { intl } = intlProvider.getChildContext();
+
+global.analytics = {
+  track: () => {},
+};
+
 let wrapper;
 
 const defaultProps = {
-  studioDetails: { course: courseDetails, enable_quality: true },
-  getCourseBestPractices: () => { },
-  getCourseLaunch: () => { },
   courseBestPracticesData: {},
   courseLaunchData: {},
   enable_quality: true,
+  getCourseBestPractices: () => { },
+  getCourseLaunch: () => { },
+  studioDetails: { course: courseDetails, enable_quality: true },
 };
 
 describe('CourseOutlineStatus', () => {
@@ -78,12 +94,12 @@ describe('CourseOutlineStatus', () => {
       expect(header.text()).toEqual('Checklists');
     });
 
-    it('an anchor with correct href', () => {
+    it('a Hyperlink with correct href', () => {
       wrapper = shallowWithIntl(<CourseOutlineStatus {...defaultProps} />);
 
-      const anchor = wrapper.find('a');
-      expect(anchor).toHaveLength(1);
-      expect(anchor.prop('href')).toEqual(`/checklists/${defaultProps.studioDetails.course.id}`);
+      const checklistsLink = wrapper.find(Hyperlink);
+      expect(checklistsLink).toHaveLength(1);
+      expect(checklistsLink.prop('destination')).toEqual(`/checklists/${defaultProps.studioDetails.course.id}`);
     });
 
     describe('if enable_quality prop is true', () => {
@@ -99,8 +115,12 @@ describe('CourseOutlineStatus', () => {
           courseLaunchData: testChecklist,
         });
 
-        const anchor = wrapper.find('a');
-        expect(anchor.text()).toEqual(`${completed}/${total} complete`);
+        const checklistsLink = wrapper.find(Hyperlink);
+        const checklistsLinkContent = shallowWithIntl(checklistsLink.prop('content'), { context: { intl } });
+        const completionCount = checklistsLinkContent.dive({ context: { intl } })
+          .find(FormattedMessage).dive({ context: { intl } });
+
+        expect(completionCount.text()).toEqual(`${completed}/${total} completed`);
       });
     });
 
@@ -127,8 +147,12 @@ describe('CourseOutlineStatus', () => {
           courseLaunchData: testChecklist,
         });
 
-        const anchor = wrapper.find('a');
-        expect(anchor.text()).toEqual(`${completed}/${total} complete`);
+        const checklistsLink = wrapper.find(Hyperlink);
+        const checklistsLinkContent = shallowWithIntl(checklistsLink.prop('content'), { context: { intl } });
+        const completionCount = checklistsLinkContent.dive({ context: { intl } })
+          .find(FormattedMessage).dive({ context: { intl } });
+
+        expect(completionCount.text()).toEqual(`${completed}/${total} completed`);
       });
     });
   });
@@ -166,6 +190,17 @@ describe('CourseOutlineStatus', () => {
         { graded_only: true },
         defaultProps.studioDetails.course,
       );
+    });
+
+    it('calls trackEvent when checklist link is clicked', () => {
+      wrapper = shallowWithIntl(<CourseOutlineStatus {...defaultProps} />);
+
+      const completionLink = wrapper.find(Hyperlink);
+      const trackEventSpy = jest.fn();
+      global.analytics.track = trackEventSpy;
+
+      completionLink.simulate('click');
+      expect(trackEventSpy).toHaveBeenCalledTimes(1);
     });
   });
 });

@@ -1,11 +1,15 @@
 import classNames from 'classnames';
-import React from 'react';
+import { Hyperlink } from '@edx/paragon';
 import PropTypes from 'prop-types';
+import React from 'react';
 
+import { trackEvent } from '../../utils/analytics';
 import getFilteredChecklist from '../../utils/CourseChecklist/getFilteredChecklist';
 import getValidatedValue from '../../utils/CourseChecklist/getValidatedValue';
 import { launchChecklist, bestPracticesChecklist } from '../../utils/CourseChecklist/courseChecklistData';
+import messages from './displayMessages';
 import styles from './CourseOutlineStatus.scss';
+import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
 
 export default class CourseOutlineStatus extends React.Component {
   constructor(props) {
@@ -90,7 +94,7 @@ export default class CourseOutlineStatus extends React.Component {
       totalCourseLaunchChecks,
     } = this.state;
 
-    const totalCompleteChecks = this.props.studioDetails.enable_quality ?
+    const totalCompletedChecks = this.props.studioDetails.enable_quality ?
       completedCourseBestPracticesChecks + completedCourseLaunchChecks :
       completedCourseLaunchChecks;
 
@@ -101,9 +105,33 @@ export default class CourseOutlineStatus extends React.Component {
     return (
       <React.Fragment>
         <div className={styles['status-checklist']}>
+
           <h2 className={styles['status-checklist-label']}>Checklists</h2>
           <div>
-            <a href={`/checklists/${this.props.studioDetails.course.id}`} className={classNames(styles['text-info'], styles['status-checklist-value'])}>{totalCompleteChecks}/{totalChecks} complete</a>          </div>
+            <Hyperlink
+              className={classNames(styles['text-info'], styles['status-checklist-value'])}
+              content={
+                <WrappedMessage
+                  message={messages.completionCountLabel}
+                  values={{ completed: totalCompletedChecks, total: totalChecks }}
+                >
+                  {displayText =>
+                    (<span>
+                      {displayText}
+                    </span>)
+                  }
+                </WrappedMessage>
+              }
+              destination={`/checklists/${this.props.studioDetails.course.id}`}
+              onClick={() => trackEvent(
+                'edx.bi.studio.course.checklist.accessed', {
+                  category: 'click',
+                  event_type: 'outline-access',
+                  label: this.props.studioDetails.course.id,
+                },
+              )}
+            />
+          </div>
         </div>
       </React.Fragment>
     );
