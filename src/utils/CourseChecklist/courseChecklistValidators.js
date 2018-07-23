@@ -17,6 +17,8 @@ export const hasDates = dates => (
 export const hasAssignmentDeadlines = (assignments, dates) => {
   if (!hasDates(dates)) {
     return false;
+  } else if (assignments.total_number === 0) {
+    return false;
   } else if (assignments.assignments_with_dates_before_start.length > 0) {
     return false;
   } else if (assignments.assignments_with_dates_after_end.length > 0) {
@@ -61,5 +63,5 @@ export const hasWeeklyHighlights = sections => (
 );
 
 export const hasShortUnitDepth = units => (
-  units.num_blocks <= 3
+  units.num_blocks.median <= 3
 );

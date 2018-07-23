@@ -88,16 +88,16 @@ const messages = defineMessages({
   },
   diverseSequencesLongDescription: {
     id: 'diverseSequencesLongDescription',
-    defaultMessage: '90% or more of course videos are mobile friendly.',
+    defaultMessage: 'Research shows that a diverse content experience drives learner engagement. We recommend 80% or more of your learning sequences or subsections include multiple content types (such as video, discussion, or problem).',
     description: 'Description for a section that prompts a user to follow best practices diverse sequences of educational content',
   },
-  weekylHighlightsShortDescription: {
-    id: 'weekylHighlightsShortDescription',
+  weeklyHighlightsShortDescription: {
+    id: 'weeklyHighlightsShortDescription',
     defaultMessage: 'Weekly Highlights',
     description: 'Label for a section that describes weekly highlights',
   },
-  weeklyHightlightsLongDescription: {
-    id: 'weeklyHightlightsLongDescription',
+  weeklyHighlightsLongDescription: {
+    id: 'weeklyHighlightsLongDescription',
     defaultMessage: 'Weekly highlights are enabled and populated with text. These highlights keep learners engaged and on-track, no matter where they are in your course.',
     description: 'Description for a section that prompts a user to follow best practices for course weekly highlights',
   },
