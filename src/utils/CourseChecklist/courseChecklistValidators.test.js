@@ -71,6 +71,8 @@ describe('courseCheckValidators utility functions', () => {
         {
           assignments_with_dates_before_start: 0,
           assignments_with_dates_after_end: 0,
+          assignments_with_ora_dates_after_end: 0,
+          assignments_with_ora_dates_before_start: 0,
         },
         {
           has_start_date: true,
@@ -106,6 +108,8 @@ describe('courseCheckValidators utility functions', () => {
         {
           assignments_with_dates_before_start: ['test'],
           assignments_with_dates_after_end: 0,
+          assignments_with_ora_dates_after_end: 0,
+          assignments_with_ora_dates_before_start: 0,
         },
         {
           has_start_date: true,
@@ -119,6 +123,8 @@ describe('courseCheckValidators utility functions', () => {
         {
           assignments_with_dates_before_start: 0,
           assignments_with_dates_after_end: ['test'],
+          assignments_with_ora_dates_after_end: 0,
+          assignments_with_ora_dates_before_start: 0,
         },
         {
           has_start_date: true,
@@ -127,6 +133,42 @@ describe('courseCheckValidators utility functions', () => {
       )).toEqual(false);
     });
   });
+
+  it(
+    'returns false when a course run has start and end date and an ora with a date before start',
+    () => {
+      expect(validators.hasAssignmentDeadlines(
+        {
+          assignments_with_dates_before_start: 0,
+          assignments_with_dates_after_end: 0,
+          assignments_with_ora_dates_after_end: 0,
+          assignments_with_ora_dates_before_start: ['test'],
+        },
+        {
+          has_start_date: true,
+          has_end_date: true,
+        },
+      )).toEqual(false);
+    },
+  );
+
+  it(
+    'returns false when a course run has start and end date and an ora with a date after end',
+    () => {
+      expect(validators.hasAssignmentDeadlines(
+        {
+          assignments_with_dates_before_start: 0,
+          assignments_with_dates_after_end: 0,
+          assignments_with_ora_dates_after_end: ['test'],
+          assignments_with_ora_dates_before_start: 0,
+        },
+        {
+          has_start_date: true,
+          has_end_date: true,
+        },
+      )).toEqual(false);
+    },
+  );
 
   describe('hasShortVideoDuration', () => {
     it('returns true if course run has no videos', () => {
