@@ -23,6 +23,8 @@ class CourseChecklist extends React.Component {
       values: {},
     };
 
+    this.spinnerClasses = [FontAwesomeStyles.fa, FontAwesomeStyles['fa-spinner'], FontAwesomeStyles['fa-spin'], FontAwesomeStyles['fa-5x']];
+
     this.onAssignmentHyperlinkClick = this.onAssignmentHyperlinkClick.bind(this);
     this.onCheckUpdateHyperlinkClick = this.onCheckUpdateHyperlinkClick.bind(this);
   }
@@ -66,21 +68,23 @@ class CourseChecklist extends React.Component {
   getCompletionCount = () => {
     const totalCompletedChecks = Object.values(this.state.checks).length;
 
-    return (
-      <WrappedMessage
-        message={messages.completionCountLabel}
-        values={{ completed: this.state.totalCompletedChecks, total: totalCompletedChecks }}
-      >
-        {displayText =>
-          (<div
-            className="font-large"
-            id={this.getCompletionCountID()}
-          >
-            {displayText}
-          </div>)
-        }
-      </WrappedMessage>
-    );
+    return this.props.isLoading ?
+      null :
+      (
+        <WrappedMessage
+          message={messages.completionCountLabel}
+          values={{ completed: this.state.totalCompletedChecks, total: totalCompletedChecks }}
+        >
+          {displayText =>
+            (<div
+              className="font-large"
+              id={this.getCompletionCountID()}
+            >
+              {displayText}
+            </div>)
+          }
+        </WrappedMessage>
+      );
   }
 
   getCompletionIcon = (checkID) => {
@@ -147,6 +151,23 @@ class CourseChecklist extends React.Component {
       />
     </div>
   );
+
+  getLoadingIcon = () => (
+    <WrappedMessage message={messages.loadingChecklistLabel}>
+      {displayText =>
+        (<div className="text-center">
+          <Icon
+            className={[classNames(...this.spinnerClasses)]}
+            screenReaderText={displayText}
+          />
+        </div>)
+      }
+    </WrappedMessage>
+  )
+
+  getBody = () => (
+    this.props.isLoading ? this.getLoadingIcon() : this.getListItems()
+  )
 
   getListItems = () => (
     this.state.checks.map((check) => {
@@ -331,7 +352,7 @@ class CourseChecklist extends React.Component {
         </div>
         <div className="row no-gutters">
           <div className="col">
-            {this.getListItems()}
+            {this.getBody()}
           </div>
         </div>
       </div>
@@ -416,4 +437,9 @@ CourseChecklist.propTypes = {
     lang: PropTypes.string,
     links: PropTypes.objectOf(PropTypes.string),
   }).isRequired,
+  isLoading: PropTypes.bool,
+};
+
+CourseChecklist.defaultProps = {
+  isLoading: false,
 };

@@ -1,13 +1,16 @@
-import { Hyperlink } from '@edx/paragon';
+import { Hyperlink, Icon } from '@edx/paragon';
 import { IntlProvider, FormattedMessage } from 'react-intl';
 import React from 'react';
 
-import CourseOutlineStatus from './';
+import { checklistLoading } from '../../data/constants/loadingTypes';
 import { courseDetails } from '../../utils/testConstants';
+import CourseOutlineStatus from './';
 import getFilteredChecklist from '../../utils/CourseChecklist/getFilteredChecklist';
 import getValidatedValue from '../../utils/CourseChecklist/getValidatedValue';
 import { launchChecklist, bestPracticesChecklist } from '../../utils/CourseChecklist/courseChecklistData';
+import messages from './displayMessages';
 import { shallowWithIntl } from '../../utils/i18n/enzymeHelper';
+import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
 
 // generating test checklist to avoid relying on actual data
 const testChecklistData = ['a', 'b', 'c', 'd'].reduce(((accumulator, currentValue) => {
@@ -70,7 +73,7 @@ const intlProvider = new IntlProvider({ locale: 'en', messages: {} }, {});
 const { intl } = intlProvider.getChildContext();
 
 global.analytics = {
-  track: () => {},
+  track: () => { },
 };
 
 let wrapper;
@@ -91,7 +94,7 @@ describe('CourseOutlineStatus', () => {
 
       const header = wrapper.find('h2');
       expect(header).toHaveLength(1);
-      expect(header.text()).toEqual('Checklists');
+      expect(header.find(WrappedMessage).prop('message')).toEqual(messages.checklistLabel);
     });
 
     it('a Hyperlink with correct href', () => {
@@ -100,6 +103,124 @@ describe('CourseOutlineStatus', () => {
       const checklistsLink = wrapper.find(Hyperlink);
       expect(checklistsLink).toHaveLength(1);
       expect(checklistsLink.prop('destination')).toEqual(`/checklists/${defaultProps.studioDetails.course.id}`);
+    });
+
+    describe('loading icons with', () => {
+      it('a loading icon instead of link when course launch is loading', () => {
+        wrapper = shallowWithIntl(<CourseOutlineStatus {...defaultProps} />);
+
+        wrapper.setProps({
+          loadingChecklists: [checklistLoading.COURSE_LAUNCH],
+        });
+
+        const link = wrapper.find(Hyperlink);
+        expect(link).toHaveLength(0);
+
+        const loadingIconSection = wrapper.find(WrappedMessage).at(2);
+        expect(loadingIconSection).toHaveLength(1);
+
+        const loadingIcon = loadingIconSection.dive({ context: { intl } })
+          .dive({ context: { intl } })
+          .find(FormattedMessage)
+          .dive({ context: { intl } })
+          .find(Icon);
+
+        expect(loadingIcon.prop('className')[0]).toEqual(expect.stringContaining('fa-spinner'));
+        expect(loadingIcon.prop('className')[0]).toEqual(expect.stringContaining('fa-spin'));
+        expect(loadingIcon.prop('screenReaderText')).toEqual(messages.loadingIconLabel.defaultMessage);
+      });
+
+      it('a loading icon instead of an link when course best practices is loading', () => {
+        wrapper = shallowWithIntl(<CourseOutlineStatus {...defaultProps} />);
+
+        wrapper.setProps({
+          loadingChecklists: [checklistLoading.COURSE_BEST_PRACTICES],
+        });
+
+        const link = wrapper.find(Hyperlink);
+        expect(link).toHaveLength(0);
+
+        const loadingIconSection = wrapper.find(WrappedMessage).at(2);
+        expect(loadingIconSection).toHaveLength(1);
+
+        const loadingIcon = loadingIconSection.dive({ context: { intl } })
+          .dive({ context: { intl } })
+          .find(FormattedMessage)
+          .dive({ context: { intl } })
+          .find(Icon);
+
+        expect(loadingIcon.prop('className')[0]).toEqual(expect.stringContaining('fa-spinner'));
+        expect(loadingIcon.prop('className')[0]).toEqual(expect.stringContaining('fa-spin'));
+        expect(loadingIcon.prop('screenReaderText')).toEqual(messages.loadingIconLabel.defaultMessage);
+      });
+
+      it('a loading icon instead of an link when both course launch and course best practices are loading', () => {
+        wrapper = shallowWithIntl(<CourseOutlineStatus {...defaultProps} />);
+
+        wrapper.setProps({
+          loadingChecklists: [
+            checklistLoading.COURSE_BEST_PRACTICES,
+            checklistLoading.COURSE_LAUNCH,
+          ],
+        });
+
+        const link = wrapper.find(Hyperlink);
+        expect(link).toHaveLength(0);
+
+        const loadingIconSection = wrapper.find(WrappedMessage).at(2);
+        expect(loadingIconSection).toHaveLength(1);
+
+        const loadingIcon = loadingIconSection.dive({ context: { intl } })
+          .dive({ context: { intl } })
+          .find(FormattedMessage)
+          .dive({ context: { intl } })
+          .find(Icon);
+
+        expect(loadingIcon.prop('className')[0]).toEqual(expect.stringContaining('fa-spinner'));
+        expect(loadingIcon.prop('className')[0]).toEqual(expect.stringContaining('fa-spin'));
+        expect(loadingIcon.prop('screenReaderText')).toEqual(messages.loadingIconLabel.defaultMessage);
+      });
+    });
+
+    describe('an aria-live region with', () => {
+      it('an aria-live region', () => {
+        wrapper = shallowWithIntl(<CourseOutlineStatus {...defaultProps} />);
+
+        const ariaLiveRegion = wrapper.find({ 'aria-live': 'polite' });
+
+        expect(ariaLiveRegion).toHaveLength(1);
+        expect(ariaLiveRegion.prop('className')).toEqual(expect.stringContaining('sr-only'));
+        expect(ariaLiveRegion.prop('role')).toEqual(expect.stringContaining('status'));
+      });
+
+      it('correct content when checklists are loading', () => {
+        wrapper = shallowWithIntl(<CourseOutlineStatus {...defaultProps} />);
+
+        wrapper.setProps({
+          loadingChecklists: [
+            checklistLoading.COURSE_BEST_PRACTICES,
+            checklistLoading.COURSE_LAUNCH,
+          ],
+        });
+
+        const ariaLiveRegion = wrapper.find({ 'aria-live': 'polite' });
+
+        expect(ariaLiveRegion.children()).toHaveLength(1);
+        expect(ariaLiveRegion.childAt(0).find(WrappedMessage).prop('message')).toEqual(messages.checklistStatusLoadingLabel);
+      });
+
+      it('correct content when checklists are done loading', () => {
+        wrapper = shallowWithIntl(<CourseOutlineStatus {...defaultProps} />);
+
+        wrapper.setProps({
+          loadingChecklists: [],
+        });
+
+        const ariaLiveRegion = wrapper.find({ 'aria-live': 'polite' });
+
+        expect(ariaLiveRegion.children()).toHaveLength(1);
+        expect(ariaLiveRegion.childAt(0).find(WrappedMessage).prop('message')).toEqual(messages.checklistStatusDoneLoadingLabel);
+      });
     });
 
     describe('if enable_quality prop is true', () => {
