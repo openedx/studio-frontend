@@ -1,10 +1,8 @@
 import classNames from 'classnames';
 import FontAwesomeStyles from 'font-awesome/css/font-awesome.min.css';
-import { Hyperlink } from '@edx/paragon';
-import { Icon } from '@edx/paragon';
+import { Hyperlink, Icon } from '@edx/paragon';
 import React from 'react';
 import PropTypes from 'prop-types';
-import React from 'react';
 
 import { checklistLoading } from '../../data/constants/loadingTypes';
 import getFilteredChecklist from '../../utils/CourseChecklist/getFilteredChecklist';
@@ -93,7 +91,7 @@ export default class CourseOutlineStatus extends React.Component {
   }
 
   getLoadingIcon = () => (
-    <WrappedMessage message={messages.loadingChecklistLabel}>
+    <WrappedMessage message={messages.loadingIconLabel}>
       {displayText =>
         (<div className="text-center">
           <Icon
@@ -148,15 +146,29 @@ export default class CourseOutlineStatus extends React.Component {
     );
   }
 
-  getBody() {
-    const isLoading =
-      this.props.loadingChecklists.includes(checklistLoading.COURSE_BEST_PRACTICES) ||
-      this.props.loadingChecklists.includes(checklistLoading.COURSE_LAUNCH);
+  getAriaLiveRegion = () => {
+    const message =
+      this.isLoading() ?
+        <WrappedMessage message={messages.checklistStatusLoadingLabel} /> :
+        <WrappedMessage message={messages.checklistStatusDoneLoadingLabel} />;
 
-    return isLoading ?
-      this.getLoadingIcon() :
-      this.getHyperLink();
+    return (
+      <div className="sr-only" aria-live="polite" role="status">
+        {message}
+      </div>
+    );
   }
+
+  getBody = () => (
+    this.isLoading() ?
+      this.getLoadingIcon() :
+      this.getHyperLink()
+  );
+
+  isLoading = () => (
+    this.props.loadingChecklists.includes(checklistLoading.COURSE_BEST_PRACTICES) ||
+    this.props.loadingChecklists.includes(checklistLoading.COURSE_LAUNCH)
+  );
 
   render() {
     return (
@@ -166,6 +178,7 @@ export default class CourseOutlineStatus extends React.Component {
             <WrappedMessage message={messages.checklistLabel} />
           </h2>
           <div>
+            {this.getAriaLiveRegion()}
             {this.getBody()}
           </div>
         </div>

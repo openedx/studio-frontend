@@ -13,6 +13,25 @@ export default class CourseChecklistPage extends React.Component {
     this.props.getCourseLaunch({ graded_only: true }, this.props.studioDetails.course);
   }
 
+  getAriaLiveRegion = (isCourseLaunchChecklistLoading, isCourseBestPracticeChecklistLoading) => {
+    const courseLaunchLoadingMessage =
+      isCourseLaunchChecklistLoading ?
+        <WrappedMessage message={messages.launchChecklistLoadingLabel} /> :
+        <WrappedMessage message={messages.launchChecklistDoneLoadingLabel} />;
+
+    const courseBestPracticesLoadingMessage =
+      isCourseBestPracticeChecklistLoading ?
+        <WrappedMessage message={messages.bestPracticesChecklistLoadingLabel} /> :
+        <WrappedMessage message={messages.bestPracticesChecklistDoneLoadingLabel} />;
+
+    return (
+      <div className="sr-only" aria-live="polite" role="status">
+        {courseLaunchLoadingMessage}
+        {this.props.studioDetails.enable_quality ? courseBestPracticesLoadingMessage : null}
+      </div>
+    );
+  }
+
 
   render() {
     const isCourseBestPracticeChecklistLoading =
@@ -33,6 +52,10 @@ export default class CourseChecklistPage extends React.Component {
 
     return (
       <div className="container">
+        {this.getAriaLiveRegion(
+          isCourseLaunchChecklistLoading,
+          isCourseBestPracticeChecklistLoading,
+        )}
         <div className="row">
           <div className="col">
             <WrappedCourseChecklist
