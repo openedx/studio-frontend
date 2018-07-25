@@ -6,15 +6,16 @@ import accessibility from '../data/reducers/accessibility';
 import { assets, metadata } from '../data/reducers/assets';
 
 export const courseDetails = {
-  lang: 'en',
-  url_name: 'course',
-  name: 'edX Demonstration Course',
+  base_url: 'sfe',
+  course_release_date: 'Jan 01, 2016 at 00:00 UTC',
   display_course_number: '',
+  id: 'course-v1:edX+DemoX+Demo_Course',
+  lang: 'en',
+  name: 'edX Demonstration Course',
   num: 'DemoX',
   org: 'edX',
-  id: 'course-v1:edX+DemoX+Demo_Course',
   revision: '',
-  base_url: 'sfe',
+  url_name: 'course',
 };
 
 const thumbnail = '/animal';

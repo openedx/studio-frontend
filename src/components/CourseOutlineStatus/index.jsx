@@ -5,6 +5,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { checklistLoading } from '../../data/constants/loadingTypes';
+import CourseOutlineStatusLabel from '../CourseOutlineStatusLabel';
+import CourseOutlineStatusValue from '../CourseOutlineStatusValue';
 import getFilteredChecklist from '../../utils/CourseChecklist/getFilteredChecklist';
 import getValidatedValue from '../../utils/CourseChecklist/getValidatedValue';
 import { launchChecklist, bestPracticesChecklist } from '../../utils/CourseChecklist/courseChecklistData';
@@ -25,6 +27,7 @@ export default class CourseOutlineStatus extends React.Component {
     };
 
     this.spinnerClasses = [FontAwesomeStyles.fa, FontAwesomeStyles['fa-spinner'], FontAwesomeStyles['fa-spin']];
+    this.onCourseChecklistHyperlinkClick = this.onCourseChecklistHyperlinkClick.bind(this);
   }
 
   componentWillMount() {
@@ -90,6 +93,74 @@ export default class CourseOutlineStatus extends React.Component {
     }
   }
 
+  onCourseChecklistHyperlinkClick = () => {
+    trackEvent(
+      'edx.bi.studio.course.checklist.accessed', {
+        category: 'click',
+        event_type: 'outline-access',
+        label: this.props.studioDetails.course.id,
+      },
+    );
+  };
+
+  getCourseStartDateStatus = () => {
+    const columnClassName = this.doesCourseHaveReleaseDate() ? 'col-5' : 'col';
+
+    return (<div className={classNames(columnClassName)}>
+      <div className="no-gutters row">
+        <div className="col">
+          <CourseOutlineStatusLabel>
+            <WrappedMessage message={messages.startDateStatusLabel} />
+          </CourseOutlineStatusLabel>
+          <CourseOutlineStatusValue>
+            <Hyperlink
+              className={classNames(
+                styles['status-link'],
+              )}
+              content={this.props.studioDetails.course.course_release_date}
+              destination={`${this.props.studioDetails.links.settings}#schedule`}
+            />
+          </CourseOutlineStatusValue>
+        </div>
+      </div>
+    </div>);
+  };
+
+  getCoursePacingTypeValue = () => (
+    this.props.studioDetails.course.is_course_self_paced ?
+      <WrappedMessage message={messages.pacingTypeSelfPaced} /> :
+      <WrappedMessage message={messages.pacingTypeInstructorPaced} />
+  );
+
+  getCoursePacingTypeStatus = () => (
+    <div className={classNames('col')}>
+      <CourseOutlineStatusLabel>
+        <WrappedMessage message={messages.pacingTypeStatusLabel} />
+      </CourseOutlineStatusLabel>
+      <CourseOutlineStatusValue>
+        {this.getCoursePacingTypeValue()}
+      </CourseOutlineStatusValue>
+    </div>
+  );
+
+  getCourseChecklistStatus = () => (
+
+    <div className={classNames('col')}>
+      <CourseOutlineStatusLabel>
+        <WrappedMessage message={messages.checklistsStatusLabel} />
+      </CourseOutlineStatusLabel>
+      <CourseOutlineStatusValue>
+        {this.getCourseChecklistValue()}
+      </CourseOutlineStatusValue>
+    </div>
+  );
+
+  getCourseChecklistValue = () => (
+    this.isLoading() ?
+      this.getLoadingIcon() :
+      this.getCourseChecklistHyperlink()
+  );
+
   getLoadingIcon = () => (
     <WrappedMessage message={messages.loadingIconLabel}>
       {displayText =>
@@ -101,9 +172,9 @@ export default class CourseOutlineStatus extends React.Component {
         </div>)
       }
     </WrappedMessage>
-  )
+  );
 
-  getHyperLink = () => {
+  getCourseChecklistHyperlink = () => {
     const {
       completedCourseBestPracticesChecks,
       completedCourseLaunchChecks,
@@ -121,7 +192,7 @@ export default class CourseOutlineStatus extends React.Component {
 
     return (
       <Hyperlink
-        className={classNames(styles['text-info'], styles['status-checklist-value'])}
+        className={classNames(styles['status-link'])}
         content={
           <WrappedMessage
             message={messages.completionCountLabel}
@@ -135,16 +206,10 @@ export default class CourseOutlineStatus extends React.Component {
           </WrappedMessage>
         }
         destination={`/checklists/${this.props.studioDetails.course.id}`}
-        onClick={() => trackEvent(
-          'edx.bi.studio.course.checklist.accessed', {
-            category: 'click',
-            event_type: 'outline-access',
-            label: this.props.studioDetails.course.id,
-          },
-        )}
+        onClick={this.onCourseChecklistHyperlinkClick}
       />
     );
-  }
+  };
 
   getAriaLiveRegion = () => {
     const message =
@@ -159,28 +224,20 @@ export default class CourseOutlineStatus extends React.Component {
     );
   }
 
-  getBody = () => (
-    this.isLoading() ?
-      this.getLoadingIcon() :
-      this.getHyperLink()
-  );
-
   isLoading = () => (
     this.props.loadingChecklists.includes(checklistLoading.COURSE_BEST_PRACTICES) ||
     this.props.loadingChecklists.includes(checklistLoading.COURSE_LAUNCH)
   );
+  doesCourseHaveReleaseDate = () => (this.props.studioDetails.course.course_release_date !== 'Set Date');
 
   render() {
     return (
       <React.Fragment>
-        <div className={styles['status-checklist']}>
-          <h2 className={styles['status-checklist-label']}>
-            <WrappedMessage message={messages.checklistLabel} />
-          </h2>
-          <div>
-            {this.getAriaLiveRegion()}
-            {this.getBody()}
-          </div>
+        {this.getAriaLiveRegion()}
+        <div className="row no-gutters">
+          {this.getCourseStartDateStatus()}
+          {this.getCoursePacingTypeStatus()}
+          {this.getCourseChecklistStatus()}
         </div>
       </React.Fragment>
     );
@@ -232,7 +289,6 @@ CourseOutlineStatus.propTypes = {
       base_url: PropTypes.string,
       course_release_date: PropTypes.string,
       display_course_number: PropTypes.string,
-      enable_quality: PropTypes.bool,
       id: PropTypes.string,
       is_course_self_paced: PropTypes.boolean,
       lang: PropTypes.string,
@@ -245,6 +301,7 @@ CourseOutlineStatus.propTypes = {
     enable_quality: PropTypes.boolean,
     help_tokens: PropTypes.objectOf(PropTypes.string),
     lang: PropTypes.string,
+    links: PropTypes.objectOf(PropTypes.string).isRequired,
   }).isRequired,
 };
 

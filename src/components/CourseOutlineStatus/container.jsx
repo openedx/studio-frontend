@@ -4,10 +4,10 @@ import CourseOutlineStatus from '.';
 import { getCourseBestPractices, getCourseLaunch } from '../../data/actions/courseChecklist';
 
 const mapStateToProps = state => ({
-  studioDetails: state.studioDetails,
   courseBestPracticesData: state.courseChecklistData.courseBestPractices,
   courseLaunchData: state.courseChecklistData.courseLaunch,
   loadingChecklists: state.courseChecklistData.loadingChecklists,
+  studioDetails: state.studioDetails,
 });
 
 const mapDispatchToProps = dispatch => ({

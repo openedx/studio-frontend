@@ -5,6 +5,8 @@ import React from 'react';
 import { checklistLoading } from '../../data/constants/loadingTypes';
 import { courseDetails } from '../../utils/testConstants';
 import CourseOutlineStatus from './';
+import CourseOutlineStatusLabel from '../CourseOutlineStatusLabel';
+import CourseOutlineStatusValue from '../CourseOutlineStatusValue';
 import getFilteredChecklist from '../../utils/CourseChecklist/getFilteredChecklist';
 import getValidatedValue from '../../utils/CourseChecklist/getValidatedValue';
 import { launchChecklist, bestPracticesChecklist } from '../../utils/CourseChecklist/courseChecklistData';
@@ -79,30 +81,128 @@ global.analytics = {
 let wrapper;
 
 const defaultProps = {
-  courseBestPracticesData: {},
-  courseLaunchData: {},
-  enable_quality: true,
+  studioDetails: {
+    course: courseDetails,
+    enable_quality: true,
+    links: {
+      settings: 'settingsTest',
+    },
+  },
   getCourseBestPractices: () => { },
   getCourseLaunch: () => { },
-  studioDetails: { course: courseDetails, enable_quality: true },
+  courseBestPracticesData: {},
+  courseLaunchData: {},
 };
 
 describe('CourseOutlineStatus', () => {
   describe('renders', () => {
-    it('a header', () => {
+    describe('a Start Date CourseOutlineStatusBlock component with', () => {
       wrapper = shallowWithIntl(<CourseOutlineStatus {...defaultProps} />);
 
-      const header = wrapper.find('h2');
-      expect(header).toHaveLength(1);
-      expect(header.find(WrappedMessage).prop('message')).toEqual(messages.checklistLabel);
+      it('a label', () => {
+        const label = wrapper.find(CourseOutlineStatusLabel).at(0);
+        expect(label.children()).toHaveLength(1);
+
+        const message = label.childAt(0).find(WrappedMessage);
+        expect(message.prop('message')).toEqual(messages.startDateStatusLabel);
+      });
+
+      it('a value', () => {
+        const value = wrapper.find(CourseOutlineStatusValue).at(0);
+        expect(value.children()).toHaveLength(1);
+
+        const link = value.childAt(0).find(Hyperlink);
+
+        expect(link).toHaveLength(1);
+        expect(link.prop('className')).toEqual(expect.stringContaining('status-link'));
+        expect(link.prop('content')).toEqual(courseDetails.course_release_date);
+        expect(link.prop('destination')).toEqual(`${defaultProps.studioDetails.links.settings}#schedule`);
+      });
     });
 
-    it('a Hyperlink with correct href', () => {
+    describe('a Pacing Type CourseOutlineStatusBlock component with', () => {
       wrapper = shallowWithIntl(<CourseOutlineStatus {...defaultProps} />);
 
-      const checklistsLink = wrapper.find(Hyperlink);
-      expect(checklistsLink).toHaveLength(1);
-      expect(checklistsLink.prop('destination')).toEqual(`/checklists/${defaultProps.studioDetails.course.id}`);
+      it('a label', () => {
+        const label = wrapper.find(CourseOutlineStatusLabel).at(1);
+        expect(label.children()).toHaveLength(1);
+
+        const message = label.childAt(0).find(WrappedMessage);
+        expect(message.prop('message')).toEqual(messages.pacingTypeStatusLabel);
+      });
+
+      describe('a value with', () => {
+        it('a value when pacing type is self paced', () => {
+          const newCourseDetails = {
+            ...courseDetails,
+            is_course_self_paced: true,
+          };
+
+          const newStudioDetails = {
+            ...defaultProps.studioDetails,
+            course: newCourseDetails,
+          };
+
+          wrapper.setProps({
+            studioDetails: newStudioDetails,
+          });
+
+          const value = wrapper.find(CourseOutlineStatusValue).at(1);
+          expect(value.children()).toHaveLength(1);
+
+          const message = value.childAt(0).find(WrappedMessage);
+          expect(message.prop('message')).toEqual(messages.pacingTypeSelfPaced);
+        });
+
+        it('a value when pacing type is instructor paced', () => {
+          const newCourseDetails = {
+            ...courseDetails,
+            is_course_self_paced: false,
+          };
+
+          const newStudioDetails = {
+            ...defaultProps.studioDetails,
+            ...newCourseDetails,
+          };
+
+          wrapper.setProps({
+            studioDetails: newStudioDetails,
+          });
+
+          const value = wrapper.find(CourseOutlineStatusValue).at(1);
+          expect(value.children()).toHaveLength(1);
+
+          const message = value.childAt(0).find(WrappedMessage);
+          expect(message.prop('message')).toEqual(messages.pacingTypeInstructorPaced);
+        });
+      });
+    });
+
+    describe('a Checklists CourseOutlineStatusBlock component with', () => {
+      wrapper = shallowWithIntl(<CourseOutlineStatus {...defaultProps} />);
+
+      it('a label', () => {
+        const label = wrapper.find(CourseOutlineStatusLabel).at(2);
+        expect(label.children()).toHaveLength(1);
+
+        const message = label.childAt(0).find(WrappedMessage);
+        expect(message.prop('message')).toEqual(messages.checklistsStatusLabel);
+      });
+
+      it('a value', () => {
+        const value = wrapper.find(CourseOutlineStatusValue).at(2);
+        expect(value.children()).toHaveLength(1);
+
+        const link = value.childAt(0);
+
+        expect(link).toHaveLength(1);
+        expect(link.prop('className')).toEqual(expect.stringContaining('status-link'));
+        expect(link.prop('destination')).toEqual(`/checklists/${defaultProps.studioDetails.course.id}`);
+
+        const content = shallowWithIntl(link.prop('content'));
+        expect(content.prop('message')).toEqual(messages.completionCountLabel);
+        expect(content.prop('values')).toEqual({ completed: 0, total: 10 });
+      });
     });
 
     describe('loading icons with', () => {
@@ -112,11 +212,12 @@ describe('CourseOutlineStatus', () => {
         wrapper.setProps({
           loadingChecklists: [checklistLoading.COURSE_LAUNCH],
         });
+        const value = wrapper.find(CourseOutlineStatusValue).at(2);
 
-        const link = wrapper.find(Hyperlink);
+        const link = value.find(Hyperlink);
         expect(link).toHaveLength(0);
 
-        const loadingIconSection = wrapper.find(WrappedMessage).at(2);
+        const loadingIconSection = value.find(WrappedMessage);
         expect(loadingIconSection).toHaveLength(1);
 
         const loadingIcon = loadingIconSection.dive({ context: { intl } })
@@ -130,17 +231,19 @@ describe('CourseOutlineStatus', () => {
         expect(loadingIcon.prop('screenReaderText')).toEqual(messages.loadingIconLabel.defaultMessage);
       });
 
-      it('a loading icon instead of an link when course best practices is loading', () => {
+      it('a loading icon instead of a link when course best practices is loading', () => {
         wrapper = shallowWithIntl(<CourseOutlineStatus {...defaultProps} />);
 
         wrapper.setProps({
           loadingChecklists: [checklistLoading.COURSE_BEST_PRACTICES],
         });
 
-        const link = wrapper.find(Hyperlink);
+        const value = wrapper.find(CourseOutlineStatusValue).at(2);
+
+        const link = value.find(Hyperlink);
         expect(link).toHaveLength(0);
 
-        const loadingIconSection = wrapper.find(WrappedMessage).at(2);
+        const loadingIconSection = value.find(WrappedMessage);
         expect(loadingIconSection).toHaveLength(1);
 
         const loadingIcon = loadingIconSection.dive({ context: { intl } })
@@ -154,7 +257,7 @@ describe('CourseOutlineStatus', () => {
         expect(loadingIcon.prop('screenReaderText')).toEqual(messages.loadingIconLabel.defaultMessage);
       });
 
-      it('a loading icon instead of an link when both course launch and course best practices are loading', () => {
+      it('a loading icon instead of a link when both course launch and course best practices are loading', () => {
         wrapper = shallowWithIntl(<CourseOutlineStatus {...defaultProps} />);
 
         wrapper.setProps({
@@ -164,10 +267,12 @@ describe('CourseOutlineStatus', () => {
           ],
         });
 
-        const link = wrapper.find(Hyperlink);
+        const value = wrapper.find(CourseOutlineStatusValue).at(2);
+
+        const link = value.find(Hyperlink);
         expect(link).toHaveLength(0);
 
-        const loadingIconSection = wrapper.find(WrappedMessage).at(2);
+        const loadingIconSection = value.find(WrappedMessage);
         expect(loadingIconSection).toHaveLength(1);
 
         const loadingIcon = loadingIconSection.dive({ context: { intl } })
@@ -236,7 +341,7 @@ describe('CourseOutlineStatus', () => {
           courseLaunchData: testChecklist,
         });
 
-        const checklistsLink = wrapper.find(Hyperlink);
+        const checklistsLink = wrapper.find(CourseOutlineStatusValue).at(2).find(Hyperlink);
         const checklistsLinkContent = shallowWithIntl(checklistsLink.prop('content'), { context: { intl } });
         const completionCount = checklistsLinkContent.dive({ context: { intl } })
           .find(FormattedMessage).dive({ context: { intl } });
@@ -268,7 +373,7 @@ describe('CourseOutlineStatus', () => {
           courseLaunchData: testChecklist,
         });
 
-        const checklistsLink = wrapper.find(Hyperlink);
+        const checklistsLink = wrapper.find(CourseOutlineStatusValue).at(2).find(Hyperlink);
         const checklistsLinkContent = shallowWithIntl(checklistsLink.prop('content'), { context: { intl } });
         const completionCount = checklistsLinkContent.dive({ context: { intl } })
           .find(FormattedMessage).dive({ context: { intl } });
@@ -316,11 +421,12 @@ describe('CourseOutlineStatus', () => {
     it('calls trackEvent when checklist link is clicked', () => {
       wrapper = shallowWithIntl(<CourseOutlineStatus {...defaultProps} />);
 
-      const completionLink = wrapper.find(Hyperlink);
+      const checklistsLink = wrapper.find(CourseOutlineStatusValue).at(2).find(Hyperlink);
+
       const trackEventSpy = jest.fn();
       global.analytics.track = trackEventSpy;
 
-      completionLink.simulate('click');
+      checklistsLink.simulate('click');
       expect(trackEventSpy).toHaveBeenCalledTimes(1);
     });
   });
