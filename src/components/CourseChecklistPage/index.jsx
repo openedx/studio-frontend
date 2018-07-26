@@ -10,7 +10,10 @@ import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
 export default class CourseChecklistPage extends React.Component {
   componentDidMount() {
     this.props.getCourseBestPractices({ exclude_graded: true }, this.props.studioDetails.course);
-    this.props.getCourseLaunch({ graded_only: true }, this.props.studioDetails.course);
+    this.props.getCourseLaunch(
+      { graded_only: true, validate_oras: true },
+      this.props.studioDetails.course,
+    );
   }
 
   getAriaLiveRegion = (isCourseLaunchChecklistLoading, isCourseBestPracticeChecklistLoading) => {

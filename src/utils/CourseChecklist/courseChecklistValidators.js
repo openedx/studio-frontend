@@ -23,6 +23,10 @@ export const hasAssignmentDeadlines = (assignments, dates) => {
     return false;
   } else if (assignments.assignments_with_dates_after_end.length > 0) {
     return false;
+  } else if (assignments.assignments_with_ora_dates_before_start.length > 0) {
+    return false;
+  } else if (assignments.assignments_with_ora_dates_after_end.length > 0) {
+    return false;
   }
 
   return true;

@@ -283,7 +283,7 @@ describe('CourseChecklistPage', () => {
 
       expect(getCourseValidationSpy).toHaveBeenCalledTimes(1);
       expect(getCourseValidationSpy).toHaveBeenCalledWith(
-        { graded_only: true },
+        { graded_only: true, validate_oras: true },
         defaultProps.studioDetails.course,
       );
     });

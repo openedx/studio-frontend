@@ -231,9 +231,23 @@ class CourseChecklist extends React.Component {
   );
 
   getAssignmentDeadlineCommentSection = () => {
-    const gradedAssignmentsOutsideDateRange = [].concat(
+    const allGradedAssignmentsOutsideDateRange = [].concat(
       this.props.data.assignments.assignments_with_dates_before_start,
       this.props.data.assignments.assignments_with_dates_after_end,
+      this.props.data.assignments.assignments_with_ora_dates_before_start,
+      this.props.data.assignments.assignments_with_ora_dates_after_end,
+    );
+
+    // de-dupe in case one assignment has multiple violations
+    const assignmentsMap = new Map();
+    allGradedAssignmentsOutsideDateRange.forEach(
+      (assignment) => { assignmentsMap.set(assignment.id, assignment); },
+    );
+    const gradedAssignmentsOutsideDateRange = [];
+    assignmentsMap.forEach(
+      (value) => {
+        gradedAssignmentsOutsideDateRange.push(value);
+      },
     );
 
     const message = (
@@ -297,7 +311,9 @@ class CourseChecklist extends React.Component {
     Object.keys(this.props.data).length > 0 &&
     (
       this.props.data.assignments.assignments_with_dates_before_start.length > 0 ||
-      this.props.data.assignments.assignments_with_dates_after_end.length > 0
+      this.props.data.assignments.assignments_with_dates_after_end.length > 0 ||
+      this.props.data.assignments.assignments_with_ora_dates_before_start.length > 0 ||
+      this.props.data.assignments.assignments_with_ora_dates_after_end.length > 0
     )
   )
 
@@ -395,6 +411,8 @@ CourseChecklist.propTypes = {
         total_visible: PropTypes.number,
         assignments_with_dates_before_start: PropTypes.array,
         assignments_with_dates_after_end: PropTypes.array,
+        assignments_with_ora_dates_before_start: PropTypes.array,
+        assignments_with_ora_dates_after_end: PropTypes.array,
       }),
       dates: PropTypes.shape({
         has_start_date: PropTypes.bool,
