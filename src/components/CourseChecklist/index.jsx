@@ -426,6 +426,7 @@ CourseChecklist.propTypes = {
         has_certificate: PropTypes.bool,
       }),
       grades: PropTypes.shape({
+        has_grading_policy: PropTypes.bool,
         sum_of_weights: PropTypes.number,
       }),
       is_self_paced: PropTypes.bool,

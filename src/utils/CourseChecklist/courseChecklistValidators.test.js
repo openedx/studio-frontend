@@ -13,15 +13,33 @@ describe('courseCheckValidators utility functions', () => {
 
   describe('hasGradingPolicy', () => {
     it('returns true when sum of weights is 1', () => {
-      expect(validators.hasGradingPolicy({ sum_of_weights: 1 })).toEqual(true);
+      expect(validators.hasGradingPolicy(
+        { has_grading_policy: true, sum_of_weights: 1 },
+      )).toEqual(true);
     });
 
     it('returns true when sum of weights is not 1 due to floating point approximation (1.00004)', () => {
-      expect(validators.hasGradingPolicy({ sum_of_weights: 1.00004 })).toEqual(true);
+      expect(validators.hasGradingPolicy(
+        { has_grading_policy: true, sum_of_weights: 1.00004 },
+      )).toEqual(true);
     });
 
     it('returns false when sum of weights is not 1', () => {
-      expect(validators.hasGradingPolicy({ sum_of_weights: 2 })).toEqual(false);
+      expect(validators.hasGradingPolicy(
+        { has_grading_policy: true, sum_of_weights: 2 },
+      )).toEqual(false);
+    });
+
+    it('returns true when has_grading_policy is true', () => {
+      expect(validators.hasGradingPolicy(
+        { has_grading_policy: true, sum_of_weights: 1 },
+      )).toEqual(true);
+    });
+
+    it('returns false when has_grading_policy is false', () => {
+      expect(validators.hasGradingPolicy(
+        { has_grading_policy: false, sum_of_weights: 1 },
+      )).toEqual(false);
     });
   });
 
@@ -97,8 +115,8 @@ describe('courseCheckValidators utility functions', () => {
           total_number: 0,
         },
         {
-          has_start_date: false,
-          has_end_date: false,
+          has_start_date: true,
+          has_end_date: true,
         },
       )).toEqual(false);
     });
