@@ -3,6 +3,7 @@ export const hasWelcomeMessage = updates => (
 );
 
 export const hasGradingPolicy = grades => (
+  grades.has_grading_policy &&
   parseFloat(grades.sum_of_weights.toPrecision(2), 10) === 1.0
 );
 
