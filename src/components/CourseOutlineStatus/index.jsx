@@ -164,7 +164,7 @@ export default class CourseOutlineStatus extends React.Component {
   getLoadingIcon = () => (
     <WrappedMessage message={messages.loadingIconLabel}>
       {displayText =>
-        (<div className="text-center">
+        (<div className="ml-5">
           <Icon
             className={[classNames(...this.spinnerClasses)]}
             screenReaderText={displayText}
