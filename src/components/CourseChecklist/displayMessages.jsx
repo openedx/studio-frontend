@@ -63,52 +63,52 @@ const messages = defineMessages({
   },
   videoDurationShortDescription: {
     id: 'videoDurationShortDescription',
-    defaultMessage: 'Video Duration',
+    defaultMessage: 'Check Video Duration',
     description: 'Label for a section that describes video durations',
   },
   videoDurationLongDescription: {
     id: 'videoDurationLongDescription',
-    defaultMessage: 'Learners engage best with shorter video content followed by opportunities to practice. 80% or more of course videos should be less than 10 minutes in duration.',
+    defaultMessage: 'Learners engage best with short videos followed by opportunities to practice. Ensure that 80% or more of course videos are less than 10 minutes long.',
     description: 'Description for a section that prompts a user to follow best practices for video length',
   },
   mobileFriendlyVideoShortDescription: {
     id: 'mobileFriendlyVideoShortDescription',
-    defaultMessage: 'Mobile Friendly Video',
+    defaultMessage: 'Create Mobile-Friendly Video',
     description: 'Label for a section that describes mobile friendly videos',
   },
   mobileFriendlyVideoLongDescription: {
     id: 'mobileFriendlyVideoLongDescription',
-    defaultMessage: '90% or more of course videos are mobile friendly.',
+    defaultMessage: 'Mobile-friendly videos can be viewed across all supported devices. Ensure that at least 90% of course videos are mobile friendly by uploading course videos to the edX video pipeline.',
     description: 'Description for a section that prompts a user to follow best practices for mobile friendly videos',
   },
   diverseSequencesShortDescription: {
     id: 'diverseSequencesShortDescription',
-    defaultMessage: 'Diverse Learning Sequences',
+    defaultMessage: 'Build Diverse Learning Sequences',
     description: 'Label for a section that describes diverse sequences of educational content',
   },
   diverseSequencesLongDescription: {
     id: 'diverseSequencesLongDescription',
-    defaultMessage: 'Research shows that a diverse content experience drives learner engagement. We recommend 80% or more of your learning sequences or subsections include multiple content types (such as video, discussion, or problem).',
+    defaultMessage: 'Research shows that a diverse content experience drives learner engagement. We recommend that 80% or more of your learning sequences or subsections include multiple content types (such as video, discussion, or problem).',
     description: 'Description for a section that prompts a user to follow best practices diverse sequences of educational content',
   },
   weeklyHighlightsShortDescription: {
     id: 'weeklyHighlightsShortDescription',
-    defaultMessage: 'Weekly Highlights',
+    defaultMessage: 'Set Weekly Highlights',
     description: 'Label for a section that describes weekly highlights',
   },
   weeklyHighlightsLongDescription: {
     id: 'weeklyHighlightsLongDescription',
-    defaultMessage: 'Weekly highlights are enabled and populated with text. These highlights keep learners engaged and on-track, no matter where they are in your course.',
+    defaultMessage: 'Enable and specify weekly highlights to keep learners engaged and on track in your course.',
     description: 'Description for a section that prompts a user to follow best practices for course weekly highlights',
   },
   unitDepthShortDescription: {
     id: 'unitDepthShortDescription',
-    defaultMessage: 'Unit Depth',
+    defaultMessage: 'Manage Unit Depth',
     description: 'Label for a section that describes course unit depth',
   },
   unitDepthLongDescription: {
     id: 'unitDepthLongDescription',
-    defaultMessage: 'Breaking up course content into manageable pieces promotes learner engagement. We recommend units contain no more than 3 components.',
+    defaultMessage: 'Breaking up course content into manageable pieces promotes learner engagement. We recommend units contain no more than three components.',
     description: 'Description for a section that prompts a user to follow best practices for course unit depth',
   },
   updateLinkLabel: {
