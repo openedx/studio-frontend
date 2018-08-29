@@ -31,11 +31,14 @@ export default class CourseOutlineStatus extends React.Component {
   }
 
   componentWillMount() {
+    const isSelfPaceCourse = this.props.studioDetails.course.is_course_self_paced;
+    const hasCertificatesEnabled = false;
+    const hasHighlightsEnabled = false;
     this.setState({
       totalCourseBestPracticesChecks: getFilteredChecklist(bestPracticesChecklist.data,
-        this.props.studioDetails.course.is_course_self_paced).length,
+        isSelfPaceCourse, hasCertificatesEnabled, hasHighlightsEnabled).length,
       totalCourseLaunchChecks: getFilteredChecklist(launchChecklist.data,
-        this.props.studioDetails.course.is_course_self_paced).length,
+        isSelfPaceCourse, hasCertificatesEnabled, hasHighlightsEnabled).length,
     });
   }
 
@@ -45,9 +48,16 @@ export default class CourseOutlineStatus extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    const courseData = {
+      isSelfPaced: false,
+      hasCertificatesEnabled: false,
+      hasHighlightsEnabled: false,
+    };
     if (Object.keys(nextProps.courseLaunchData).length > 0) {
-      const checks = getFilteredChecklist(
-        launchChecklist.data, nextProps.courseLaunchData.is_self_paced);
+      courseData.isSelfPaced = nextProps.courseLaunchData.is_self_paced;
+      courseData.hasCertificatesEnabled = nextProps.courseLaunchData.certificates.is_enabled;
+      const filteredCourseLaunchChecks = getFilteredChecklist(launchChecklist.data,
+        courseData.isSelfPaced, courseData.hasCertificatesEnabled, courseData.hasHighlightsEnabled);
 
       let completedCourseLaunchChecks = 0;
 
@@ -55,7 +65,7 @@ export default class CourseOutlineStatus extends React.Component {
         data: nextProps.courseLaunchData,
       };
 
-      checks.forEach((check) => {
+      filteredCourseLaunchChecks.forEach((check) => {
         const value = getValidatedValue(props, check.id);
 
         if (value) {
@@ -65,13 +75,16 @@ export default class CourseOutlineStatus extends React.Component {
 
       this.setState({
         completedCourseLaunchChecks,
+        totalCourseLaunchChecks: filteredCourseLaunchChecks.length,
       });
     }
 
     if (Object.keys(nextProps.courseBestPracticesData).length > 0
       && nextProps.studioDetails.enable_quality) {
-      const checks = getFilteredChecklist(
-        bestPracticesChecklist.data, nextProps.courseBestPracticesData.is_self_paced);
+      courseData.hasHighlightsEnabled =
+        nextProps.courseBestPracticesData.sections.highlights_enabled;
+      const filteredCourseBestPracticesChecks = getFilteredChecklist(bestPracticesChecklist.data,
+        courseData.isSelfPaced, courseData.hasCertificatesEnabled, courseData.hasHighlightsEnabled);
 
       let completedCourseBestPracticesChecks = 0;
 
@@ -79,7 +92,7 @@ export default class CourseOutlineStatus extends React.Component {
         data: nextProps.courseBestPracticesData,
       };
 
-      checks.forEach((check) => {
+      filteredCourseBestPracticesChecks.forEach((check) => {
         const value = getValidatedValue(props, check.id);
 
         if (value) {
@@ -89,6 +102,7 @@ export default class CourseOutlineStatus extends React.Component {
 
       this.setState({
         completedCourseBestPracticesChecks,
+        totalCourseBestPracticesChecks: filteredCourseBestPracticesChecks.length,
       });
     }
   }
@@ -251,6 +265,7 @@ CourseOutlineStatus.propTypes = {
       total_visible: PropTypes.number,
       total_number: PropTypes.number,
       highlights_enabled: PropTypes.bool,
+      highlights_active_for_course: PropTypes.bool,
     }),
     subsections: PropTypes.object,
     units: PropTypes.object,
@@ -273,6 +288,7 @@ CourseOutlineStatus.propTypes = {
       has_update: PropTypes.bool,
     }),
     certificates: PropTypes.shape({
+      is_enabled: PropTypes.bool,
       is_activated: PropTypes.bool,
       has_certificate: PropTypes.bool,
     }),

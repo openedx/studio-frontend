@@ -61,6 +61,12 @@ const testData = {
   grades: {
     sum_of_weights: 1,
   },
+  sections: {
+    highlights_enabled: true,
+  },
+  certificates: {
+    is_enabled: true,
+  },
 };
 
 const defaultProps = {

@@ -243,11 +243,21 @@ describe('courseCheckValidators utility functions', () => {
 
   describe('hasWeeklyHighlights', () => {
     it('returns true when course run has highlights enabled', () => {
-      expect(validators.hasWeeklyHighlights({ highlights_enabled: true })).toEqual(true);
+      const data = { highlights_active_for_course: true, highlights_enabled: true };
+      expect(validators.hasWeeklyHighlights(data)).toEqual(true);
     });
 
     it('returns false when course run has highlights enabled', () => {
-      expect(validators.hasWeeklyHighlights({ highlights_enabled: false })).toEqual(false);
+      const data = { highlights_active_for_course: false, highlights_enabled: false };
+      expect(validators.hasWeeklyHighlights(data)).toEqual(false);
+
+      data.highlights_enabled = true;
+      data.highlights_active_for_course = false;
+      expect(validators.hasWeeklyHighlights(data)).toEqual(false);
+
+      data.highlights_enabled = false;
+      data.highlights_active_for_course = true;
+      expect(validators.hasWeeklyHighlights(data)).toEqual(false);
     });
   });
 
