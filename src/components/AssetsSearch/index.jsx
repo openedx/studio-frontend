@@ -1,8 +1,6 @@
 import React from 'react';
-import classNames from 'classnames';
 import PropTypes from 'prop-types';
-import { Button, Icon, InputText } from '@edx/paragon';
-import FontAwesomeStyles from 'font-awesome/css/font-awesome.min.css';
+import { SearchField } from '@edx/paragon';
 
 import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
 import messages from './displayMessages';
@@ -14,7 +12,6 @@ export default class AssetsSearch extends React.Component {
     this.state = { value: props.assetsSearch.search };
 
     this.handleChange = this.handleChange.bind(this);
-    this.submit = this.submit.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -23,9 +20,8 @@ export default class AssetsSearch extends React.Component {
     }
   }
 
-  submit(event) {
+  submit = () => {
     this.props.updateSearch(this.state.value, this.props.courseDetails);
-    event.preventDefault(); // prevent the page from navigating to the form action URL
   }
 
   handleChange(value) {
@@ -33,39 +29,16 @@ export default class AssetsSearch extends React.Component {
   }
 
   render() {
-    // TODO: InputText creates its own form-group div. Nesting them is not semantic.
-    // Once Paragon's asInput is refactored, use only one form-group element.
     return (
-      <form
-        className="form-group form-inline justify-content-end"
+      <SearchField
         onSubmit={this.submit}
-      >
-        <InputText
-          name="search"
-          className={['form-inline']}
-          type="search"
-          inline
-          label={<WrappedMessage message={messages.assetsSearchInputLabel} />}
-          value={this.state.value}
-          onChange={this.handleChange}
-          inputGroupAppend={(
-            <Button
-              buttonType="primary"
-              type="submit"
-              label={
-                <WrappedMessage message={messages.assetsSearchSubmitLabel}>{
-                  txt => (
-                    <Icon
-                      className={[classNames(FontAwesomeStyles.fa, FontAwesomeStyles['fa-search'])]}
-                      screenReaderText={txt}
-                    />
-                  )
-                }</WrappedMessage>
-              }
-            />
-          )}
-        />
-      </form>
+        onChange={this.handleChange}
+        inputLabel={<WrappedMessage message={messages.assetsSearchInputLabel} />}
+        screenReaderText={{
+          clearButton: <WrappedMessage message={messages.assetsClearSearchButtonLabel} />,
+          searchButton: <WrappedMessage message={messages.assetsSearchSubmitLabel} />,
+        }}
+      />
     );
   }
 }
