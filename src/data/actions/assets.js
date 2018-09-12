@@ -192,6 +192,9 @@ export const pageUpdate = (page, courseDetails) =>
         // the previous and next props for forcePage are the same; therefore, we
         // have to reset the page state after a failed click in order to be able
         // to reset the page
+        // TODO: is this still necessary? If not, we should remove the
+        // resetPageState action creator/action type, and possibly
+        // downstream portions of state
         dispatch(resetPageState());
         dispatch(pageUpdateFailure(currentPageState));
       }
