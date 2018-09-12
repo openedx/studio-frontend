@@ -14,8 +14,8 @@ const defaultProps = {
 
 describe('<AssetsSearch />', () => {
   describe('renders', () => {
-    let wrapper,
-        searchField;
+    let wrapper;
+    let searchField;
     beforeEach(() => {
       wrapper = mountWithIntl(
         <AssetsSearch

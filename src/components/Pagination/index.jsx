@@ -11,6 +11,8 @@ import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
  *
  * Translates between zero-indexed Asset page metadata and Paragon's
  * Pagination component's one-indexed page numbers
+ *
+ * @extends React.Component
  */
 export default class Pagination extends React.Component {
   onPageClick = (oneIndexedPageNumber) => {

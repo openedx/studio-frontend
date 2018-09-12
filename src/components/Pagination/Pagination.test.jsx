@@ -20,8 +20,8 @@ const totalPages = Math.ceil(
 );
 
 describe('<Pagination />', () => {
-  let wrapper,
-      paragonPagination;
+  let wrapper;
+  let paragonPagination;
 
   beforeEach(() => {
     wrapper = mountWithIntl(
@@ -39,7 +39,7 @@ describe('<Pagination />', () => {
     expect(paragonPagination.last().prop('pageCount')).toEqual(totalPages);
   });
   it('translates zero-indexed page numbers to one-indexed page numbers for paragon\'s ingestion', () => {
-    let currentPage = wrapper.props().assetsListMetadata.page;
+    const currentPage = wrapper.props().assetsListMetadata.page;
 
     expect(currentPage).toEqual(0);
     expect(paragonPagination.prop('currentPage')).toEqual(currentPage + 1);
@@ -51,8 +51,8 @@ describe('<Pagination />', () => {
         pageSize: 50,
         totalCount: 5000,
       },
-    })
-    let currentPage = wrapper.props().assetsListMetadata.page;
+    });
+    const currentPage = wrapper.props().assetsListMetadata.page;
     paragonPagination = wrapper.find(ParagonPagination);
 
     expect(currentPage).toEqual(1);
@@ -61,7 +61,7 @@ describe('<Pagination />', () => {
   it('calls provided updatePage function when paragon\'s pagination changes page number', () => {
     const updatePageSpy = jest.fn();
     wrapper.setProps({
-      updatePage: updatePageSpy
+      updatePage: updatePageSpy,
     });
     paragonPagination.prop('onPageSelect')(7);
     expect(updatePageSpy).toHaveBeenCalledTimes(1);
