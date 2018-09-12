@@ -1,4 +1,5 @@
 import React from 'react';
+import { Pagination as ParagonPagination } from '@edx/paragon';
 
 import { courseDetails } from '../../utils/testConstants';
 import { mountWithIntl } from '../../utils/i18n/enzymeHelper';
@@ -19,9 +20,10 @@ const totalPages = Math.ceil(
 );
 
 describe('<Pagination />', () => {
-  let wrapper;
-  let pageItems;
-  let pageLinks;
+  let wrapper,
+      paragonPagination,
+      // TODO: these should probably be eliminated since they cross component boundaries
+      pageLinks;
 
   beforeEach(() => {
     wrapper = mountWithIntl(
@@ -30,46 +32,36 @@ describe('<Pagination />', () => {
       />,
     );
 
-    pageItems = wrapper.find('.page-item');
     pageLinks = wrapper.find('.page-item .page-link');
+    paragonPagination = wrapper.find(ParagonPagination);
   });
 
-  it('renders correct number of pages', () => {
-    expect(parseInt(pageItems.last().text(), 10)).toEqual(totalPages);
-    expect(parseInt(pageLinks.last().text(), 10)).toEqual(totalPages);
+  it('renders exactly one paragon Pagination component', () => {
+    expect(paragonPagination.length).toEqual(1);
   });
-  it('page click calls updatePage', () => {
-    const updatePageSpy = jest.fn();
-
-    wrapper.setProps({ updatePage: updatePageSpy });
-
-    pageLinks.last().simulate('click');
-
-    expect(updatePageSpy).toHaveBeenCalledTimes(1);
-    // API treats pages as 0-indexed, but we treat them as 1-indexed
-    expect(updatePageSpy).toHaveBeenCalledWith(totalPages - 1, defaultProps.courseDetails);
+  it('provides the correct number of pages to the paragon pagination component', () => {
+    expect(paragonPagination.last().prop('pageCount')).toEqual(totalPages);
   });
-  it('changes the current page when assets list state updates', () => {
+  it('translates zero-indexed page numbers to one-indexed page numbers for paragon\'s ingestion', () => {
     let currentPage = wrapper.props().assetsListMetadata.page;
-    let currentPageLink = pageItems.at(0).find('a');
 
     expect(currentPage).toEqual(0);
-    expect(currentPageLink.prop('aria-label')).toContain('current page');
-
+    expect(paragonPagination.prop('currentPage')).toEqual(currentPage + 1);
+  });
+  it('changes the current page when assets list state updates', () => {
     wrapper.setProps({
       assetsListMetadata: {
         page: 1,
         pageSize: 50,
         totalCount: 5000,
       },
-    });
-
-    pageItems = wrapper.find('.page-item');
-    currentPage = wrapper.props().assetsListMetadata.page;
-    currentPageLink = pageItems.at(1).find('a');
+    })
+    let currentPage = wrapper.props().assetsListMetadata.page;
+    paragonPagination = wrapper.find(ParagonPagination);
 
     expect(currentPage).toEqual(1);
-    expect(currentPageLink.prop('aria-label')).toContain('current page');
+    expect(paragonPagination.prop('currentPage')).toEqual(currentPage + 1);
+
   });
   describe('break link', () => {
     let breakLink;
