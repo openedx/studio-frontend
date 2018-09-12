@@ -38,6 +38,7 @@ export default class AssetsSearch extends React.Component {
           clearButton: <WrappedMessage message={messages.assetsClearSearchButtonLabel} />,
           searchButton: <WrappedMessage message={messages.assetsSearchSubmitLabel} />,
         }}
+        value={this.state.value}
       />
     );
   }
