@@ -30,16 +30,18 @@ export default class AssetsSearch extends React.Component {
 
   render() {
     return (
-      <SearchField
-        onSubmit={this.submit}
-        onChange={this.handleChange}
-        inputLabel={<WrappedMessage message={messages.assetsSearchInputLabel} />}
-        screenReaderText={{
-          clearButton: <WrappedMessage message={messages.assetsClearSearchButtonLabel} />,
-          searchButton: <WrappedMessage message={messages.assetsSearchSubmitLabel} />,
-        }}
-        value={this.state.value}
-      />
+      <div className="form-group form-inline justify-content-end">
+        <SearchField
+          onSubmit={this.submit}
+          onChange={this.handleChange}
+          inputLabel={<WrappedMessage message={messages.assetsSearchInputLabel} />}
+          screenReaderText={{
+            clearButton: <WrappedMessage message={messages.assetsClearSearchButtonLabel} />,
+            searchButton: <WrappedMessage message={messages.assetsSearchSubmitLabel} />,
+          }}
+          value={this.state.value}
+        />
+      </div>
     );
   }
 }
