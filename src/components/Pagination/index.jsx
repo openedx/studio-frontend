@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Pagination as ParagonPagination } from '@edx/paragon';
+import { intlShape, injectIntl } from 'react-intl';
 
-import paginationStyles from './Pagination.scss';
+import './Pagination.scss';
 import messages from './displayMessages';
 import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
 
@@ -14,29 +15,10 @@ import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
  *
  * @extends React.Component
  */
-export default class Pagination extends React.Component {
+class Pagination extends React.Component {
   onPageClick = (oneIndexedPageNumber) => {
     this.props.updatePage(oneIndexedPageNumber - 1, this.props.courseDetails);
   }
-
-  getDisabledScreenReaderText() {
-    return (
-      <WrappedMessage message={messages.paginationButtonDisabled}>
-        { displayText => <span className={paginationStyles['sr-only']}>{displayText}</span> }
-      </WrappedMessage>
-    );
-  }
-
-  getPreviousLabel(totalPages) {
-    return (
-      <React.Fragment>
-        <WrappedMessage message={messages.paginationPrevious} />
-        {(this.props.assetsListMetadata.page === 0 && totalPages >= 0) &&
-          this.getDisabledScreenReaderText()}
-      </React.Fragment>
-    );
-  }
-
 
   render() {
     const { page: zeroIndexedPageNumber, pageSize, totalCount } = this.props.assetsListMetadata;
@@ -50,17 +32,11 @@ export default class Pagination extends React.Component {
               paginationLabel={paginationLabel}
               pageCount={totalPages}
               buttonLabels={{
-                // TODO; blocked on an interesting issue documented at matthugs/trouble-in-intl-land
-                /* previous: this.getPreviousLabel(totalPages),
-                    next: (
-                    <React.Fragment>
-                    <WrappedMessage message={messages.paginationNext} />
-                    {(this.props.assetsListMetadata.page === totalPages - 1 &&
-                    totalPages > 0) && this.getDisabledScreenReaderText()}
-                    </React.Fragment>),
-                    page: <WrappedMessage message={messages.paginationPage} />,
-                    curerntPage: <WrappedMessage message={messages.paginationCurrentPage} />,
-                    pageOfCount: <WrappedMessage message={messages.paginationOf} />, */
+                previous: this.props.intl.formatMessage(messages.paginationPrevious),
+                next: this.props.intl.formatMessage(messages.paginationNext),
+                page: this.props.intl.formatMessage(messages.paginationPage),
+                curerntPage: this.props.intl.formatMessage(messages.paginationCurrentPage),
+                pageOfCount: this.props.intl.formatMessage(messages.paginationOf),
               }}
               currentPage={zeroIndexedPageNumber + 1}
               onPageSelect={this.onPageClick}
@@ -92,4 +68,7 @@ Pagination.propTypes = {
     base_url: PropTypes.string,
   }).isRequired,
   updatePage: PropTypes.func.isRequired,
+  intl: intlShape.isRequired,
 };
+
+export default injectIntl(Pagination);

@@ -11,7 +11,6 @@
 }
 
 .page-item {
-  min-width: 50px;
   text-align: center;
 }
 
@@ -28,4 +27,7 @@
   .page-link {
     @extend .disabled;
   }
+}
+.page-item.disabled .page-link {
+  background-color: transparent;
 }
