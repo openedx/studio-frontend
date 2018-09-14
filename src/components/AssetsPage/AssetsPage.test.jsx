@@ -44,7 +44,7 @@ const renderAssetsTableTest = () => {
 };
 
 const renderPaginationTest = () => {
-  expect(wrapper.find('Connect(Pagination)')).toHaveLength(1);
+  expect(wrapper.find('Connect(InjectIntl(Pagination))')).toHaveLength(1);
 };
 
 const rendersAssetsResultsCountTest = () => {
