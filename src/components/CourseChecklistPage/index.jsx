@@ -93,6 +93,7 @@ CourseChecklistPage.propTypes = {
       total_visible: PropTypes.number,
       total_number: PropTypes.number,
       highlights_enabled: PropTypes.bool,
+      highlights_active_for_course: PropTypes.bool,
     }),
     subsections: PropTypes.object,
     units: PropTypes.object,
@@ -115,6 +116,7 @@ CourseChecklistPage.propTypes = {
       has_update: PropTypes.bool,
     }),
     certificates: PropTypes.shape({
+      is_enabled: PropTypes.bool,
       is_activated: PropTypes.bool,
       has_certificate: PropTypes.bool,
     }),

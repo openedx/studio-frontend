@@ -329,8 +329,11 @@ class CourseChecklist extends React.Component {
 
   updateChecklistState(props) {
     if (Object.keys(props.data).length > 0) {
-      const checks = getFilteredChecklist(
-        props.dataList, props.data.is_self_paced);
+      const isSelfPaced = props.data.is_self_paced;
+      const hasCertificatesEnabled = props.data.certificates && props.data.certificates.is_enabled;
+      const hasHighlightsEnabled = props.data.sections && props.data.sections.highlights_enabled;
+      const checks = getFilteredChecklist(props.dataList,
+        isSelfPaced, hasCertificatesEnabled, hasHighlightsEnabled);
 
       const values = {};
       let totalCompletedChecks = 0;
@@ -397,6 +400,7 @@ CourseChecklist.propTypes = {
         has_update: PropTypes.bool,
       }),
       certificates: PropTypes.shape({
+        is_enabled: PropTypes.bool,
         is_activated: PropTypes.bool,
         has_certificate: PropTypes.bool,
       }),
@@ -422,6 +426,7 @@ CourseChecklist.propTypes = {
         has_update: PropTypes.bool,
       }),
       certificates: PropTypes.shape({
+        is_enabled: PropTypes.bool,
         is_activated: PropTypes.bool,
         has_certificate: PropTypes.bool,
       }),

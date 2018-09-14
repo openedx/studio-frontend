@@ -64,7 +64,7 @@ export const hasDiverseSequences = (subsections) => {
 };
 
 export const hasWeeklyHighlights = sections => (
-  sections.highlights_enabled
+  sections.highlights_active_for_course && sections.highlights_enabled
 );
 
 export const hasShortUnitDepth = units => (

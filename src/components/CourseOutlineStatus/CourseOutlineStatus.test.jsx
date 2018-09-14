@@ -26,6 +26,10 @@ const testChecklistData = ['a', 'b', 'c', 'd'].reduce(((accumulator, currentValu
 const testChecklist = {
   heading: 'test',
   data: testChecklistData,
+  sections: { highlights_enabled: true },
+};
+const testCourseLaunchData = {
+  certificates: { is_enabled: true },
 };
 
 /**
@@ -338,7 +342,7 @@ describe('CourseOutlineStatus', () => {
 
         wrapper.setProps({
           courseBestPracticesData: testChecklist,
-          courseLaunchData: testChecklist,
+          courseLaunchData: testCourseLaunchData,
         });
 
         const checklistsLink = wrapper.find(CourseOutlineStatusValue).at(2).find(Hyperlink);
@@ -370,7 +374,7 @@ describe('CourseOutlineStatus', () => {
 
         wrapper.setProps({
           courseBestPracticesData: testChecklist,
-          courseLaunchData: testChecklist,
+          courseLaunchData: testCourseLaunchData,
         });
 
         const checklistsLink = wrapper.find(CourseOutlineStatusValue).at(2).find(Hyperlink);

@@ -1,19 +1,26 @@
 import { filters } from './courseChecklistData';
 
-const getFilteredChecklist = (checklist, isSelfPaced) => {
-  let healthChecks;
+const getFilteredChecklist = (
+  checklist, isSelfPaced, hasCertificatesEnabled, hasHighlightsEnabled) => {
+  let filteredCheckList;
 
   if (isSelfPaced) {
-    healthChecks =
+    filteredCheckList =
       checklist.filter(data => data.pacingTypeFilter === filters.ALL ||
         data.pacingTypeFilter === filters.SELF_PACED);
   } else {
-    healthChecks =
+    filteredCheckList =
       checklist.filter(data => data.pacingTypeFilter === filters.ALL ||
         data.pacingTypeFilter === filters.INSTRUCTOR_PACED);
   }
 
-  return healthChecks;
+  filteredCheckList = filteredCheckList.filter(data => data.id !== 'certificate' ||
+    hasCertificatesEnabled);
+
+  filteredCheckList = filteredCheckList.filter(data => data.id !== 'weeklyHighlights' ||
+    hasHighlightsEnabled);
+
+  return filteredCheckList;
 };
 
 export default getFilteredChecklist;
