@@ -1,3 +1,5 @@
+$pagination-disabled-bg: transparent;
+
 @import 'edx-bootstrap';
 
 .pagination {
@@ -29,5 +31,5 @@
   }
 }
 .page-item.disabled .page-link {
-  background-color: transparent;
+  background-color: $pagination-disabled-bg;
 }
