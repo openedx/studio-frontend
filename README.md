@@ -99,6 +99,28 @@ your local docker devstack by following these steps:
 Your devstack Studio should now be using the production studio-frontend files
 built by your local checkout.
 
+## Testing in studio-frontend
+
+### Where do test files go?
+If you are developing a component and you are adding new `js` or `jsx` test files,
+the test files would go in the same location as the file. It makes it easier
+to track and test. For example, if you are developing a component `AssertsSearch`
+in `src/components/` you would name the test file after the component name
+`AssertsSearch.test.jsx`. Similarly, if you are adding a file
+`parseDateTime.jsx` in the `src/utils/` place the test file at same location with
+the name `parseDateTime.test.jsx`.
+
+### How to run tests locally
+To run the whole suite of tests, you can run `npm run test` inside the docker container shell.
+```
+make shell
+npm run test
+```
+If you want to run a particular test file only, you can run `npm run test -t <path>`.
+You can also add `".only"` to any `"it"` or `"describe"` block in a particular test
+file to only run that particular test. For example, `it.only` to run only that test
+or `describe.only` to run only the tests in that describe block.
+
 ## Testing a Branch on a Sandbox
 
 It is a good practice to test out any major changes to studio-frontend in a

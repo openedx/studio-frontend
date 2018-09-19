@@ -24,6 +24,9 @@ logs: ## show logs for studio-frontend container
 down: ## stop and remove studio-frontend container
 	docker-compose down
 
+stop: ## stops studio-frontend container
+	docker-compose stop
+
 npm-install-%: ## install specified % npm package on the studio-frontend container
 	docker exec dahlia.studio-frontend npm install $* --save-dev
 	git add package.json
