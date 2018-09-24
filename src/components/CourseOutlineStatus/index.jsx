@@ -79,8 +79,7 @@ export default class CourseOutlineStatus extends React.Component {
       });
     }
 
-    if (Object.keys(nextProps.courseBestPracticesData).length > 0
-      && nextProps.studioDetails.enable_quality) {
+    if (Object.keys(nextProps.courseBestPracticesData).length > 0) {
       courseData.hasHighlightsEnabled =
         nextProps.courseBestPracticesData.sections.highlights_enabled;
       const filteredCourseBestPracticesChecks = getFilteredChecklist(bestPracticesChecklist.data,
@@ -196,13 +195,11 @@ export default class CourseOutlineStatus extends React.Component {
       totalCourseLaunchChecks,
     } = this.state;
 
-    const totalCompletedChecks = this.props.studioDetails.enable_quality ?
-      completedCourseBestPracticesChecks + completedCourseLaunchChecks :
-      completedCourseLaunchChecks;
+    const totalCompletedChecks =
+      completedCourseBestPracticesChecks + completedCourseLaunchChecks;
 
-    const totalChecks = this.props.studioDetails.enable_quality ?
-      totalCourseBestPracticesChecks + totalCourseLaunchChecks :
-      totalCourseLaunchChecks;
+    const totalChecks =
+      totalCourseBestPracticesChecks + totalCourseLaunchChecks;
 
     return (
       <Hyperlink
@@ -315,7 +312,6 @@ CourseOutlineStatus.propTypes = {
       revision: PropTypes.string,
       url_name: PropTypes.string,
     }),
-    enable_quality: PropTypes.boolean,
     help_tokens: PropTypes.objectOf(PropTypes.string),
     lang: PropTypes.string,
     links: PropTypes.objectOf(PropTypes.string).isRequired,

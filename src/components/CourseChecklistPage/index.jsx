@@ -30,7 +30,7 @@ export default class CourseChecklistPage extends React.Component {
     return (
       <div className="sr-only" aria-live="polite" role="status">
         {courseLaunchLoadingMessage}
-        {this.props.studioDetails.enable_quality ? courseBestPracticesLoadingMessage : null}
+        {courseBestPracticesLoadingMessage}
       </div>
     );
   }
@@ -70,17 +70,11 @@ export default class CourseChecklistPage extends React.Component {
             />
           </div>
         </div>
-        {
-          this.props.studioDetails.enable_quality ?
-            (
-              <div className="row ">
-                <div className="col">
-                  {courseBestPracticesChecklist}
-                </div>
-              </div>
-            )
-            : null
-        }
+        <div className="row ">
+          <div className="col">
+            {courseBestPracticesChecklist}
+          </div>
+        </div>
       </div>
     );
   }
@@ -134,7 +128,6 @@ CourseChecklistPage.propTypes = {
       base_url: PropTypes.string,
       course_release_date: PropTypes.string,
       display_course_number: PropTypes.string,
-      enable_quality: PropTypes.bool,
       id: PropTypes.string,
       is_course_self_paced: PropTypes.boolean,
       lang: PropTypes.string,
@@ -144,7 +137,6 @@ CourseChecklistPage.propTypes = {
       revision: PropTypes.string,
       url_name: PropTypes.string,
     }),
-    enable_quality: PropTypes.boolean,
     help_tokens: PropTypes.objectOf(PropTypes.string),
     lang: PropTypes.string,
   }).isRequired,
