@@ -266,18 +266,6 @@ describe('Assets Reducers', () => {
           ...action.previousState,
         });
       });
-      it('returns correct pagination state on RESET_PAGE action', () => {
-        action = {
-          type: assetActions.paginate.RESET_PAGE,
-        };
-
-        state = reducers.pagination(defaultState, action);
-
-        expect(state).toEqual({
-          ...defaultState,
-          page: -1,
-        });
-      });
     });
     describe('sort reducer', () => {
       it('returns correct sort and direction state on REQUEST_ASSETS_SUCCESS action', () => {

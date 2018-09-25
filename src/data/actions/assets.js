@@ -174,10 +174,6 @@ export const pageUpdateFailure = previousPageState => ({
   previousState: { ...previousPageState },
 });
 
-export const resetPageState = () => ({
-  type: assetActions.paginate.RESET_PAGE,
-});
-
 export const pageUpdate = (page, courseDetails) =>
   (dispatch, getState) => {
     const currentPageState = getState().metadata.pagination;
@@ -188,11 +184,6 @@ export const pageUpdate = (page, courseDetails) =>
 
     return dispatch(getAssets(parameters, courseDetails)).then((responseAction) => {
       if (requestFailed(responseAction)) {
-        // react-paginate does not force the page state via the forcePage prop when
-        // the previous and next props for forcePage are the same; therefore, we
-        // have to reset the page state after a failed click in order to be able
-        // to reset the page
-        dispatch(resetPageState());
         dispatch(pageUpdateFailure(currentPageState));
       }
     });

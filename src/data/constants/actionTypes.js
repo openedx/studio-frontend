@@ -25,7 +25,6 @@ export const assetActions = {
   paginate: {
     PAGE_UPDATE: 'PAGE_UPDATE',
     PAGE_UPDATE_FAILURE: 'PAGE_UPDATE_FAILURE',
-    RESET_PAGE: 'RESET_PAGE',
   },
   request: {
     REQUEST_ASSETS_SUCCESS: 'REQUEST_ASSETS_SUCCESS',

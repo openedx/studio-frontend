@@ -1,90 +1,46 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import ReactPaginate from 'react-paginate';
+import { Pagination as ParagonPagination } from '@edx/paragon';
+import { intlShape, injectIntl } from 'react-intl';
 
-import classNames from 'classnames';
-import paginationStyles from './Pagination.scss';
-import edxBootstrap from '../../SFE.scss';
+import './Pagination.scss';
 import messages from './displayMessages';
 import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
 
-export default class Pagination extends React.Component {
-  constructor(props) {
-    super(props);
-    this.onPageClick = this.onPageClick.bind(this);
-  }
-
-  onPageClick(pageData) {
-    this.props.updatePage(pageData.selected, this.props.courseDetails);
-  }
-
-  getDisabledScreenReaderText() {
-    return (
-      <WrappedMessage message={messages.paginationButtonDisabled}>
-        { displayText => <span className={paginationStyles['sr-only']}>{displayText}</span> }
-      </WrappedMessage>
-    );
-  }
-
-  getPreviousLabel(totalPages) {
-    return (
-      <React.Fragment>
-        <WrappedMessage message={messages.paginationPrevious} />
-        {(this.props.assetsListMetadata.page === 0 && totalPages >= 0) &&
-          this.getDisabledScreenReaderText()}
-      </React.Fragment>
-    );
-  }
-
-  getNextLabel(totalPages) {
-    return (
-      <React.Fragment>
-        <WrappedMessage message={messages.paginationNext} />
-        {(this.props.assetsListMetadata.page === totalPages - 1 &&
-          totalPages > 0) && this.getDisabledScreenReaderText()}
-      </React.Fragment>
-    );
-  }
-
-  getBreakLabel() {
-    return (
-      <span>
-      ...
-        {this.getDisabledScreenReaderText()}
-      </span>
-    );
+/**
+ * Pagination component specific to the Studio Asset page
+ *
+ * Translates between zero-indexed Asset page metadata and Paragon's
+ * Pagination component's one-indexed page numbers
+ *
+ * @extends React.Component
+ */
+class Pagination extends React.Component {
+  onPageClick = (oneIndexedPageNumber) => {
+    this.props.updatePage(oneIndexedPageNumber - 1, this.props.courseDetails);
   }
 
   render() {
-    const { page, pageSize, totalCount } = this.props.assetsListMetadata;
+    const { page: zeroIndexedPageNumber, pageSize, totalCount } = this.props.assetsListMetadata;
     const totalPages = Math.ceil(totalCount / pageSize);
 
     return (
       <WrappedMessage message={messages.paginationAriaLabel}>
         { paginationLabel =>
           (
-            <nav aria-label={paginationLabel}>
-              <ReactPaginate
-                previousLabel={this.getPreviousLabel(totalPages)}
-                nextLabel={this.getNextLabel(totalPages)}
-                breakLabel={this.getBreakLabel()}
-                pageCount={totalPages}
-                forcePage={page}
-                marginPagesDisplayed={2}
-                pageRangeDisplayed={5}
-                onPageChange={this.onPageClick}
-                activeClassName={classNames(edxBootstrap.active)}
-                breakClassName={classNames(edxBootstrap['page-link'], edxBootstrap.disabled)}
-                containerClassName={classNames(edxBootstrap.pagination)}
-                disabledClassName={classNames(edxBootstrap.disabled)}
-                nextClassName={classNames(edxBootstrap.next)}
-                nextLinkClassName={classNames(edxBootstrap['page-link'])}
-                pageClassName={classNames(edxBootstrap['page-item'])}
-                pageLinkClassName={classNames(edxBootstrap['page-link'])}
-                previousClassName={classNames(edxBootstrap.previous)}
-                previousLinkClassName={classNames(edxBootstrap['page-link'])}
-              />
-            </nav>
+            <ParagonPagination
+              paginationLabel={paginationLabel}
+              pageCount={totalPages}
+              buttonLabels={{
+                previous: this.props.intl.formatMessage(messages.paginationPrevious),
+                next: this.props.intl.formatMessage(messages.paginationNext),
+                page: this.props.intl.formatMessage(messages.paginationPage),
+                currentPage: this.props.intl.formatMessage(messages.paginationCurrentPage),
+                pageOfCount: this.props.intl.formatMessage(messages.paginationOf),
+              }}
+              currentPage={zeroIndexedPageNumber + 1}
+              onPageSelect={this.onPageClick}
+            />
           )
         }
       </WrappedMessage>
@@ -112,4 +68,7 @@ Pagination.propTypes = {
     base_url: PropTypes.string,
   }).isRequired,
   updatePage: PropTypes.func.isRequired,
+  intl: intlShape.isRequired,
 };
+
+export default injectIntl(Pagination);

@@ -101,8 +101,6 @@ export const pagination = (state = paginationInitial, action) => {
       };
     case assetActions.paginate.PAGE_UPDATE_FAILURE:
       return { ...state, ...action.previousState };
-    case assetActions.paginate.RESET_PAGE:
-      return { ...state, page: -1 };
     default:
       return state;
   }

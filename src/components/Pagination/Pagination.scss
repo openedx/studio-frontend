@@ -1,4 +1,7 @@
+$pagination-disabled-bg: transparent;
+
 @import 'edx-bootstrap';
+@import '~@edx/paragon/src/Pagination/Pagination';
 
 .pagination {
   justify-content: center;
@@ -11,7 +14,6 @@
 }
 
 .page-item {
-  min-width: 50px;
   text-align: center;
 }
 
@@ -28,4 +30,7 @@
   .page-link {
     @extend .disabled;
   }
+}
+.page-item.disabled .page-link {
+  background-color: $pagination-disabled-bg;
 }

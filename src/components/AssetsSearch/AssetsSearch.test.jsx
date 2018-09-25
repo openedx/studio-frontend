@@ -1,4 +1,5 @@
 import React from 'react';
+import { SearchField } from '@edx/paragon';
 
 import AssetsSearch from './index';
 import { searchInitial } from './../../data/reducers/assets';
@@ -10,58 +11,54 @@ const defaultProps = {
   courseDetails: {},
 };
 
-let wrapper;
 
 describe('<AssetsSearch />', () => {
   describe('renders', () => {
+    let wrapper;
+    let searchField;
     beforeEach(() => {
       wrapper = mountWithIntl(
         <AssetsSearch
           {...defaultProps}
         />,
       );
+      searchField = wrapper.find(SearchField);
     });
-    it('has label, input, and button in a form element', () => {
-      const searchForm = wrapper.find('form');
-
-      expect(searchForm).toHaveLength(1);
-      expect(searchForm.find('label')).toHaveLength(1);
-      expect(searchForm.find('input[type="search"]')).toHaveLength(1);
-      expect(searchForm.find('button[type="submit"]')).toHaveLength(1);
-    });
-    it('has correct styling', () => {
-      const button = wrapper.find('form').find('button[type="submit"]');
-      expect(wrapper.find('form').hasClass('form-group')).toEqual(true);
-      expect(wrapper.find('form').hasClass('form-inline')).toEqual(true);
-      expect(button.find('span.fa')).toHaveLength(1);
-      expect(button.find('span.fa').hasClass('fa-search')).toEqual(true);
+    it('has a paragon SearchField', () => {
+      expect(searchField).toHaveLength(1);
     });
     it('handles onChange callback correctly', () => {
-      const searchInput = wrapper.find('form input[type="search"]');
-
-      searchInput.simulate('change', { target: { value: 'edX' } });
+      searchField.prop('onChange')('edX');
       expect(wrapper.state('value')).toEqual('edX');
     });
-    it('calls updateSearch when submit button is clicked', () => {
-      const searchSpy = jest.fn();
+    describe('how updateSearch is called', () => {
+      let searchSpy;
 
-      wrapper.setProps({
-        updateSearch: searchSpy,
+      beforeEach(() => {
+        searchSpy = jest.fn();
+
+        wrapper.setProps({
+          updateSearch: searchSpy,
+        });
+        searchField.prop('onChange')('edX');
+        searchField.prop('onSubmit')();
       });
 
-      const submitButton = wrapper.find('form button[type="submit"]');
-      const searchInput = wrapper.find('form input[type="search"]');
-      searchInput.simulate('change', { target: { value: 'edX' } });
-      submitButton.simulate('submit');
-
-      expect(searchSpy).toHaveBeenCalledTimes(1);
-      expect(searchSpy).toHaveBeenCalledWith('edX', defaultProps.courseDetails);
+      it('calls updateSearch when submit button is clicked', () => {
+        expect(searchSpy).toHaveBeenCalledTimes(1);
+        expect(searchSpy).toHaveBeenCalledWith('edX', defaultProps.courseDetails);
+      });
+      it('calls updateSearch when clear button is clicked', () => {
+        searchField.prop('onClear')();
+        expect(searchSpy).toHaveBeenCalledTimes(2);
+        expect(searchSpy).toHaveBeenLastCalledWith('', defaultProps.courseDetails);
+      });
     });
     it('updates search input text when search redux state is updated', () => {
-      const searchInput = wrapper.find('form input[type="search"]');
       wrapper.setProps({ assetsSearch: { search: 'foobar' } }, () => {
+        searchField = wrapper.find(SearchField);
         expect(wrapper.state('value')).toEqual('foobar');
-        expect(searchInput.instance().value).toEqual('foobar');
+        expect(searchField.prop('value')).toEqual('foobar');
       });
     });
   });
