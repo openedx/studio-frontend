@@ -28,12 +28,19 @@ export default class AssetsSearch extends React.Component {
     this.setState({ value });
   }
 
+  handleClear = () => {
+    // relying on `submit` introduces as state update race
+    // condition
+    this.props.updateSearch('', this.props.courseDetails);
+  }
+
   render() {
     return (
       <div className="form-group form-inline justify-content-end">
         <SearchField
           onSubmit={this.submit}
           onChange={this.handleChange}
+          onClear={this.handleClear}
           inputLabel={<WrappedMessage message={messages.assetsSearchInputLabel} />}
           screenReaderText={{
             clearButton: <WrappedMessage message={messages.assetsClearSearchButtonLabel} />,
