@@ -76,7 +76,6 @@ const defaultProps = {
   idPrefix: 'test',
   studioDetails: {
     course: courseDetails,
-    enable_quality: true,
     links: {
       certificates: 'certificatesTest',
       course_outline: 'courseOutlineTest',
@@ -444,7 +443,6 @@ describe('CourseChecklist', () => {
       idPrefix: '',
       studioDetails: {
         course: courseDetails,
-        enable_quality: true,
         links: {
           certificates: '',
           course_outline: '',
