@@ -11,6 +11,7 @@ services:
             - container_only_node_modules:/studio-frontend/node_modules
         ports:
             - "18011:18011"
+            - "9229:9229"
 
 networks:
     default:

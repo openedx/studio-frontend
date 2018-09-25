@@ -103,10 +103,10 @@ built by your local checkout.
 
 ### Where do test files go?
 If you are developing a component and you are adding new `js` or `jsx` test files,
-the test files would go in the same location as the file. It makes it easier
-to track and test. For example, if you are developing a component `AssertsSearch`
+the test files would go in the same location as the file. This makes it easier
+to track and test. For example, if you are developing a component `AssetsSearch`
 in `src/components/` you would name the test file after the component name
-`AssertsSearch.test.jsx`. Similarly, if you are adding a file
+`AssetsSearch.test.jsx`. Similarly, if you are adding a file
 `parseDateTime.jsx` in the `src/utils/` place the test file at same location with
 the name `parseDateTime.test.jsx`.
 
@@ -120,6 +120,20 @@ If you want to run a particular test file only, you can run `npm run test -t <pa
 You can also add `".only"` to any `"it"` or `"describe"` block in a particular test
 file to only run that particular test. For example, `it.only` to run only that test
 or `describe.only` to run only the tests in that describe block.
+
+### How to debug locally running tests
+To debug tests running locally, first open the Node debugger:
+
+1) navigate to `chrome://inspect` in your browser
+2) choose "Open dedicated DevTools for Node" (it will open in a new window)
+3) check that the default network configuration in the "Connection" tab is `127.0.0.1:9229` (i.e. port `9229` on `localhost`)
+
+Next, after adding a `debugger;` statement above the test code you'd like to debug, use these commands inside the `studio-frontend` repo:
+```
+make shell
+node --inspect=0.0.0.0 node_modules/.bin/jest --runInBand
+```
+The node debugger should grab focus as soon as your first breakpoint is hit. You can specify individual test files by appending `-- path/to/yourTestFile.test.jsx` to the end of the `node` command.
 
 ## Testing a Branch on a Sandbox
 
