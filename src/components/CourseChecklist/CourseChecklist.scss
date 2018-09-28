@@ -30,14 +30,6 @@ $success-color: theme-color("success");
   text-decoration: none;
 }
 
-.checklist-item {
-  &:not(:hover) {
-    .checklist-item-link {
-      @include sr_only();
-    }  
-  }
-}
-
 //complete checklist item style
 .checklist-item-complete {
   box-shadow: -5px 0 0 0 $success-color;

@@ -505,7 +505,6 @@ describe('Assets Action Creators', () => {
       { type: assetActions.request.REQUEST_ASSETS_FAILURE,
         previousState: initialState.assets,
         response: errorResponse },
-      { type: assetActions.paginate.RESET_PAGE },
       { type: assetActions.paginate.PAGE_UPDATE_FAILURE,
         previousState: { ...initialState.metadata.pagination } },
     ];

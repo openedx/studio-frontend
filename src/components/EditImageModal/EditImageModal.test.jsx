@@ -198,7 +198,7 @@ describe('EditImageModal', () => {
 
 
             it('no Pagination component', () => {
-              expect(getModalBody(editImageModal).find('Connect(Pagination)')).toHaveLength(0);
+              expect(getModalBody(editImageModal).find('Pagination')).toHaveLength(0);
             });
           });
 
@@ -244,7 +244,7 @@ describe('EditImageModal', () => {
             });
 
             it('a Pagination component', () => {
-              expect(getModalBody(editImageModal).find('Connect(Pagination)')).toHaveLength(1);
+              expect(getModalBody(editImageModal).find('Connect(InjectIntl(Pagination))')).toHaveLength(1);
             });
           });
 
@@ -294,7 +294,7 @@ describe('EditImageModal', () => {
             });
 
             it('no Pagination component', () => {
-              expect(getModalBody(editImageModal).find('Connect(Pagination)')).toHaveLength(0);
+              expect(getModalBody(editImageModal).find('Pagination')).toHaveLength(0);
             });
           });
 
@@ -345,7 +345,7 @@ describe('EditImageModal', () => {
             });
 
             it('no Pagination component', () => {
-              expect(getModalBody(editImageModal).find('Connect(Pagination)')).toHaveLength(0);
+              expect(getModalBody(editImageModal).find('Pagination')).toHaveLength(0);
             });
           });
         });

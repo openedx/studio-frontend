@@ -15,7 +15,7 @@
   "license": "AGPL-3.0",
   "dependencies": {
     "@edx/edx-bootstrap": "^1.0.0",
-    "@edx/paragon": "3.1.2",
+    "@edx/paragon": "3.4.8",
     "airbnb-prop-types": "^2.10.0",
     "babel-polyfill": "^6.26.0",
     "classnames": "^2.2.5",
@@ -30,7 +30,6 @@
     "react-dropzone": "^4.2.3",
     "react-intl": "^2.4.0",
     "react-intl-translations-manager": "^5.0.1",
-    "react-paginate": "^5.0.0",
     "react-redux": "^5.0.6",
     "react-transition-group": "^2.2.1",
     "redux": "^3.7.2",
