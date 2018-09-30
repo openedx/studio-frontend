@@ -163,5 +163,8 @@
   "paginationAriaLabel": "Asignación de numero de página al contenido",
   "paginationButtonDisabled": "el botón está desactivado",
   "paginationNext": "siguiente",
-  "paginationPrevious": "anterior"
+  "paginationPrevious": "anterior",
+  "paginationPage": "page",
+  "paginationCurrentPage": "current page",
+  "paginationOf": "of"
 }

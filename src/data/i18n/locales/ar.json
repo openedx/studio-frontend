@@ -163,5 +163,8 @@
   "paginationAriaLabel": "Content pagination",
   "paginationButtonDisabled": "button is disabled",
   "paginationNext": "التالي",
-  "paginationPrevious": "السابق"
+  "paginationPrevious": "السابق",
+  "paginationPage": "page",
+  "paginationCurrentPage": "current page",
+  "paginationOf": "of"
 }
