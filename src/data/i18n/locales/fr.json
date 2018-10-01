@@ -163,5 +163,8 @@
   "paginationAriaLabel": "Content pagination",
   "paginationButtonDisabled": "le bouton est désactivé",
   "paginationNext": "suivant",
-  "paginationPrevious": "précédent"
+  "paginationPrevious": "précédent",
+  "paginationPage": "page",
+  "paginationCurrentPage": "current page",
+  "paginationOf": "of"
 }
