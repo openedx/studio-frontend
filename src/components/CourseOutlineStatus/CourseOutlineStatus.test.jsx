@@ -87,6 +87,7 @@ let wrapper;
 const defaultProps = {
   studioDetails: {
     course: courseDetails,
+    enable_quality: true,
     links: {
       settings: 'settingsTest',
     },
@@ -331,25 +332,58 @@ describe('CourseOutlineStatus', () => {
       });
     });
 
-    it('completion count text', () => {
-      wrapper = shallowWithIntl(<CourseOutlineStatus {...defaultProps} />);
+    describe('if enable_quality prop is true', () => {
+      it('completion count text', () => {
+        wrapper = shallowWithIntl(<CourseOutlineStatus {...defaultProps} />);
 
-      // multiplied by two because of two checklists
-      const completed = Object.values(validatedValues).filter(value => value).length;
-      const total = Object.values(validatedValues).length;
+        // multiplied by two because of two checklists
+        const completed = Object.values(validatedValues).filter(value => value).length;
+        const total = Object.values(validatedValues).length;
 
-      wrapper.setProps({
-        courseBestPracticesData: testChecklist,
-        courseLaunchData: testCourseLaunchData,
+        wrapper.setProps({
+          courseBestPracticesData: testChecklist,
+          courseLaunchData: testCourseLaunchData,
+        });
+
+        const checklistsLink = wrapper.find(CourseOutlineStatusValue).at(2).find(Hyperlink);
+        const checklistsLinkContent = shallowWithIntl(checklistsLink.prop('content'), { context: { intl } });
+        const completionCount = checklistsLinkContent.dive({ context: { intl } })
+          .find(FormattedMessage).dive({ context: { intl } });
+
+        expect(completionCount.text()).toEqual(`${completed}/${total} completed`);
       });
+    });
 
-      const checklistsLink = wrapper.find(CourseOutlineStatusValue).at(2).find(Hyperlink);
-      const checklistsLinkContent = shallowWithIntl(checklistsLink.prop('content'), { context: { intl } });
-      const completionCount = checklistsLinkContent
-        .dive({ context: { intl } })
-        .find(FormattedMessage).dive({ context: { intl } });
+    describe('if enable_quality prop is false', () => {
+      it('completion count text', () => {
+        const newStudioDetails = {
+          ...defaultProps.studioDetails,
+          enable_quality: false,
+        };
 
-      expect(completionCount.text()).toEqual(`${completed}/${total} completed`);
+        const newProps = {
+          ...defaultProps,
+          studioDetails: newStudioDetails,
+        };
+
+        wrapper = shallowWithIntl(<CourseOutlineStatus {...newProps} />);
+
+        const completed = Object.values(launchChecklistValidatedValues)
+          .filter(value => value).length;
+        const total = Object.values(launchChecklistValidatedValues).length;
+
+        wrapper.setProps({
+          courseBestPracticesData: testChecklist,
+          courseLaunchData: testCourseLaunchData,
+        });
+
+        const checklistsLink = wrapper.find(CourseOutlineStatusValue).at(2).find(Hyperlink);
+        const checklistsLinkContent = shallowWithIntl(checklistsLink.prop('content'), { context: { intl } });
+        const completionCount = checklistsLinkContent.dive({ context: { intl } })
+          .find(FormattedMessage).dive({ context: { intl } });
+
+        expect(completionCount.text()).toEqual(`${completed}/${total} completed`);
+      });
     });
   });
 

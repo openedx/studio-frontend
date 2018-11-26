@@ -75,6 +75,7 @@ const defaultProps = {
   dataList: testChecklistData,
   idPrefix: 'test',
   studioDetails: {
+    enable_quality: true,
     course: courseDetails,
     links: {
       certificates: 'certificatesTest',
@@ -443,6 +444,7 @@ describe('CourseChecklist', () => {
       idPrefix: '',
       studioDetails: {
         course: courseDetails,
+        enable_quality: true,
         links: {
           certificates: '',
           course_outline: '',
