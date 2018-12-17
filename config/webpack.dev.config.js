@@ -102,6 +102,12 @@ module.exports = Merge.smart(commonConfig, {
       filename: 'courseOutlineHealthCheck.html',
       template: path.resolve(__dirname, '../public/index.html'),
     }),
+    new HtmlWebpackPlugin({
+      inject: true,
+      chunks: ['proctoringSettings'],
+      filename: 'proctoringSettings.html',
+      template: path.resolve(__dirname, '../public/index.html'),
+    }),
   ],
   devServer: {
     host: '0.0.0.0',

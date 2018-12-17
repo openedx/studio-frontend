@@ -20,6 +20,21 @@ function assetTypesFromState(assetTypes) {
   return Object.keys(assetTypes).filter(key => assetTypes[key]);
 }
 
+export function requestChangeAdvancedSettings(courseId, params) {
+  return fetch(
+    `${endpoints.advancedSettings}/${courseId}`, {
+      body: JSON.stringify(params),
+      credentials: 'same-origin',
+      method: 'put',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'X-CSRFToken': Cookies.get('csrftoken'),
+      },
+    },
+  );
+}
+
 export function requestAssets(courseId, params) {
   const assetTypesToFilter = assetTypesFromState(params.assetTypes);
   const sortType = getDatabaseAttributesFromAssetAttributes(params.sort);

@@ -10,6 +10,7 @@ module.exports = {
     courseHealthCheck: path.resolve(__dirname, '../src/courseHealthCheckIndex.jsx'),
     courseOutlineHealthCheck: path.resolve(__dirname, '../src/courseOutlineHealthCheckIndex.jsx'),
     i18nMessages: path.resolve(__dirname, '../src/data/i18n/locales/currentlySupportedLangs.jsx'),
+    proctoringSettings: path.resolve(__dirname, '../src/proctoringSettings.jsx'),
   },
   output: {
     path: path.resolve(__dirname, '../dist'),
