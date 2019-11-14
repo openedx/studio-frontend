@@ -1,0 +1,21 @@
+# This file describes this Open edX repo, as described in OEP-2:
+# https://open-edx-proposals.readthedocs.io/en/latest/oep-0002-bp-repo-metadata.html
+
+nick: sfe
+owner: fysheets
+oeps:
+  oep-2:
+    state: True
+  oep-11:
+    state: True
+    reason: This repo uses the technology noted in this OEP
+  oep-7:
+    applicable: False
+    reason: This OEP discusses Python 3 migration and this repo does not use Python
+  oep-18:
+    applicable: False
+    reason: This OEP discusses Python dependency management and this repo does not use Python
+  oep-22:
+    applicable: False
+    reason: This OEP discusses Django Caching and this repo does not use Django
+
