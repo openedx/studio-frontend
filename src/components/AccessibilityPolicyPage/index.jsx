@@ -10,7 +10,6 @@ const AccessibilityPolicyPage = props => (
       <div className="col">
         <AccessibilityBody
           communityAccessibilityLink={props.communityAccessibilityLink}
-          phoneNumber={props.phoneNumber}
           email={props.email}
         />
         <WrappedAccessibilityPolicyForm
@@ -24,7 +23,6 @@ const AccessibilityPolicyPage = props => (
 AccessibilityPolicyPage.propTypes = {
   communityAccessibilityLink: PropTypes.string.isRequired,
   email: PropTypes.string.isRequired,
-  phoneNumber: PropTypes.string.isRequired,
 };
 
 export default AccessibilityPolicyPage;
