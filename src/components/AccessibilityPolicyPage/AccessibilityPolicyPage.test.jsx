@@ -8,7 +8,6 @@ import { mountWithIntl } from '../../utils/i18n/enzymeHelper';
 const defaultProps = {
   communityAccessibilityLink: 'http://www.testLink.com',
   email: 'test@example.com',
-  phoneNumber: '555-555-5555',
 };
 const initialState = {
   accessibility: {

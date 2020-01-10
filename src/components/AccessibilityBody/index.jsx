@@ -1,20 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import ReactDomServer from 'react-dom/server';
 
 import messages from './displayMessages';
 import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
 import styles from './AccessibilityBody.scss';
 
 const AccessibilityBody = (props) => {
-  const mailto = `mailto:${props.email}`;
-  const emailElement = (<a href={mailto}>{props.email}</a>);
+  const emailAddress = props.email;
+  const mailto = `mailto:${emailAddress}`;
+  const emailElement = (<a href={mailto}>{emailAddress}</a>);
   const communityAccessibilityElement = (
     <WrappedMessage message={messages.a11yBodyPolicyLink}>
       { displayText => <a href={props.communityAccessibilityLink}>{displayText}</a> }
     </WrappedMessage>
   );
-
-  /* eslint-disable max-len */
+  /* eslint-disable max-len,react/no-danger */
   return (
     <div>
       <WrappedMessage message={messages.a11yBodyPageHeader}>
@@ -35,12 +36,15 @@ const AccessibilityBody = (props) => {
         <WrappedMessage
           message={messages.a11yBodyEmailHeading}
           values={{
-            emailElement,
+            emailElement: ReactDomServer.renderToString(emailElement),
           }}
         >
           {
             displayText => (
-              <li>{displayText}
+              // I am using dangerouslySetInnerHTML to as workaround to fix an issue that does not render
+              // html element in the parent when it has its own children.
+              // I am certain about the string being inserted here is not malicious so it's a pretty safe bet to use dangerouslySetInnerHTML.
+              <li><span dangerouslySetInnerHTML={{ __html: displayText }} />
                 <ol className={styles['alphabetical-list']}>
                   <WrappedMessage
                     message={messages.a11yBodyNameEmail}
@@ -71,52 +75,7 @@ const AccessibilityBody = (props) => {
           message={messages.a11yBodyExtraInfo}
           tagName="li"
         />
-        <WrappedMessage
-          message={messages.a11yBodyFixesListHeader}
-          tagName="li"
-        >
-          {
-            displayText => (
-              <li>{displayText}
-                <ol className={styles['alphabetical-list']}>
-                  <WrappedMessage
-                    message={messages.a11yBodyThirdParty}
-                    tagName="li"
-                  />
-                  <WrappedMessage
-                    message={messages.a11yBodyContractor}
-                    tagName="li"
-                  />
-                  <WrappedMessage
-                    message={messages.a11yBodyCodeFix}
-                    tagName="li"
-                  />
-                </ol>
-              </li>
-            )
-          }
-        </WrappedMessage>
       </ol>
-      <WrappedMessage
-        message={messages.a11yBodyEdxResponse}
-        tagName="p"
-      />
-      <WrappedMessage
-        message={messages.a11yBodyEdxFollowUp}
-        tagName="p"
-      />
-      <WrappedMessage
-        message={messages.a11yBodyOngoingSupport}
-        tagName="p"
-      />
-      <WrappedMessage
-        message={messages.a11yBodyProcessContact}
-        tagName="p"
-        values={{
-          emailElement,
-          phoneNumber: props.phoneNumber,
-        }}
-      />
       <WrappedMessage
         message={messages.a11yBodyA11yFeedback}
         tagName="p"
@@ -132,7 +91,6 @@ const AccessibilityBody = (props) => {
 AccessibilityBody.propTypes = {
   communityAccessibilityLink: PropTypes.string.isRequired,
   email: PropTypes.string.isRequired,
-  phoneNumber: PropTypes.string.isRequired,
 };
 
 export default AccessibilityBody;
