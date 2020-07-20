@@ -39,6 +39,7 @@ export default class AssetsStatusAlert extends React.Component {
     const assetName = deletedAsset.display_name;
     let alertDialog;
     let alertType;
+    const fileSizeMB = Math.round((assetsStatus.maxFileSizeMB / (1024 ** 2)).toFixed(2));
 
     const genericUpdateError = (
       <WrappedMessage
@@ -98,7 +99,7 @@ export default class AssetsStatusAlert extends React.Component {
         alertDialog = (
           <WrappedMessage
             message={messages.assetsStatusAlertTooMuchData}
-            values={{ max_size: (<FormattedNumber value={assetsStatus.maxFileSizeMB} />) }}
+            values={{ max_size: (<FormattedNumber value={fileSizeMB} />) }}
           />
         );
         alertType = 'danger';
