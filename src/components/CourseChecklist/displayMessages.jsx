@@ -111,6 +111,16 @@ const messages = defineMessages({
     defaultMessage: 'Breaking up course content into manageable pieces promotes learner engagement. We recommend units contain no more than three components.',
     description: 'Description for a section that prompts a user to follow best practices for course unit depth',
   },
+  proctoringEmailShortDescription: {
+    id: 'proctoringEmailShortDescription',
+    defaultMessage: 'Add a Proctortrack Escalation Email',
+    description: 'Label for a section that describes proctoring escalation email',
+  },
+  proctoringEmailLongDescription: {
+    id: 'proctoringEmailLongDescription',
+    defaultMessage: 'Courses using Proctortrack require an escalation email. Ensure learners and Support can contact your course team regarding proctoring issues (e.g. appeals, exam resets, etc).',
+    description: 'Description for a section that prompts the user to add a Proctortrack escalation email for the course',
+  },
   updateLinkLabel: {
     id: 'updateLinkLabel',
     defaultMessage: 'Update',

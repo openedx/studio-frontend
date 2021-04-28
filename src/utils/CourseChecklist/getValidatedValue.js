@@ -22,6 +22,8 @@ const getValidatedValue = (props, id) => {
       return healthValidators.hasWeeklyHighlights(props.data.sections);
     case 'unitDepth':
       return healthValidators.hasShortUnitDepth(props.data.units);
+    case 'proctoringEmail':
+      return healthValidators.hasProctoringEscalationEmail(props.data.proctoring);
     default:
       throw new Error(`Unknown validator ${id}.`);
   }

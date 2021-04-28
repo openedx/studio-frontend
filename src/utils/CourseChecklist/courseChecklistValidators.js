@@ -70,3 +70,7 @@ export const hasWeeklyHighlights = sections => (
 export const hasShortUnitDepth = units => (
   units.num_blocks.median <= 3
 );
+
+export const hasProctoringEscalationEmail = proctoring => (
+  proctoring.has_proctoring_escalation_email
+);

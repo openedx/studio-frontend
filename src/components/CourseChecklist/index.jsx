@@ -137,6 +137,7 @@ class CourseChecklist extends React.Component {
       case 'gradingPolicy': return this.props.studioDetails.links.grading_policy;
       case 'certificate': return this.props.studioDetails.links.certificates;
       case 'courseDates': return `${this.props.studioDetails.links.settings}#schedule`;
+      case 'proctoringEmail': return this.props.studioDetails.links.proctored_exam_settings;
       default: return null;
     }
   }
@@ -299,6 +300,7 @@ class CourseChecklist extends React.Component {
       case 'gradingPolicy': return true;
       case 'certificate': return true;
       case 'courseDates': return true;
+      case 'proctoringEmail': return true;
       default: return false;
     }
   }
@@ -332,8 +334,16 @@ class CourseChecklist extends React.Component {
       const isSelfPaced = props.data.is_self_paced;
       const hasCertificatesEnabled = props.data.certificates && props.data.certificates.is_enabled;
       const hasHighlightsEnabled = props.data.sections && props.data.sections.highlights_enabled;
-      const checks = getFilteredChecklist(props.dataList,
-        isSelfPaced, hasCertificatesEnabled, hasHighlightsEnabled);
+      const needsProctoringEscalationEmail = (
+        props.data.proctoring && props.data.proctoring.needs_proctoring_escalation_email
+      );
+      const checks = getFilteredChecklist(
+        props.dataList,
+        isSelfPaced,
+        hasCertificatesEnabled,
+        hasHighlightsEnabled,
+        needsProctoringEscalationEmail,
+      );
 
       const values = {};
       let totalCompletedChecks = 0;
@@ -433,6 +443,10 @@ CourseChecklist.propTypes = {
       grades: PropTypes.shape({
         has_grading_policy: PropTypes.bool,
         sum_of_weights: PropTypes.number,
+      }),
+      proctoring: PropTypes.shape({
+        needs_proctoring_escalation_email: PropTypes.bool,
+        has_proctoring_escalation_email: PropTypes.bool,
       }),
       is_self_paced: PropTypes.bool,
     }).isRequired,

@@ -282,4 +282,16 @@ describe('courseCheckValidators utility functions', () => {
       expect(validators.hasShortUnitDepth(units)).toEqual(false);
     });
   });
+
+  describe('hasProctoringEscalationEmail', () => {
+    it('returns true when the course has a proctoring escalation email', () => {
+      const proctoring = { has_proctoring_escalation_email: true };
+      expect(validators.hasProctoringEscalationEmail(proctoring)).toEqual(true);
+    });
+
+    it('returns false when the course does not have a proctoring escalation email', () => {
+      const proctoring = { has_proctoring_escalation_email: false };
+      expect(validators.hasProctoringEscalationEmail(proctoring)).toEqual(false);
+    });
+  });
 });

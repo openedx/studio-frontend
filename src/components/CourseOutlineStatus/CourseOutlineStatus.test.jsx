@@ -205,7 +205,7 @@ describe('CourseOutlineStatus', () => {
 
         const content = shallowWithIntl(link.prop('content'));
         expect(content.prop('message')).toEqual(messages.completionCountLabel);
-        expect(content.prop('values')).toEqual({ completed: 0, total: 10 });
+        expect(content.prop('values')).toEqual({ completed: 0, total: 11 });
       });
     });
 

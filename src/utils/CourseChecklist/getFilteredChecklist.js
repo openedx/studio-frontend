@@ -1,7 +1,12 @@
 import { filters } from './courseChecklistData';
 
 const getFilteredChecklist = (
-  checklist, isSelfPaced, hasCertificatesEnabled, hasHighlightsEnabled) => {
+  checklist,
+  isSelfPaced,
+  hasCertificatesEnabled,
+  hasHighlightsEnabled,
+  needsProctoringEscalationEmail,
+) => {
   let filteredCheckList;
 
   if (isSelfPaced) {
@@ -19,6 +24,9 @@ const getFilteredChecklist = (
 
   filteredCheckList = filteredCheckList.filter(data => data.id !== 'weeklyHighlights' ||
     hasHighlightsEnabled);
+
+  filteredCheckList = filteredCheckList.filter(data => data.id !== 'proctoringEmail' ||
+    needsProctoringEscalationEmail);
 
   return filteredCheckList;
 };

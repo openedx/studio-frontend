@@ -26,6 +26,10 @@ export const launchChecklist = {
       id: 'assignmentDeadlines',
       pacingTypeFilter: filters.INSTRUCTOR_PACED,
     },
+    {
+      id: 'proctoringEmail',
+      pacingTypeFilter: filters.ALL,
+    },
   ],
 };
 
