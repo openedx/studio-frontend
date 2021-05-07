@@ -143,6 +143,20 @@ describe('getValidatedValue utility function', () => {
     expect(spy).toHaveBeenCalledTimes(1);
   });
 
+  it('proctoring email', () => {
+    const spy = jest.fn();
+    validators.hasProctoringEscalationEmail = spy;
+
+    const props = {
+      data: {
+        proctoring: {},
+      },
+    };
+
+    getValidatedValue(props, 'proctoringEmail');
+    expect(spy).toHaveBeenCalledTimes(1);
+  });
+
   it('other', () => {
     const sampleID = 'edX';
     expect(() => getValidatedValue({}, sampleID)).toThrow(Error);

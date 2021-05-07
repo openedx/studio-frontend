@@ -26,6 +26,10 @@ const checklist = [
     id: 'weeklyHighlights',
     pacingTypeFilter: filters.SELF_PACED,
   },
+  {
+    id: 'proctoringEmail',
+    pacingTypeFilter: filters.ALL,
+  },
 ];
 
 
@@ -35,11 +39,18 @@ describe('getFilteredChecklist utility function', () => {
     courseData = {
       isSelfPaced: true,
       hasCertificatesEnabled: true,
-      hasHighlightsEnabled: true };
+      hasHighlightsEnabled: true,
+      needsProctoringEscalationEmail: true,
+    };
   });
   it('returns only checklist items with filters ALL and SELF_PACED when isSelfPaced is true', () => {
-    const filteredChecklist = getFilteredChecklist(checklist,
-      courseData.isSelfPaced, courseData.hasCertificatesEnabled, courseData.hasHighlightsEnabled);
+    const filteredChecklist = getFilteredChecklist(
+      checklist,
+      courseData.isSelfPaced,
+      courseData.hasCertificatesEnabled,
+      courseData.hasHighlightsEnabled,
+      courseData.needsProctoringEscalationEmail,
+    );
 
     filteredChecklist.forEach(((
       item => expect(item.pacingTypeFilter === filters.ALL ||
@@ -54,8 +65,13 @@ describe('getFilteredChecklist utility function', () => {
 
   it('returns only checklist items with filters ALL and INSTRUCTOR_PACED when isSelfPaced is false', () => {
     courseData.isSelfPaced = false;
-    const filteredChecklist = getFilteredChecklist(checklist,
-      courseData.isSelfPaced, courseData.hasCertificatesEnabled, courseData.hasHighlightsEnabled);
+    const filteredChecklist = getFilteredChecklist(
+      checklist,
+      courseData.isSelfPaced,
+      courseData.hasCertificatesEnabled,
+      courseData.hasHighlightsEnabled,
+      courseData.needsProctoringEscalationEmail,
+    );
 
     filteredChecklist.forEach(((
       item => expect(item.pacingTypeFilter === filters.ALL ||
@@ -70,24 +86,65 @@ describe('getFilteredChecklist utility function', () => {
   });
 
   it('excludes certificates when they are disabled', () => {
-    let filteredChecklist = getFilteredChecklist(checklist,
-      courseData.isSelfPaced, courseData.hasCertificatesEnabled, courseData.hasHighlightsEnabled);
+    let filteredChecklist = getFilteredChecklist(
+      checklist,
+      courseData.isSelfPaced,
+      courseData.hasCertificatesEnabled,
+      courseData.hasHighlightsEnabled,
+      courseData.needsProctoringEscalationEmail,
+    );
     expect(checklist.filter(item => item.id === 'certificate').length).toEqual(1);
 
     courseData.hasCertificatesEnabled = false;
-    filteredChecklist = getFilteredChecklist(checklist,
-      courseData.isSelfPaced, courseData.hasCertificatesEnabled, courseData.hasHighlightsEnabled);
+    filteredChecklist = getFilteredChecklist(
+      checklist,
+      courseData.isSelfPaced,
+      courseData.hasCertificatesEnabled,
+      courseData.hasHighlightsEnabled,
+      courseData.needsProctoringEscalationEmail,
+    );
     expect(filteredChecklist.filter(item => item.id === 'certificate').length).toEqual(0);
   });
 
   it('excludes weekly highlights when they are disabled', () => {
-    let filteredChecklist = getFilteredChecklist(checklist,
-      courseData.isSelfPaced, courseData.hasCertificatesEnabled, courseData.hasHighlightsEnabled);
+    let filteredChecklist = getFilteredChecklist(
+      checklist,
+      courseData.isSelfPaced,
+      courseData.hasCertificatesEnabled,
+      courseData.hasHighlightsEnabled,
+      courseData.needsProctoringEscalationEmail,
+    );
     expect(filteredChecklist.filter(item => item.id === 'weeklyHighlights').length).toEqual(1);
 
     courseData.hasHighlightsEnabled = false;
-    filteredChecklist = getFilteredChecklist(checklist,
-      courseData.isSelfPaced, courseData.hasCertificatesEnabled, courseData.hasHighlightsEnabled);
+    filteredChecklist = getFilteredChecklist(
+      checklist,
+      courseData.isSelfPaced,
+      courseData.hasCertificatesEnabled,
+      courseData.hasHighlightsEnabled,
+      courseData.needsProctoringEscalationEmail,
+    );
     expect(filteredChecklist.filter(item => item.id === 'weeklyHighlights').length).toEqual(0);
+  });
+
+  it('excludes proctoring escalation email when not needed', () => {
+    let filteredChecklist = getFilteredChecklist(
+      checklist,
+      courseData.isSelfPaced,
+      courseData.hasCertificatesEnabled,
+      courseData.hasHighlightsEnabled,
+      courseData.needsProctoringEscalationEmail,
+    );
+    expect(filteredChecklist.filter(item => item.id === 'proctoringEmail').length).toEqual(1);
+
+    courseData.needsProctoringEscalationEmail = false;
+    filteredChecklist = getFilteredChecklist(
+      checklist,
+      courseData.isSelfPaced,
+      courseData.hasCertificatesEnabled,
+      courseData.hasHighlightsEnabled,
+      courseData.needsProctoringEscalationEmail,
+    );
+    expect(filteredChecklist.filter(item => item.id === 'proctoringEmail').length).toEqual(0);
   });
 });

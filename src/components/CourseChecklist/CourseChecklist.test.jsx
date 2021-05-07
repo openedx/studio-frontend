@@ -335,6 +335,14 @@ describe('CourseChecklist', () => {
         expect(comment).toHaveLength(0);
       });
     });
+    describe('proctoringEmail check with', () => {
+      it('no comment section', () => {
+        wrapper = shallowWithIntl(<CourseChecklist {...defaultProps} />);
+        const comment = wrapper.find('#checklist-item-proctoringEmail').find('[data-identifier="comment"]');
+
+        expect(comment).toHaveLength(0);
+      });
+    });
     describe('assignmentDeadlines check with', () => {
       it('no comment section if assignments with dates before start and after end are empty', () => {
         wrapper = shallowWithIntl(<CourseChecklist {...defaultProps} />);
