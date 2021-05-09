@@ -113,6 +113,8 @@
   "weeklyHighlightsLongDescription": "فعّل و حدد خاصية التلميحات الأسبوعية لمساعدة المتعلمين على الاندماج في التعلّم والبقاء على المسار في مساقك.",
   "unitDepthShortDescription": "إدارة عمق الوحدة",
   "unitDepthLongDescription": "تقسيم محتوى المساق إلى أجزاء يحفز مشاركة المتعلم. ننصح ألا تحتوي الوحدات على أكثر من ثلاثة عناصر.",
+  "proctoringEmailShortDescription": "Add a Proctortrack Escalation Email",
+  "proctoringEmailLongDescription": "Courses using Proctortrack require an escalation email. Ensure learners and Support can contact your course team regarding proctoring issues (e.g. appeals, exam resets, etc).",
   "updateLinkLabel": "تحديث",
   "completionCountLabel": "{completed}/{total} مكتمل",
   "completedItemLabel": "مكتمل",

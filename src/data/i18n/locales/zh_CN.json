@@ -113,6 +113,8 @@
   "weeklyHighlightsLongDescription": "启用和发布每周亮点，以保持学习者对课程的参与和了解程度。",
   "unitDepthShortDescription": "管理单元深度",
   "unitDepthLongDescription": "将课程内容划分成可管理的部分可以促进学习者的参与。我们建议单元不超过三个组成部分。",
+  "proctoringEmailShortDescription": "Add a Proctortrack Escalation Email",
+  "proctoringEmailLongDescription": "Courses using Proctortrack require an escalation email. Ensure learners and Support can contact your course team regarding proctoring issues (e.g. appeals, exam resets, etc).",
   "updateLinkLabel": "更新",
   "completionCountLabel": "{completed}/{total} 完成",
   "completedItemLabel": "完成",

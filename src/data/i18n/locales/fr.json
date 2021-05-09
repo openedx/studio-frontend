@@ -113,6 +113,8 @@
   "weeklyHighlightsLongDescription": "Activer et préciser les faits marquants de la semaine pour maintenir la participation et la motivation des étudiants pour votre cours.",
   "unitDepthShortDescription": "Gérer la profondeur de l'unité",
   "unitDepthLongDescription": "La division du contenu du cours en morceaux gérables encourage la participation de l'étudiant. Nous vous recommandons d'avoir trois composants par unités tout au plus.",
+  "proctoringEmailShortDescription": "Add a Proctortrack Escalation Email",
+  "proctoringEmailLongDescription": "Courses using Proctortrack require an escalation email. Ensure learners and Support can contact your course team regarding proctoring issues (e.g. appeals, exam resets, etc).",
   "updateLinkLabel": "Mettre à jour",
   "completionCountLabel": "{completed}/{total} achevée",
   "completedItemLabel": "achevée",
