@@ -1,0 +1,56 @@
+name: node_js CI
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - "**"
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Setup Nodejs
+      uses: actions/setup-node@v1
+      with:
+        node-version: 12
+
+    - name: Setup npm
+      run: npm i -g npm@5.8.0
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Cache node modules
+      uses: actions/cache@v2
+      with:
+        path: ~/.npm
+        key: v1-npm-deps-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: v1-npm-deps-
+
+    - name: Unit Tests
+      run: npm run test
+
+    - name: Validation Checks
+      run: ./.github/validate_changes_for_merge.sh
+
+    - name: Run Coverage
+      uses: codecov/codecov-action@v2
+
+    - name: Send failure notification
+      if: ${{ failure() }}
+      uses: dawidd6/action-send-mail@v3
+      with:
+        server_address: email-smtp.us-east-1.amazonaws.com
+        server_port: 465
+        username: ${{secrets.EDX_SMTP_USERNAME}}
+        password: ${{secrets.EDX_SMTP_PASSWORD}}
+        subject: CI workflow failed in ${{github.repository}}
+        to: teaching-and-learning@edx.opsgenie.net
+        from: github-actions <github-actions@edx.org>
+        body: CI workflow in ${{github.repository}} failed! For details see "github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
