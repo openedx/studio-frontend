@@ -15,6 +15,7 @@
   "license": "AGPL-3.0",
   "dependencies": {
     "@edx/edx-bootstrap": "^1.0.0",
+    "@edx/eslint-config": "^1.2.0",
     "@edx/paragon": "3.4.8",
     "airbnb-prop-types": "^2.10.0",
     "babel-polyfill": "^6.26.0",
@@ -55,7 +56,6 @@
     "css-loader": "^0.28.11",
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-16": "^1.1.1",
-    "eslint-config-edx": "4.0.0",
     "extract-text-webpack-plugin": "next",
     "fetch-mock": "^5.13.1",
     "file-loader": "^1.1.11",
