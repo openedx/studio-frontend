@@ -1,4 +1,4 @@
-FROM node:8.11
+FROM node:16.12
 
 USER root
 RUN apt-get update

@@ -15,10 +15,13 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
+    - name: Setup Nodejs Env
+      run: echo "NODE_VER=`cat .nvmrc`" >> $GITHUB_ENV
+
     - name: Setup Nodejs
-      uses: actions/setup-node@v1
+      uses: dcodeIO/setup-node-nvm@v4
       with:
-        node-version: 12
+        node-version: "${{ env.NODE_VER }}"
 
     - name: Setup npm
       run: npm i -g npm@5.8.0
