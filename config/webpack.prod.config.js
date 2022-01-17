@@ -24,6 +24,7 @@ module.exports = Merge.smart(commonConfig, {
           path.resolve(__dirname, '../src'),
         ],
         loader: 'babel-loader',
+        options: { presets: ['@babel/env', '@babel/preset-react'] },
       },
       {
         type: 'javascript/auto',
