@@ -34,7 +34,7 @@ const messages = defineMessages({
   paginationOf: {
     id: 'paginationOf',
     defaultMessage: 'of',
-    description: 'word used to show the number of pages out of which a page is selected; for example, "page 5 of 10" current page in a page navigation element',
+    description: 'Word used to show the number of pages out of which a page is selected; for example, "page 5 of 10" current page in a page navigation element',
   },
 
 });
