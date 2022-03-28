@@ -75,7 +75,7 @@ tx_url2 = https://www.transifex.com/api/2/project/edx-platform/resource/studio-f
 push_translations: | i18n.extract
 	# Transifex is set up to watch transifex_input.json, but that filetype lacks comments
 	./node_modules/@edx/reactifex/bash_scripts/get_hashed_strings_v3.sh
-	$$(npm bin)/reactifex ./src/data/i18n/default/src/components/ --comments --v3-scripts-path
+	$$(npm bin)/transifex-utils.js ./src/data/i18n/default --comments --v3-scripts-path
 	./node_modules/@edx/reactifex/bash_scripts/put_comments_v3.sh
 
 pull_translations: ## must be exactly this name for edx tooling support, see ecommerce-scripts/transifex/pull.py
