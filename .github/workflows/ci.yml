@@ -9,8 +9,12 @@ on:
       - "**"
 
 jobs:
-  build:
+  tests:
     runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        node: [ 12, 14, 16 ]
+
     steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -18,10 +22,10 @@ jobs:
     - name: Setup Nodejs
       uses: actions/setup-node@v1
       with:
-        node-version: 12
+        node-version: ${{ matrix.node }}
 
     - name: Setup npm
-      run: npm i -g npm@5.8.0
+      run: npm i -g npm@8.x.x
 
     - name: Install dependencies
       run: npm ci
@@ -51,6 +55,7 @@ jobs:
         username: ${{secrets.EDX_SMTP_USERNAME}}
         password: ${{secrets.EDX_SMTP_PASSWORD}}
         subject: CI workflow failed in ${{github.repository}}
-        to: tnl-squad@edx.org
+        to: teaching-and-learning@edx.opsgenie.net
         from: github-actions <github-actions@edx.org>
         body: CI workflow in ${{github.repository}} failed! For details see "github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+
