@@ -80,7 +80,7 @@ push_translations: | i18n.extract
 
 pull_translations: ## must be exactly this name for edx tooling support, see ecommerce-scripts/transifex/pull.py
 	# explicit list of languages defined here and in currentlySupportedLangs.jsx
-	tx pull -f --mode reviewed --language="ar,fr,es_419,zh_CN"
+	tx pull -f --mode reviewed --languages="ar,fr,es_419,zh_CN"
 
 copy-dist:
 	for f in dist/*; do docker cp $$f edx.devstack.studio:/edx/app/edxapp/edx-platform/node_modules/@edx/studio-frontend/dist/; done
