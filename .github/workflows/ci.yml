@@ -45,17 +45,3 @@ jobs:
 
     - name: Run Coverage
       uses: codecov/codecov-action@v2
-
-    - name: Send failure notification
-      if: ${{ failure() }}
-      uses: dawidd6/action-send-mail@v3
-      with:
-        server_address: email-smtp.us-east-1.amazonaws.com
-        server_port: 465
-        username: ${{secrets.EDX_SMTP_USERNAME}}
-        password: ${{secrets.EDX_SMTP_PASSWORD}}
-        subject: CI workflow failed in ${{github.repository}}
-        to: teaching-and-learning@edx.opsgenie.net
-        from: github-actions <github-actions@edx.org>
-        body: CI workflow in ${{github.repository}} failed! For details see "github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-
