@@ -15,7 +15,7 @@
     "i18n": {
       "plugins": [
         ["react-intl", {
-          "messagesDir": "./src/data/i18n/default/",
+          "messagesDir": "./temp/babel-plugin-react-intl",
           "enforceDescriptions": true
         }]
       ]

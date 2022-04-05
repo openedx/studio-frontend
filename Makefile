@@ -1,4 +1,11 @@
 UNAME := $(shell uname)
+
+i18n = ./src/data/i18n/default
+transifex_input = $(i18n)/transifex_input.json
+
+# This directory must match .babelrc .
+transifex_temp = ./temp/babel-plugin-react-intl
+
 export TRANSIFEX_RESOURCE = studio-frontend
 
 # Help message borrowed from https://github.com/edx/devstack, which borrowed it from https://github.com/pydanny/cookiecutter-djangopackage.
@@ -28,6 +35,9 @@ down: ## stop and remove studio-frontend container
 stop: ## stops studio-frontend container
 	docker-compose stop
 
+requirements:
+	npm install
+
 npm-install-%: ## install specified % npm package on the studio-frontend container
 	docker exec dahlia.studio-frontend npm install $* --save-dev
 	git add package.json
@@ -55,27 +65,27 @@ asset-page-flag: ## insert a waffle flag into local docker devstack
 i18n.docker: ## what devs should do from their host machines
 	docker exec -t dahlia.studio-frontend bash -c 'make i18n.extract && make i18n.preprocess'
 
-extract_translations: ## no prerequisites so we can control order of operations
-	echo "We have to define this target due to tooling assumptions"
-	echo "Also we have to npm install using this hook b/c there's no other place for it in the current setup"
-	npm install
-	npm run-script i18n_extract
+extract_translations: | requirements i18n.extract i18n.preprocess
 
 i18n.extract: ## move display strings from displayMessages.jsx to displayMessages.json
 	npm run-script i18n_extract
 
 i18n.preprocess: ## gather all display strings into a single file
-	$$(npm bin)/reactifex ./src/data/i18n/default/src/components/ ./src/data/i18n/default/transifex_input.json
+	$$(npm bin)/edx_reactifex $(transifex_temp) $(transifex_input)
 
 i18n.pre_validate: | i18n.extract i18n.preprocess
 	git diff --exit-code ./src/data/i18n/default/transifex_input.json
 
 tx_url1 = https://www.transifex.com/api/2/project/edx-platform/resource/studio-frontend/translation/en/strings/
 tx_url2 = https://www.transifex.com/api/2/project/edx-platform/resource/studio-frontend/source/
-push_translations: | i18n.extract
-	# Transifex is set up to watch transifex_input.json, but that filetype lacks comments
+# Pushes translations to Transifex.  You must run make extract_translations first.
+push_translations:
+
+	# # Pushing strings to Transifex...
+	tx push -s
+
 	./node_modules/@edx/reactifex/bash_scripts/get_hashed_strings_v3.sh
-	$$(npm bin)/edx_reactifex ./src/data/i18n/default --comments --v3-scripts-path
+	$$(npm bin)/edx_reactifex $(transifex_temp) --comments --v3-scripts-path
 	./node_modules/@edx/reactifex/bash_scripts/put_comments_v3.sh
 
 pull_translations: ## must be exactly this name for edx tooling support, see ecommerce-scripts/transifex/pull.py
