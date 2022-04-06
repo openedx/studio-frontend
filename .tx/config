@@ -3,6 +3,7 @@ host = https://www.transifex.com
 
 [o:open-edx:p:edx-platform:r:studio-frontend]
 file_filter = src/data/i18n/locales/<lang>.json
+source_file = src/data/i18n/default/transifex_input.json
 source_lang = en_US
 type        = KEYVALUEJSON
 

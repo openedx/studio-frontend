@@ -3,6 +3,13 @@
 node_modules
 npm-debug.log
 coverage
+.idea
 
 dist/
 src/data/i18n/default/src/
+temp/babel-plugin-react-intl
+
+## Emacs ###
+*~
+/temp
+/.vscode
