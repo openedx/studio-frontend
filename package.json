@@ -10,7 +10,7 @@
     "lint_fix": "eslint --fix --ext .js --ext .jsx .",
     "prepare": "npm run build",
     "start": "NODE_ENV=development BABEL_ENV=development $(npm bin)/webpack-dev-server --config=config/webpack.dev.config.js --hot --inline --progress",
-    "test": "jest --env=node --runInBand --coverage"
+    "test": "jest --runInBand --coverage"
   },
   "license": "AGPL-3.0",
   "dependencies": {
@@ -95,6 +95,8 @@
     "webpack-merge": "^4.1.2"
   },
   "jest": {
+    "verbose": true,
+    "testURL": "http://localhost/",
     "setupFiles": [
       "./shim.js",
       "./setupTests.js"
