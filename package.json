@@ -42,6 +42,7 @@
     "@babel/core": "^7.2.3",
     "@commitlint/cli": "^6.1.3",
     "@commitlint/config-angular": "^6.1.3",
+    "@edx/eslint-config": "^2.0.0",
     "@edx/reactifex": "^1.1.0",
     "autoprefixer": "^7.2.5",
     "babel-cli": "^6.26.0",
@@ -57,7 +58,12 @@
     "css-loader": "^0.28.11",
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-16": "^1.1.1",
-    "eslint-config-edx": "4.0.0",
+    "eslint": "^8.14.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-jsx-a11y": "^6.5.1",
+    "eslint-plugin-react": "^7.29.4",
+    "eslint-plugin-react-hooks": "^4.4.0",
     "extract-text-webpack-plugin": "next",
     "fetch-mock": "^5.13.1",
     "file-loader": "^1.1.11",
@@ -66,7 +72,7 @@
     "husky": "^0.14.3",
     "identity-obj-proxy": "^3.0.0",
     "ignore-loader": "^0.1.2",
-    "jest": "^22.4.3",
+    "jest": "22.4.3",
     "null-loader": "^0.1.1",
     "optimize-css-assets-webpack-plugin": "^3.2.0",
     "postcss-initial": "^2.0.0",
@@ -89,6 +95,8 @@
     "webpack-merge": "^4.1.2"
   },
   "jest": {
+    "verbose": true,
+    "testURL": "http://localhost/",
     "setupFiles": [
       "./shim.js",
       "./setupTests.js"
