@@ -42,7 +42,7 @@
     "@babel/core": "^7.2.3",
     "@commitlint/cli": "^6.1.3",
     "@commitlint/config-angular": "^6.1.3",
-    "@edx/eslint-config": "^2.0.0",
+    "@edx/eslint-config": "^1.0.0",
     "@edx/reactifex": "^1.1.0",
     "autoprefixer": "^7.2.5",
     "babel-cli": "^6.26.0",
