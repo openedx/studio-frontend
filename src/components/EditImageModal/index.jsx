@@ -740,40 +740,37 @@ export default class EditImageModal extends React.Component {
 
   getNextPageButton = () => (
     <Button
-      label={
-        <WrappedMessage
-          message={messages.editImageModalNextPageButton}
-        />
-      }
       buttonType="primary"
       disabled={!this.isAssetSelected()}
       onClick={this.onNextPageButtonClick}
-    />
+    >
+      <WrappedMessage
+        message={messages.editImageModalNextPageButton}
+      />
+    </Button>
   );
 
   getPreviousPageButton = () => (
     <Button
-      label={
-        <WrappedMessage
-          message={messages.editImageModalPreviousPageButton}
-        />
-      }
       buttonType="link"
       onClick={this.onPreviousPageButtonClick}
       inputRef={this.setPreviousButtonRef}
-    />
+    >
+      <WrappedMessage
+        message={messages.editImageModalPreviousPageButton}
+      />
+    </Button>
   );
 
   getInsertImageButton = () => (
     <Button
-      label={
-        <WrappedMessage
-          message={messages.editImageModalInsertImageButton}
-        />
-      }
       buttonType="primary"
       onClick={this.onInsertImageButtonClick}
-    />
+    >
+      <WrappedMessage
+        message={messages.editImageModalInsertImageButton}
+      />
+    </Button
   );
 
   getUploadErrorStatusMessage = () => {

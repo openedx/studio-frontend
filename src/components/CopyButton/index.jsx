@@ -58,19 +58,19 @@ export default class CopyButton extends React.Component {
 
   render() {
     const label = this.state.wasClicked ? this.props.onCopyLabel : this.props.label;
-
     return (
       <Button
         className={[...this.props.className, styles['copy-button'], 'btn-outline-primary']}
         aria-label={this.props.ariaLabel}
-        label={label}
         inputRef={this.setButtonRef}
         onClick={this.onClick}
         onBlur={this.onBlur}
         onMouseUp={this.onMouseUp}
         onMouseDown={this.onMouseDown}
         data-identifier={this.props['data-identifier']}
-      />
+      >
+        {label}
+      </Button>
     );
   }
 }

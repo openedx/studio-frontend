@@ -144,16 +144,15 @@ export default class AssetsTable extends React.Component {
     }
     return (
       <WrappedMessage message={lockStateMessage} values={{ object: asset.display_name }}>
-        { displayText =>
-          (<Button
+        {displayText => (
+          <Button
             className={classes}
-            label={''}
             data-asset-id={asset.id}
             aria-label={displayText}
             onClick={this.onLockClick}
             data-identifier="asset-lock-button"
-          />)
-        }
+          />
+        )}
       </WrappedMessage>
     );
   }
@@ -166,14 +165,15 @@ export default class AssetsTable extends React.Component {
         message={messages.assetsTableUpdateLock}
         values={{ assetName: asset.display_name }}
       >
-        { displayText =>
-          (<Button
+        {displayText => (
+          <Button
             className={['btn-outline-primary']}
-            label={(<span className={classNames(...spinnerClasses)} />)}
             aria-label={displayText}
             data-identifier="asset-locking-button"
-          />)
-        }
+          >
+            <span className={classNames(...spinnerClasses)} />
+          </Button>
+        )}
       </WrappedMessage>
     );
   }
@@ -282,17 +282,16 @@ export default class AssetsTable extends React.Component {
           message={messages.assetsTableDeleteObject}
           values={{ displayName: currentAsset.display_name }}
         >
-          { displayText =>
-            (<Button
+          { displayText => (
+            <Button
               key={currentAsset.id}
               className={[FontAwesomeStyles.fa, FontAwesomeStyles['fa-trash'], 'btn-outline-primary']}
-              label={''}
               aria-label={displayText}
               onClick={() => { this.onDeleteClick(index); }}
               inputRef={ref => this.getAssetDeleteButtonRef(ref, currentAsset)}
               data-identifier="asset-delete-button"
-            />)
-          }
+            />
+          )}
         </WrappedMessage>
       );
 
@@ -370,11 +369,12 @@ export default class AssetsTable extends React.Component {
           onClose={this.closeModal}
           buttons={[
             <Button
-              label={<WrappedMessage message={messages.assetsTablePermaDelete} />}
               buttonType="primary"
               onClick={this.deleteAsset}
               data-identifier="asset-confirm-delete-button"
-            />,
+            >
+              <WrappedMessage message={messages.assetsTablePermaDelete} />
+            </Button>,
           ]}
           variant={{ status: Variant.status.WARNING }}
           parentSelector={`#${modalWrapperID}`}
