@@ -2,7 +2,7 @@ import React from 'react';
 import { SearchField } from '@edx/paragon';
 
 import AssetsSearch from './index';
-import { searchInitial } from './../../data/reducers/assets';
+import { searchInitial } from '../../data/reducers/assets';
 import { mountWithIntl } from '../../utils/i18n/enzymeHelper';
 
 const defaultProps = {
@@ -10,7 +10,6 @@ const defaultProps = {
   updateSearch: () => {},
   courseDetails: {},
 };
-
 
 describe('<AssetsSearch />', () => {
   describe('renders', () => {

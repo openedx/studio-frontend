@@ -4,7 +4,6 @@ import { Provider } from 'react-redux';
 import AccessibilityPolicyPage from './index';
 import { mountWithIntl } from '../../utils/i18n/enzymeHelper';
 
-
 const defaultProps = {
   communityAccessibilityLink: 'http://www.testLink.com',
   email: 'test@example.com',

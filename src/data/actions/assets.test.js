@@ -6,11 +6,12 @@ import thunk from 'redux-thunk';
 
 import deepCopy from './utils';
 import endpoints from '../api/endpoints';
-import { assetActions } from '../../data/constants/actionTypes';
-import { deletionInitial, filtersInitial, paginationInitial, sortInitial, searchInitial, requestInitial } from '../reducers/assets';
+import { assetActions } from '../constants/actionTypes';
+import {
+  deletionInitial, filtersInitial, paginationInitial, sortInitial, searchInitial, requestInitial,
+} from '../reducers/assets';
 import { testAssetsList, courseDetails } from '../../utils/testConstants';
 import * as actionCreators from './assets';
-
 
 const initialState = {
   assets: [],
@@ -112,9 +113,11 @@ describe('Assets Action Creators', () => {
     const expectedActions = [
       { type: assetActions.request.REQUESTING_ASSETS },
       { type: assetActions.request.UPDATE_REQUEST, newRequest: requestInitial },
-      { type: assetActions.request.REQUEST_ASSETS_FAILURE,
+      {
+        type: assetActions.request.REQUEST_ASSETS_FAILURE,
         previousState: initialState.assets,
-        response: errorResponse },
+        response: errorResponse,
+      },
     ];
 
     store = mockStore(initialState);
@@ -201,8 +204,10 @@ describe('Assets Action Creators', () => {
     fetchMock.once(`begin:${assetsEndpoint}`, response);
     const expectedActions = [
       { type: assetActions.request.REQUESTING_ASSETS },
-      { type: assetActions.request.UPDATE_REQUEST,
-        newRequest: { ...requestInitial, ...newRequest } },
+      {
+        type: assetActions.request.UPDATE_REQUEST,
+        newRequest: { ...requestInitial, ...newRequest },
+      },
       { type: assetActions.request.REQUEST_ASSETS_SUCCESS, response: response.body },
     ];
 
@@ -235,13 +240,19 @@ describe('Assets Action Creators', () => {
     fetchMock.once(`begin:${assetsEndpoint}`, response);
     const expectedActions = [
       { type: assetActions.request.REQUESTING_ASSETS },
-      { type: assetActions.request.UPDATE_REQUEST,
-        newRequest: { ...requestInitial, ...newRequest } },
-      { type: assetActions.request.REQUEST_ASSETS_FAILURE,
+      {
+        type: assetActions.request.UPDATE_REQUEST,
+        newRequest: { ...requestInitial, ...newRequest },
+      },
+      {
+        type: assetActions.request.REQUEST_ASSETS_FAILURE,
         previousState: initialState.assets,
-        response: errorResponse },
-      { type: assetActions.filter.FILTER_UPDATE_FAILURE,
-        previousState: { assetTypes: initialState.metadata.filters.assetTypes } },
+        response: errorResponse,
+      },
+      {
+        type: assetActions.filter.FILTER_UPDATE_FAILURE,
+        previousState: { assetTypes: initialState.metadata.filters.assetTypes },
+      },
     ];
 
     return store.dispatch(actionCreators.filterUpdate(filterParameter, true, courseDetails))
@@ -268,8 +279,10 @@ describe('Assets Action Creators', () => {
     fetchMock.once(`begin:${assetsEndpoint}`, response);
     const expectedActions = [
       { type: assetActions.request.REQUESTING_ASSETS },
-      { type: assetActions.request.UPDATE_REQUEST,
-        newRequest: { ...requestInitial, ...newRequest } },
+      {
+        type: assetActions.request.UPDATE_REQUEST,
+        newRequest: { ...requestInitial, ...newRequest },
+      },
       { type: assetActions.request.REQUEST_ASSETS_SUCCESS, response: response.body },
     ];
 
@@ -298,13 +311,19 @@ describe('Assets Action Creators', () => {
     fetchMock.once(`begin:${assetsEndpoint}`, response);
     const expectedActions = [
       { type: assetActions.request.REQUESTING_ASSETS },
-      { type: assetActions.request.UPDATE_REQUEST,
-        newRequest: { ...requestInitial, ...newRequest } },
-      { type: assetActions.request.REQUEST_ASSETS_FAILURE,
+      {
+        type: assetActions.request.UPDATE_REQUEST,
+        newRequest: { ...requestInitial, ...newRequest },
+      },
+      {
+        type: assetActions.request.REQUEST_ASSETS_FAILURE,
         previousState: initialState.assets,
-        response: errorResponse },
-      { type: assetActions.clear.CLEAR_FILTERS_FAILURE,
-        previousState: { assetTypes: initialState.metadata.filters.assetTypes } },
+        response: errorResponse,
+      },
+      {
+        type: assetActions.clear.CLEAR_FILTERS_FAILURE,
+        previousState: { assetTypes: initialState.metadata.filters.assetTypes },
+      },
     ];
 
     return store.dispatch(actionCreators.clearFilters(courseDetails)).then(() => {
@@ -332,8 +351,10 @@ describe('Assets Action Creators', () => {
     fetchMock.once(`begin:${assetsEndpoint}`, response);
     const expectedActions = [
       { type: assetActions.request.REQUESTING_ASSETS },
-      { type: assetActions.request.UPDATE_REQUEST,
-        newRequest: { ...requestInitial, ...newRequest } },
+      {
+        type: assetActions.request.UPDATE_REQUEST,
+        newRequest: { ...requestInitial, ...newRequest },
+      },
       { type: assetActions.request.REQUEST_ASSETS_SUCCESS, response: response.body },
     ];
 
@@ -366,13 +387,19 @@ describe('Assets Action Creators', () => {
     fetchMock.once(`begin:${assetsEndpoint}`, response);
     const expectedActions = [
       { type: assetActions.request.REQUESTING_ASSETS },
-      { type: assetActions.request.UPDATE_REQUEST,
-        newRequest: { ...requestInitial, ...newRequest } },
-      { type: assetActions.request.REQUEST_ASSETS_FAILURE,
+      {
+        type: assetActions.request.UPDATE_REQUEST,
+        newRequest: { ...requestInitial, ...newRequest },
+      },
+      {
+        type: assetActions.request.REQUEST_ASSETS_FAILURE,
         previousState: initialState.assets,
-        response: errorResponse },
-      { type: assetActions.sort.SORT_UPDATE_FAILURE,
-        previousState: { ...initialState.metadata.sort } },
+        response: errorResponse,
+      },
+      {
+        type: assetActions.sort.SORT_UPDATE_FAILURE,
+        previousState: { ...initialState.metadata.sort },
+      },
     ];
 
     return store.dispatch(actionCreators.sortUpdate('edX', 'desc', courseDetails)).then(() => {
@@ -400,8 +427,10 @@ describe('Assets Action Creators', () => {
     fetchMock.once(`begin:${assetsEndpoint}`, response);
     const expectedActions = [
       { type: assetActions.request.REQUESTING_ASSETS },
-      { type: assetActions.request.UPDATE_REQUEST,
-        newRequest: { ...requestInitial, ...newRequest } },
+      {
+        type: assetActions.request.UPDATE_REQUEST,
+        newRequest: { ...requestInitial, ...newRequest },
+      },
       { type: assetActions.request.REQUEST_ASSETS_SUCCESS, response: response.body },
     ];
 
@@ -434,13 +463,19 @@ describe('Assets Action Creators', () => {
     fetchMock.once(`begin:${assetsEndpoint}`, response);
     const expectedActions = [
       { type: assetActions.request.REQUESTING_ASSETS },
-      { type: assetActions.request.UPDATE_REQUEST,
-        newRequest: { ...requestInitial, ...newRequest } },
-      { type: assetActions.request.REQUEST_ASSETS_FAILURE,
+      {
+        type: assetActions.request.UPDATE_REQUEST,
+        newRequest: { ...requestInitial, ...newRequest },
+      },
+      {
+        type: assetActions.request.REQUEST_ASSETS_FAILURE,
         previousState: initialState.assets,
-        response: errorResponse },
-      { type: assetActions.search.SEARCH_UPDATE_FAILURE,
-        previousState: { ...initialState.metadata.search } },
+        response: errorResponse,
+      },
+      {
+        type: assetActions.search.SEARCH_UPDATE_FAILURE,
+        previousState: { ...initialState.metadata.search },
+      },
     ];
 
     return store.dispatch(actionCreators.searchUpdate('edX', courseDetails)).then(() => {
@@ -467,8 +502,10 @@ describe('Assets Action Creators', () => {
     fetchMock.once(`begin:${assetsEndpoint}`, response);
     const expectedActions = [
       { type: assetActions.request.REQUESTING_ASSETS },
-      { type: assetActions.request.UPDATE_REQUEST,
-        newRequest: { ...requestInitial, ...newRequest } },
+      {
+        type: assetActions.request.UPDATE_REQUEST,
+        newRequest: { ...requestInitial, ...newRequest },
+      },
       { type: assetActions.request.REQUEST_ASSETS_SUCCESS, response: response.body },
     ];
 
@@ -500,13 +537,19 @@ describe('Assets Action Creators', () => {
     fetchMock.once(`begin:${assetsEndpoint}`, response);
     const expectedActions = [
       { type: assetActions.request.REQUESTING_ASSETS },
-      { type: assetActions.request.UPDATE_REQUEST,
-        newRequest: { ...requestInitial, ...newRequest } },
-      { type: assetActions.request.REQUEST_ASSETS_FAILURE,
+      {
+        type: assetActions.request.UPDATE_REQUEST,
+        newRequest: { ...requestInitial, ...newRequest },
+      },
+      {
+        type: assetActions.request.REQUEST_ASSETS_FAILURE,
         previousState: initialState.assets,
-        response: errorResponse },
-      { type: assetActions.paginate.PAGE_UPDATE_FAILURE,
-        previousState: { ...initialState.metadata.pagination } },
+        response: errorResponse,
+      },
+      {
+        type: assetActions.paginate.PAGE_UPDATE_FAILURE,
+        previousState: { ...initialState.metadata.pagination },
+      },
     ];
 
     return store.dispatch(actionCreators.pageUpdate(10, courseDetails)).then(() => {
@@ -689,8 +732,10 @@ describe('Assets Action Creators', () => {
     assets.forEach((asset) => {
       expectedActions.push({ type: assetActions.upload.UPLOAD_ASSET_SUCCESS, response: { asset } });
       expectedActions.push({ type: assetActions.request.REQUESTING_ASSETS });
-      expectedActions.push({ type: assetActions.request.UPDATE_REQUEST,
-        newRequest: requestInitial });
+      expectedActions.push({
+        type: assetActions.request.UPDATE_REQUEST,
+        newRequest: requestInitial,
+      });
     });
 
     assets.forEach(() => {

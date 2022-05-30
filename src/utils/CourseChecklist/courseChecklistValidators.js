@@ -3,8 +3,8 @@ export const hasWelcomeMessage = updates => (
 );
 
 export const hasGradingPolicy = grades => (
-  grades.has_grading_policy &&
-  parseFloat(grades.sum_of_weights.toPrecision(2), 10) === 1.0
+  grades.has_grading_policy
+  && parseFloat(grades.sum_of_weights.toPrecision(2), 10) === 1.0
 );
 
 export const hasCertificate = certificates => (
@@ -18,15 +18,15 @@ export const hasDates = dates => (
 export const hasAssignmentDeadlines = (assignments, dates) => {
   if (!hasDates(dates)) {
     return false;
-  } else if (assignments.total_number === 0) {
+  } if (assignments.total_number === 0) {
     return false;
-  } else if (assignments.assignments_with_dates_before_start.length > 0) {
+  } if (assignments.assignments_with_dates_before_start.length > 0) {
     return false;
-  } else if (assignments.assignments_with_dates_after_end.length > 0) {
+  } if (assignments.assignments_with_dates_after_end.length > 0) {
     return false;
-  } else if (assignments.assignments_with_ora_dates_before_start.length > 0) {
+  } if (assignments.assignments_with_ora_dates_before_start.length > 0) {
     return false;
-  } else if (assignments.assignments_with_ora_dates_after_end.length > 0) {
+  } if (assignments.assignments_with_ora_dates_after_end.length > 0) {
     return false;
   }
 
@@ -36,7 +36,7 @@ export const hasAssignmentDeadlines = (assignments, dates) => {
 export const hasShortVideoDuration = (videos) => {
   if (videos.total_number === 0) {
     return true;
-  } else if (videos.total_number > 0 && videos.durations.median <= 600) {
+  } if (videos.total_number > 0 && videos.durations.median <= 600) {
     return true;
   }
 
@@ -46,7 +46,7 @@ export const hasShortVideoDuration = (videos) => {
 export const hasMobileFriendlyVideos = (videos) => {
   if (videos.total_number === 0) {
     return true;
-  } else if (videos.total_number > 0 && (videos.num_mobile_encoded / videos.total_number) >= 0.9) {
+  } if (videos.total_number > 0 && (videos.num_mobile_encoded / videos.total_number) >= 0.9) {
     return true;
   }
 
@@ -56,7 +56,7 @@ export const hasMobileFriendlyVideos = (videos) => {
 export const hasDiverseSequences = (subsections) => {
   if (subsections.total_visible === 0) {
     return false;
-  } else if (subsections.total_visible > 0) {
+  } if (subsections.total_visible > 0) {
     return ((subsections.num_with_one_block_type / subsections.total_visible) < 0.2);
   }
 

@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Table, Button, Modal, Variant } from '@edx/paragon';
+import {
+  Table, Button, Modal, Variant,
+} from '@edx/paragon';
 import classNames from 'classnames';
 
 import FontAwesomeStyles from 'font-awesome/css/font-awesome.min.css';
@@ -120,13 +122,13 @@ export default class AssetsTable extends React.Component {
     const baseUrl = this.props.courseDetails.base_url || '';
     if (thumbnail) {
       return (
-        <WrappedMessage message={messages.assetsTableNoDescription} >
+        <WrappedMessage message={messages.assetsTableNoDescription}>
           { displayText => (<img src={`${baseUrl}${thumbnail}`} alt={displayText} data-identifier="asset-image-thumbnail" />) }
         </WrappedMessage>
       );
     }
     return (
-      <WrappedMessage message={messages.assetsTableNoPreview} >
+      <WrappedMessage message={messages.assetsTableNoPreview}>
         { displayText => <div className={styles['no-image-preview']} data-identifier="asset-image-thumbnail">{displayText}</div> }
       </WrappedMessage>
     );
@@ -144,16 +146,16 @@ export default class AssetsTable extends React.Component {
     }
     return (
       <WrappedMessage message={lockStateMessage} values={{ object: asset.display_name }}>
-        { displayText =>
-          (<Button
+        { displayText => (
+          <Button
             className={classes}
-            label={''}
+            label=""
             data-asset-id={asset.id}
             aria-label={displayText}
             onClick={this.onLockClick}
             data-identifier="asset-lock-button"
-          />)
-        }
+          />
+        )}
       </WrappedMessage>
     );
   }
@@ -166,14 +168,14 @@ export default class AssetsTable extends React.Component {
         message={messages.assetsTableUpdateLock}
         values={{ assetName: asset.display_name }}
       >
-        { displayText =>
-          (<Button
+        { displayText => (
+          <Button
             className={['btn-outline-primary']}
             label={(<span className={classNames(...spinnerClasses)} />)}
             aria-label={displayText}
             data-identifier="asset-locking-button"
-          />)
-        }
+          />
+        )}
       </WrappedMessage>
     );
   }
@@ -221,8 +223,8 @@ export default class AssetsTable extends React.Component {
         }}
       >
         {
-          displayText =>
-            (<CopyButton
+          displayText => (
+            <CopyButton
               label={buttonLabel}
               className={classes}
               textToCopy={url}
@@ -230,7 +232,8 @@ export default class AssetsTable extends React.Component {
               ariaLabel={displayText}
               onCopyLabel={onCopyLabel}
               data-identifier={`asset-copy-${labelMessage.defaultMessage.toLowerCase()}-url-button`}
-            />)
+            />
+          )
         }
       </WrappedMessage>
     );
@@ -275,34 +278,34 @@ export default class AssetsTable extends React.Component {
 
   addSupplementalTableElements() {
     const newAssetsList = this.props.assetsList.map((asset, index) => {
-      const currentAsset = Object.assign({}, asset);
+      const currentAsset = { ...asset };
 
       const deleteButton = (
         <WrappedMessage
           message={messages.assetsTableDeleteObject}
           values={{ displayName: currentAsset.display_name }}
         >
-          { displayText =>
-            (<Button
+          { displayText => (
+            <Button
               key={currentAsset.id}
               className={[FontAwesomeStyles.fa, FontAwesomeStyles['fa-trash'], 'btn-outline-primary']}
-              label={''}
+              label=""
               aria-label={displayText}
               onClick={() => { this.onDeleteClick(index); }}
               inputRef={ref => this.getAssetDeleteButtonRef(ref, currentAsset)}
               data-identifier="asset-delete-button"
-            />)
-          }
+            />
+          )}
         </WrappedMessage>
       );
 
-      const isLoadingLock = currentAsset.loadingFields &&
-        currentAsset.loadingFields.includes(assetLoading.LOCK);
+      const isLoadingLock = currentAsset.loadingFields
+        && currentAsset.loadingFields.includes(assetLoading.LOCK);
 
       currentAsset.delete_asset = deleteButton;
 
-      currentAsset.lock_asset = isLoadingLock ?
-        this.getLoadingLockButton(currentAsset) : this.getLockButton(currentAsset);
+      currentAsset.lock_asset = isLoadingLock
+        ? this.getLoadingLockButton(currentAsset) : this.getLockButton(currentAsset);
 
       /*
         TODO: we will have to add functionality to actually have the alt tag be the
@@ -359,12 +362,14 @@ export default class AssetsTable extends React.Component {
       <div id={modalWrapperID}>
         <Modal
           open={this.state.modalOpen}
-          title={(<WrappedMessage
-            message={messages.assetsTableDeleteObject}
-            values={{
-              displayName: this.props.assetToDelete.display_name,
-            }}
-          />)}
+          title={(
+            <WrappedMessage
+              message={messages.assetsTableDeleteObject}
+              values={{
+                displayName: this.props.assetToDelete.display_name,
+              }}
+            />
+)}
           body={this.renderModalBody()}
           closeText={<WrappedMessage message={messages.assetsTableCancel} />}
           onClose={this.closeModal}
@@ -401,7 +406,7 @@ export default class AssetsTable extends React.Component {
     );
 
     return (
-      <React.Fragment>
+      <>
         <WrappedMessage
           message={messages.assetsTableDeleteWarning}
           tagName="p"
@@ -416,13 +421,13 @@ export default class AssetsTable extends React.Component {
             link: learnMoreLink,
           }}
         />
-      </React.Fragment>
+      </>
     );
   }
 
   render() {
     return (
-      <React.Fragment>
+      <>
         <Table
           caption={this.getTableCaption()}
           className={['table-responsive']}
@@ -441,7 +446,7 @@ export default class AssetsTable extends React.Component {
               : ''
           }
         </span>
-      </React.Fragment>
+      </>
     );
   }
 }

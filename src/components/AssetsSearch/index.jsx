@@ -53,7 +53,6 @@ export default class AssetsSearch extends React.Component {
   }
 }
 
-
 AssetsSearch.propTypes = {
   assetsSearch: PropTypes.shape({
     search: PropTypes.string,

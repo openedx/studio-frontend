@@ -1,6 +1,6 @@
 import React from 'react';
 
-import CourseOutlineStatusValue from './';
+import CourseOutlineStatusValue from '.';
 import { shallowWithIntl } from '../../utils/i18n/enzymeHelper';
 
 let wrapper;

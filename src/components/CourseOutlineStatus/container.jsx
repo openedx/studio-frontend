@@ -11,10 +11,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  getCourseBestPractices: (parameters, courseDetails) =>
-    dispatch(getCourseBestPractices(parameters, courseDetails)),
-  getCourseLaunch: (parameters, courseDetails) =>
-    dispatch(getCourseLaunch(parameters, courseDetails)),
+  getCourseBestPractices: (parameters, courseDetails) => dispatch(getCourseBestPractices(parameters, courseDetails)),
+  getCourseLaunch: (parameters, courseDetails) => dispatch(getCourseLaunch(parameters, courseDetails)),
 });
 
 const WrappedCourseOutlineStatus = connect(

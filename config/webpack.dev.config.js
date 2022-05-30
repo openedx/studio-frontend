@@ -110,12 +110,11 @@ module.exports = Merge.smart(commonConfig, {
       'Access-Control-Allow-Origin': '*',
     },
     overlay: true,
-    proxy: Object.keys(apiEndpoints).reduce(
-      (map, endpoint) => {
-        map[apiEndpoints[endpoint]] = { // eslint-disable-line no-param-reassign
-          target: targetUrl,
-        };
-        return map;
-      }, {}),
+    proxy: Object.keys(apiEndpoints).reduce((map, endpoint) => {
+      map[apiEndpoints[endpoint]] = { // eslint-disable-line no-param-reassign
+        target: targetUrl,
+      };
+      return map;
+    }, {}),
   },
 });

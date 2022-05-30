@@ -1,7 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Button, InputText, StatusAlert, TextArea } from '@edx/paragon';
+import {
+  Button, InputText, StatusAlert, TextArea,
+} from '@edx/paragon';
 import { FormattedTime, FormattedDate } from 'react-intl';
 
 import messages from './displayMessages';
@@ -40,8 +42,8 @@ export class AccessibilityPolicyForm extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     const { accessibilityStatus } = nextProps;
-    if (accessibilityStatus.type ===
-      accessibilityActions.submit.ACCESSIBILITY_FORM_SUBMIT_SUCCESS) {
+    if (accessibilityStatus.type
+      === accessibilityActions.submit.ACCESSIBILITY_FORM_SUBMIT_SUCCESS) {
       this.clearInputs();
     }
   }
@@ -53,8 +55,8 @@ export class AccessibilityPolicyForm extends React.Component {
     const isValidEmail = this.validateEmail(submitterEmail);
     const isValidFullName = this.validateFullName(submitterFullName);
     const isValidMessage = this.validateMessage(submitterMessage);
-    const isValidContent = isValidEmail.isValid &&
-      isValidFullName.isValid && isValidMessage.isValid;
+    const isValidContent = isValidEmail.isValid
+      && isValidFullName.isValid && isValidMessage.isValid;
 
     this.setState({
       isStatusAlertOpen: true,
@@ -106,8 +108,8 @@ export class AccessibilityPolicyForm extends React.Component {
           </div>
         ),
       };
-    } else if (accessibilityStatus.type ===
-        accessibilityActions.submit.ACCESSIBILITY_FORM_SUBMIT_RATE_LIMIT_FAILURE) {
+    } else if (accessibilityStatus.type
+        === accessibilityActions.submit.ACCESSIBILITY_FORM_SUBMIT_RATE_LIMIT_FAILURE) {
       status = {
         alertType: 'danger',
         alertDialog: (
@@ -120,8 +122,8 @@ export class AccessibilityPolicyForm extends React.Component {
           />
         ),
       };
-    } else if (accessibilityStatus.type ===
-        accessibilityActions.submit.ACCESSIBILITY_FORM_SUBMIT_SUCCESS) {
+    } else if (accessibilityStatus.type
+        === accessibilityActions.submit.ACCESSIBILITY_FORM_SUBMIT_SUCCESS) {
       const start = new Date('Mon Jan 29 2018 13:00:00 GMT (UTC)');
       const end = new Date('Fri Feb 2 2018 21:00:00 GMT (UTC)');
       status = {
@@ -288,15 +290,15 @@ export class AccessibilityPolicyForm extends React.Component {
             inputRef={(ref) => { this.messageInputRef = ref; }}
           />
           <WrappedMessage message={messages.accessibilityPolicyFormSubmitAria}>
-            { displayText =>
-              (<Button
+            { displayText => (
+              <Button
                 buttonType="primary"
                 label={<WrappedMessage message={messages.accessibilityPolicyFormSubmitLabel} />}
                 aria-label={displayText}
                 onClick={() => { this.onSubmitClick(); }}
                 inputRef={(ref) => { this.submitButtonRef = ref; }}
-              />)
-            }
+              />
+            )}
           </WrappedMessage>
         </section>
       </div>
@@ -320,8 +322,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   clearAccessibilityStatus: () => dispatch(clearAccessibilityStatus()),
-  submitAccessibilityForm: (email, fullName, message) =>
-    dispatch(submitAccessibilityForm(email, fullName, message)),
+  submitAccessibilityForm: (email, fullName, message) => dispatch(submitAccessibilityForm(email, fullName, message)),
 });
 
 const WrappedAccessibilityPolicyForm = connect(

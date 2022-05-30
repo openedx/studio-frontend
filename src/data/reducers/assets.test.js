@@ -1,6 +1,6 @@
 import * as reducers from './assets';
-import { assetActions } from '../../data/constants/actionTypes';
-import { assetLoading } from '../../data/constants/loadingTypes';
+import { assetActions } from '../constants/actionTypes';
+import { assetLoading } from '../constants/loadingTypes';
 import { getAssetAPIAttributeFromDatabaseAttribute } from '../../utils/getAssetsAttributes';
 import { getDefaultFilterState } from '../../utils/getAssetsFilters';
 

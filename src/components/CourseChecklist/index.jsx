@@ -38,23 +38,19 @@ class CourseChecklist extends React.Component {
   }
 
   onAssignmentHyperlinkClick = (assignmentID) => {
-    trackEvent(
-      'edx.bi.studio.course.checklist.invalid-assignment.clicked', {
-        category: 'click',
-        event_type: `invalid-assignment-${assignmentID}`,
-        label: this.props.studioDetails.course.id,
-      },
-    );
+    trackEvent('edx.bi.studio.course.checklist.invalid-assignment.clicked', {
+      category: 'click',
+      event_type: `invalid-assignment-${assignmentID}`,
+      label: this.props.studioDetails.course.id,
+    });
   }
 
   onCheckUpdateHyperlinkClick = (checkID) => {
-    trackEvent(
-      'edx.bi.studio.course.checklist.update.clicked', {
-        category: 'click',
-        event_type: `update-${checkID}`,
-        label: this.props.studioDetails.course.id,
-      },
-    );
+    trackEvent('edx.bi.studio.course.checklist.update.clicked', {
+      category: 'click',
+      event_type: `update-${checkID}`,
+      label: this.props.studioDetails.course.id,
+    });
   }
 
   getCompletionCountID = () => (`${this.props.idPrefix.split(/\s/).join('-')}-completion-count`);
@@ -68,21 +64,21 @@ class CourseChecklist extends React.Component {
   getCompletionCount = () => {
     const totalCompletedChecks = Object.values(this.state.checks).length;
 
-    return this.props.isLoading ?
-      null :
-      (
+    return this.props.isLoading
+      ? null
+      : (
         <WrappedMessage
           message={messages.completionCountLabel}
           values={{ completed: this.state.totalCompletedChecks, total: totalCompletedChecks }}
         >
-          {displayText =>
-            (<div
+          {displayText => (
+            <div
               className="font-large"
               id={this.getCompletionCountID()}
             >
               {displayText}
-            </div>)
-          }
+            </div>
+          )}
         </WrappedMessage>
       );
   }
@@ -99,14 +95,14 @@ class CourseChecklist extends React.Component {
               className={[classNames(
                 FontAwesomeStyles.fa,
                 FontAwesomeStyles['fa-2x'],
-                this.getCompletionIconClassNames(isCompleted)),
+                this.getCompletionIconClassNames(isCompleted),
+              ),
               ]}
               id={`icon-${checkID}`}
               screenReaderText={displayText}
             />
           </div>
-        )
-        }
+        )}
       </WrappedMessage>
     );
   }
@@ -155,14 +151,14 @@ class CourseChecklist extends React.Component {
 
   getLoadingIcon = () => (
     <WrappedMessage message={messages.loadingChecklistLabel}>
-      {displayText =>
-        (<div className="text-center">
+      {displayText => (
+        <div className="text-center">
           <Icon
             className={[classNames(...this.spinnerClasses)]}
             screenReaderText={displayText}
           />
-        </div>)
-      }
+        </div>
+      )}
     </WrappedMessage>
   )
 
@@ -181,8 +177,8 @@ class CourseChecklist extends React.Component {
             'bg-white border my-2',
             { 'pt-4': shouldShowCommentSection, 'py-4': !shouldShowCommentSection },
             this.getChecklistItemColorClassName(isCompleted),
-            styles['checklist-item'])
-          }
+            styles['checklist-item'],
+          )}
           id={`checklist-item-${check.id}`}
           key={check.id}
         >
@@ -210,8 +206,7 @@ class CourseChecklist extends React.Component {
           FontAwesomeStyles['fa-lg'],
           FontAwesomeStyles['fa-comment'],
           styles['comment-icon'],
-        )]
-        }
+        )]}
       />
     </div>
   );
@@ -252,7 +247,7 @@ class CourseChecklist extends React.Component {
     );
 
     const message = (
-      <React.Fragment>
+      <>
         <WrappedMessage message={messages.assignmentDeadlinesComment} />
         <ul className={styles['assignment-list']}>
           {
@@ -267,7 +262,7 @@ class CourseChecklist extends React.Component {
             ))
           }
         </ul>
-      </React.Fragment>
+      </>
     );
 
     return this.getComment(message);
@@ -310,19 +305,19 @@ class CourseChecklist extends React.Component {
   )
 
   shouldShowAssignmentDeadlinesCommentSection = () => (
-    Object.keys(this.props.data).length > 0 &&
-    (
-      this.props.data.assignments.assignments_with_dates_before_start.length > 0 ||
-      this.props.data.assignments.assignments_with_dates_after_end.length > 0 ||
-      this.props.data.assignments.assignments_with_ora_dates_before_start.length > 0 ||
-      this.props.data.assignments.assignments_with_ora_dates_after_end.length > 0
+    Object.keys(this.props.data).length > 0
+    && (
+      this.props.data.assignments.assignments_with_dates_before_start.length > 0
+      || this.props.data.assignments.assignments_with_dates_after_end.length > 0
+      || this.props.data.assignments.assignments_with_ora_dates_before_start.length > 0
+      || this.props.data.assignments.assignments_with_ora_dates_after_end.length > 0
     )
   )
 
   shouldShowCommentSection = (checkID) => {
     if (checkID === 'gradingPolicy' && this.shouldShowGradingPolicyCommentSection()) {
       return true;
-    } else if (checkID === 'assignmentDeadlines' && this.shouldShowAssignmentDeadlinesCommentSection()) {
+    } if (checkID === 'assignmentDeadlines' && this.shouldShowAssignmentDeadlinesCommentSection()) {
       return true;
     }
 

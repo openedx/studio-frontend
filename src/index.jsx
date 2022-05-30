@@ -1,6 +1,6 @@
 /* eslint-disable global-require,no-underscore-dangle */
-if ((typeof window !== 'undefined' && !window._babelPolyfill) ||
-   (typeof global !== 'undefined' && !global._babelPolyfill)) {
+if ((typeof window !== 'undefined' && !window._babelPolyfill)
+   || (typeof global !== 'undefined' && !global._babelPolyfill)) {
   // Don't load babel-polyfill if already loaded: https://github.com/babel/babel/issues/4019
   require('@babel/polyfill'); // general ES2015 polyfill (e.g. promise)
 }
@@ -21,15 +21,17 @@ import loadI18nDomData from './utils/i18n/loadI18nDomData';
 
 const i18nData = loadI18nDomData();
 
-const App = () => (
-  <IntlProvider locale={i18nData.locale} messages={i18nData.messages}>
-    <Provider store={store}>
-      <div className="SFE-wrapper">
-        <BackendStatusBanner />
-        <WrappedAssetsPage />
-      </div>
-    </Provider>
-  </IntlProvider>
-);
+function App() {
+  return (
+    <IntlProvider locale={i18nData.locale} messages={i18nData.messages}>
+      <Provider store={store}>
+        <div className="SFE-wrapper">
+          <BackendStatusBanner />
+          <WrappedAssetsPage />
+        </div>
+      </Provider>
+    </IntlProvider>
+  );
+}
 
 ReactDOM.render(<App />, document.getElementById('root'));

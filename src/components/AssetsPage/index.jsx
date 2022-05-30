@@ -90,7 +90,7 @@ export default class AssetsPage extends React.Component {
   );
 
   renderAssetsPage = () => (
-    <React.Fragment>
+    <>
       <div className="row">
         <div className="col-10 offset-2">
           <div className="row">
@@ -100,10 +100,11 @@ export default class AssetsPage extends React.Component {
               </div>
             </div>
             <div className="col-md-4 text-right">
-              {hasSearchOrFilterApplied(this.props.filtersMetadata.assetTypes,
-                this.props.searchMetadata.search) &&
-                <WrappedAssetsClearFiltersButton className="p-3" />
-              }
+              {hasSearchOrFilterApplied(
+                this.props.filtersMetadata.assetTypes,
+                this.props.searchMetadata.search,
+              )
+                && <WrappedAssetsClearFiltersButton className="p-3" />}
             </div>
           </div>
         </div>
@@ -135,7 +136,7 @@ export default class AssetsPage extends React.Component {
           <WrappedPagination />
         </div>
       </div>
-    </React.Fragment>
+    </>
   );
 
   renderNoAssetsBody = () => (
@@ -154,10 +155,10 @@ export default class AssetsPage extends React.Component {
   );
 
   renderNoResultsBody = () => (
-    <React.Fragment>
+    <>
       <WrappedMessage message={messages.assetsPageNoResultsMessage} tagName="h3" />
       <WrappedAssetsClearFiltersButton />
-    </React.Fragment>
+    </>
   );
 
   renderNoResultsPage = () => (
@@ -183,7 +184,7 @@ export default class AssetsPage extends React.Component {
 
   render() {
     return (
-      <React.Fragment>
+      <>
         <div
           aria-atomic
           aria-live="polite"
@@ -202,8 +203,8 @@ export default class AssetsPage extends React.Component {
               />
             </div>
           </div>
-          {(this.state.pageType === pageTypes.NORMAL ||
-            this.state.pageType === pageTypes.NO_RESULTS) && (
+          {(this.state.pageType === pageTypes.NORMAL
+            || this.state.pageType === pageTypes.NO_RESULTS) && (
             <div className="row">
               <div className="col-12 p-0">
                 <WrappedAssetsSearch />
@@ -212,7 +213,7 @@ export default class AssetsPage extends React.Component {
           )}
           {this.getPage(this.state.pageType)}
         </div>
-      </React.Fragment>
+      </>
     );
   }
 }

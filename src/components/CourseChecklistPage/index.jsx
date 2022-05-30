@@ -22,15 +22,13 @@ export default class CourseChecklistPage extends React.Component {
   }
 
   getAriaLiveRegion = (isCourseLaunchChecklistLoading, isCourseBestPracticeChecklistLoading) => {
-    const courseLaunchLoadingMessage =
-      isCourseLaunchChecklistLoading ?
-        <WrappedMessage message={messages.launchChecklistLoadingLabel} /> :
-        <WrappedMessage message={messages.launchChecklistDoneLoadingLabel} />;
+    const courseLaunchLoadingMessage = isCourseLaunchChecklistLoading
+      ? <WrappedMessage message={messages.launchChecklistLoadingLabel} />
+      : <WrappedMessage message={messages.launchChecklistDoneLoadingLabel} />;
 
-    const courseBestPracticesLoadingMessage =
-      isCourseBestPracticeChecklistLoading ?
-        <WrappedMessage message={messages.bestPracticesChecklistLoadingLabel} /> :
-        <WrappedMessage message={messages.bestPracticesChecklistDoneLoadingLabel} />;
+    const courseBestPracticesLoadingMessage = isCourseBestPracticeChecklistLoading
+      ? <WrappedMessage message={messages.bestPracticesChecklistLoadingLabel} />
+      : <WrappedMessage message={messages.bestPracticesChecklistDoneLoadingLabel} />;
 
     return (
       <div className="sr-only" aria-live="polite" role="status">
@@ -40,13 +38,10 @@ export default class CourseChecklistPage extends React.Component {
     );
   }
 
-
   render() {
-    const isCourseBestPracticeChecklistLoading =
-      this.props.loadingChecklists.includes(checklistLoading.COURSE_BEST_PRACTICES);
+    const isCourseBestPracticeChecklistLoading = this.props.loadingChecklists.includes(checklistLoading.COURSE_BEST_PRACTICES);
 
-    const isCourseLaunchChecklistLoading =
-      this.props.loadingChecklists.includes(checklistLoading.COURSE_LAUNCH);
+    const isCourseLaunchChecklistLoading = this.props.loadingChecklists.includes(checklistLoading.COURSE_LAUNCH);
 
     const courseBestPracticesChecklist = (
       <WrappedCourseChecklist
@@ -76,8 +71,8 @@ export default class CourseChecklistPage extends React.Component {
           </div>
         </div>
         {
-          this.props.studioDetails.enable_quality ?
-            (
+          this.props.studioDetails.enable_quality
+            ? (
               <div className="row ">
                 <div className="col">
                   {courseBestPracticesChecklist}

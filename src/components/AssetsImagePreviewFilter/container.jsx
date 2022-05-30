@@ -8,8 +8,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  updateImagePreview: checked =>
-    dispatch(updateImagePreview(checked)),
+  updateImagePreview: checked => dispatch(updateImagePreview(checked)),
 });
 
 const WrappedAssetsImagePreviewFilter = connect(

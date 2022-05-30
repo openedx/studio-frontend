@@ -414,7 +414,7 @@ describe('<AssetsPage />', () => {
 
     testData.forEach((test) => {
       it(`returns the correct element to focus on when element at index ${test.deletedAssetIndex} deleted`, () => {
-        const deletedAssetIndex = test.deletedAssetIndex;
+        const { deletedAssetIndex } = test;
 
         wrapper.setProps({
           assetsList: testAssetsList,

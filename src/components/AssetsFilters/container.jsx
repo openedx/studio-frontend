@@ -9,8 +9,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  updateFilter: (filterKey, filterValue, courseDetails) =>
-    dispatch(filterUpdate(filterKey, filterValue, courseDetails)),
+  updateFilter: (filterKey, filterValue, courseDetails) => dispatch(filterUpdate(filterKey, filterValue, courseDetails)),
 });
 
 const WrappedAssetsFilters = connect(

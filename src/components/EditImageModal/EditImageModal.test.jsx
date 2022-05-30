@@ -1,4 +1,6 @@
-import { Button, CheckBox, Fieldset, Modal, InputText, StatusAlert, Variant } from '@edx/paragon';
+import {
+  Button, CheckBox, Fieldset, Modal, InputText, StatusAlert, Variant,
+} from '@edx/paragon';
 import { IntlProvider, FormattedMessage } from 'react-intl';
 import { Provider } from 'react-redux';
 import React from 'react';
@@ -26,41 +28,29 @@ const store = getMockStore({
 const intlProvider = new IntlProvider({ locale: 'en', messages: {} }, {});
 const { intl } = intlProvider.getChildContext();
 
-const getEditImageModal = wrapper =>
-  (wrapper.find('Connect(EditImageModal)').dive({ context: { store, intl } }).find(EditImageModal).dive({ context: { store, intl } }));
+const getEditImageModal = wrapper => (wrapper.find('Connect(EditImageModal)').dive({ context: { store, intl } }).find(EditImageModal).dive({ context: { store, intl } }));
 const getModal = editImageModal => (editImageModal.find(Modal));
-const getModalContent = editImageModal =>
-  (getModal(editImageModal).dive({ context: { store, intl } }));
+const getModalContent = editImageModal => (getModal(editImageModal).dive({ context: { store, intl } }));
 const getModalBody = editImageModal => (getModalContent(editImageModal).find('.modal-body'));
 const getModalFooter = editImageModal => (getModalContent(editImageModal).find('.modal-footer'));
 const getFormContainer = editImageModal => (getModalBody(editImageModal).find('div.col form'));
 const getStatusAlert = editImageModal => (getModalBody(editImageModal).find(StatusAlert));
-const getCloseStatusAlertButton = editImageModal =>
-  (getStatusAlert(editImageModal).dive({ context: { store, intl } }).find(Button));
-const getInsertImageButton = editImageModal =>
-  (getModalFooter(editImageModal).find(Button).first());
-const getNextButton = editImageModal =>
-  (getModalFooter(editImageModal).find(Button).first());
+const getCloseStatusAlertButton = editImageModal => (getStatusAlert(editImageModal).dive({ context: { store, intl } }).find(Button));
+const getInsertImageButton = editImageModal => (getModalFooter(editImageModal).find(Button).first());
+const getNextButton = editImageModal => (getModalFooter(editImageModal).find(Button).first());
 const getPreviousButton = editImageModal => (getModalBody(editImageModal).find(Button));
 
-const getImageDescriptionFieldset = editImageModal =>
-  (getFormContainer(editImageModal).find(Fieldset).at(0));
-const getImageDescriptionInput = editImageModal =>
-  (getImageDescriptionFieldset(editImageModal).find(InputText));
-const getImageDescriptionInputCheckBox = editImageModal =>
-  (getImageDescriptionFieldset(editImageModal).find(CheckBox));
+const getImageDescriptionFieldset = editImageModal => (getFormContainer(editImageModal).find(Fieldset).at(0));
+const getImageDescriptionInput = editImageModal => (getImageDescriptionFieldset(editImageModal).find(InputText));
+const getImageDescriptionInputCheckBox = editImageModal => (getImageDescriptionFieldset(editImageModal).find(CheckBox));
 
-const getImageDimensionsFieldset = editImageModal =>
-  (getFormContainer(editImageModal).find(Fieldset).at(1));
-const getImageDimensionsWidthInput = editImageModal =>
-  (getImageDimensionsFieldset(editImageModal)
-    .dive({ context: { store, intl } }).find(InputText).at(0));
+const getImageDimensionsFieldset = editImageModal => (getFormContainer(editImageModal).find(Fieldset).at(1));
+const getImageDimensionsWidthInput = editImageModal => (getImageDimensionsFieldset(editImageModal)
+  .dive({ context: { store, intl } }).find(InputText).at(0));
 
-const getImageDimensionsHeightInput = editImageModal =>
-  (getImageDimensionsFieldset(editImageModal)
-    .dive({ context: { store, intl } }).find(InputText).at(1));
-const getImageDimensionsCheckBox = editImageModal =>
-  (getImageDimensionsFieldset(editImageModal).dive({ context: { store, intl } }).find(CheckBox));
+const getImageDimensionsHeightInput = editImageModal => (getImageDimensionsFieldset(editImageModal)
+  .dive({ context: { store, intl } }).find(InputText).at(1));
+const getImageDimensionsCheckBox = editImageModal => (getImageDimensionsFieldset(editImageModal).dive({ context: { store, intl } }).find(CheckBox));
 
 const getNextPageButton = editImageModal => (getModalFooter(editImageModal).find(Button).first());
 
@@ -195,7 +185,6 @@ describe('EditImageModal', () => {
             it('no AssetsResultsCount component', () => {
               expect(getModalBody(editImageModal).find('Connect(AssetsResultsCount)')).toHaveLength(0);
             });
-
 
             it('no Pagination component', () => {
               expect(getModalBody(editImageModal).find('Pagination')).toHaveLength(0);
@@ -494,8 +483,7 @@ describe('EditImageModal', () => {
                 });
 
                 it('correct initial props', () => {
-                  const imageDescriptionInputCheckbox =
-                    getImageDescriptionInputCheckBox(editImageModal);
+                  const imageDescriptionInputCheckbox = getImageDescriptionInputCheckBox(editImageModal);
 
                   expect(imageDescriptionInputCheckbox.prop('id')).toEqual('isDecorative');
                   expect(imageDescriptionInputCheckbox.prop('id')).toEqual('isDecorative');
@@ -869,8 +857,7 @@ describe('EditImageModal', () => {
           to succesfully shallow them. Once Enzyme introduces support for React Fragments,
           we can remove the extraneous div.
         */
-        const statusAlertDialog =
-          shallowWithIntl(<div>{statusAlert.prop('dialog')}</div>).find(WrappedMessage);
+        const statusAlertDialog = shallowWithIntl(<div>{statusAlert.prop('dialog')}</div>).find(WrappedMessage);
         expect(statusAlertDialog.prop('message')).toEqual(messages.editImageModalTooManyFiles);
       });
 
@@ -888,8 +875,7 @@ describe('EditImageModal', () => {
           to succesfully shallow them. Once Enzyme introduces support for React Fragments,
           we can remove the extraneous div.
         */
-        const statusAlertDialog =
-          shallowWithIntl(<div>{statusAlert.prop('dialog')}</div>).find(WrappedMessage);
+        const statusAlertDialog = shallowWithIntl(<div>{statusAlert.prop('dialog')}</div>).find(WrappedMessage);
         expect(statusAlertDialog.prop('message')).toEqual(messages.editImageModalInvalidFileType);
       });
 
@@ -1452,7 +1438,6 @@ describe('EditImageModal', () => {
         expect(() => editImageModal.instance().onImageDimensionBlur(sampleText)).toThrow(`Unknown dimension type ${sampleText}.`);
       });
 
-
       it('returns correct feedback for invalid dimensions (negative numbers)', () => {
         editImageModal.setState({
           imageDimensions: {
@@ -1689,7 +1674,6 @@ describe('EditImageModal', () => {
 
         editImageModal.instance().validateImageDescription = validationMock;
       });
-
 
       it('sends bubbles as true', () => {
         getInsertImageButton(editImageModal).simulate('click');

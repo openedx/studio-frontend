@@ -1,4 +1,6 @@
-import { Button, CheckBox, Fieldset, Icon, InputText, Modal, StatusAlert, Variant } from '@edx/paragon';
+import {
+ Button, CheckBox, Fieldset, Icon, InputText, Modal, StatusAlert, Variant 
+} from '@edx/paragon';
 import classNames from 'classnames';
 import { connect } from 'react-redux';
 import FontAwesomeStyles from 'font-awesome/css/font-awesome.min.css';
@@ -17,7 +19,6 @@ import WrappedAssetsList from '../AssetsList/container';
 import WrappedAssetsSearch from '../AssetsSearch/container';
 import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
 import WrappedPagination from '../Pagination/container';
-
 
 // Create an AssetsResultsCount that is not aware of the Images filter.
 // This is so that the message will initially say "out of N total files" instead of "out of N
@@ -159,7 +160,8 @@ export default class EditImageModal extends React.Component {
 
     this.props.clearSearch(this.props.courseDetails);
     this.resetImageSelection();
-    this.modalWrapperRef.dispatchEvent(new CustomEvent('closeModal',
+    this.modalWrapperRef.dispatchEvent(new CustomEvent(
+'closeModal',
       {
         bubbles: true,
       },
@@ -274,7 +276,8 @@ export default class EditImageModal extends React.Component {
     });
 
     if (isValidFormContent) {
-      this.imageFormRef.dispatchEvent(new CustomEvent('submitForm',
+      this.imageFormRef.dispatchEvent(new CustomEvent(
+'submitForm',
         {
           bubbles: true,
           detail: {
@@ -374,11 +377,11 @@ export default class EditImageModal extends React.Component {
     >
       <InputText
         name="imageDescription"
-        label={
+        label={(
           <WrappedMessage
             message={messages.editImageModalImageDescriptionLabel}
           />
-        }
+        )}
         describedBy={`#Error-${imageDescriptionID}`}
         description={this.getImageDescriptionDescription()}
         id={imageDescriptionID}
@@ -396,11 +399,11 @@ export default class EditImageModal extends React.Component {
       <CheckBox
         id="isDecorative"
         name="isDecorative"
-        label={
+        label={(
           <WrappedMessage
             message={messages.editImageModalImageIsDecorativeCheckboxLabel}
           />
-        }
+        )}
         description={this.getImageIsDecorativeDescription()}
         checked={this.state.isImageDecorative}
         onChange={this.onImageIsDecorativeClick}
@@ -425,19 +428,19 @@ export default class EditImageModal extends React.Component {
   );
 
   getImageDescriptionDescription = () => (
-    <React.Fragment>
+    <>
       <WrappedMessage message={messages.editImageModalImageDescriptionDescription} />
       {' '}
       {this.getLearnMoreLink()}
-    </React.Fragment>
+    </>
   );
 
   getImageIsDecorativeDescription = () => (
-    <React.Fragment>
+    <>
       <WrappedMessage message={messages.editImageModalImageIsDecorativeCheckboxDescription} />
       {' '}
       {this.getLearnMoreLink()}
-    </React.Fragment>
+    </>
   );
 
   getImageDimensionsInput = () => (
@@ -455,11 +458,11 @@ export default class EditImageModal extends React.Component {
         <div className="col">
           <InputText
             name="imageWidth"
-            label={
+            label={(
               <WrappedMessage
                 message={messages.editImageModalImageWidthLabel}
               />
-            }
+            )}
             id={imageWidthID}
             type="number"
             value={'width' in this.state.imageDimensions ? this.state.imageDimensions.width : ''}
@@ -472,11 +475,11 @@ export default class EditImageModal extends React.Component {
         <div className="col">
           <InputText
             name={imageHeightID}
-            label={
+            label={(
               <WrappedMessage
                 message={messages.editImageModalImageHeightLabel}
               />
-            }
+            )}
             id="imageHeight"
             type="number"
             value={'height' in this.state.imageDimensions ? this.state.imageDimensions.height : ''}
@@ -487,11 +490,11 @@ export default class EditImageModal extends React.Component {
       <CheckBox
         id="lockProportions"
         name="lockProportions"
-        label={
+        label={(
           <WrappedMessage
             message={messages.editImageModalLockImageProportionsCheckboxLabel}
           />
-        }
+        )}
         checked={this.state.areProportionsLocked}
         onChange={this.onConstrainProportionsClick}
       />
@@ -519,11 +522,12 @@ export default class EditImageModal extends React.Component {
   */
   getImagePreviewPlaceholder = () => (
     <div className={styles['image-preview-placeholder']}>
-      <WrappedMessage message={messages.editImageModalImagePreviewText} >
-        {displayText =>
-          (<span className={classNames({ invisible: this.state.isImageLoaded })}>
+      <WrappedMessage message={messages.editImageModalImagePreviewText}>
+        {displayText => (
+<span className={classNames({ invisible: this.state.isImageLoaded })}>
             {displayText}
-          </span>)}
+          </span>
+)}
       </WrappedMessage>
       {this.state.imageSource && this.getImage()}
     </div>
@@ -544,9 +548,9 @@ export default class EditImageModal extends React.Component {
 
     if (this.state.pageNumber === 1) {
       dialog = (
-        <React.Fragment>
+        <>
           {this.getUploadErrorStatusMessage()}
-        </React.Fragment>
+        </>
       );
     } else if (this.state.pageNumber === 2) {
       dialog = (
@@ -561,7 +565,7 @@ export default class EditImageModal extends React.Component {
                 const value = this.state.currentValidationMessages[current];
 
                 if (value) {
-                  const errorMessage = <li key={`Error-${current}`}>{<a href={`#${current}`}>{value} </a>}</li>;
+                  const errorMessage = <li key={`Error-${current}`}><a href={`#${current}`}>{value} </a></li>;
                   accumulator.push(errorMessage);
                 }
 
@@ -630,10 +634,10 @@ export default class EditImageModal extends React.Component {
         );
       case pageTypes.NO_RESULTS:
         return (
-          <React.Fragment>
+          <>
             <WrappedMessage message={messages.editImageModalAssetsListNoResultsMessage} tagName="h3" />
             <WrappedAssetsClearSearchButton />
-          </React.Fragment>
+          </>
         );
       case pageTypes.SKELETON:
         return (
@@ -656,7 +660,7 @@ export default class EditImageModal extends React.Component {
   }
 
   getImageSelectionModalBody = () => (
-    <React.Fragment>
+    <>
       <div className="row">
         <div className="col">
           {this.getStatusAlert()}
@@ -705,11 +709,11 @@ export default class EditImageModal extends React.Component {
           </div>
         </div>
       )}
-    </React.Fragment>
+    </>
   );
 
   getImageSettingsModalBody = () => (
-    <React.Fragment>
+    <>
       {this.getStatusAlert()}
       <div className="row">
         {this.state.shouldShowPreviousButton && this.getPreviousPageButton()}
@@ -725,7 +729,7 @@ export default class EditImageModal extends React.Component {
           </form>
         </div>
       </div>
-    </React.Fragment>
+    </>
   );
 
   getModalButtons = () => {
@@ -740,11 +744,11 @@ export default class EditImageModal extends React.Component {
 
   getNextPageButton = () => (
     <Button
-      label={
+      label={(
         <WrappedMessage
           message={messages.editImageModalNextPageButton}
         />
-      }
+      )}
       buttonType="primary"
       disabled={!this.isAssetSelected()}
       onClick={this.onNextPageButtonClick}
@@ -753,11 +757,11 @@ export default class EditImageModal extends React.Component {
 
   getPreviousPageButton = () => (
     <Button
-      label={
+      label={(
         <WrappedMessage
           message={messages.editImageModalPreviousPageButton}
         />
-      }
+      )}
       buttonType="link"
       onClick={this.onPreviousPageButtonClick}
       inputRef={this.setPreviousButtonRef}
@@ -766,11 +770,11 @@ export default class EditImageModal extends React.Component {
 
   getInsertImageButton = () => (
     <Button
-      label={
+      label={(
         <WrappedMessage
           message={messages.editImageModalInsertImageButton}
         />
-      }
+      )}
       buttonType="primary"
       onClick={this.onInsertImageButtonClick}
     />
@@ -895,8 +899,7 @@ export default class EditImageModal extends React.Component {
     }
   }
 
-  render = () => (
-    <div
+  render() { return <div
       ref={this.setModalWrapperRef}
       id={modalWrapperID}
     >
@@ -917,7 +920,7 @@ export default class EditImageModal extends React.Component {
         buttons={[this.getModalButtons()]}
         parentSelector={`#${modalWrapperID}`}
       />
-    </div>
+    </div>; }
   );
 }
 

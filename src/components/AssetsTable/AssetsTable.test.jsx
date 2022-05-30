@@ -12,7 +12,8 @@ const getStatusAlert = () => (
   <AssetsStatusAlert
     clearAssetsStatus={() => {}}
     onDeleteStatusAlertClose={() => {}}
-  />);
+  />
+);
 
 const defaultProps = {
   assetsList: testAssetsList,
@@ -120,9 +121,9 @@ describe('<AssetsTable />', () => {
       // non-sortable, non-hidden columns (e.g. Copy URLs) will not have a sortable button
       // but will have screenreader only text still within the header, validate that it is there
       expect(
-        wrapper.find('th').filterWhere(heading => heading.childAt(0).exists() &&
-          !heading.childAt(0).html().includes('button') &&
-          heading.childAt(0).html().includes('<span class="sr-only">')),
+        wrapper.find('th').filterWhere(heading => heading.childAt(0).exists()
+          && !heading.childAt(0).html().includes('button')
+          && heading.childAt(0).html().includes('<span class="sr-only">')),
       ).toHaveLength(
         defaultColumns.filter(column => column.hideHeader).length,
       );
@@ -228,8 +229,8 @@ describe('<AssetsTable />', () => {
     ];
 
     testData.forEach((test) => {
-      const sortProps = test.sortProps;
-      const expectedValues = test.expectedValues;
+      const { sortProps } = test;
+      const { expectedValues } = test;
 
       it(`calls onSort function with ${sortProps.direction} click on ${sortProps.sort === 'date_added' ? 'same' : 'different'} column`, () => {
         const sortableAssetParameters = {
@@ -246,9 +247,9 @@ describe('<AssetsTable />', () => {
         );
 
         const sortButtons = wrapper.find('button').filterWhere(button => (
-          button.find('span > span .fa-sort').exists() ||
-          button.find('span > span .fa-sort-desc').exists() ||
-          button.find('span > span .fa-sort-asc').exists()
+          button.find('span > span .fa-sort').exists()
+          || button.find('span > span .fa-sort-desc').exists()
+          || button.find('span > span .fa-sort-asc').exists()
         ));
 
         expect(sortButtons).toHaveLength(3);

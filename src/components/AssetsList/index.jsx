@@ -29,8 +29,10 @@ export default class AssetsList extends React.Component {
     if (this.props.paginationMetadata.page !== nextProps.paginationMetadata.page) {
       if (nextProps.paginationMetadata.page === this.state.selectedAssetPage) {
         this.setState({
-          selectedAssetIndex: this.getSelectedAssetIndex(nextProps.assetsList,
-            nextProps.selectedAsset),
+          selectedAssetIndex: this.getSelectedAssetIndex(
+            nextProps.assetsList,
+            nextProps.selectedAsset,
+          ),
         });
       } else {
         this.setState({
@@ -43,8 +45,8 @@ export default class AssetsList extends React.Component {
       if the selectedAsset is set to empty object, reset selectedAssetIndex; this is to
       handle the case when the EditImageModal closes
     */
-    if (Object.keys(this.props.selectedAsset).length !== 0 &&
-      Object.keys(nextProps.selectedAsset).length === 0) {
+    if (Object.keys(this.props.selectedAsset).length !== 0
+      && Object.keys(nextProps.selectedAsset).length === 0) {
       this.setState({
         ...initialState,
       });
@@ -64,7 +66,8 @@ export default class AssetsList extends React.Component {
     // if no list item is selected, select first item on  listbox focus
     if (this.state.selectedAssetIndex === -1) {
       this.setState(
-        { selectedAssetIndex: 0,
+        {
+          selectedAssetIndex: 0,
           selectedAssetPage: this.props.paginationMetadata.page,
         },
         () => { this.props.selectAsset(this.props.assetsList[this.state.selectedAssetIndex]); },
@@ -117,18 +120,21 @@ export default class AssetsList extends React.Component {
     return (
       <div className={styles['assets-list-image-preview-container']}>
         {
-          thumbnail ?
-            <img className={styles['assets-list-image-preview-image']} src={`${baseUrl}${thumbnail}`} alt="" data-identifier="asset-image-thumbnail" /> :
-            <WrappedMessage message={messages.assetsListNoPreview} >
-              {displayText => <span className={classNames('text-center')} data-identifier="asset-image-thumbnail">{displayText}</span>}
-            </WrappedMessage>
+          thumbnail
+            ? <img className={styles['assets-list-image-preview-image']} src={`${baseUrl}${thumbnail}`} alt="" data-identifier="asset-image-thumbnail" />
+            : (
+              <WrappedMessage message={messages.assetsListNoPreview}>
+                {displayText => <span className={classNames('text-center')} data-identifier="asset-image-thumbnail">{displayText}</span>}
+              </WrappedMessage>
+            )
         }
       </div>
     );
   }
 
   getSelectedAssetIndex = (assetsList, selectedAsset) => (assetsList.findIndex(
-    asset => asset.id === selectedAsset.id));
+    asset => asset.id === selectedAsset.id,
+  ));
 
   getThumbnailElement = thumbnail => (
     <span aria-hidden className="col">{this.getImageThumbnail(thumbnail)}</span>
@@ -170,12 +176,11 @@ export default class AssetsList extends React.Component {
     }
   }
 
-  render = () => {
-    const assetsListItems = this.props.assetsList.map((asset, index) =>
-      this.getAssetListItem(asset, index));
+  render() {
+    const assetsListItems = this.props.assetsList.map((asset, index) => this.getAssetListItem(asset, index));
 
     return (
-      <React.Fragment>
+      <>
         {this.getAssetsListHeader()}
         <ol
           aria-activedescendant={this.state.selectedAssetIndex > -1 ? `asset-list-option-${this.state.selectedAssetIndex}` : null}
@@ -187,9 +192,9 @@ export default class AssetsList extends React.Component {
         >
           {assetsListItems}
         </ol>
-      </React.Fragment>
+      </>
     );
-  };
+  }
 }
 
 AssetsList.propTypes = {

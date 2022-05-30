@@ -13,7 +13,7 @@ const renderCount = count => (
   </span>
 );
 
-const AssetsResultsCount = ({ paginationMetadata, filtersMetadata, searchMetadata }) => {
+function AssetsResultsCount({ paginationMetadata, filtersMetadata, searchMetadata }) {
   let message = messages.assetsResultsCountTotal;
   if (hasSearchOrFilterApplied(filtersMetadata.assetTypes, searchMetadata.search)) {
     message = messages.assetsResultsCountFiltered;
@@ -32,7 +32,7 @@ const AssetsResultsCount = ({ paginationMetadata, filtersMetadata, searchMetadat
       />
     </div>
   );
-};
+}
 
 AssetsResultsCount.propTypes = {
   paginationMetadata: PropTypes.shape({

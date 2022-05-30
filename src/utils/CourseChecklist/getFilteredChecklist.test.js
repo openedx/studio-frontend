@@ -32,7 +32,6 @@ const checklist = [
   },
 ];
 
-
 let courseData;
 describe('getFilteredChecklist utility function', () => {
   beforeEach(() => {
@@ -53,8 +52,8 @@ describe('getFilteredChecklist utility function', () => {
     );
 
     filteredChecklist.forEach(((
-      item => expect(item.pacingTypeFilter === filters.ALL ||
-        item.pacingTypeFilter === filters.SELF_PACED)
+      item => expect(item.pacingTypeFilter === filters.ALL
+        || item.pacingTypeFilter === filters.SELF_PACED)
     )));
 
     expect(filteredChecklist.filter(item => item.pacingTypeFilter === filters.ALL).length)
@@ -74,8 +73,8 @@ describe('getFilteredChecklist utility function', () => {
     );
 
     filteredChecklist.forEach(((
-      item => expect(item.pacingTypeFilter === filters.ALL ||
-        item.pacingTypeFilter === filters.INSTRUCTOR_PACED)
+      item => expect(item.pacingTypeFilter === filters.ALL
+        || item.pacingTypeFilter === filters.INSTRUCTOR_PACED)
     )));
 
     expect(filteredChecklist.filter(item => item.pacingTypeFilter === filters.ALL).length)

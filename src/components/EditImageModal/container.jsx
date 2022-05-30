@@ -10,7 +10,6 @@ import {
   selectAsset,
 } from '../../data/actions/assets';
 
-
 // Create an EditImageModal that is not aware of the Images filter.
 // This is so that the page will display a "noAssets" list instead of a "noResults" list when the
 // course has no images.

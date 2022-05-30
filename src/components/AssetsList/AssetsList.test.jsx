@@ -25,7 +25,8 @@ let list;
 let wrapper = mountWithIntl(
   <AssetsList
     {...defaultProps}
-  />);
+  />,
+);
 
 const selectAssetSpy = jest.fn();
 
@@ -42,7 +43,8 @@ const resetWrapper = () => {
   wrapper = mountWithIntl(
     <AssetsList
       {...defaultProps}
-    />);
+    />,
+  );
 
   updateConstants();
 };
@@ -110,7 +112,7 @@ describe('AssetsList', () => {
               expect(thumbnailElementContainer.prop('className').includes('assets-list-image-preview-container')).toEqual(true);
             });
 
-            const thumbnail = defaultProps.assetsList[index].thumbnail;
+            const { thumbnail } = defaultProps.assetsList[index];
 
             if (thumbnail) {
               describe('an img element with', () => {
@@ -564,4 +566,3 @@ describe('AssetsList', () => {
     });
   });
 });
-

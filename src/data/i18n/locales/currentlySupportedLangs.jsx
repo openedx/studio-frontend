@@ -18,10 +18,10 @@ import './zh_CN.json';
 // If these values change, please also update the pull_translations command in Makefile
 
 const localeDataMap = {
-  'ar': arData,
-  'en': enData,
+  ar: arData,
+  en: enData,
   'es-419': esData,
-  'fr': frData,
+  fr: frData,
   'zh-cn': zhData,
 };
 
