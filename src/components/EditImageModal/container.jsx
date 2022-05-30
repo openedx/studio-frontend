@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 
-import EditImageModal from '.';
+import EditImageModal from './index';
 import {
   clearAssetsStatus,
   clearSelectedAsset,

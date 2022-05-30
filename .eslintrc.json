@@ -19,6 +19,9 @@
     "quote-props": [
       "error",
       "consistent-as-needed"
+    ],
+    "default-param-last": [
+      "off"
     ]
   },
   "env": {

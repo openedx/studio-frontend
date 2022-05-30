@@ -207,7 +207,8 @@ export const unstageAssetDeletion = () => ({
   type: assetActions.delete.UNSTAGE_ASSET_DELETION,
 });
 
-export const deleteAsset = (asset, courseDetails) => dispatch => clientApi.requestDeleteAsset(courseDetails.id, asset.id)
+export const deleteAsset = (asset, courseDetails) => dispatch => (
+  clientApi.requestDeleteAsset(courseDetails.id, asset.id))
 // since the API returns 204 on success and 404 on failure, neither of which have
 // content, we don't json-ify the response
   .then((response) => {

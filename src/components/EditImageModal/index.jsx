@@ -63,7 +63,7 @@ const initialEditImageModalState = {
   shouldShowPreviousButton: false,
 };
 
-export default class EditImageModal extends React.Component {
+class EditImageModal extends React.Component {
   constructor(props) {
     super(props);
 
@@ -147,7 +147,7 @@ export default class EditImageModal extends React.Component {
     this.modalWrapperRef.removeEventListener('openModal', this.handleOpenModal);
   }
 
-  onConstrainProportionsClick = (checked) => {
+  onConstrainProportionsClick(checked) {
     this.setState({
       areProportionsLocked: checked,
     });
@@ -920,8 +920,8 @@ export default class EditImageModal extends React.Component {
         buttons={[this.getModalButtons()]}
         parentSelector={`#${modalWrapperID}`}
       />
-    </div>; }
-  );
+    </div>;
+    };
 }
 
 EditImageModal.propTypes = {
@@ -959,3 +959,5 @@ EditImageModal.propTypes = {
   }).isRequired,
   updatePage: PropTypes.func.isRequired,
 };
+
+export default EditImageModal;

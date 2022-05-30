@@ -12,7 +12,8 @@ export const submitAccessibilityFormRateLimitFailure = response => ({
   failureDetails: response.detail,
 });
 
-export const submitAccessibilityForm = (formEmail, formFullName, formMessage) => dispatch => clientApi.postAccessibilityForm(formEmail, formFullName, formMessage)
+export const submitAccessibilityForm = (formEmail, formFullName, formMessage) => dispatch => (
+  clientApi.postAccessibilityForm(formEmail, formFullName, formMessage))
   .then((response) => {
     // if 429 - Rate limit hit
     // fetch response json to get more details

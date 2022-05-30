@@ -15,35 +15,32 @@ import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
  *
  * @extends React.Component
  */
-class Pagination extends React.Component {
-  onPageClick = (oneIndexedPageNumber) => {
-    this.props.updatePage(oneIndexedPageNumber - 1, this.props.courseDetails);
-  }
+function Pagination(props) {
+  const onPageClick = (oneIndexedPageNumber) => {
+    props.updatePage(oneIndexedPageNumber - 1, props.courseDetails);
+  };
+  const { page: zeroIndexedPageNumber, pageSize, totalCount } = props.assetsListMetadata;
+  const totalPages = Math.ceil(totalCount / pageSize);
 
-  render() {
-    const { page: zeroIndexedPageNumber, pageSize, totalCount } = this.props.assetsListMetadata;
-    const totalPages = Math.ceil(totalCount / pageSize);
-
-    return (
-      <WrappedMessage message={messages.paginationAriaLabel}>
-        { paginationLabel => (
-          <ParagonPagination
-            paginationLabel={paginationLabel}
-            pageCount={totalPages}
-            buttonLabels={{
-              previous: this.props.intl.formatMessage(messages.paginationPrevious),
-              next: this.props.intl.formatMessage(messages.paginationNext),
-              page: this.props.intl.formatMessage(messages.paginationPage),
-              currentPage: this.props.intl.formatMessage(messages.paginationCurrentPage),
-              pageOfCount: this.props.intl.formatMessage(messages.paginationOf),
-            }}
-            currentPage={zeroIndexedPageNumber + 1}
-            onPageSelect={this.onPageClick}
-          />
-        )}
-      </WrappedMessage>
-    );
-  }
+  return (
+    <WrappedMessage message={messages.paginationAriaLabel}>
+      { paginationLabel => (
+        <ParagonPagination
+          paginationLabel={paginationLabel}
+          pageCount={totalPages}
+          buttonLabels={{
+            previous: props.intl.formatMessage(messages.paginationPrevious),
+            next: props.intl.formatMessage(messages.paginationNext),
+            page: props.intl.formatMessage(messages.paginationPage),
+            currentPage: props.intl.formatMessage(messages.paginationCurrentPage),
+            pageOfCount: props.intl.formatMessage(messages.paginationOf),
+          }}
+          currentPage={zeroIndexedPageNumber + 1}
+          onPageSelect={onPageClick}
+        />
+      )}
+    </WrappedMessage>
+  );
 }
 
 Pagination.propTypes = {
