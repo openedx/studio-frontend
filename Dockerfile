@@ -7,13 +7,9 @@ RUN npm i -g npm@8.x.x
 
 WORKDIR /prebuilt
 COPY config/ config/
-COPY src/accessibilityIndex.jsx src/accessibilityIndex.jsx
-COPY src/courseHealthCheckIndex.jsx src/courseHealthCheckIndex.jsx
-COPY src/courseOutlineHealthCheckIndex.jsx src/courseOutlineHealthCheckIndex.jsx
-COPY src/data/i18n/locales src/data/i18n/locales
-COPY src/editImageModalIndex.jsx src/editImageModalIndex.jsx
-COPY src/index.jsx src/index.jsx
+COPY src/ src/
 COPY package.json .
+COPY package-lock.json .
 RUN npm install
 
 WORKDIR /studio-frontend
