@@ -39,7 +39,9 @@ export default class CourseChecklistPage extends React.Component {
   };
 
   render() {
-    const isCourseBestPracticeChecklistLoading = this.props.loadingChecklists.includes(checklistLoading.COURSE_BEST_PRACTICES);
+    const isCourseBestPracticeChecklistLoading = this.props.loadingChecklists.includes(
+      checklistLoading.COURSE_BEST_PRACTICES,
+    );
 
     const isCourseLaunchChecklistLoading = this.props.loadingChecklists.includes(checklistLoading.COURSE_LAUNCH);
 
@@ -136,7 +138,7 @@ CourseChecklistPage.propTypes = {
       display_course_number: PropTypes.string,
       enable_quality: PropTypes.bool,
       id: PropTypes.string,
-      is_course_self_paced: PropTypes.boolean,
+      is_course_self_paced: PropTypes.bool,
       lang: PropTypes.string,
       name: PropTypes.string,
       num: PropTypes.string,
@@ -144,7 +146,7 @@ CourseChecklistPage.propTypes = {
       revision: PropTypes.string,
       url_name: PropTypes.string,
     }),
-    enable_quality: PropTypes.boolean,
+    enable_quality: PropTypes.bool,
     help_tokens: PropTypes.objectOf(PropTypes.string),
     lang: PropTypes.string,
   }).isRequired,

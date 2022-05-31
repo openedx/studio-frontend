@@ -20,13 +20,13 @@ export default class AssetsSearch extends React.Component {
     }
   }
 
-  submit = () => {
-    this.props.updateSearch(this.state.value, this.props.courseDetails);
-  };
-
   handleChange(value) {
     this.setState({ value });
   }
+
+  submit = () => {
+    this.props.updateSearch(this.state.value, this.props.courseDetails);
+  };
 
   handleClear = () => {
     // relying on `submit` introduces as state update race

@@ -23,6 +23,7 @@
     "default-param-last": [
       "off"
     ],
+    "comma-dangle": ["off"],
     "react/function-component-definition": [
       2,
       {

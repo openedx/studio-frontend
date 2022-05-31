@@ -35,6 +35,11 @@ export default class AssetsStatusAlert extends React.Component {
     this.updateStatusAlertFields(assetsStatus, deletedAsset);
   }
 
+  closeDeleteStatus = () => {
+    this.closeStatusAlert();
+    this.props.onDeleteStatusAlertClose();
+  };
+
   updateStatusAlertFields(assetsStatus, deletedAsset) {
     const assetName = deletedAsset.display_name;
     let alertDialog;
@@ -143,11 +148,6 @@ export default class AssetsStatusAlert extends React.Component {
     this.statusAlertRef.focus();
   }
 
-  closeDeleteStatus = () => {
-    this.closeStatusAlert();
-    this.props.onDeleteStatusAlertClose();
-  };
-
   closeStatusAlert() {
     this.props.clearAssetsStatus();
 
@@ -189,7 +189,7 @@ AssetsStatusAlert.propTypes = {
   assetsStatus: PropTypes.shape({
     response: PropTypes.object,
     type: PropTypes.string,
-  }).isRequired,
+  }),
   clearAssetsStatus: PropTypes.func.isRequired,
   deletedAsset: PropTypes.shape({
     display_name: PropTypes.string,

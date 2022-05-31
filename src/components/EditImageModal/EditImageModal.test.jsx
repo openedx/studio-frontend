@@ -17,7 +17,8 @@ import { shallowWithIntl } from '../../utils/i18n/enzymeHelper';
 import WrappedEditImageModal from './container';
 import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
 
-const learnMoreLink = 'http://edx.readthedocs.io/projects/edx-partner-course-staff/en/latest/accessibility/best_practices_course_content_dev.html#use-best-practices-for-describing-images';
+const learnMoreLink = 'http://edx.readthedocs.io/projects/edx-partner-course-staff/en/latest/accessibility/best_'
+  + 'practices_course_content_dev.html#use-best-practices-for-describing-images';
 
 const store = getMockStore({
   help_tokens: {
@@ -28,14 +29,16 @@ const store = getMockStore({
 const intlProvider = new IntlProvider({ locale: 'en', messages: {} }, {});
 const { intl } = intlProvider.getChildContext();
 
-const getEditImageModal = wrapper => (wrapper.find('Connect(EditImageModal)').dive({ context: { store, intl } }).find(EditImageModal).dive({ context: { store, intl } }));
+const getEditImageModal = wrapper => (wrapper.find('Connect(EditImageModal)').dive({ context: { store, intl } })
+  .find(EditImageModal).dive({ context: { store, intl } }));
 const getModal = editImageModal => (editImageModal.find(Modal));
 const getModalContent = editImageModal => (getModal(editImageModal).dive({ context: { store, intl } }));
 const getModalBody = editImageModal => (getModalContent(editImageModal).find('.modal-body'));
 const getModalFooter = editImageModal => (getModalContent(editImageModal).find('.modal-footer'));
 const getFormContainer = editImageModal => (getModalBody(editImageModal).find('div.col form'));
 const getStatusAlert = editImageModal => (getModalBody(editImageModal).find(StatusAlert));
-const getCloseStatusAlertButton = editImageModal => (getStatusAlert(editImageModal).dive({ context: { store, intl } }).find(Button));
+const getCloseStatusAlertButton = editImageModal => (getStatusAlert(editImageModal)
+  .dive({ context: { store, intl } }).find(Button));
 const getInsertImageButton = editImageModal => (getModalFooter(editImageModal).find(Button).first());
 const getNextButton = editImageModal => (getModalFooter(editImageModal).find(Button).first());
 const getPreviousButton = editImageModal => (getModalBody(editImageModal).find(Button));
@@ -50,7 +53,8 @@ const getImageDimensionsWidthInput = editImageModal => (getImageDimensionsFields
 
 const getImageDimensionsHeightInput = editImageModal => (getImageDimensionsFieldset(editImageModal)
   .dive({ context: { store, intl } }).find(InputText).at(1));
-const getImageDimensionsCheckBox = editImageModal => (getImageDimensionsFieldset(editImageModal).dive({ context: { store, intl } }).find(CheckBox));
+const getImageDimensionsCheckBox = editImageModal => (getImageDimensionsFieldset(editImageModal)
+  .dive({ context: { store, intl } }).find(CheckBox));
 
 const getNextPageButton = editImageModal => (getModalFooter(editImageModal).find(Button).first());
 

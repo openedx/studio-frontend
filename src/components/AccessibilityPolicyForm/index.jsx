@@ -74,6 +74,12 @@ export class AccessibilityPolicyForm extends React.Component {
     }
   }
 
+  handleEmailChange(value) {
+    this.setState({
+      submitterEmail: value,
+    });
+  }
+
   getStatusFields() {
     const { accessibilityStatus, accessibilityEmail } = this.props;
     const { isValidFormContent, validationMessages } = this.state;
@@ -148,12 +154,6 @@ export class AccessibilityPolicyForm extends React.Component {
     }
 
     return status;
-  }
-
-  handleEmailChange(value) {
-    this.setState({
-      submitterEmail: value,
-    });
   }
 
   handleFullNameChange(value) {

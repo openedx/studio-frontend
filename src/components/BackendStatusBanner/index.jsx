@@ -9,13 +9,6 @@ import statusMap from './statusMap.json';
 import { pingStudio } from '../../data/actions/pingStudio';
 
 class BackendStatusBanner extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      apiConnectionStatus: 200,
-    };
-  }
-
   componentDidMount() {
     this.props.pingStudio();
   }

@@ -47,7 +47,6 @@ const initialEditImageModalState = {
   baseAssetURL: '',
   currentUploadErrorMessage: null,
   currentValidationMessages: {},
-  displayLoadingSpinner: false,
   imageDescription: '',
   imageDimensions: {},
   imageSource: '',
@@ -55,8 +54,6 @@ const initialEditImageModalState = {
   isImageDecorative: false,
   isImageDescriptionValid: true,
   isImageLoaded: false,
-  isImageLoading: false,
-  isImageDimensionsValid: true,
   isModalOpen: false,
   isStatusAlertOpen: false,
   pageNumber: 1,
@@ -69,25 +66,25 @@ class EditImageModal extends React.Component {
 
     this.state = { ...initialEditImageModalState };
 
-    this.handleOpenModal = this.handleOpenModal.bind(this);
-    this.onConstrainProportionsClick = this.onConstrainProportionsClick.bind(this);
-    this.onEditImageModalClose = this.onEditImageModalClose.bind(this);
-    this.onImageDescriptionBlur = this.onImageDescriptionBlur.bind(this);
-    this.onImageDimensionBlur = this.onImageDimensionBlur.bind(this);
-    this.onInsertImageButtonClick = this.onInsertImageButtonClick.bind(this);
-    this.onImageIsDecorativeClick = this.onImageIsDecorativeClick.bind(this);
-    this.onImageLoad = this.onImageLoad.bind(this);
-    this.onNextPageButtonClick = this.onNextPageButtonClick.bind(this);
-    this.onPreviousPageButtonClick = this.onPreviousPageButtonClick.bind(this);
-    this.onStatusAlertClose = this.onStatusAlertClose.bind(this);
-    // Create ref setters to minimize anonymous inline functions
-    this.setDropZoneButtonRef = this.setDropZoneButtonRef.bind(this);
-    this.setImageDescriptionInputRef = this.setImageDescriptionInputRef.bind(this);
-    this.setImageFormRef = this.setImageFormRef.bind(this);
-    this.setImageRef = this.setImageRef.bind(this);
-    this.setModalWrapperRef = this.setModalWrapperRef.bind(this);
-    this.setPreviousButtonRef = this.setPreviousButtonRef.bind(this);
-    this.setStatusAlertRef = this.setStatusAlertRef.bind(this);
+    // this.handleOpenModal = this.handleOpenModal.bind(this);
+    // this.onConstrainProportionsClick = this.onConstrainProportionsClick.bind(this);
+    // this.onEditImageModalClose = this.onEditImageModalClose.bind(this);
+    // this.onImageDescriptionBlur = this.onImageDescriptionBlur.bind(this);
+    // this.onImageDimensionBlur = this.onImageDimensionBlur.bind(this);
+    // this.onInsertImageButtonClick = this.onInsertImageButtonClick.bind(this);
+    // this.onImageIsDecorativeClick = this.onImageIsDecorativeClick.bind(this);
+    // this.onImageLoad = this.onImageLoad.bind(this);
+    // this.onNextPageButtonClick = this.onNextPageButtonClick.bind(this);
+    // this.onPreviousPageButtonClick = this.onPreviousPageButtonClick.bind(this);
+    // this.onStatusAlertClose = this.onStatusAlertClose.bind(this);
+    // // Create ref setters to minimize anonymous inline functions
+    // this.setDropZoneButtonRef = this.setDropZoneButtonRef.bind(this);
+    // this.setImageDescriptionInputRef = this.setImageDescriptionInputRef.bind(this);
+    // this.setImageFormRef = this.setImageFormRef.bind(this);
+    // this.setImageRef = this.setImageRef.bind(this);
+    // this.setModalWrapperRef = this.setModalWrapperRef.bind(this);
+    // this.setPreviousButtonRef = this.setPreviousButtonRef.bind(this);
+    // this.setStatusAlertRef = this.setStatusAlertRef.bind(this);
 
     this.dropZoneButtonRef = null;
     this.imageDescriptionInputRef = null;
@@ -178,22 +175,18 @@ class EditImageModal extends React.Component {
     const img = event.target;
 
     this.setState({
-      displayLoadingSpinner: false,
       imageDimensions: {
         width: img.naturalWidth,
         height: img.naturalHeight,
         aspectRatio: img.naturalWidth / img.naturalHeight,
       },
       isImageLoaded: true,
-      isImageLoading: false,
     });
   };
 
   onImageError = () => {
     this.setState({
-      displayLoadingSpinner: false,
       imageDimensions: {},
-      isImageLoading: false,
       isImageLoaded: false,
     });
   };
@@ -222,11 +215,11 @@ class EditImageModal extends React.Component {
       const newImageDimensions = { ...this.state.imageDimensions };
       const parsedDimensionValue = parseInt(dimensionValue, 10);
 
-      newImageDimensions[dimensionType] = isNaN(parsedDimensionValue) ? '' : parsedDimensionValue;
+      newImageDimensions[dimensionType] = Number.isNaN(parsedDimensionValue) ? '' : parsedDimensionValue;
 
       if (this.state.areProportionsLocked) {
         const newDimensionValue = Math.round(parsedDimensionValue * aspectRatio);
-        newImageDimensions[newDimensionType] = isNaN(newDimensionValue) ? '' : newDimensionValue;
+        newImageDimensions[newDimensionType] = Number.isNaN(newDimensionValue) ? '' : newDimensionValue;
       }
       this.setState({ imageDimensions: newImageDimensions });
     };
@@ -247,7 +240,6 @@ class EditImageModal extends React.Component {
     this.setState({
       currentValidationMessages: {},
       isImageDescriptionValid: true,
-      isImageDimensionsValid: true,
       isStatusAlertOpen: false,
       pageNumber: 1,
     });
