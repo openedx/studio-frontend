@@ -13,9 +13,8 @@ import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
  * Translates between zero-indexed Asset page metadata and Paragon's
  * Pagination component's one-indexed page numbers
  *
- * @extends React.Component
  */
-function Pagination(props) {
+const Pagination = (props) => {
   const onPageClick = (oneIndexedPageNumber) => {
     props.updatePage(oneIndexedPageNumber - 1, props.courseDetails);
   };
@@ -41,7 +40,7 @@ function Pagination(props) {
       )}
     </WrappedMessage>
   );
-}
+};
 
 Pagination.propTypes = {
   assetsListMetadata: PropTypes.shape({

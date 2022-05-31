@@ -255,7 +255,7 @@ export default class CourseOutlineStatus extends React.Component {
         {message}
       </div>
     );
-  }
+  };
 
   isLoading = () => (
     this.props.loadingChecklists.includes(checklistLoading.COURSE_BEST_PRACTICES)

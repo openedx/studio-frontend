@@ -60,7 +60,7 @@ export default class AssetsList extends React.Component {
     });
 
     this.props.selectAsset(asset);
-  }
+  };
 
   onListBoxFocus = () => {
     // if no list item is selected, select first item on  listbox focus
@@ -73,14 +73,14 @@ export default class AssetsList extends React.Component {
         () => { this.props.selectAsset(this.props.assetsList[this.state.selectedAssetIndex]); },
       );
     }
-  }
+  };
 
   getAssetsListHeader = () => (
     <div className={classNames(styles['list-header'], 'row')}>
       <span className="col-6 offset-3" data-identifier="asset-file-name" id="name-header"><WrappedMessage message={messages.assetsListNameLabel} /></span>
       <span className="col-3" data-identifier="asset-date-added" id="date-added-header"><WrappedMessage message={messages.assetsListDateLabel} /></span>
     </div>
-  )
+  );
 
   getAssetListItem = (asset, index) => {
     const isSelected = this.props.selectedAsset.id === asset.id;
@@ -104,7 +104,7 @@ export default class AssetsList extends React.Component {
         </div>
       </li>
     );
-  }
+  };
 
   getDateAddedElement = (dateAdded, index) => (
     <span id={`asset-date-${index}`} className="col-3" data-identifier="asset-date-added">{dateAdded}</span>
@@ -174,7 +174,7 @@ export default class AssetsList extends React.Component {
       }
       default:
     }
-  }
+  };
 
   render() {
     const assetsListItems = this.props.assetsList.map((asset, index) => this.getAssetListItem(asset, index));

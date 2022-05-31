@@ -146,7 +146,7 @@ export default class AssetsStatusAlert extends React.Component {
   closeDeleteStatus = () => {
     this.closeStatusAlert();
     this.props.onDeleteStatusAlertClose();
-  }
+  };
 
   closeStatusAlert() {
     this.props.clearAssetsStatus();

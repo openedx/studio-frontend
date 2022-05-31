@@ -55,7 +55,7 @@ export default class AssetsPage extends React.Component {
       const focusElement = this.getNextFocusElementOnDelete();
       focusElement.focus();
     }
-  }
+  };
 
   getNextFocusElementOnDelete() {
     const { deletedAssetIndex, assetsList } = this.props;
@@ -77,7 +77,7 @@ export default class AssetsPage extends React.Component {
       default:
         throw new Error(`Unknown pageType ${type}.`);
     }
-  }
+  };
 
   renderAssetsDropZone = () => (
     <WrappedAssetsDropZone

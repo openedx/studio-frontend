@@ -110,7 +110,7 @@ export default class AssetsTable extends React.Component {
     const assetId = e.currentTarget.getAttribute('data-asset-id');
     const clickedAsset = this.props.assetsList.find(asset => (asset.id === assetId));
     this.props.toggleLockAsset(clickedAsset, this.props.courseDetails);
-  }
+  };
 
   onCopyButtonClick(isClicked) {
     this.setState({

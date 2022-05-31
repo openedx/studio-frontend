@@ -43,7 +43,7 @@ class CourseChecklist extends React.Component {
       event_type: `invalid-assignment-${assignmentID}`,
       label: this.props.studioDetails.course.id,
     });
-  }
+  };
 
   onCheckUpdateHyperlinkClick = (checkID) => {
     trackEvent('edx.bi.studio.course.checklist.update.clicked', {
@@ -51,7 +51,7 @@ class CourseChecklist extends React.Component {
       event_type: `update-${checkID}`,
       label: this.props.studioDetails.course.id,
     });
-  }
+  };
 
   getCompletionCountID = () => (`${this.props.idPrefix.split(/\s/).join('-')}-completion-count`);
 
@@ -59,7 +59,7 @@ class CourseChecklist extends React.Component {
     <h3 aria-describedby={this.getCompletionCountID()} className={classNames('font-weight-normal', 'font-extra-large')}>
       {this.props.dataHeading}
     </h3>
-  )
+  );
 
   getCompletionCount = () => {
     const totalCompletedChecks = Object.values(this.state.checks).length;
@@ -81,7 +81,7 @@ class CourseChecklist extends React.Component {
           )}
         </WrappedMessage>
       );
-  }
+  };
 
   getCompletionIcon = (checkID) => {
     const isCompleted = this.isCheckCompleted(checkID);
@@ -105,7 +105,7 @@ class CourseChecklist extends React.Component {
         )}
       </WrappedMessage>
     );
-  }
+  };
 
   getCompletionIconClassNames = isCompleted => (
     isCompleted ? ['fa-check-circle', 'text-success'] : ['fa-circle-thin', styles['checklist-icon-incomplete']]
@@ -136,7 +136,7 @@ class CourseChecklist extends React.Component {
       case 'proctoringEmail': return this.props.studioDetails.links.proctored_exam_settings;
       default: return null;
     }
-  }
+  };
 
   getUpdateLink = checkID => (
     <div className="col-1">
@@ -160,11 +160,11 @@ class CourseChecklist extends React.Component {
         </div>
       )}
     </WrappedMessage>
-  )
+  );
 
   getBody = () => (
     this.props.isLoading ? this.getLoadingIcon() : this.getListItems()
-  )
+  );
 
   getListItems = () => (
     this.state.checks.map((check) => {
@@ -266,7 +266,7 @@ class CourseChecklist extends React.Component {
     );
 
     return this.getComment(message);
-  }
+  };
 
   getCommentSection = (checkID) => {
     switch (checkID) {
@@ -274,7 +274,7 @@ class CourseChecklist extends React.Component {
       case 'assignmentDeadlines': return this.getAssignmentDeadlineCommentSection();
       default: return null;
     }
-  }
+  };
 
   getComment = comment => (
     <div className={classNames('align-items-center no-gutters border-top mt-4 row')} data-identifier="comment">
@@ -285,9 +285,9 @@ class CourseChecklist extends React.Component {
         {comment}
       </div>
     </div>
-  )
+  );
 
-  isCheckCompleted = checkID => (this.state.values[checkID])
+  isCheckCompleted = checkID => (this.state.values[checkID]);
 
   shouldShowUpdateLink = (checkID) => {
     switch (checkID) {
@@ -298,11 +298,11 @@ class CourseChecklist extends React.Component {
       case 'proctoringEmail': return true;
       default: return false;
     }
-  }
+  };
 
   shouldShowGradingPolicyCommentSection = () => (
     Object.keys(this.props.data).length > 0 && this.props.data.grades.sum_of_weights !== 1
-  )
+  );
 
   shouldShowAssignmentDeadlinesCommentSection = () => (
     Object.keys(this.props.data).length > 0
@@ -312,7 +312,7 @@ class CourseChecklist extends React.Component {
       || this.props.data.assignments.assignments_with_ora_dates_before_start.length > 0
       || this.props.data.assignments.assignments_with_ora_dates_after_end.length > 0
     )
-  )
+  );
 
   shouldShowCommentSection = (checkID) => {
     if (checkID === 'gradingPolicy' && this.shouldShowGradingPolicyCommentSection()) {
@@ -322,7 +322,7 @@ class CourseChecklist extends React.Component {
     }
 
     return false;
-  }
+  };
 
   updateChecklistState(props) {
     if (Object.keys(props.data).length > 0) {

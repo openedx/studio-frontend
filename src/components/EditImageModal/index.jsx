@@ -1,5 +1,5 @@
 import {
- Button, CheckBox, Fieldset, Icon, InputText, Modal, StatusAlert, Variant 
+  Button, CheckBox, Fieldset, Icon, InputText, Modal, StatusAlert, Variant,
 } from '@edx/paragon';
 import classNames from 'classnames';
 import { connect } from 'react-redux';
@@ -147,11 +147,11 @@ class EditImageModal extends React.Component {
     this.modalWrapperRef.removeEventListener('openModal', this.handleOpenModal);
   }
 
-  onConstrainProportionsClick(checked) {
+  onConstrainProportionsClick = (checked) => {
     this.setState({
       areProportionsLocked: checked,
     });
-  }
+  };
 
   onEditImageModalClose = () => {
     this.setState({
@@ -161,18 +161,18 @@ class EditImageModal extends React.Component {
     this.props.clearSearch(this.props.courseDetails);
     this.resetImageSelection();
     this.modalWrapperRef.dispatchEvent(new CustomEvent(
-'closeModal',
+      'closeModal',
       {
         bubbles: true,
       },
     ));
-  }
+  };
 
   onImageIsDecorativeClick = (checked) => {
     this.setState({
       isImageDecorative: checked,
     });
-  }
+  };
 
   onImageLoad = (event) => {
     const img = event.target;
@@ -187,7 +187,7 @@ class EditImageModal extends React.Component {
       isImageLoaded: true,
       isImageLoading: false,
     });
-  }
+  };
 
   onImageError = () => {
     this.setState({
@@ -196,13 +196,13 @@ class EditImageModal extends React.Component {
       isImageLoading: false,
       isImageLoaded: false,
     });
-  }
+  };
 
   onImageDescriptionBlur = (imageDescription) => {
     this.setState({
       imageDescription,
     });
-  }
+  };
 
   onImageDimensionBlur = (dimensionType) => {
     let aspectRatio;
@@ -230,7 +230,7 @@ class EditImageModal extends React.Component {
       }
       this.setState({ imageDimensions: newImageDimensions });
     };
-  }
+  };
 
   onNextPageButtonClick = () => {
     if (this.isAssetSelected()) {
@@ -241,7 +241,7 @@ class EditImageModal extends React.Component {
       });
       this.props.clearAssetsStatus();
     }
-  }
+  };
 
   onPreviousPageButtonClick = () => {
     this.setState({
@@ -251,7 +251,7 @@ class EditImageModal extends React.Component {
       isStatusAlertOpen: false,
       pageNumber: 1,
     });
-  }
+  };
 
   onInsertImageButtonClick = () => {
     const isValidImageDescription = this.validateImageDescription();
@@ -277,7 +277,7 @@ class EditImageModal extends React.Component {
 
     if (isValidFormContent) {
       this.imageFormRef.dispatchEvent(new CustomEvent(
-'submitForm',
+        'submitForm',
         {
           bubbles: true,
           detail: {
@@ -298,7 +298,7 @@ class EditImageModal extends React.Component {
     } else {
       this.statusAlertRef.focus();
     }
-  }
+  };
 
   onStatusAlertClose = () => {
     if (this.state.pageNumber === 1) {
@@ -315,7 +315,7 @@ class EditImageModal extends React.Component {
     this.setState({
       isStatusAlertOpen: false,
     });
-  }
+  };
 
   setDropZoneButtonRef(ref) {
     this.dropZoneButtonRef = ref;
@@ -355,14 +355,14 @@ class EditImageModal extends React.Component {
       return naturalDimensions[dimensionType];
     }
     return null;
-  }
+  };
 
   getDimensionStateOrNatural = (dimensionType) => {
     if (!this.state.imageDimensions[dimensionType]) {
       return this.getNaturalDimension(dimensionType);
     }
     return this.state.imageDimensions[dimensionType];
-  }
+  };
 
   getImageDescriptionInput = () => (
     <Fieldset
@@ -524,10 +524,10 @@ class EditImageModal extends React.Component {
     <div className={styles['image-preview-placeholder']}>
       <WrappedMessage message={messages.editImageModalImagePreviewText}>
         {displayText => (
-<span className={classNames({ invisible: this.state.isImageLoaded })}>
+          <span className={classNames({ invisible: this.state.isImageLoaded })}>
             {displayText}
           </span>
-)}
+        )}
       </WrappedMessage>
       {this.state.imageSource && this.getImage()}
     </div>
@@ -588,7 +588,7 @@ class EditImageModal extends React.Component {
       open={this.state.isStatusAlertOpen}
       ref={this.setStatusAlertRef}
     />
-  )
+  );
 
   getModalHeader = () => {
     let header;
@@ -610,7 +610,7 @@ class EditImageModal extends React.Component {
         { header }
       </div>
     );
-  }
+  };
 
   getModalBody = () => {
     let body;
@@ -620,7 +620,7 @@ class EditImageModal extends React.Component {
       body = this.getImageSettingsModalBody();
     }
     return body;
-  }
+  };
 
   getImageSelectionModalBodyAssetsList = (type) => {
     switch (type) {
@@ -657,7 +657,7 @@ class EditImageModal extends React.Component {
       default:
         throw new Error(`Unknown pageType ${type}.`);
     }
-  }
+  };
 
   getImageSelectionModalBody = () => (
     <>
@@ -684,8 +684,8 @@ class EditImageModal extends React.Component {
       </div>
       <div className="row">
         <div className="col-6 order-2">
-          {(this.state.assetsPageType === pageTypes.NORMAL ||
-            this.state.assetsPageType === pageTypes.NO_RESULTS) && (
+          {(this.state.assetsPageType === pageTypes.NORMAL
+            || this.state.assetsPageType === pageTypes.NO_RESULTS) && (
             <WrappedAssetsSearch />
           )}
         </div>
@@ -740,7 +740,7 @@ class EditImageModal extends React.Component {
       buttons = this.getInsertImageButton();
     }
     return buttons;
-  }
+  };
 
   getNextPageButton = () => (
     <Button
@@ -797,7 +797,7 @@ class EditImageModal extends React.Component {
   resetImageSelection = () => {
     this.props.updatePage(0, this.props.courseDetails);
     this.props.clearSelectedAsset();
-  }
+  };
 
   handleOpenModal = (event) => {
     const eventSource = event.detail.src;
@@ -830,7 +830,7 @@ class EditImageModal extends React.Component {
     if (this.props.assetsList.length === 0) {
       this.props.getAssets({ assetTypes: { Images: true }, pageSize: 4 }, this.props.courseDetails);
     }
-  }
+  };
 
   validateImageDescription = () => {
     let feedback = { isValid: true };
@@ -847,7 +847,7 @@ class EditImageModal extends React.Component {
       };
     }
     return feedback;
-  }
+  };
 
   validateImageDimensions = () => {
     let feedback = { isValid: true };
@@ -864,13 +864,13 @@ class EditImageModal extends React.Component {
       };
     }
     return feedback;
-  }
+  };
 
   didStatusAlertOpen = (prevState) => {
     if (this.state.isStatusAlertOpen && !prevState.isStatusAlertOpen) {
       this.statusAlertRef.focus();
     }
-  }
+  };
 
   isAssetSelected = () => (this.props.selectedAsset
     && Object.keys(this.props.selectedAsset).length !== 0);
@@ -883,45 +883,48 @@ class EditImageModal extends React.Component {
       return true;
     }
     return false;
-  }
+  };
 
   wasNextButtonClicked = (prevState) => {
     if (this.state.pageNumber === 2 && prevState.pageNumber === 1
       && this.state.shouldShowPreviousButton) {
       this.previousPageButtonRef.focus();
     }
-  }
+  };
 
   wasPreviousButtonClicked = (prevState) => {
     if (this.state.pageNumber === 1 && prevState.pageNumber === 2
       && prevState.isModalOpen) {
       this.dropZoneButtonRef.focus();
     }
-  }
+  };
 
-  render() { return <div
-      ref={this.setModalWrapperRef}
-      id={modalWrapperID}
-    >
+  render() {
+    return (
       <div
-        aria-atomic
-        aria-live={this.state.isModalOpen ? 'polite' : 'off'}
-        aria-relevant="text"
-        className="sr-only"
+        ref={this.setModalWrapperRef}
+        id={modalWrapperID}
       >
-        <WrappedAssetsResultsCount />
+        <div
+          aria-atomic
+          aria-live={this.state.isModalOpen ? 'polite' : 'off'}
+          aria-relevant="text"
+          className="sr-only"
+        >
+          <WrappedAssetsResultsCount />
+        </div>
+        <Modal
+          open={this.state.isModalOpen}
+          title={this.getModalHeader()}
+          body={this.getModalBody()}
+          closeText={<WrappedMessage message={messages.editImageModalCancelButton} />}
+          onClose={this.onEditImageModalClose}
+          buttons={[this.getModalButtons()]}
+          parentSelector={`#${modalWrapperID}`}
+        />
       </div>
-      <Modal
-        open={this.state.isModalOpen}
-        title={this.getModalHeader()}
-        body={this.getModalBody()}
-        closeText={<WrappedMessage message={messages.editImageModalCancelButton} />}
-        onClose={this.onEditImageModalClose}
-        buttons={[this.getModalButtons()]}
-        parentSelector={`#${modalWrapperID}`}
-      />
-    </div>;
-    };
+    );
+  }
 }
 
 EditImageModal.propTypes = {

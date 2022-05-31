@@ -36,7 +36,7 @@ export default class CourseChecklistPage extends React.Component {
         {this.props.studioDetails.enable_quality ? courseBestPracticesLoadingMessage : null}
       </div>
     );
-  }
+  };
 
   render() {
     const isCourseBestPracticeChecklistLoading = this.props.loadingChecklists.includes(checklistLoading.COURSE_BEST_PRACTICES);

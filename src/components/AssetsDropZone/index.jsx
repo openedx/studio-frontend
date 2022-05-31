@@ -30,19 +30,19 @@ export default class AssetsDropZone extends React.Component {
     } else {
       this.props.uploadAssets(acceptedFiles, this.props.courseDetails);
     }
-  }
+  };
 
   setDropZoneRef = (ref) => {
     this.dropZoneRef = ref;
-  }
+  };
 
   setUploadButtonRef = (ref) => {
     this.props.buttonRef(ref);
-  }
+  };
 
   handleClick = () => {
     this.dropZoneRef.open();
-  }
+  };
 
   render() {
     return (
