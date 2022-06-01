@@ -23,12 +23,6 @@ export default class AssetsStatusAlert extends React.Component {
     this.state = defaultState;
 
     this.statusAlertRef = {};
-
-    this.closeStatusAlert = this.closeStatusAlert.bind(this);
-    this.updateStatusAlertFields = this.updateStatusAlertFields.bind(this);
-    this.updateUploadSuccessCount = this.updateUploadSuccessCount.bind(this);
-
-    this.closeDeleteStatus = this.closeDeleteStatus.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -41,7 +35,7 @@ export default class AssetsStatusAlert extends React.Component {
     this.props.onDeleteStatusAlertClose();
   };
 
-  updateStatusAlertFields(assetsStatus, deletedAsset) {
+  updateStatusAlertFields = (assetsStatus, deletedAsset) => {
     const assetName = deletedAsset.display_name;
     let alertDialog;
     let alertType;
@@ -147,20 +141,20 @@ export default class AssetsStatusAlert extends React.Component {
       },
     });
     this.statusAlertRef.focus();
-  }
+  };
 
-  closeStatusAlert() {
+  closeStatusAlert = () => {
     this.props.clearAssetsStatus();
 
     // clear out all status related state
     this.setState(defaultState);
-  }
+  };
 
-  updateUploadSuccessCount() {
-    this.setState({
-      uploadSuccessCount: this.state.uploadSuccessCount + 1,
-    });
-  }
+  updateUploadSuccessCount = () => {
+    this.setState(prevState => ({
+      uploadSuccessCount: prevState.uploadSuccessCount + 1,
+    }));
+  };
 
   render() {
     const { assetsStatus, statusAlertRef } = this.props;

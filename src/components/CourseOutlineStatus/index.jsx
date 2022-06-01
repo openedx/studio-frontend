@@ -10,6 +10,7 @@ import CourseOutlineStatusValue from '../CourseOutlineStatusValue';
 import getFilteredChecklist from '../../utils/CourseChecklist/getFilteredChecklist';
 import getValidatedValue from '../../utils/CourseChecklist/getValidatedValue';
 import { launchChecklist, bestPracticesChecklist } from '../../utils/CourseChecklist/courseChecklistData';
+import { COURSE_BEST_PRACTICES_DATA_SHAPE } from '../../utils/constants';
 import messages from './displayMessages';
 import styles from './CourseOutlineStatus.scss';
 import { trackEvent } from '../../utils/analytics';
@@ -151,7 +152,7 @@ export default class CourseOutlineStatus extends React.Component {
                   styles['status-link'],
                 )}
                 content={this.props.studioDetails.course.course_release_date}
-                destination={`${this.props.studioDetails.links.settings}#schedule`}
+                destination={`${this.props.studioDetails?.links?.settings}#schedule`}
               />
             </CourseOutlineStatusValue>
           </div>
@@ -279,19 +280,7 @@ export default class CourseOutlineStatus extends React.Component {
 }
 
 CourseOutlineStatus.propTypes = {
-  courseBestPracticesData: PropTypes.shape({
-    sections: PropTypes.shape({
-      number_with_highlights: PropTypes.number,
-      total_visible: PropTypes.number,
-      total_number: PropTypes.number,
-      highlights_enabled: PropTypes.bool,
-      highlights_active_for_course: PropTypes.bool,
-    }),
-    subsections: PropTypes.object,
-    units: PropTypes.object,
-    videos: PropTypes.object,
-    is_self_paced: PropTypes.bool,
-  }).isRequired,
+  courseBestPracticesData: PropTypes.shape(COURSE_BEST_PRACTICES_DATA_SHAPE).isRequired,
   courseLaunchData: PropTypes.shape({
     assignments: PropTypes.shape({
       total_number: PropTypes.number,

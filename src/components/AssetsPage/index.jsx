@@ -28,6 +28,7 @@ export default class AssetsPage extends React.Component {
       pageType: pageTypes.SKELETON,
     };
 
+    /* eslint-disable react/no-unused-class-component-methods */
     this.statusAlertRef = null;
     this.deleteButtonRefs = {};
 

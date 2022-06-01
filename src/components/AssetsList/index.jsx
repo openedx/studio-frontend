@@ -150,7 +150,7 @@ export default class AssetsList extends React.Component {
         if (this.state.selectedAssetIndex < this.props.paginationMetadata.pageSize - 1) {
           this.setState(
             (state, props) => ({
-              selectedAssetIndex: this.state.selectedAssetIndex + 1,
+              selectedAssetIndex: state.selectedAssetIndex + 1,
               selectedAssetPage: props.paginationMetadata.page,
             }),
             () => { this.props.selectAsset(this.props.assetsList[this.state.selectedAssetIndex]); },
@@ -165,7 +165,7 @@ export default class AssetsList extends React.Component {
         if (this.state.selectedAssetIndex > 0) {
           this.setState(
             (state, props) => ({
-              selectedAssetIndex: this.state.selectedAssetIndex - 1,
+              selectedAssetIndex: state.selectedAssetIndex - 1,
               selectedAssetPage: props.paginationMetadata.page,
             }),
             () => { this.props.selectAsset(this.props.assetsList[this.state.selectedAssetIndex]); },

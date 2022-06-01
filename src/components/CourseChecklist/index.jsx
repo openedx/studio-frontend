@@ -129,11 +129,11 @@ class CourseChecklist extends React.Component {
 
   getUpdateLinkDestination = (checkID) => {
     switch (checkID) {
-      case 'welcomeMessage': return this.props.studioDetails.links.course_updates;
-      case 'gradingPolicy': return this.props.studioDetails.links.grading_policy;
-      case 'certificate': return this.props.studioDetails.links.certificates;
-      case 'courseDates': return `${this.props.studioDetails.links.settings}#schedule`;
-      case 'proctoringEmail': return this.props.studioDetails.links.proctored_exam_settings;
+      case 'welcomeMessage': return this.props.studioDetails?.links?.course_updates;
+      case 'gradingPolicy': return this.props.studioDetails?.links?.grading_policy;
+      case 'certificate': return this.props.studioDetails?.links?.certificates;
+      case 'courseDates': return `${this.props.studioDetails?.links?.settings}#schedule`;
+      case 'proctoringEmail': return this.props.studioDetails?.links?.proctored_exam_settings;
       default: return null;
     }
   };
@@ -418,10 +418,12 @@ CourseChecklist.propTypes = {
       assignments: PropTypes.shape({
         total_number: PropTypes.number,
         total_visible: PropTypes.number,
+        /* eslint-disable react/forbid-prop-types */
         assignments_with_dates_before_start: PropTypes.array,
         assignments_with_dates_after_end: PropTypes.array,
         assignments_with_ora_dates_before_start: PropTypes.array,
         assignments_with_ora_dates_after_end: PropTypes.array,
+        /* eslint-enable react/forbid-prop-types */
       }),
       dates: PropTypes.shape({
         has_start_date: PropTypes.bool,
@@ -448,7 +450,10 @@ CourseChecklist.propTypes = {
   ]).isRequired,
   dataHeading: elementType(WrappedMessage).isRequired,
   // eslint-disable-next-line react/no-unused-prop-types
-  dataList: PropTypes.arrayOf(PropTypes.object).isRequired,
+  dataList: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.string,
+    pacingTypeFilter: PropTypes.string
+  })).isRequired,
   idPrefix: PropTypes.string.isRequired,
   studioDetails: PropTypes.shape({
     course: PropTypes.shape({

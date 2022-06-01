@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import { checklistLoading } from '../../data/constants/loadingTypes';
 import { launchChecklist, bestPracticesChecklist } from '../../utils/CourseChecklist/courseChecklistData';
+import { COURSE_BEST_PRACTICES_DATA_SHAPE } from '../../utils/constants';
 import messages from './displayMessages';
 import WrappedCourseChecklist from '../CourseChecklist/container';
 import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
@@ -89,19 +90,7 @@ export default class CourseChecklistPage extends React.Component {
 }
 
 CourseChecklistPage.propTypes = {
-  courseBestPracticesData: PropTypes.shape({
-    sections: PropTypes.shape({
-      number_with_highlights: PropTypes.number,
-      total_visible: PropTypes.number,
-      total_number: PropTypes.number,
-      highlights_enabled: PropTypes.bool,
-      highlights_active_for_course: PropTypes.bool,
-    }),
-    subsections: PropTypes.object,
-    units: PropTypes.object,
-    videos: PropTypes.object,
-    is_self_paced: PropTypes.bool,
-  }).isRequired,
+  courseBestPracticesData: PropTypes.shape(COURSE_BEST_PRACTICES_DATA_SHAPE).isRequired,
   courseLaunchData: PropTypes.shape({
     assignments: PropTypes.shape({
       total_number: PropTypes.number,

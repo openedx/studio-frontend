@@ -193,7 +193,8 @@ class EditImageModal extends React.Component {
     }
 
     return (dimensionValue) => {
-      const newImageDimensions = { ...this.state.imageDimensions };
+      const prevState = { ...this.state };
+      const newImageDimensions = prevState.imageDimensions;
       const parsedDimensionValue = parseInt(dimensionValue, 10);
 
       newImageDimensions[dimensionType] = Number.isNaN(parsedDimensionValue) ? '' : parsedDimensionValue;
