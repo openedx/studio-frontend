@@ -17,6 +17,7 @@
     "@babel/polyfill": "^7.0.0",
     "@edx/edx-bootstrap": "^1.0.0",
     "@edx/paragon": "3.4.8",
+    "acorn": "^8.7.1",
     "airbnb-prop-types": "^2.10.0",
     "classnames": "^2.2.5",
     "copy-to-clipboard": "^3.0.8",
