@@ -5,6 +5,7 @@ import React from 'react';
 import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
 import messages from './displayMessages';
 import styles from './AssetsList.scss';
+import { ASSET_SHAPE } from '../../utils/constants';
 
 const initialState = {
   selectedAssetIndex: -1,
@@ -198,7 +199,7 @@ export default class AssetsList extends React.Component {
 }
 
 AssetsList.propTypes = {
-  assetsList: PropTypes.arrayOf(PropTypes.object).isRequired,
+  assetsList: PropTypes.arrayOf(PropTypes.shape(ASSET_SHAPE)).isRequired,
   courseDetails: PropTypes.shape({
     lang: PropTypes.string,
     url_name: PropTypes.string,

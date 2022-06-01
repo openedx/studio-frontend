@@ -5,6 +5,7 @@ import { FormattedNumber } from 'react-intl';
 
 import { assetActions } from '../../data/constants/actionTypes';
 import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
+import { ASSET_STATUS_SHAPE } from '../../utils/constants';
 import messages from './displayMessages';
 
 const defaultState = {
@@ -186,10 +187,7 @@ export default class AssetsStatusAlert extends React.Component {
 }
 
 AssetsStatusAlert.propTypes = {
-  assetsStatus: PropTypes.shape({
-    response: PropTypes.object,
-    type: PropTypes.string,
-  }),
+  assetsStatus: PropTypes.shape(ASSET_STATUS_SHAPE),
   clearAssetsStatus: PropTypes.func.isRequired,
   deletedAsset: PropTypes.shape({
     display_name: PropTypes.string,

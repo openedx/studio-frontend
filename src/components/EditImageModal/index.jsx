@@ -12,6 +12,7 @@ import AssetsResultsCount from '../AssetsResultsCount/index';
 import { getPageType, pageTypes } from '../../utils/getAssetsPageType';
 import messages from './displayMessages';
 import rewriteStaticLinks from '../../utils/rewriteStaticLinks';
+import { ASSET_STATUS_SHAPE, ASSET_SHAPE } from '../../utils/constants';
 import styles from './EditImageModal.scss';
 import WrappedAssetsClearSearchButton from '../AssetsClearSearchButton/container';
 import WrappedAssetsDropZone from '../AssetsDropZone/container';
@@ -65,26 +66,6 @@ class EditImageModal extends React.Component {
     super(props);
 
     this.state = { ...initialEditImageModalState };
-
-    // this.handleOpenModal = this.handleOpenModal.bind(this);
-    // this.onConstrainProportionsClick = this.onConstrainProportionsClick.bind(this);
-    // this.onEditImageModalClose = this.onEditImageModalClose.bind(this);
-    // this.onImageDescriptionBlur = this.onImageDescriptionBlur.bind(this);
-    // this.onImageDimensionBlur = this.onImageDimensionBlur.bind(this);
-    // this.onInsertImageButtonClick = this.onInsertImageButtonClick.bind(this);
-    // this.onImageIsDecorativeClick = this.onImageIsDecorativeClick.bind(this);
-    // this.onImageLoad = this.onImageLoad.bind(this);
-    // this.onNextPageButtonClick = this.onNextPageButtonClick.bind(this);
-    // this.onPreviousPageButtonClick = this.onPreviousPageButtonClick.bind(this);
-    // this.onStatusAlertClose = this.onStatusAlertClose.bind(this);
-    // // Create ref setters to minimize anonymous inline functions
-    // this.setDropZoneButtonRef = this.setDropZoneButtonRef.bind(this);
-    // this.setImageDescriptionInputRef = this.setImageDescriptionInputRef.bind(this);
-    // this.setImageFormRef = this.setImageFormRef.bind(this);
-    // this.setImageRef = this.setImageRef.bind(this);
-    // this.setModalWrapperRef = this.setModalWrapperRef.bind(this);
-    // this.setPreviousButtonRef = this.setPreviousButtonRef.bind(this);
-    // this.setStatusAlertRef = this.setStatusAlertRef.bind(this);
 
     this.dropZoneButtonRef = null;
     this.imageDescriptionInputRef = null;
@@ -309,33 +290,33 @@ class EditImageModal extends React.Component {
     });
   };
 
-  setDropZoneButtonRef(ref) {
+  setDropZoneButtonRef = (ref) => {
     this.dropZoneButtonRef = ref;
-  }
+  };
 
-  setImageDescriptionInputRef(ref) {
+  setImageDescriptionInputRef = (ref) => {
     this.imageDescriptionInputRef = ref;
-  }
+  };
 
-  setImageFormRef(ref) {
+  setImageFormRef = (ref) => {
     this.imageFormRef = ref;
-  }
+  };
 
-  setImageRef(ref) {
+  setImageRef = (ref) => {
     this.imageRef = ref;
-  }
+  };
 
-  setModalWrapperRef(ref) {
+  setModalWrapperRef = (ref) => {
     this.modalWrapperRef = ref;
-  }
+  };
 
-  setPreviousButtonRef(ref) {
+  setPreviousButtonRef = (ref) => {
     this.previousPageButtonRef = ref;
-  }
+  };
 
-  setStatusAlertRef(ref) {
+  setStatusAlertRef = (ref) => {
     this.statusAlertRef = ref;
-  }
+  };
 
   getNaturalDimension = (dimensionType) => {
     if (this.imageRef) {
@@ -920,11 +901,8 @@ class EditImageModal extends React.Component {
 }
 
 EditImageModal.propTypes = {
-  assetsList: PropTypes.arrayOf(PropTypes.object).isRequired,
-  assetsStatus: PropTypes.shape({
-    response: PropTypes.object,
-    type: PropTypes.string,
-  }).isRequired,
+  assetsList: PropTypes.arrayOf(PropTypes.shape(ASSET_SHAPE)).isRequired,
+  assetsStatus: PropTypes.shape(ASSET_STATUS_SHAPE).isRequired,
   clearAssetsStatus: PropTypes.func.isRequired,
   clearSearch: PropTypes.func.isRequired,
   clearSelectedAsset: PropTypes.func.isRequired,

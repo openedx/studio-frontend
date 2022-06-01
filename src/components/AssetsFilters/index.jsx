@@ -4,6 +4,7 @@ import { CheckBox, CheckBoxGroup } from '@edx/paragon';
 
 import ASSET_TYPES from '../../data/constants/assetTypeFilters';
 import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
+import { ASSET_TYPES_SHAPE } from '../../utils/constants';
 import styles from './AssetsFilters.scss';
 import messages from './displayMessages';
 
@@ -35,7 +36,7 @@ function AssetsFilters({ assetsFilters, updateFilter, courseDetails }) {
 
 AssetsFilters.propTypes = {
   assetsFilters: PropTypes.shape({
-    assetTypes: PropTypes.object,
+    assetTypes: PropTypes.shape(ASSET_TYPES_SHAPE),
   }).isRequired,
   courseDetails: PropTypes.shape({
     lang: PropTypes.string,

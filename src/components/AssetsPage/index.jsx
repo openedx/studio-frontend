@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 
 import { getPageType, pageTypes } from '../../utils/getAssetsPageType';
 import { hasSearchOrFilterApplied } from '../../utils/getAssetsFilters';
+import { ASSET_SHAPE, ASSET_TYPES_SHAPE, ASSET_STATUS_SHAPE } from '../../utils/constants';
 import WrappedAssetsDropZone from '../AssetsDropZone/container';
 import WrappedAssetsTable from '../AssetsTable/container';
 import WrappedAssetsFilters from '../AssetsFilters/container';
@@ -220,7 +221,7 @@ export default class AssetsPage extends React.Component {
 
 AssetsPage.propTypes = {
   // eslint-disable-next-line react/no-unused-prop-types
-  assetsList: PropTypes.arrayOf(PropTypes.object).isRequired,
+  assetsList: PropTypes.arrayOf(PropTypes.shape(ASSET_SHAPE)).isRequired,
   courseDetails: PropTypes.shape({
     lang: PropTypes.string,
     url_name: PropTypes.string,
@@ -236,7 +237,7 @@ AssetsPage.propTypes = {
   ]),
   // eslint-disable-next-line react/no-unused-prop-types
   filtersMetadata: PropTypes.shape({
-    assetTypes: PropTypes.object,
+    assetTypes: PropTypes.shape(ASSET_TYPES_SHAPE),
   }).isRequired,
   // eslint-disable-next-line react/no-unused-prop-types
   searchMetadata: PropTypes.shape({
@@ -244,10 +245,7 @@ AssetsPage.propTypes = {
   }).isRequired,
   getAssets: PropTypes.func.isRequired,
   // eslint-disable-next-line react/no-unused-prop-types
-  status: PropTypes.shape({
-    type: PropTypes.string,
-    response: PropTypes.object,
-  }).isRequired,
+  status: PropTypes.shape(ASSET_STATUS_SHAPE).isRequired,
   uploadSettings: PropTypes.shape({
     max_file_size_in_mbs: PropTypes.number,
   }).isRequired,

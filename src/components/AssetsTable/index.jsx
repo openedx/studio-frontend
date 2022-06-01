@@ -11,6 +11,7 @@ import { assetLoading } from '../../data/constants/loadingTypes';
 import CopyButton from '../CopyButton';
 import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
 import messages from './displayMessages';
+import { ASSET_SHAPE } from '../../utils/constants';
 
 const isIE11 = !!window.MSInputMethodContext && !!document.documentMode;
 const modalWrapperID = 'modalWrapper';
@@ -452,7 +453,7 @@ export default class AssetsTable extends React.Component {
 }
 
 AssetsTable.propTypes = {
-  assetsList: PropTypes.arrayOf(PropTypes.object).isRequired,
+  assetsList: PropTypes.arrayOf(PropTypes.shape(ASSET_SHAPE)).isRequired,
   assetsSortMetadata: PropTypes.shape({
     sort: PropTypes.string,
     direction: PropTypes.string,

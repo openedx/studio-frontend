@@ -10,6 +10,7 @@ import messages from './displayMessages';
 import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
 import { clearAccessibilityStatus, submitAccessibilityForm } from '../../data/actions/accessibility';
 import { accessibilityActions } from '../../data/constants/actionTypes';
+import { ASSET_STATUS_SHAPE } from '../../utils/constants';
 import styles from './AccessibilityPolicyForm.scss';
 
 export class AccessibilityPolicyForm extends React.Component {
@@ -307,10 +308,7 @@ export class AccessibilityPolicyForm extends React.Component {
 }
 
 AccessibilityPolicyForm.propTypes = {
-  accessibilityStatus: PropTypes.shape({
-    response: PropTypes.object,
-    type: PropTypes.string,
-  }).isRequired,
+  accessibilityStatus: PropTypes.shape(ASSET_STATUS_SHAPE).isRequired,
   accessibilityEmail: PropTypes.string.isRequired,
   clearAccessibilityStatus: PropTypes.func.isRequired,
   submitAccessibilityForm: PropTypes.func.isRequired,
