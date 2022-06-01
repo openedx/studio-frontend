@@ -75,13 +75,13 @@ export class AccessibilityPolicyForm extends React.Component {
     }
   }
 
-  handleEmailChange(value) {
+  handleEmailChange = (value) => {
     this.setState({
       submitterEmail: value,
     });
-  }
+  };
 
-  getStatusFields() {
+  getStatusFields = () => {
     const { accessibilityStatus, accessibilityEmail } = this.props;
     const { isValidFormContent, validationMessages } = this.state;
     let status = {
@@ -155,21 +155,21 @@ export class AccessibilityPolicyForm extends React.Component {
     }
 
     return status;
-  }
+  };
 
-  handleFullNameChange(value) {
+  handleFullNameChange = (value) => {
     this.setState({
       submitterFullName: value,
     });
-  }
+  };
 
-  handleMessageChange(value) {
+  handleMessageChange = (value) => {
     this.setState({
       submitterMessage: value,
     });
-  }
+  };
 
-  validateEmail(email) {
+  validateEmail = (email) => {
     let feedback = { isValid: true };
     /* eslint-disable max-len */
     /* eslint-disable no-useless-escape */
@@ -184,9 +184,9 @@ export class AccessibilityPolicyForm extends React.Component {
       };
     }
     return feedback;
-  }
+  };
 
-  validateFullName(fullName) {
+  validateFullName = (fullName) => {
     let feedback = { isValid: true };
     if (!fullName) {
       feedback = {
@@ -196,9 +196,9 @@ export class AccessibilityPolicyForm extends React.Component {
       };
     }
     return feedback;
-  }
+  };
 
-  validateMessage(message) {
+  validateMessage = (message) => {
     let feedback = { isValid: true };
     if (!message) {
       feedback = {
@@ -210,24 +210,24 @@ export class AccessibilityPolicyForm extends React.Component {
       };
     }
     return feedback;
-  }
+  };
 
-  clearInputs() {
+  clearInputs = () => {
     this.setState({
       submitterEmail: '',
       submitterFullName: '',
       submitterMessage: '',
     });
-  }
+  };
 
-  closeStatusAlert() {
+  closeStatusAlert = () => {
     this.emailInputRef.focus();
     this.setState({
       isStatusAlertOpen: false,
     });
-  }
+  };
 
-  renderStatusAlert() {
+  renderStatusAlert = () => {
     const status = this.getStatusFields();
 
     const statusAlert = (
@@ -245,7 +245,7 @@ export class AccessibilityPolicyForm extends React.Component {
         {statusAlert}
       </div>
     );
-  }
+  };
 
   render() {
     return (
