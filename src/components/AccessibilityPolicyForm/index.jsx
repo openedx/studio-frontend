@@ -27,9 +27,6 @@ export class AccessibilityPolicyForm extends React.Component {
 
     this.statusAlertRef = {};
     this.emailInputRef = {};
-    this.fullNameInputRef = {};
-    this.messageInputRef = {};
-    this.submitButtonRef = {};
 
     this.handleEmailChange = this.handleEmailChange.bind(this);
     this.handleFullNameChange = this.handleFullNameChange.bind(this);
@@ -278,7 +275,6 @@ export class AccessibilityPolicyForm extends React.Component {
             value={this.state.submitterFullName}
             themes={['danger']}
             validator={fullName => this.validateFullName(fullName)}
-            inputRef={(ref) => { this.fullNameInputRef = ref; }}
           />
           <TextArea
             name="message"
@@ -288,7 +284,6 @@ export class AccessibilityPolicyForm extends React.Component {
             value={this.state.submitterMessage}
             themes={['danger']}
             validator={message => this.validateMessage(message)}
-            inputRef={(ref) => { this.messageInputRef = ref; }}
           />
           <WrappedMessage message={messages.accessibilityPolicyFormSubmitAria}>
             { displayText => (
@@ -297,7 +292,6 @@ export class AccessibilityPolicyForm extends React.Component {
                 label={<WrappedMessage message={messages.accessibilityPolicyFormSubmitLabel} />}
                 aria-label={displayText}
                 onClick={() => { this.onSubmitClick(); }}
-                inputRef={(ref) => { this.submitButtonRef = ref; }}
               />
             )}
           </WrappedMessage>
