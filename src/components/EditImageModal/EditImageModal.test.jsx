@@ -607,7 +607,6 @@ describe('EditImageModal', () => {
         expect(editImageModal.state('assetsPageType')).toEqual(pageTypes.NORMAL);
         expect(editImageModal.state('baseAssetURL')).toEqual('');
         expect(editImageModal.state('currentValidationMessages')).toEqual({});
-        expect(editImageModal.state('displayLoadingSpinner')).toEqual(false);
         expect(editImageModal.state('imageDescription')).toEqual('');
         expect(editImageModal.state('imageDimensions')).toEqual({});
         expect(editImageModal.state('imageSource')).toEqual('');
@@ -615,7 +614,6 @@ describe('EditImageModal', () => {
         expect(editImageModal.state('isImageDecorative')).toEqual(false);
         expect(editImageModal.state('isImageDescriptionValid')).toEqual(true);
         expect(editImageModal.state('isImageLoaded')).toEqual(false);
-        expect(editImageModal.state('isImageLoading')).toEqual(false);
         expect(editImageModal.state('isStatusAlertOpen')).toEqual(false);
         expect(editImageModal.state('isModalOpen')).toEqual(false);
         expect(editImageModal.state('pageNumber')).toEqual(1);
@@ -635,7 +633,6 @@ describe('EditImageModal', () => {
         expect(editImageModal.state('baseAssetURL')).toEqual('');
         expect(editImageModal.state('currentUploadErrorMessage')).toBe(null);
         expect(editImageModal.state('currentValidationMessages')).toEqual({});
-        expect(editImageModal.state('displayLoadingSpinner')).toEqual(false);
         expect(editImageModal.state('imageDescription')).toEqual('');
         expect(editImageModal.state('imageDimensions')).toEqual({});
         expect(editImageModal.state('imageSource')).toEqual('');
@@ -643,7 +640,6 @@ describe('EditImageModal', () => {
         expect(editImageModal.state('isImageDecorative')).toEqual(false);
         expect(editImageModal.state('isImageDescriptionValid')).toEqual(true);
         expect(editImageModal.state('isImageLoaded')).toEqual(false);
-        expect(editImageModal.state('isImageLoading')).toEqual(false);
         expect(editImageModal.state('isStatusAlertOpen')).toEqual(false);
         expect(editImageModal.state('isModalOpen')).toEqual(true);
         expect(editImageModal.state('pageNumber')).toEqual(1);
@@ -659,7 +655,6 @@ describe('EditImageModal', () => {
         expect(editImageModal.state('baseAssetURL')).toEqual('');
         expect(editImageModal.state('currentUploadErrorMessage')).toBe(null);
         expect(editImageModal.state('currentValidationMessages')).toEqual({});
-        expect(editImageModal.state('displayLoadingSpinner')).toEqual(false);
         expect(editImageModal.state('imageDescription')).toEqual('');
         expect(editImageModal.state('imageDimensions')).toEqual({});
         expect(editImageModal.state('imageSource')).toEqual('');
@@ -667,7 +662,6 @@ describe('EditImageModal', () => {
         expect(editImageModal.state('isImageDecorative')).toEqual(false);
         expect(editImageModal.state('isImageDescriptionValid')).toEqual(true);
         expect(editImageModal.state('isImageLoaded')).toEqual(false);
-        expect(editImageModal.state('isImageLoading')).toEqual(false);
         expect(editImageModal.state('isStatusAlertOpen')).toEqual(false);
         expect(editImageModal.state('isModalOpen')).toEqual(true);
         expect(editImageModal.state('pageNumber')).toEqual(1);
@@ -695,7 +689,6 @@ describe('EditImageModal', () => {
         expect(editImageModal.state('baseAssetURL')).toEqual(sampleText);
         expect(editImageModal.state('currentUploadErrorMessage')).toBe(null);
         expect(editImageModal.state('currentValidationMessages')).toEqual({});
-        expect(editImageModal.state('displayLoadingSpinner')).toEqual(false);
         expect(editImageModal.state('imageDescription')).toEqual(sampleText);
         expect(editImageModal.state('imageDimensions')).toEqual({
           width: sampleImgData.naturalWidth,
@@ -707,7 +700,6 @@ describe('EditImageModal', () => {
         expect(editImageModal.state('isImageDecorative')).toEqual(false);
         expect(editImageModal.state('isImageDescriptionValid')).toEqual(true);
         expect(editImageModal.state('isImageLoaded')).toEqual(true);
-        expect(editImageModal.state('isImageLoading')).toEqual(false);
         expect(editImageModal.state('isStatusAlertOpen')).toEqual(false);
         expect(editImageModal.state('isModalOpen')).toEqual(true);
         expect(editImageModal.state('pageNumber')).toEqual(2);
@@ -1226,14 +1218,12 @@ describe('EditImageModal', () => {
 
         getModalBody(editImageModal).find('img').simulate('load', { target: { ...sampleImgData } });
 
-        expect(editImageModal.state('displayLoadingSpinner')).toEqual(false);
         expect(editImageModal.state('imageDimensions')).toEqual({
           width: sampleImgData.naturalWidth,
           height: sampleImgData.naturalHeight,
           aspectRatio: sampleImgData.naturalWidth / sampleImgData.naturalHeight,
         });
         expect(editImageModal.state('isImageLoaded')).toEqual(true);
-        expect(editImageModal.state('isImageLoading')).toEqual(false);
       });
 
       it('correct state is set on image error', () => {
@@ -1243,10 +1233,8 @@ describe('EditImageModal', () => {
 
         getModalBody(editImageModal).find('img').simulate('error');
 
-        expect(editImageModal.state('displayLoadingSpinner')).toEqual(false);
         expect(editImageModal.state('imageDimensions')).toEqual({});
         expect(editImageModal.state('isImageLoaded')).toEqual(false);
-        expect(editImageModal.state('isImageLoading')).toEqual(false);
       });
 
       it('with visible image preview image when this.state.isImageLoaded is false (default)', () => {

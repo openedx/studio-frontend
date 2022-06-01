@@ -83,20 +83,18 @@ export const SECTIONS_SHAPE = {
 };
 
 export const SUBSECTIONS_SHAPE = {
-  num_block_types: PropTypes.objectOf(
-    PropTypes.oneOfType([null, PropTypes.number])
-  ),
+  num_block_types: PropTypes.objectOf(PropTypes.number),
   num_with_one_block_type: PropTypes.number,
   total_visible: PropTypes.number,
 };
 
 export const UNITS_SHAPE = {
-  num_blocks: PropTypes.objectOf(PropTypes.oneOfType([null, PropTypes.number])),
+  num_blocks: PropTypes.objectOf(PropTypes.number),
   total_visible: PropTypes.number,
 };
 
 export const VIDEOS_SHAPE = {
-  durations: PropTypes.objectOf(PropTypes.oneOfType([null, PropTypes.number])),
+  durations: PropTypes.objectOf(PropTypes.number),
   num_mobile_encoded: PropTypes.number,
   num_with_val_id: PropTypes.number,
   total_number: PropTypes.number,
