@@ -11,7 +11,7 @@ import { shallowWithIntl } from '../../utils/i18n/enzymeHelper';
 import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
 
 // generating test checklist to avoid relying on actual data
-const testChecklistData = ['welcomeMessage', 'gradingPolicy', 'certificate', 'courseDates', 'assignmentDeadlines'].reduce(((accumulator, currentValue) => { accumulator.push({ id: currentValue }); return accumulator; }), []);
+const testChecklistData = ['welcomeMessage', 'gradingPolicy', 'certificate', 'courseDates', 'assignmentDeadlines', 'proctoringEmail'].reduce(((accumulator, currentValue) => { accumulator.push({ id: currentValue }); return accumulator; }), []);
 
 /**
  * generating test validated values to mock the implementation
