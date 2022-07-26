@@ -2,9 +2,10 @@ import * as validators from './courseChecklistValidators';
 import getValidatedValue from './getValidatedValue';
 
 describe('getValidatedValue utility function', () => {
+  const localValidators = validators;
   it('welcome message', () => {
     const spy = jest.fn();
-    validators.hasWelcomeMessage = spy;
+    localValidators.hasWelcomeMessage = spy;
 
     const props = {
       data: {
@@ -18,7 +19,7 @@ describe('getValidatedValue utility function', () => {
 
   it('grading policy', () => {
     const spy = jest.fn();
-    validators.hasGradingPolicy = spy;
+    localValidators.hasGradingPolicy = spy;
 
     const props = {
       data: {
@@ -32,7 +33,7 @@ describe('getValidatedValue utility function', () => {
 
   it('certificate', () => {
     const spy = jest.fn();
-    validators.hasCertificate = spy;
+    localValidators.hasCertificate = spy;
 
     const props = {
       data: {
@@ -46,7 +47,7 @@ describe('getValidatedValue utility function', () => {
 
   it('course dates', () => {
     const spy = jest.fn();
-    validators.hasDates = spy;
+    localValidators.hasDates = spy;
 
     const props = {
       data: {
@@ -60,7 +61,7 @@ describe('getValidatedValue utility function', () => {
 
   it('assignment deadlines', () => {
     const spy = jest.fn();
-    validators.hasAssignmentDeadlines = spy;
+    localValidators.hasAssignmentDeadlines = spy;
 
     const props = {
       data: {
@@ -75,7 +76,7 @@ describe('getValidatedValue utility function', () => {
 
   it('video duration', () => {
     const spy = jest.fn();
-    validators.hasShortVideoDuration = spy;
+    localValidators.hasShortVideoDuration = spy;
 
     const props = {
       data: {
@@ -89,7 +90,7 @@ describe('getValidatedValue utility function', () => {
 
   it('mobile friendly video', () => {
     const spy = jest.fn();
-    validators.hasMobileFriendlyVideos = spy;
+    localValidators.hasMobileFriendlyVideos = spy;
 
     const props = {
       data: {
@@ -103,7 +104,7 @@ describe('getValidatedValue utility function', () => {
 
   it('diverse sequences', () => {
     const spy = jest.fn();
-    validators.hasDiverseSequences = spy;
+    localValidators.hasDiverseSequences = spy;
 
     const props = {
       data: {
@@ -117,7 +118,7 @@ describe('getValidatedValue utility function', () => {
 
   it('weekly highlights', () => {
     const spy = jest.fn();
-    validators.hasWeeklyHighlights = spy;
+    localValidators.hasWeeklyHighlights = spy;
 
     const props = {
       data: {
@@ -131,7 +132,7 @@ describe('getValidatedValue utility function', () => {
 
   it('unit depth', () => {
     const spy = jest.fn();
-    validators.hasShortUnitDepth = spy;
+    localValidators.hasShortUnitDepth = spy;
 
     const props = {
       data: {
@@ -145,7 +146,7 @@ describe('getValidatedValue utility function', () => {
 
   it('proctoring email', () => {
     const spy = jest.fn();
-    validators.hasProctoringEscalationEmail = spy;
+    localValidators.hasProctoringEscalationEmail = spy;
 
     const props = {
       data: {

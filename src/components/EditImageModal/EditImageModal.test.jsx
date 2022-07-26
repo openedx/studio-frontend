@@ -1,4 +1,6 @@
-import { Button, CheckBox, Fieldset, Modal, InputText, StatusAlert, Variant } from '@edx/paragon';
+import {
+  Button, CheckBox, Fieldset, Modal, InputText, StatusAlert, Variant,
+} from '@edx/paragon';
 import { IntlProvider, FormattedMessage } from 'react-intl';
 import { Provider } from 'react-redux';
 import React from 'react';
@@ -15,7 +17,8 @@ import { shallowWithIntl } from '../../utils/i18n/enzymeHelper';
 import WrappedEditImageModal from './container';
 import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
 
-const learnMoreLink = 'http://edx.readthedocs.io/projects/edx-partner-course-staff/en/latest/accessibility/best_practices_course_content_dev.html#use-best-practices-for-describing-images';
+const learnMoreLink = 'http://edx.readthedocs.io/projects/edx-partner-course-staff/en/latest/accessibility/best_'
+  + 'practices_course_content_dev.html#use-best-practices-for-describing-images';
 
 const store = getMockStore({
   help_tokens: {
@@ -26,41 +29,32 @@ const store = getMockStore({
 const intlProvider = new IntlProvider({ locale: 'en', messages: {} }, {});
 const { intl } = intlProvider.getChildContext();
 
-const getEditImageModal = wrapper =>
-  (wrapper.find('Connect(EditImageModal)').dive({ context: { store, intl } }).find(EditImageModal).dive({ context: { store, intl } }));
+const getEditImageModal = wrapper => (wrapper.find('Connect(EditImageModal)').dive({ context: { store, intl } })
+  .find(EditImageModal).dive({ context: { store, intl } }));
 const getModal = editImageModal => (editImageModal.find(Modal));
-const getModalContent = editImageModal =>
-  (getModal(editImageModal).dive({ context: { store, intl } }));
+const getModalContent = editImageModal => (getModal(editImageModal).dive({ context: { store, intl } }));
 const getModalBody = editImageModal => (getModalContent(editImageModal).find('.modal-body'));
 const getModalFooter = editImageModal => (getModalContent(editImageModal).find('.modal-footer'));
 const getFormContainer = editImageModal => (getModalBody(editImageModal).find('div.col form'));
 const getStatusAlert = editImageModal => (getModalBody(editImageModal).find(StatusAlert));
-const getCloseStatusAlertButton = editImageModal =>
-  (getStatusAlert(editImageModal).dive({ context: { store, intl } }).find(Button));
-const getInsertImageButton = editImageModal =>
-  (getModalFooter(editImageModal).find(Button).first());
-const getNextButton = editImageModal =>
-  (getModalFooter(editImageModal).find(Button).first());
+const getCloseStatusAlertButton = editImageModal => (getStatusAlert(editImageModal)
+  .dive({ context: { store, intl } }).find(Button));
+const getInsertImageButton = editImageModal => (getModalFooter(editImageModal).find(Button).first());
+const getNextButton = editImageModal => (getModalFooter(editImageModal).find(Button).first());
 const getPreviousButton = editImageModal => (getModalBody(editImageModal).find(Button));
 
-const getImageDescriptionFieldset = editImageModal =>
-  (getFormContainer(editImageModal).find(Fieldset).at(0));
-const getImageDescriptionInput = editImageModal =>
-  (getImageDescriptionFieldset(editImageModal).find(InputText));
-const getImageDescriptionInputCheckBox = editImageModal =>
-  (getImageDescriptionFieldset(editImageModal).find(CheckBox));
+const getImageDescriptionFieldset = editImageModal => (getFormContainer(editImageModal).find(Fieldset).at(0));
+const getImageDescriptionInput = editImageModal => (getImageDescriptionFieldset(editImageModal).find(InputText));
+const getImageDescriptionInputCheckBox = editImageModal => (getImageDescriptionFieldset(editImageModal).find(CheckBox));
 
-const getImageDimensionsFieldset = editImageModal =>
-  (getFormContainer(editImageModal).find(Fieldset).at(1));
-const getImageDimensionsWidthInput = editImageModal =>
-  (getImageDimensionsFieldset(editImageModal)
-    .dive({ context: { store, intl } }).find(InputText).at(0));
+const getImageDimensionsFieldset = editImageModal => (getFormContainer(editImageModal).find(Fieldset).at(1));
+const getImageDimensionsWidthInput = editImageModal => (getImageDimensionsFieldset(editImageModal)
+  .dive({ context: { store, intl } }).find(InputText).at(0));
 
-const getImageDimensionsHeightInput = editImageModal =>
-  (getImageDimensionsFieldset(editImageModal)
-    .dive({ context: { store, intl } }).find(InputText).at(1));
-const getImageDimensionsCheckBox = editImageModal =>
-  (getImageDimensionsFieldset(editImageModal).dive({ context: { store, intl } }).find(CheckBox));
+const getImageDimensionsHeightInput = editImageModal => (getImageDimensionsFieldset(editImageModal)
+  .dive({ context: { store, intl } }).find(InputText).at(1));
+const getImageDimensionsCheckBox = editImageModal => (getImageDimensionsFieldset(editImageModal)
+  .dive({ context: { store, intl } }).find(CheckBox));
 
 const getNextPageButton = editImageModal => (getModalFooter(editImageModal).find(Button).first());
 
@@ -195,7 +189,6 @@ describe('EditImageModal', () => {
             it('no AssetsResultsCount component', () => {
               expect(getModalBody(editImageModal).find('Connect(AssetsResultsCount)')).toHaveLength(0);
             });
-
 
             it('no Pagination component', () => {
               expect(getModalBody(editImageModal).find('Pagination')).toHaveLength(0);
@@ -494,8 +487,7 @@ describe('EditImageModal', () => {
                 });
 
                 it('correct initial props', () => {
-                  const imageDescriptionInputCheckbox =
-                    getImageDescriptionInputCheckBox(editImageModal);
+                  const imageDescriptionInputCheckbox = getImageDescriptionInputCheckBox(editImageModal);
 
                   expect(imageDescriptionInputCheckbox.prop('id')).toEqual('isDecorative');
                   expect(imageDescriptionInputCheckbox.prop('id')).toEqual('isDecorative');
@@ -615,7 +607,6 @@ describe('EditImageModal', () => {
         expect(editImageModal.state('assetsPageType')).toEqual(pageTypes.NORMAL);
         expect(editImageModal.state('baseAssetURL')).toEqual('');
         expect(editImageModal.state('currentValidationMessages')).toEqual({});
-        expect(editImageModal.state('displayLoadingSpinner')).toEqual(false);
         expect(editImageModal.state('imageDescription')).toEqual('');
         expect(editImageModal.state('imageDimensions')).toEqual({});
         expect(editImageModal.state('imageSource')).toEqual('');
@@ -623,7 +614,6 @@ describe('EditImageModal', () => {
         expect(editImageModal.state('isImageDecorative')).toEqual(false);
         expect(editImageModal.state('isImageDescriptionValid')).toEqual(true);
         expect(editImageModal.state('isImageLoaded')).toEqual(false);
-        expect(editImageModal.state('isImageLoading')).toEqual(false);
         expect(editImageModal.state('isStatusAlertOpen')).toEqual(false);
         expect(editImageModal.state('isModalOpen')).toEqual(false);
         expect(editImageModal.state('pageNumber')).toEqual(1);
@@ -643,7 +633,6 @@ describe('EditImageModal', () => {
         expect(editImageModal.state('baseAssetURL')).toEqual('');
         expect(editImageModal.state('currentUploadErrorMessage')).toBe(null);
         expect(editImageModal.state('currentValidationMessages')).toEqual({});
-        expect(editImageModal.state('displayLoadingSpinner')).toEqual(false);
         expect(editImageModal.state('imageDescription')).toEqual('');
         expect(editImageModal.state('imageDimensions')).toEqual({});
         expect(editImageModal.state('imageSource')).toEqual('');
@@ -651,7 +640,6 @@ describe('EditImageModal', () => {
         expect(editImageModal.state('isImageDecorative')).toEqual(false);
         expect(editImageModal.state('isImageDescriptionValid')).toEqual(true);
         expect(editImageModal.state('isImageLoaded')).toEqual(false);
-        expect(editImageModal.state('isImageLoading')).toEqual(false);
         expect(editImageModal.state('isStatusAlertOpen')).toEqual(false);
         expect(editImageModal.state('isModalOpen')).toEqual(true);
         expect(editImageModal.state('pageNumber')).toEqual(1);
@@ -667,7 +655,6 @@ describe('EditImageModal', () => {
         expect(editImageModal.state('baseAssetURL')).toEqual('');
         expect(editImageModal.state('currentUploadErrorMessage')).toBe(null);
         expect(editImageModal.state('currentValidationMessages')).toEqual({});
-        expect(editImageModal.state('displayLoadingSpinner')).toEqual(false);
         expect(editImageModal.state('imageDescription')).toEqual('');
         expect(editImageModal.state('imageDimensions')).toEqual({});
         expect(editImageModal.state('imageSource')).toEqual('');
@@ -675,7 +662,6 @@ describe('EditImageModal', () => {
         expect(editImageModal.state('isImageDecorative')).toEqual(false);
         expect(editImageModal.state('isImageDescriptionValid')).toEqual(true);
         expect(editImageModal.state('isImageLoaded')).toEqual(false);
-        expect(editImageModal.state('isImageLoading')).toEqual(false);
         expect(editImageModal.state('isStatusAlertOpen')).toEqual(false);
         expect(editImageModal.state('isModalOpen')).toEqual(true);
         expect(editImageModal.state('pageNumber')).toEqual(1);
@@ -703,7 +689,6 @@ describe('EditImageModal', () => {
         expect(editImageModal.state('baseAssetURL')).toEqual(sampleText);
         expect(editImageModal.state('currentUploadErrorMessage')).toBe(null);
         expect(editImageModal.state('currentValidationMessages')).toEqual({});
-        expect(editImageModal.state('displayLoadingSpinner')).toEqual(false);
         expect(editImageModal.state('imageDescription')).toEqual(sampleText);
         expect(editImageModal.state('imageDimensions')).toEqual({
           width: sampleImgData.naturalWidth,
@@ -715,7 +700,6 @@ describe('EditImageModal', () => {
         expect(editImageModal.state('isImageDecorative')).toEqual(false);
         expect(editImageModal.state('isImageDescriptionValid')).toEqual(true);
         expect(editImageModal.state('isImageLoaded')).toEqual(true);
-        expect(editImageModal.state('isImageLoading')).toEqual(false);
         expect(editImageModal.state('isStatusAlertOpen')).toEqual(false);
         expect(editImageModal.state('isModalOpen')).toEqual(true);
         expect(editImageModal.state('pageNumber')).toEqual(2);
@@ -869,8 +853,7 @@ describe('EditImageModal', () => {
           to succesfully shallow them. Once Enzyme introduces support for React Fragments,
           we can remove the extraneous div.
         */
-        const statusAlertDialog =
-          shallowWithIntl(<div>{statusAlert.prop('dialog')}</div>).find(WrappedMessage);
+        const statusAlertDialog = shallowWithIntl(<div>{statusAlert.prop('dialog')}</div>).find(WrappedMessage);
         expect(statusAlertDialog.prop('message')).toEqual(messages.editImageModalTooManyFiles);
       });
 
@@ -888,8 +871,7 @@ describe('EditImageModal', () => {
           to succesfully shallow them. Once Enzyme introduces support for React Fragments,
           we can remove the extraneous div.
         */
-        const statusAlertDialog =
-          shallowWithIntl(<div>{statusAlert.prop('dialog')}</div>).find(WrappedMessage);
+        const statusAlertDialog = shallowWithIntl(<div>{statusAlert.prop('dialog')}</div>).find(WrappedMessage);
         expect(statusAlertDialog.prop('message')).toEqual(messages.editImageModalInvalidFileType);
       });
 
@@ -1236,14 +1218,12 @@ describe('EditImageModal', () => {
 
         getModalBody(editImageModal).find('img').simulate('load', { target: { ...sampleImgData } });
 
-        expect(editImageModal.state('displayLoadingSpinner')).toEqual(false);
         expect(editImageModal.state('imageDimensions')).toEqual({
           width: sampleImgData.naturalWidth,
           height: sampleImgData.naturalHeight,
           aspectRatio: sampleImgData.naturalWidth / sampleImgData.naturalHeight,
         });
         expect(editImageModal.state('isImageLoaded')).toEqual(true);
-        expect(editImageModal.state('isImageLoading')).toEqual(false);
       });
 
       it('correct state is set on image error', () => {
@@ -1253,10 +1233,8 @@ describe('EditImageModal', () => {
 
         getModalBody(editImageModal).find('img').simulate('error');
 
-        expect(editImageModal.state('displayLoadingSpinner')).toEqual(false);
         expect(editImageModal.state('imageDimensions')).toEqual({});
         expect(editImageModal.state('isImageLoaded')).toEqual(false);
-        expect(editImageModal.state('isImageLoading')).toEqual(false);
       });
 
       it('with visible image preview image when this.state.isImageLoaded is false (default)', () => {
@@ -1451,7 +1429,6 @@ describe('EditImageModal', () => {
         expect(() => editImageModal.instance().onImageDimensionBlur(sampleText)).toThrow(Error);
         expect(() => editImageModal.instance().onImageDimensionBlur(sampleText)).toThrow(`Unknown dimension type ${sampleText}.`);
       });
-
 
       it('returns correct feedback for invalid dimensions (negative numbers)', () => {
         editImageModal.setState({
@@ -1689,7 +1666,6 @@ describe('EditImageModal', () => {
 
         editImageModal.instance().validateImageDescription = validationMock;
       });
-
 
       it('sends bubbles as true', () => {
         getInsertImageButton(editImageModal).simulate('click');

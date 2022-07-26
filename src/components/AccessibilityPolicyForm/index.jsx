@@ -1,13 +1,16 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Button, InputText, StatusAlert, TextArea } from '@edx/paragon';
+import {
+  Button, InputText, StatusAlert, TextArea,
+} from '@edx/paragon';
 import { FormattedTime, FormattedDate } from 'react-intl';
 
 import messages from './displayMessages';
 import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
 import { clearAccessibilityStatus, submitAccessibilityForm } from '../../data/actions/accessibility';
 import { accessibilityActions } from '../../data/constants/actionTypes';
+import { ASSET_STATUS_SHAPE } from '../../utils/constants';
 import styles from './AccessibilityPolicyForm.scss';
 
 export class AccessibilityPolicyForm extends React.Component {
@@ -24,9 +27,6 @@ export class AccessibilityPolicyForm extends React.Component {
 
     this.statusAlertRef = {};
     this.emailInputRef = {};
-    this.fullNameInputRef = {};
-    this.messageInputRef = {};
-    this.submitButtonRef = {};
 
     this.handleEmailChange = this.handleEmailChange.bind(this);
     this.handleFullNameChange = this.handleFullNameChange.bind(this);
@@ -40,8 +40,8 @@ export class AccessibilityPolicyForm extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     const { accessibilityStatus } = nextProps;
-    if (accessibilityStatus.type ===
-      accessibilityActions.submit.ACCESSIBILITY_FORM_SUBMIT_SUCCESS) {
+    if (accessibilityStatus.type
+      === accessibilityActions.submit.ACCESSIBILITY_FORM_SUBMIT_SUCCESS) {
       this.clearInputs();
     }
   }
@@ -53,8 +53,8 @@ export class AccessibilityPolicyForm extends React.Component {
     const isValidEmail = this.validateEmail(submitterEmail);
     const isValidFullName = this.validateFullName(submitterFullName);
     const isValidMessage = this.validateMessage(submitterMessage);
-    const isValidContent = isValidEmail.isValid &&
-      isValidFullName.isValid && isValidMessage.isValid;
+    const isValidContent = isValidEmail.isValid
+      && isValidFullName.isValid && isValidMessage.isValid;
 
     this.setState({
       isStatusAlertOpen: true,
@@ -72,7 +72,13 @@ export class AccessibilityPolicyForm extends React.Component {
     }
   }
 
-  getStatusFields() {
+  handleEmailChange = (value) => {
+    this.setState({
+      submitterEmail: value,
+    });
+  };
+
+  getStatusFields = () => {
     const { accessibilityStatus, accessibilityEmail } = this.props;
     const { isValidFormContent, validationMessages } = this.state;
     let status = {
@@ -106,8 +112,8 @@ export class AccessibilityPolicyForm extends React.Component {
           </div>
         ),
       };
-    } else if (accessibilityStatus.type ===
-        accessibilityActions.submit.ACCESSIBILITY_FORM_SUBMIT_RATE_LIMIT_FAILURE) {
+    } else if (accessibilityStatus.type
+        === accessibilityActions.submit.ACCESSIBILITY_FORM_SUBMIT_RATE_LIMIT_FAILURE) {
       status = {
         alertType: 'danger',
         alertDialog: (
@@ -120,8 +126,8 @@ export class AccessibilityPolicyForm extends React.Component {
           />
         ),
       };
-    } else if (accessibilityStatus.type ===
-        accessibilityActions.submit.ACCESSIBILITY_FORM_SUBMIT_SUCCESS) {
+    } else if (accessibilityStatus.type
+        === accessibilityActions.submit.ACCESSIBILITY_FORM_SUBMIT_SUCCESS) {
       const start = new Date('Mon Jan 29 2018 13:00:00 GMT (UTC)');
       const end = new Date('Fri Feb 2 2018 21:00:00 GMT (UTC)');
       status = {
@@ -146,27 +152,21 @@ export class AccessibilityPolicyForm extends React.Component {
     }
 
     return status;
-  }
+  };
 
-  handleEmailChange(value) {
-    this.setState({
-      submitterEmail: value,
-    });
-  }
-
-  handleFullNameChange(value) {
+  handleFullNameChange = (value) => {
     this.setState({
       submitterFullName: value,
     });
-  }
+  };
 
-  handleMessageChange(value) {
+  handleMessageChange = (value) => {
     this.setState({
       submitterMessage: value,
     });
-  }
+  };
 
-  validateEmail(email) {
+  validateEmail = (email) => {
     let feedback = { isValid: true };
     /* eslint-disable max-len */
     /* eslint-disable no-useless-escape */
@@ -181,9 +181,9 @@ export class AccessibilityPolicyForm extends React.Component {
       };
     }
     return feedback;
-  }
+  };
 
-  validateFullName(fullName) {
+  validateFullName = (fullName) => {
     let feedback = { isValid: true };
     if (!fullName) {
       feedback = {
@@ -193,9 +193,9 @@ export class AccessibilityPolicyForm extends React.Component {
       };
     }
     return feedback;
-  }
+  };
 
-  validateMessage(message) {
+  validateMessage = (message) => {
     let feedback = { isValid: true };
     if (!message) {
       feedback = {
@@ -207,24 +207,24 @@ export class AccessibilityPolicyForm extends React.Component {
       };
     }
     return feedback;
-  }
+  };
 
-  clearInputs() {
+  clearInputs = () => {
     this.setState({
       submitterEmail: '',
       submitterFullName: '',
       submitterMessage: '',
     });
-  }
+  };
 
-  closeStatusAlert() {
+  closeStatusAlert = () => {
     this.emailInputRef.focus();
     this.setState({
       isStatusAlertOpen: false,
     });
-  }
+  };
 
-  renderStatusAlert() {
+  renderStatusAlert = () => {
     const status = this.getStatusFields();
 
     const statusAlert = (
@@ -242,7 +242,7 @@ export class AccessibilityPolicyForm extends React.Component {
         {statusAlert}
       </div>
     );
-  }
+  };
 
   render() {
     return (
@@ -275,7 +275,6 @@ export class AccessibilityPolicyForm extends React.Component {
             value={this.state.submitterFullName}
             themes={['danger']}
             validator={fullName => this.validateFullName(fullName)}
-            inputRef={(ref) => { this.fullNameInputRef = ref; }}
           />
           <TextArea
             name="message"
@@ -285,18 +284,16 @@ export class AccessibilityPolicyForm extends React.Component {
             value={this.state.submitterMessage}
             themes={['danger']}
             validator={message => this.validateMessage(message)}
-            inputRef={(ref) => { this.messageInputRef = ref; }}
           />
           <WrappedMessage message={messages.accessibilityPolicyFormSubmitAria}>
-            { displayText =>
-              (<Button
+            { displayText => (
+              <Button
                 buttonType="primary"
                 label={<WrappedMessage message={messages.accessibilityPolicyFormSubmitLabel} />}
                 aria-label={displayText}
                 onClick={() => { this.onSubmitClick(); }}
-                inputRef={(ref) => { this.submitButtonRef = ref; }}
-              />)
-            }
+              />
+            )}
           </WrappedMessage>
         </section>
       </div>
@@ -305,10 +302,7 @@ export class AccessibilityPolicyForm extends React.Component {
 }
 
 AccessibilityPolicyForm.propTypes = {
-  accessibilityStatus: PropTypes.shape({
-    response: PropTypes.object,
-    type: PropTypes.string,
-  }).isRequired,
+  accessibilityStatus: PropTypes.shape(ASSET_STATUS_SHAPE).isRequired,
   accessibilityEmail: PropTypes.string.isRequired,
   clearAccessibilityStatus: PropTypes.func.isRequired,
   submitAccessibilityForm: PropTypes.func.isRequired,
@@ -320,8 +314,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   clearAccessibilityStatus: () => dispatch(clearAccessibilityStatus()),
-  submitAccessibilityForm: (email, fullName, message) =>
-    dispatch(submitAccessibilityForm(email, fullName, message)),
+  submitAccessibilityForm: (email, fullName, message) => dispatch(submitAccessibilityForm(email, fullName, message)),
 });
 
 const WrappedAccessibilityPolicyForm = connect(

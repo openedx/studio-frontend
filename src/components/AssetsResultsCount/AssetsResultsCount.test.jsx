@@ -1,7 +1,7 @@
 import React from 'react';
 
 import AssetsResultsCount from './index';
-import { paginationInitial, filtersInitial, searchInitial } from './../../data/reducers/assets';
+import { paginationInitial, filtersInitial, searchInitial } from '../../data/reducers/assets';
 import { mountWithIntl } from '../../utils/i18n/enzymeHelper';
 import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
 import messages from './displayMessages';

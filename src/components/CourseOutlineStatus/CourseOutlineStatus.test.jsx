@@ -4,7 +4,7 @@ import React from 'react';
 
 import { checklistLoading } from '../../data/constants/loadingTypes';
 import { courseDetails } from '../../utils/testConstants';
-import CourseOutlineStatus from './';
+import CourseOutlineStatus from '.';
 import CourseOutlineStatusLabel from '../CourseOutlineStatusLabel';
 import CourseOutlineStatusValue from '../CourseOutlineStatusValue';
 import getFilteredChecklist from '../../utils/CourseChecklist/getFilteredChecklist';

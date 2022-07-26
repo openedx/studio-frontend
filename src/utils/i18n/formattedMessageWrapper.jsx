@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
 
-const WrappedMessage = (props) => {
+function WrappedMessage(props) {
   const { message, intl, ...other } = props;
 
   // manually check if a translation exists for this message in the current (non-default) locale
@@ -19,7 +19,7 @@ const WrappedMessage = (props) => {
       />
     </span>
   );
-};
+}
 
 WrappedMessage.propTypes = {
   intl: intlShape.isRequired,

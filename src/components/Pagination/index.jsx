@@ -18,7 +18,7 @@ import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
 class Pagination extends React.Component {
   onPageClick = (oneIndexedPageNumber) => {
     this.props.updatePage(oneIndexedPageNumber - 1, this.props.courseDetails);
-  }
+  };
 
   render() {
     const { page: zeroIndexedPageNumber, pageSize, totalCount } = this.props.assetsListMetadata;
@@ -26,23 +26,21 @@ class Pagination extends React.Component {
 
     return (
       <WrappedMessage message={messages.paginationAriaLabel}>
-        { paginationLabel =>
-          (
-            <ParagonPagination
-              paginationLabel={paginationLabel}
-              pageCount={totalPages}
-              buttonLabels={{
-                previous: this.props.intl.formatMessage(messages.paginationPrevious),
-                next: this.props.intl.formatMessage(messages.paginationNext),
-                page: this.props.intl.formatMessage(messages.paginationPage),
-                currentPage: this.props.intl.formatMessage(messages.paginationCurrentPage),
-                pageOfCount: this.props.intl.formatMessage(messages.paginationOf),
-              }}
-              currentPage={zeroIndexedPageNumber + 1}
-              onPageSelect={this.onPageClick}
-            />
-          )
-        }
+        { paginationLabel => (
+          <ParagonPagination
+            paginationLabel={paginationLabel}
+            pageCount={totalPages}
+            buttonLabels={{
+              previous: this.props.intl.formatMessage(messages.paginationPrevious),
+              next: this.props.intl.formatMessage(messages.paginationNext),
+              page: this.props.intl.formatMessage(messages.paginationPage),
+              currentPage: this.props.intl.formatMessage(messages.paginationCurrentPage),
+              pageOfCount: this.props.intl.formatMessage(messages.paginationOf),
+            }}
+            currentPage={zeroIndexedPageNumber + 1}
+            onPageSelect={this.onPageClick}
+          />
+        )}
       </WrappedMessage>
     );
   }

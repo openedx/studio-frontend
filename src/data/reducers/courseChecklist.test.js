@@ -1,6 +1,6 @@
 import { checklistLoading } from '../constants/loadingTypes';
 import { courseBestPractices, courseLaunch, loadingChecklists } from './courseChecklist';
-import { courseChecklistActions } from '../../data/constants/actionTypes';
+import { courseChecklistActions } from '../constants/actionTypes';
 
 let action;
 let defaultState;

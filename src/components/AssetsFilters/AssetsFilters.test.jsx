@@ -2,7 +2,7 @@ import React from 'react';
 import { CheckBoxGroup } from '@edx/paragon';
 
 import AssetsFilters from './index';
-import { filtersInitial } from './../../data/reducers/assets';
+import { filtersInitial } from '../../data/reducers/assets';
 import { mountWithIntl } from '../../utils/i18n/enzymeHelper';
 
 const defaultProps = {

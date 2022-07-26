@@ -1,5 +1,5 @@
 import accessibility from './accessibility';
-import { accessibilityActions } from '../../data/constants/actionTypes';
+import { accessibilityActions } from '../constants/actionTypes';
 
 const defaultState = {};
 

@@ -6,7 +6,7 @@ import thunk from 'redux-thunk';
 
 import endpoints from '../api/endpoints';
 import * as actionCreators from './accessibility';
-import { accessibilityActions } from '../../data/constants/actionTypes';
+import { accessibilityActions } from '../constants/actionTypes';
 
 const initialState = {
   accessibility: {
@@ -38,7 +38,8 @@ describe('Accessibility Action Creators', () => {
     };
 
     expect(store.dispatch(
-      actionCreators.submitAccessibilityFormSuccess(response))).toEqual(expectedAction);
+      actionCreators.submitAccessibilityFormSuccess(response),
+    )).toEqual(expectedAction);
   });
   it('returns expected state from submitAccessibilityFormRateLimitFailure', () => {
     const response = {
@@ -53,7 +54,8 @@ describe('Accessibility Action Creators', () => {
     };
 
     expect(store.dispatch(
-      actionCreators.submitAccessibilityFormRateLimitFailure(response))).toEqual(expectedAction);
+      actionCreators.submitAccessibilityFormRateLimitFailure(response),
+    )).toEqual(expectedAction);
   });
   it('returns expected state from success', () => {
     fetchMock.once(zendeskEndpoint, 201);

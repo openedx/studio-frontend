@@ -6,6 +6,7 @@ import { hasSearchOrFilterApplied } from '../../utils/getAssetsFilters';
 import styles from './AssetsResultsCount.scss';
 import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
 import messages from './displayMessages';
+import { ASSET_TYPES_SHAPE } from '../../utils/constants';
 
 const renderCount = count => (
   <span className="font-weight-bold">
@@ -13,7 +14,7 @@ const renderCount = count => (
   </span>
 );
 
-const AssetsResultsCount = ({ paginationMetadata, filtersMetadata, searchMetadata }) => {
+function AssetsResultsCount({ paginationMetadata, filtersMetadata, searchMetadata }) {
   let message = messages.assetsResultsCountTotal;
   if (hasSearchOrFilterApplied(filtersMetadata.assetTypes, searchMetadata.search)) {
     message = messages.assetsResultsCountFiltered;
@@ -32,7 +33,7 @@ const AssetsResultsCount = ({ paginationMetadata, filtersMetadata, searchMetadat
       />
     </div>
   );
-};
+}
 
 AssetsResultsCount.propTypes = {
   paginationMetadata: PropTypes.shape({
@@ -43,7 +44,7 @@ AssetsResultsCount.propTypes = {
     totalCount: PropTypes.number,
   }).isRequired,
   filtersMetadata: PropTypes.shape({
-    assetTypes: PropTypes.object,
+    assetTypes: PropTypes.shape(ASSET_TYPES_SHAPE),
   }).isRequired,
   searchMetadata: PropTypes.shape({
     search: PropTypes.string,

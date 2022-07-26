@@ -1,8 +1,9 @@
 import { connect } from 'react-redux';
 
 import AssetsDropZone from '.';
-import { uploadAssets, uploadExceedMaxSize, uploadExceedMaxCount, uploadInvalidFileType } from '../../data/actions/assets';
-
+import {
+  uploadAssets, uploadExceedMaxSize, uploadExceedMaxCount, uploadInvalidFileType,
+} from '../../data/actions/assets';
 
 const mapStateToProps = state => ({
   courseDetails: state.studioDetails.course,

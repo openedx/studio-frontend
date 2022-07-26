@@ -6,7 +6,7 @@ import messages from './displayMessages';
 import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
 import styles from './AccessibilityBody.scss';
 
-const AccessibilityBody = (props) => {
+function AccessibilityBody(props) {
   const emailAddress = props.email;
   const mailto = `mailto:${emailAddress}`;
   const emailElement = (<a href={mailto}>{emailAddress}</a>);
@@ -86,7 +86,7 @@ const AccessibilityBody = (props) => {
     </div>
   );
   /* eslint-enable max-len */
-};
+}
 
 AccessibilityBody.propTypes = {
   communityAccessibilityLink: PropTypes.string.isRequired,

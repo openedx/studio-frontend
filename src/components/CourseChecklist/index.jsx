@@ -38,24 +38,20 @@ class CourseChecklist extends React.Component {
   }
 
   onAssignmentHyperlinkClick = (assignmentID) => {
-    trackEvent(
-      'edx.bi.studio.course.checklist.invalid-assignment.clicked', {
-        category: 'click',
-        event_type: `invalid-assignment-${assignmentID}`,
-        label: this.props.studioDetails.course.id,
-      },
-    );
-  }
+    trackEvent('edx.bi.studio.course.checklist.invalid-assignment.clicked', {
+      category: 'click',
+      event_type: `invalid-assignment-${assignmentID}`,
+      label: this.props.studioDetails.course.id,
+    });
+  };
 
   onCheckUpdateHyperlinkClick = (checkID) => {
-    trackEvent(
-      'edx.bi.studio.course.checklist.update.clicked', {
-        category: 'click',
-        event_type: `update-${checkID}`,
-        label: this.props.studioDetails.course.id,
-      },
-    );
-  }
+    trackEvent('edx.bi.studio.course.checklist.update.clicked', {
+      category: 'click',
+      event_type: `update-${checkID}`,
+      label: this.props.studioDetails.course.id,
+    });
+  };
 
   getCompletionCountID = () => (`${this.props.idPrefix.split(/\s/).join('-')}-completion-count`);
 
@@ -63,29 +59,29 @@ class CourseChecklist extends React.Component {
     <h3 aria-describedby={this.getCompletionCountID()} className={classNames('font-weight-normal', 'font-extra-large')}>
       {this.props.dataHeading}
     </h3>
-  )
+  );
 
   getCompletionCount = () => {
     const totalCompletedChecks = Object.values(this.state.checks).length;
 
-    return this.props.isLoading ?
-      null :
-      (
+    return this.props.isLoading
+      ? null
+      : (
         <WrappedMessage
           message={messages.completionCountLabel}
           values={{ completed: this.state.totalCompletedChecks, total: totalCompletedChecks }}
         >
-          {displayText =>
-            (<div
+          {displayText => (
+            <div
               className="font-large"
               id={this.getCompletionCountID()}
             >
               {displayText}
-            </div>)
-          }
+            </div>
+          )}
         </WrappedMessage>
       );
-  }
+  };
 
   getCompletionIcon = (checkID) => {
     const isCompleted = this.isCheckCompleted(checkID);
@@ -99,17 +95,17 @@ class CourseChecklist extends React.Component {
               className={[classNames(
                 FontAwesomeStyles.fa,
                 FontAwesomeStyles['fa-2x'],
-                this.getCompletionIconClassNames(isCompleted)),
+                this.getCompletionIconClassNames(isCompleted),
+              ),
               ]}
               id={`icon-${checkID}`}
               screenReaderText={displayText}
             />
           </div>
-        )
-        }
+        )}
       </WrappedMessage>
     );
-  }
+  };
 
   getCompletionIconClassNames = isCompleted => (
     isCompleted ? ['fa-check-circle', 'text-success'] : ['fa-circle-thin', styles['checklist-icon-incomplete']]
@@ -133,14 +129,14 @@ class CourseChecklist extends React.Component {
 
   getUpdateLinkDestination = (checkID) => {
     switch (checkID) {
-      case 'welcomeMessage': return this.props.studioDetails.links.course_updates;
-      case 'gradingPolicy': return this.props.studioDetails.links.grading_policy;
-      case 'certificate': return this.props.studioDetails.links.certificates;
-      case 'courseDates': return `${this.props.studioDetails.links.settings}#schedule`;
-      case 'proctoringEmail': return this.props.studioDetails.links.proctored_exam_settings;
+      case 'welcomeMessage': return this.props.studioDetails?.links?.course_updates;
+      case 'gradingPolicy': return this.props.studioDetails?.links?.grading_policy;
+      case 'certificate': return this.props.studioDetails?.links?.certificates;
+      case 'courseDates': return `${this.props.studioDetails?.links?.settings}#schedule`;
+      case 'proctoringEmail': return this.props.studioDetails?.links?.proctored_exam_settings;
       default: return null;
     }
-  }
+  };
 
   getUpdateLink = checkID => (
     <div className="col-1">
@@ -155,20 +151,20 @@ class CourseChecklist extends React.Component {
 
   getLoadingIcon = () => (
     <WrappedMessage message={messages.loadingChecklistLabel}>
-      {displayText =>
-        (<div className="text-center">
+      {displayText => (
+        <div className="text-center">
           <Icon
             className={[classNames(...this.spinnerClasses)]}
             screenReaderText={displayText}
           />
-        </div>)
-      }
+        </div>
+      )}
     </WrappedMessage>
-  )
+  );
 
   getBody = () => (
     this.props.isLoading ? this.getLoadingIcon() : this.getListItems()
-  )
+  );
 
   getListItems = () => (
     this.state.checks.map((check) => {
@@ -181,8 +177,8 @@ class CourseChecklist extends React.Component {
             'bg-white border my-2',
             { 'pt-4': shouldShowCommentSection, 'py-4': !shouldShowCommentSection },
             this.getChecklistItemColorClassName(isCompleted),
-            styles['checklist-item'])
-          }
+            styles['checklist-item'],
+          )}
           id={`checklist-item-${check.id}`}
           key={check.id}
         >
@@ -210,8 +206,7 @@ class CourseChecklist extends React.Component {
           FontAwesomeStyles['fa-lg'],
           FontAwesomeStyles['fa-comment'],
           styles['comment-icon'],
-        )]
-        }
+        )]}
       />
     </div>
   );
@@ -252,7 +247,7 @@ class CourseChecklist extends React.Component {
     );
 
     const message = (
-      <React.Fragment>
+      <>
         <WrappedMessage message={messages.assignmentDeadlinesComment} />
         <ul className={styles['assignment-list']}>
           {
@@ -267,11 +262,11 @@ class CourseChecklist extends React.Component {
             ))
           }
         </ul>
-      </React.Fragment>
+      </>
     );
 
     return this.getComment(message);
-  }
+  };
 
   getCommentSection = (checkID) => {
     switch (checkID) {
@@ -279,7 +274,7 @@ class CourseChecklist extends React.Component {
       case 'assignmentDeadlines': return this.getAssignmentDeadlineCommentSection();
       default: return null;
     }
-  }
+  };
 
   getComment = comment => (
     <div className={classNames('align-items-center no-gutters border-top mt-4 row')} data-identifier="comment">
@@ -290,9 +285,9 @@ class CourseChecklist extends React.Component {
         {comment}
       </div>
     </div>
-  )
+  );
 
-  isCheckCompleted = checkID => (this.state.values[checkID])
+  isCheckCompleted = checkID => (this.state.values[checkID]);
 
   shouldShowUpdateLink = (checkID) => {
     switch (checkID) {
@@ -303,31 +298,31 @@ class CourseChecklist extends React.Component {
       case 'proctoringEmail': return true;
       default: return false;
     }
-  }
+  };
 
   shouldShowGradingPolicyCommentSection = () => (
     Object.keys(this.props.data).length > 0 && this.props.data.grades.sum_of_weights !== 1
-  )
+  );
 
   shouldShowAssignmentDeadlinesCommentSection = () => (
-    Object.keys(this.props.data).length > 0 &&
-    (
-      this.props.data.assignments.assignments_with_dates_before_start.length > 0 ||
-      this.props.data.assignments.assignments_with_dates_after_end.length > 0 ||
-      this.props.data.assignments.assignments_with_ora_dates_before_start.length > 0 ||
-      this.props.data.assignments.assignments_with_ora_dates_after_end.length > 0
+    Object.keys(this.props.data).length > 0
+    && (
+      this.props.data.assignments.assignments_with_dates_before_start.length > 0
+      || this.props.data.assignments.assignments_with_dates_after_end.length > 0
+      || this.props.data.assignments.assignments_with_ora_dates_before_start.length > 0
+      || this.props.data.assignments.assignments_with_ora_dates_after_end.length > 0
     )
-  )
+  );
 
   shouldShowCommentSection = (checkID) => {
     if (checkID === 'gradingPolicy' && this.shouldShowGradingPolicyCommentSection()) {
       return true;
-    } else if (checkID === 'assignmentDeadlines' && this.shouldShowAssignmentDeadlinesCommentSection()) {
+    } if (checkID === 'assignmentDeadlines' && this.shouldShowAssignmentDeadlinesCommentSection()) {
       return true;
     }
 
     return false;
-  }
+  };
 
   updateChecklistState(props) {
     if (Object.keys(props.data).length > 0) {
@@ -423,10 +418,12 @@ CourseChecklist.propTypes = {
       assignments: PropTypes.shape({
         total_number: PropTypes.number,
         total_visible: PropTypes.number,
+        /* eslint-disable react/forbid-prop-types */
         assignments_with_dates_before_start: PropTypes.array,
         assignments_with_dates_after_end: PropTypes.array,
         assignments_with_ora_dates_before_start: PropTypes.array,
         assignments_with_ora_dates_after_end: PropTypes.array,
+        /* eslint-enable react/forbid-prop-types */
       }),
       dates: PropTypes.shape({
         has_start_date: PropTypes.bool,
@@ -453,7 +450,10 @@ CourseChecklist.propTypes = {
   ]).isRequired,
   dataHeading: elementType(WrappedMessage).isRequired,
   // eslint-disable-next-line react/no-unused-prop-types
-  dataList: PropTypes.arrayOf(PropTypes.object).isRequired,
+  dataList: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.string,
+    pacingTypeFilter: PropTypes.string
+  })).isRequired,
   idPrefix: PropTypes.string.isRequired,
   studioDetails: PropTypes.shape({
     course: PropTypes.shape({
@@ -462,7 +462,7 @@ CourseChecklist.propTypes = {
       display_course_number: PropTypes.string,
       enable_quality: PropTypes.bool,
       id: PropTypes.string,
-      is_course_self_paced: PropTypes.boolean,
+      is_course_self_paced: PropTypes.bool,
       lang: PropTypes.string,
       name: PropTypes.string,
       num: PropTypes.string,
@@ -470,7 +470,7 @@ CourseChecklist.propTypes = {
       revision: PropTypes.string,
       url_name: PropTypes.string,
     }),
-    enable_quality: PropTypes.boolean,
+    enable_quality: PropTypes.bool,
     help_tokens: PropTypes.objectOf(PropTypes.string),
     lang: PropTypes.string,
     links: PropTypes.objectOf(PropTypes.string),

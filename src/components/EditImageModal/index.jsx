@@ -1,4 +1,6 @@
-import { Button, CheckBox, Fieldset, Icon, InputText, Modal, StatusAlert, Variant } from '@edx/paragon';
+import {
+  Button, CheckBox, Fieldset, Icon, InputText, Modal, StatusAlert, Variant,
+} from '@edx/paragon';
 import classNames from 'classnames';
 import { connect } from 'react-redux';
 import FontAwesomeStyles from 'font-awesome/css/font-awesome.min.css';
@@ -10,6 +12,7 @@ import AssetsResultsCount from '../AssetsResultsCount/index';
 import { getPageType, pageTypes } from '../../utils/getAssetsPageType';
 import messages from './displayMessages';
 import rewriteStaticLinks from '../../utils/rewriteStaticLinks';
+import { ASSET_STATUS_SHAPE, ASSET_SHAPE } from '../../utils/constants';
 import styles from './EditImageModal.scss';
 import WrappedAssetsClearSearchButton from '../AssetsClearSearchButton/container';
 import WrappedAssetsDropZone from '../AssetsDropZone/container';
@@ -17,7 +20,6 @@ import WrappedAssetsList from '../AssetsList/container';
 import WrappedAssetsSearch from '../AssetsSearch/container';
 import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
 import WrappedPagination from '../Pagination/container';
-
 
 // Create an AssetsResultsCount that is not aware of the Images filter.
 // This is so that the message will initially say "out of N total files" instead of "out of N
@@ -46,7 +48,6 @@ const initialEditImageModalState = {
   baseAssetURL: '',
   currentUploadErrorMessage: null,
   currentValidationMessages: {},
-  displayLoadingSpinner: false,
   imageDescription: '',
   imageDimensions: {},
   imageSource: '',
@@ -54,39 +55,17 @@ const initialEditImageModalState = {
   isImageDecorative: false,
   isImageDescriptionValid: true,
   isImageLoaded: false,
-  isImageLoading: false,
-  isImageDimensionsValid: true,
   isModalOpen: false,
   isStatusAlertOpen: false,
   pageNumber: 1,
   shouldShowPreviousButton: false,
 };
 
-export default class EditImageModal extends React.Component {
+class EditImageModal extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = { ...initialEditImageModalState };
-
-    this.handleOpenModal = this.handleOpenModal.bind(this);
-    this.onConstrainProportionsClick = this.onConstrainProportionsClick.bind(this);
-    this.onEditImageModalClose = this.onEditImageModalClose.bind(this);
-    this.onImageDescriptionBlur = this.onImageDescriptionBlur.bind(this);
-    this.onImageDimensionBlur = this.onImageDimensionBlur.bind(this);
-    this.onInsertImageButtonClick = this.onInsertImageButtonClick.bind(this);
-    this.onImageIsDecorativeClick = this.onImageIsDecorativeClick.bind(this);
-    this.onImageLoad = this.onImageLoad.bind(this);
-    this.onNextPageButtonClick = this.onNextPageButtonClick.bind(this);
-    this.onPreviousPageButtonClick = this.onPreviousPageButtonClick.bind(this);
-    this.onStatusAlertClose = this.onStatusAlertClose.bind(this);
-    // Create ref setters to minimize anonymous inline functions
-    this.setDropZoneButtonRef = this.setDropZoneButtonRef.bind(this);
-    this.setImageDescriptionInputRef = this.setImageDescriptionInputRef.bind(this);
-    this.setImageFormRef = this.setImageFormRef.bind(this);
-    this.setImageRef = this.setImageRef.bind(this);
-    this.setModalWrapperRef = this.setModalWrapperRef.bind(this);
-    this.setPreviousButtonRef = this.setPreviousButtonRef.bind(this);
-    this.setStatusAlertRef = this.setStatusAlertRef.bind(this);
 
     this.dropZoneButtonRef = null;
     this.imageDescriptionInputRef = null;
@@ -150,7 +129,7 @@ export default class EditImageModal extends React.Component {
     this.setState({
       areProportionsLocked: checked,
     });
-  }
+  };
 
   onEditImageModalClose = () => {
     this.setState({
@@ -159,48 +138,45 @@ export default class EditImageModal extends React.Component {
 
     this.props.clearSearch(this.props.courseDetails);
     this.resetImageSelection();
-    this.modalWrapperRef.dispatchEvent(new CustomEvent('closeModal',
+    this.modalWrapperRef.dispatchEvent(new CustomEvent(
+      'closeModal',
       {
         bubbles: true,
       },
     ));
-  }
+  };
 
   onImageIsDecorativeClick = (checked) => {
     this.setState({
       isImageDecorative: checked,
     });
-  }
+  };
 
   onImageLoad = (event) => {
     const img = event.target;
 
     this.setState({
-      displayLoadingSpinner: false,
       imageDimensions: {
         width: img.naturalWidth,
         height: img.naturalHeight,
         aspectRatio: img.naturalWidth / img.naturalHeight,
       },
       isImageLoaded: true,
-      isImageLoading: false,
     });
-  }
+  };
 
   onImageError = () => {
     this.setState({
-      displayLoadingSpinner: false,
       imageDimensions: {},
-      isImageLoading: false,
       isImageLoaded: false,
     });
-  }
+  };
 
   onImageDescriptionBlur = (imageDescription) => {
     this.setState({
       imageDescription,
     });
-  }
+  };
 
   onImageDimensionBlur = (dimensionType) => {
     let aspectRatio;
@@ -217,18 +193,19 @@ export default class EditImageModal extends React.Component {
     }
 
     return (dimensionValue) => {
-      const newImageDimensions = { ...this.state.imageDimensions };
+      const prevState = { ...this.state };
+      const newImageDimensions = prevState.imageDimensions;
       const parsedDimensionValue = parseInt(dimensionValue, 10);
 
-      newImageDimensions[dimensionType] = isNaN(parsedDimensionValue) ? '' : parsedDimensionValue;
+      newImageDimensions[dimensionType] = Number.isNaN(parsedDimensionValue) ? '' : parsedDimensionValue;
 
       if (this.state.areProportionsLocked) {
         const newDimensionValue = Math.round(parsedDimensionValue * aspectRatio);
-        newImageDimensions[newDimensionType] = isNaN(newDimensionValue) ? '' : newDimensionValue;
+        newImageDimensions[newDimensionType] = Number.isNaN(newDimensionValue) ? '' : newDimensionValue;
       }
       this.setState({ imageDimensions: newImageDimensions });
     };
-  }
+  };
 
   onNextPageButtonClick = () => {
     if (this.isAssetSelected()) {
@@ -239,17 +216,16 @@ export default class EditImageModal extends React.Component {
       });
       this.props.clearAssetsStatus();
     }
-  }
+  };
 
   onPreviousPageButtonClick = () => {
     this.setState({
       currentValidationMessages: {},
       isImageDescriptionValid: true,
-      isImageDimensionsValid: true,
       isStatusAlertOpen: false,
       pageNumber: 1,
     });
-  }
+  };
 
   onInsertImageButtonClick = () => {
     const isValidImageDescription = this.validateImageDescription();
@@ -274,7 +250,8 @@ export default class EditImageModal extends React.Component {
     });
 
     if (isValidFormContent) {
-      this.imageFormRef.dispatchEvent(new CustomEvent('submitForm',
+      this.imageFormRef.dispatchEvent(new CustomEvent(
+        'submitForm',
         {
           bubbles: true,
           detail: {
@@ -295,7 +272,7 @@ export default class EditImageModal extends React.Component {
     } else {
       this.statusAlertRef.focus();
     }
-  }
+  };
 
   onStatusAlertClose = () => {
     if (this.state.pageNumber === 1) {
@@ -312,35 +289,35 @@ export default class EditImageModal extends React.Component {
     this.setState({
       isStatusAlertOpen: false,
     });
-  }
+  };
 
-  setDropZoneButtonRef(ref) {
+  setDropZoneButtonRef = (ref) => {
     this.dropZoneButtonRef = ref;
-  }
+  };
 
-  setImageDescriptionInputRef(ref) {
+  setImageDescriptionInputRef = (ref) => {
     this.imageDescriptionInputRef = ref;
-  }
+  };
 
-  setImageFormRef(ref) {
+  setImageFormRef = (ref) => {
     this.imageFormRef = ref;
-  }
+  };
 
-  setImageRef(ref) {
+  setImageRef = (ref) => {
     this.imageRef = ref;
-  }
+  };
 
-  setModalWrapperRef(ref) {
+  setModalWrapperRef = (ref) => {
     this.modalWrapperRef = ref;
-  }
+  };
 
-  setPreviousButtonRef(ref) {
+  setPreviousButtonRef = (ref) => {
     this.previousPageButtonRef = ref;
-  }
+  };
 
-  setStatusAlertRef(ref) {
+  setStatusAlertRef = (ref) => {
     this.statusAlertRef = ref;
-  }
+  };
 
   getNaturalDimension = (dimensionType) => {
     if (this.imageRef) {
@@ -352,14 +329,14 @@ export default class EditImageModal extends React.Component {
       return naturalDimensions[dimensionType];
     }
     return null;
-  }
+  };
 
   getDimensionStateOrNatural = (dimensionType) => {
     if (!this.state.imageDimensions[dimensionType]) {
       return this.getNaturalDimension(dimensionType);
     }
     return this.state.imageDimensions[dimensionType];
-  }
+  };
 
   getImageDescriptionInput = () => (
     <Fieldset
@@ -374,11 +351,11 @@ export default class EditImageModal extends React.Component {
     >
       <InputText
         name="imageDescription"
-        label={
+        label={(
           <WrappedMessage
             message={messages.editImageModalImageDescriptionLabel}
           />
-        }
+        )}
         describedBy={`#Error-${imageDescriptionID}`}
         description={this.getImageDescriptionDescription()}
         id={imageDescriptionID}
@@ -396,11 +373,11 @@ export default class EditImageModal extends React.Component {
       <CheckBox
         id="isDecorative"
         name="isDecorative"
-        label={
+        label={(
           <WrappedMessage
             message={messages.editImageModalImageIsDecorativeCheckboxLabel}
           />
-        }
+        )}
         description={this.getImageIsDecorativeDescription()}
         checked={this.state.isImageDecorative}
         onChange={this.onImageIsDecorativeClick}
@@ -425,19 +402,19 @@ export default class EditImageModal extends React.Component {
   );
 
   getImageDescriptionDescription = () => (
-    <React.Fragment>
+    <>
       <WrappedMessage message={messages.editImageModalImageDescriptionDescription} />
       {' '}
       {this.getLearnMoreLink()}
-    </React.Fragment>
+    </>
   );
 
   getImageIsDecorativeDescription = () => (
-    <React.Fragment>
+    <>
       <WrappedMessage message={messages.editImageModalImageIsDecorativeCheckboxDescription} />
       {' '}
       {this.getLearnMoreLink()}
-    </React.Fragment>
+    </>
   );
 
   getImageDimensionsInput = () => (
@@ -455,11 +432,11 @@ export default class EditImageModal extends React.Component {
         <div className="col">
           <InputText
             name="imageWidth"
-            label={
+            label={(
               <WrappedMessage
                 message={messages.editImageModalImageWidthLabel}
               />
-            }
+            )}
             id={imageWidthID}
             type="number"
             value={'width' in this.state.imageDimensions ? this.state.imageDimensions.width : ''}
@@ -472,11 +449,11 @@ export default class EditImageModal extends React.Component {
         <div className="col">
           <InputText
             name={imageHeightID}
-            label={
+            label={(
               <WrappedMessage
                 message={messages.editImageModalImageHeightLabel}
               />
-            }
+            )}
             id="imageHeight"
             type="number"
             value={'height' in this.state.imageDimensions ? this.state.imageDimensions.height : ''}
@@ -487,11 +464,11 @@ export default class EditImageModal extends React.Component {
       <CheckBox
         id="lockProportions"
         name="lockProportions"
-        label={
+        label={(
           <WrappedMessage
             message={messages.editImageModalLockImageProportionsCheckboxLabel}
           />
-        }
+        )}
         checked={this.state.areProportionsLocked}
         onChange={this.onConstrainProportionsClick}
       />
@@ -519,11 +496,12 @@ export default class EditImageModal extends React.Component {
   */
   getImagePreviewPlaceholder = () => (
     <div className={styles['image-preview-placeholder']}>
-      <WrappedMessage message={messages.editImageModalImagePreviewText} >
-        {displayText =>
-          (<span className={classNames({ invisible: this.state.isImageLoaded })}>
+      <WrappedMessage message={messages.editImageModalImagePreviewText}>
+        {displayText => (
+          <span className={classNames({ invisible: this.state.isImageLoaded })}>
             {displayText}
-          </span>)}
+          </span>
+        )}
       </WrappedMessage>
       {this.state.imageSource && this.getImage()}
     </div>
@@ -544,9 +522,9 @@ export default class EditImageModal extends React.Component {
 
     if (this.state.pageNumber === 1) {
       dialog = (
-        <React.Fragment>
+        <>
           {this.getUploadErrorStatusMessage()}
-        </React.Fragment>
+        </>
       );
     } else if (this.state.pageNumber === 2) {
       dialog = (
@@ -561,7 +539,7 @@ export default class EditImageModal extends React.Component {
                 const value = this.state.currentValidationMessages[current];
 
                 if (value) {
-                  const errorMessage = <li key={`Error-${current}`}>{<a href={`#${current}`}>{value} </a>}</li>;
+                  const errorMessage = <li key={`Error-${current}`}><a href={`#${current}`}>{value} </a></li>;
                   accumulator.push(errorMessage);
                 }
 
@@ -584,7 +562,7 @@ export default class EditImageModal extends React.Component {
       open={this.state.isStatusAlertOpen}
       ref={this.setStatusAlertRef}
     />
-  )
+  );
 
   getModalHeader = () => {
     let header;
@@ -606,7 +584,7 @@ export default class EditImageModal extends React.Component {
         { header }
       </div>
     );
-  }
+  };
 
   getModalBody = () => {
     let body;
@@ -616,7 +594,7 @@ export default class EditImageModal extends React.Component {
       body = this.getImageSettingsModalBody();
     }
     return body;
-  }
+  };
 
   getImageSelectionModalBodyAssetsList = (type) => {
     switch (type) {
@@ -630,10 +608,10 @@ export default class EditImageModal extends React.Component {
         );
       case pageTypes.NO_RESULTS:
         return (
-          <React.Fragment>
+          <>
             <WrappedMessage message={messages.editImageModalAssetsListNoResultsMessage} tagName="h3" />
             <WrappedAssetsClearSearchButton />
-          </React.Fragment>
+          </>
         );
       case pageTypes.SKELETON:
         return (
@@ -653,10 +631,10 @@ export default class EditImageModal extends React.Component {
       default:
         throw new Error(`Unknown pageType ${type}.`);
     }
-  }
+  };
 
   getImageSelectionModalBody = () => (
-    <React.Fragment>
+    <>
       <div className="row">
         <div className="col">
           {this.getStatusAlert()}
@@ -680,8 +658,8 @@ export default class EditImageModal extends React.Component {
       </div>
       <div className="row">
         <div className="col-6 order-2">
-          {(this.state.assetsPageType === pageTypes.NORMAL ||
-            this.state.assetsPageType === pageTypes.NO_RESULTS) && (
+          {(this.state.assetsPageType === pageTypes.NORMAL
+            || this.state.assetsPageType === pageTypes.NO_RESULTS) && (
             <WrappedAssetsSearch />
           )}
         </div>
@@ -705,11 +683,11 @@ export default class EditImageModal extends React.Component {
           </div>
         </div>
       )}
-    </React.Fragment>
+    </>
   );
 
   getImageSettingsModalBody = () => (
-    <React.Fragment>
+    <>
       {this.getStatusAlert()}
       <div className="row">
         {this.state.shouldShowPreviousButton && this.getPreviousPageButton()}
@@ -725,7 +703,7 @@ export default class EditImageModal extends React.Component {
           </form>
         </div>
       </div>
-    </React.Fragment>
+    </>
   );
 
   getModalButtons = () => {
@@ -736,15 +714,15 @@ export default class EditImageModal extends React.Component {
       buttons = this.getInsertImageButton();
     }
     return buttons;
-  }
+  };
 
   getNextPageButton = () => (
     <Button
-      label={
+      label={(
         <WrappedMessage
           message={messages.editImageModalNextPageButton}
         />
-      }
+      )}
       buttonType="primary"
       disabled={!this.isAssetSelected()}
       onClick={this.onNextPageButtonClick}
@@ -753,11 +731,11 @@ export default class EditImageModal extends React.Component {
 
   getPreviousPageButton = () => (
     <Button
-      label={
+      label={(
         <WrappedMessage
           message={messages.editImageModalPreviousPageButton}
         />
-      }
+      )}
       buttonType="link"
       onClick={this.onPreviousPageButtonClick}
       inputRef={this.setPreviousButtonRef}
@@ -766,11 +744,11 @@ export default class EditImageModal extends React.Component {
 
   getInsertImageButton = () => (
     <Button
-      label={
+      label={(
         <WrappedMessage
           message={messages.editImageModalInsertImageButton}
         />
-      }
+      )}
       buttonType="primary"
       onClick={this.onInsertImageButtonClick}
     />
@@ -793,7 +771,7 @@ export default class EditImageModal extends React.Component {
   resetImageSelection = () => {
     this.props.updatePage(0, this.props.courseDetails);
     this.props.clearSelectedAsset();
-  }
+  };
 
   handleOpenModal = (event) => {
     const eventSource = event.detail.src;
@@ -826,7 +804,7 @@ export default class EditImageModal extends React.Component {
     if (this.props.assetsList.length === 0) {
       this.props.getAssets({ assetTypes: { Images: true }, pageSize: 4 }, this.props.courseDetails);
     }
-  }
+  };
 
   validateImageDescription = () => {
     let feedback = { isValid: true };
@@ -843,7 +821,7 @@ export default class EditImageModal extends React.Component {
       };
     }
     return feedback;
-  }
+  };
 
   validateImageDimensions = () => {
     let feedback = { isValid: true };
@@ -860,13 +838,13 @@ export default class EditImageModal extends React.Component {
       };
     }
     return feedback;
-  }
+  };
 
   didStatusAlertOpen = (prevState) => {
     if (this.state.isStatusAlertOpen && !prevState.isStatusAlertOpen) {
       this.statusAlertRef.focus();
     }
-  }
+  };
 
   isAssetSelected = () => (this.props.selectedAsset
     && Object.keys(this.props.selectedAsset).length !== 0);
@@ -879,54 +857,53 @@ export default class EditImageModal extends React.Component {
       return true;
     }
     return false;
-  }
+  };
 
   wasNextButtonClicked = (prevState) => {
     if (this.state.pageNumber === 2 && prevState.pageNumber === 1
       && this.state.shouldShowPreviousButton) {
       this.previousPageButtonRef.focus();
     }
-  }
+  };
 
   wasPreviousButtonClicked = (prevState) => {
     if (this.state.pageNumber === 1 && prevState.pageNumber === 2
       && prevState.isModalOpen) {
       this.dropZoneButtonRef.focus();
     }
-  }
+  };
 
-  render = () => (
-    <div
-      ref={this.setModalWrapperRef}
-      id={modalWrapperID}
-    >
+  render() {
+    return (
       <div
-        aria-atomic
-        aria-live={this.state.isModalOpen ? 'polite' : 'off'}
-        aria-relevant="text"
-        className="sr-only"
+        ref={this.setModalWrapperRef}
+        id={modalWrapperID}
       >
-        <WrappedAssetsResultsCount />
+        <div
+          aria-atomic
+          aria-live={this.state.isModalOpen ? 'polite' : 'off'}
+          aria-relevant="text"
+          className="sr-only"
+        >
+          <WrappedAssetsResultsCount />
+        </div>
+        <Modal
+          open={this.state.isModalOpen}
+          title={this.getModalHeader()}
+          body={this.getModalBody()}
+          closeText={<WrappedMessage message={messages.editImageModalCancelButton} />}
+          onClose={this.onEditImageModalClose}
+          buttons={[this.getModalButtons()]}
+          parentSelector={`#${modalWrapperID}`}
+        />
       </div>
-      <Modal
-        open={this.state.isModalOpen}
-        title={this.getModalHeader()}
-        body={this.getModalBody()}
-        closeText={<WrappedMessage message={messages.editImageModalCancelButton} />}
-        onClose={this.onEditImageModalClose}
-        buttons={[this.getModalButtons()]}
-        parentSelector={`#${modalWrapperID}`}
-      />
-    </div>
-  );
+    );
+  }
 }
 
 EditImageModal.propTypes = {
-  assetsList: PropTypes.arrayOf(PropTypes.object).isRequired,
-  assetsStatus: PropTypes.shape({
-    response: PropTypes.object,
-    type: PropTypes.string,
-  }).isRequired,
+  assetsList: PropTypes.arrayOf(PropTypes.shape(ASSET_SHAPE)).isRequired,
+  assetsStatus: PropTypes.shape(ASSET_STATUS_SHAPE).isRequired,
   clearAssetsStatus: PropTypes.func.isRequired,
   clearSearch: PropTypes.func.isRequired,
   clearSelectedAsset: PropTypes.func.isRequired,
@@ -956,3 +933,5 @@ EditImageModal.propTypes = {
   }).isRequired,
   updatePage: PropTypes.func.isRequired,
 };
+
+export default EditImageModal;

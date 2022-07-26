@@ -2,7 +2,6 @@ import React from 'react';
 import AccessibilityBody from './index';
 import { mountWithIntl } from '../../utils/i18n/enzymeHelper';
 
-
 let wrapper;
 
 describe('<AccessibilityBody />', () => {

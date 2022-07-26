@@ -95,8 +95,11 @@ describe('<AccessibilityPolicyForm />', () => {
     });
 
     it('dispatch to submitAccessibilityForm correctly', () => {
-      formComponent.props().submitAccessibilityForm(formInputs.email,
-        formInputs.fullName, formInputs.message);
+      formComponent.props().submitAccessibilityForm(
+        formInputs.email,
+        formInputs.fullName,
+        formInputs.message,
+      );
       expect(store.dispatch).toHaveBeenCalledTimes(1);
       // TODO: determine best way to validate async functions here
     });
