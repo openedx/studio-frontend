@@ -40,6 +40,9 @@ jobs:
     - name: Unit Tests
       run: npm run test
 
+    - name: Build
+      run: npm run build
+
     - name: Validation Checks
       run: ./.github/validate_changes_for_merge.sh
 
