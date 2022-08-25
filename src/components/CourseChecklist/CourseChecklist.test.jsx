@@ -10,9 +10,8 @@ import messages from './displayMessages';
 import { shallowWithIntl } from '../../utils/i18n/enzymeHelper';
 import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
 
-
 // generating test checklist to avoid relying on actual data
-const testChecklistData = ['welcomeMessage', 'gradingPolicy', 'certificate', 'courseDates', 'assignmentDeadlines'].reduce(((accumulator, currentValue) => { accumulator.push({ id: currentValue }); return accumulator; }), []);
+const testChecklistData = ['welcomeMessage', 'gradingPolicy', 'certificate', 'courseDates', 'assignmentDeadlines', 'proctoringEmail'].reduce(((accumulator, currentValue) => { accumulator.push({ id: currentValue }); return accumulator; }), []);
 
 /**
  * generating test validated values to mock the implementation
@@ -361,10 +360,8 @@ describe('CourseChecklist', () => {
           const newProps = {
             ...defaultProps,
           };
-          newProps.data.assignments.assignments_with_dates_after_end =
-            assignmentsWithDatesAfterEnd;
-          newProps.data.assignments.assignments_with_dates_before_start =
-            assignmentsWithDatesBeforeStart;
+          newProps.data.assignments.assignments_with_dates_after_end = assignmentsWithDatesAfterEnd;
+          newProps.data.assignments.assignments_with_dates_before_start = assignmentsWithDatesBeforeStart;
 
           wrapper.setProps({
             newProps,
@@ -418,12 +415,12 @@ describe('CourseChecklist', () => {
 
           assignments.find(Hyperlink).forEach((assignmentLink) => {
             const content = assignmentLink.prop('content');
-            expect(content === assignmentsWithDatesAfterEnd[0].display_name ||
-              content === assignmentsWithDatesBeforeStart[0].display_name).toEqual(true);
+            expect(content === assignmentsWithDatesAfterEnd[0].display_name
+              || content === assignmentsWithDatesBeforeStart[0].display_name).toEqual(true);
 
             const destination = assignmentLink.prop('destination');
-            expect(destination === `${defaultProps.studioDetails.links.course_outline}#${assignmentsWithDatesAfterEnd[0].id}` ||
-              destination === `${defaultProps.studioDetails.links.course_outline}#${assignmentsWithDatesBeforeStart[0].id}`).toEqual(true);
+            expect(destination === `${defaultProps.studioDetails.links.course_outline}#${assignmentsWithDatesAfterEnd[0].id}`
+              || destination === `${defaultProps.studioDetails.links.course_outline}#${assignmentsWithDatesBeforeStart[0].id}`).toEqual(true);
           });
         });
 

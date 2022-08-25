@@ -9,8 +9,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  updateSearch: (searchValue, courseDetails) =>
-    dispatch(searchUpdate(searchValue, courseDetails)),
+  updateSearch: (searchValue, courseDetails) => dispatch(searchUpdate(searchValue, courseDetails)),
 });
 
 const WrappedAssetsSearch = connect(

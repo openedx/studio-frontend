@@ -5,6 +5,7 @@ import React from 'react';
 import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
 import messages from './displayMessages';
 import styles from './AssetsList.scss';
+import { ASSET_SHAPE } from '../../utils/constants';
 
 const initialState = {
   selectedAssetIndex: -1,
@@ -29,8 +30,10 @@ export default class AssetsList extends React.Component {
     if (this.props.paginationMetadata.page !== nextProps.paginationMetadata.page) {
       if (nextProps.paginationMetadata.page === this.state.selectedAssetPage) {
         this.setState({
-          selectedAssetIndex: this.getSelectedAssetIndex(nextProps.assetsList,
-            nextProps.selectedAsset),
+          selectedAssetIndex: this.getSelectedAssetIndex(
+            nextProps.assetsList,
+            nextProps.selectedAsset,
+          ),
         });
       } else {
         this.setState({
@@ -43,8 +46,8 @@ export default class AssetsList extends React.Component {
       if the selectedAsset is set to empty object, reset selectedAssetIndex; this is to
       handle the case when the EditImageModal closes
     */
-    if (Object.keys(this.props.selectedAsset).length !== 0 &&
-      Object.keys(nextProps.selectedAsset).length === 0) {
+    if (Object.keys(this.props.selectedAsset).length !== 0
+      && Object.keys(nextProps.selectedAsset).length === 0) {
       this.setState({
         ...initialState,
       });
@@ -58,26 +61,27 @@ export default class AssetsList extends React.Component {
     });
 
     this.props.selectAsset(asset);
-  }
+  };
 
   onListBoxFocus = () => {
     // if no list item is selected, select first item on  listbox focus
     if (this.state.selectedAssetIndex === -1) {
       this.setState(
-        { selectedAssetIndex: 0,
+        {
+          selectedAssetIndex: 0,
           selectedAssetPage: this.props.paginationMetadata.page,
         },
         () => { this.props.selectAsset(this.props.assetsList[this.state.selectedAssetIndex]); },
       );
     }
-  }
+  };
 
   getAssetsListHeader = () => (
     <div className={classNames(styles['list-header'], 'row')}>
       <span className="col-6 offset-3" data-identifier="asset-file-name" id="name-header"><WrappedMessage message={messages.assetsListNameLabel} /></span>
       <span className="col-3" data-identifier="asset-date-added" id="date-added-header"><WrappedMessage message={messages.assetsListDateLabel} /></span>
     </div>
-  )
+  );
 
   getAssetListItem = (asset, index) => {
     const isSelected = this.props.selectedAsset.id === asset.id;
@@ -101,7 +105,7 @@ export default class AssetsList extends React.Component {
         </div>
       </li>
     );
-  }
+  };
 
   getDateAddedElement = (dateAdded, index) => (
     <span id={`asset-date-${index}`} className="col-3" data-identifier="asset-date-added">{dateAdded}</span>
@@ -117,18 +121,21 @@ export default class AssetsList extends React.Component {
     return (
       <div className={styles['assets-list-image-preview-container']}>
         {
-          thumbnail ?
-            <img className={styles['assets-list-image-preview-image']} src={`${baseUrl}${thumbnail}`} alt="" data-identifier="asset-image-thumbnail" /> :
-            <WrappedMessage message={messages.assetsListNoPreview} >
-              {displayText => <span className={classNames('text-center')} data-identifier="asset-image-thumbnail">{displayText}</span>}
-            </WrappedMessage>
+          thumbnail
+            ? <img className={styles['assets-list-image-preview-image']} src={`${baseUrl}${thumbnail}`} alt="" data-identifier="asset-image-thumbnail" />
+            : (
+              <WrappedMessage message={messages.assetsListNoPreview}>
+                {displayText => <span className={classNames('text-center')} data-identifier="asset-image-thumbnail">{displayText}</span>}
+              </WrappedMessage>
+            )
         }
       </div>
     );
   }
 
   getSelectedAssetIndex = (assetsList, selectedAsset) => (assetsList.findIndex(
-    asset => asset.id === selectedAsset.id));
+    asset => asset.id === selectedAsset.id,
+  ));
 
   getThumbnailElement = thumbnail => (
     <span aria-hidden className="col">{this.getImageThumbnail(thumbnail)}</span>
@@ -143,7 +150,7 @@ export default class AssetsList extends React.Component {
         if (this.state.selectedAssetIndex < this.props.paginationMetadata.pageSize - 1) {
           this.setState(
             (state, props) => ({
-              selectedAssetIndex: this.state.selectedAssetIndex + 1,
+              selectedAssetIndex: state.selectedAssetIndex + 1,
               selectedAssetPage: props.paginationMetadata.page,
             }),
             () => { this.props.selectAsset(this.props.assetsList[this.state.selectedAssetIndex]); },
@@ -158,7 +165,7 @@ export default class AssetsList extends React.Component {
         if (this.state.selectedAssetIndex > 0) {
           this.setState(
             (state, props) => ({
-              selectedAssetIndex: this.state.selectedAssetIndex - 1,
+              selectedAssetIndex: state.selectedAssetIndex - 1,
               selectedAssetPage: props.paginationMetadata.page,
             }),
             () => { this.props.selectAsset(this.props.assetsList[this.state.selectedAssetIndex]); },
@@ -168,14 +175,13 @@ export default class AssetsList extends React.Component {
       }
       default:
     }
-  }
+  };
 
-  render = () => {
-    const assetsListItems = this.props.assetsList.map((asset, index) =>
-      this.getAssetListItem(asset, index));
+  render() {
+    const assetsListItems = this.props.assetsList.map((asset, index) => this.getAssetListItem(asset, index));
 
     return (
-      <React.Fragment>
+      <>
         {this.getAssetsListHeader()}
         <ol
           aria-activedescendant={this.state.selectedAssetIndex > -1 ? `asset-list-option-${this.state.selectedAssetIndex}` : null}
@@ -187,13 +193,13 @@ export default class AssetsList extends React.Component {
         >
           {assetsListItems}
         </ol>
-      </React.Fragment>
+      </>
     );
-  };
+  }
 }
 
 AssetsList.propTypes = {
-  assetsList: PropTypes.arrayOf(PropTypes.object).isRequired,
+  assetsList: PropTypes.arrayOf(PropTypes.shape(ASSET_SHAPE)).isRequired,
   courseDetails: PropTypes.shape({
     lang: PropTypes.string,
     url_name: PropTypes.string,

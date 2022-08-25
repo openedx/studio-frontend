@@ -31,16 +31,14 @@ describe('Course Checklist Action Creators', () => {
 
   it('returns expected state from requestCourseBestPracticesSuccess', () => {
     response = 'response';
-    const expectedAction =
-    { type: courseChecklistActions.request.REQUEST_COURSE_BEST_PRACTICES_SUCCESS, response };
+    const expectedAction = { type: courseChecklistActions.request.REQUEST_COURSE_BEST_PRACTICES_SUCCESS, response };
     expect(store.dispatch(actionCreators.requestCourseBestPracticesSuccess(response)))
       .toEqual(expectedAction);
   });
 
   it('returns expected state from requestCourseBestPracticesFailure', () => {
     response = 'response';
-    const expectedAction =
-      { type: courseChecklistActions.request.REQUEST_COURSE_BEST_PRACTICES_FAILURE, response };
+    const expectedAction = { type: courseChecklistActions.request.REQUEST_COURSE_BEST_PRACTICES_FAILURE, response };
     expect(store.dispatch(actionCreators.requestCourseBestPracticesFailure(response)))
       .toEqual(expectedAction);
   });
@@ -92,8 +90,7 @@ describe('Course Checklist Action Creators', () => {
   it('returns expected state from requestCourseLaunchSuccess', () => {
     response = 'response';
 
-    const expectedAction =
-      { type: courseChecklistActions.request.REQUEST_COURSE_LAUNCH_SUCCESS, response };
+    const expectedAction = { type: courseChecklistActions.request.REQUEST_COURSE_LAUNCH_SUCCESS, response };
     expect(store.dispatch(actionCreators.requestCourseLaunchSuccess(response)))
       .toEqual(expectedAction);
   });
@@ -101,8 +98,7 @@ describe('Course Checklist Action Creators', () => {
   it('returns expected state from requestCourseLaunchFailure', () => {
     response = 'response';
 
-    const expectedAction =
-      { type: courseChecklistActions.request.REQUEST_COURSE_LAUNCH_FAILURE, response };
+    const expectedAction = { type: courseChecklistActions.request.REQUEST_COURSE_LAUNCH_FAILURE, response };
     expect(store.dispatch(actionCreators.requestCourseLaunchFailure(response)))
       .toEqual(expectedAction);
   });

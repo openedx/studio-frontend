@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 
 import { getPageType, pageTypes } from '../../utils/getAssetsPageType';
 import { hasSearchOrFilterApplied } from '../../utils/getAssetsFilters';
+import { ASSET_SHAPE, ASSET_TYPES_SHAPE, ASSET_STATUS_SHAPE } from '../../utils/constants';
 import WrappedAssetsDropZone from '../AssetsDropZone/container';
 import WrappedAssetsTable from '../AssetsTable/container';
 import WrappedAssetsFilters from '../AssetsFilters/container';
@@ -27,6 +28,7 @@ export default class AssetsPage extends React.Component {
       pageType: pageTypes.SKELETON,
     };
 
+    /* eslint-disable react/no-unused-class-component-methods */
     this.statusAlertRef = null;
     this.deleteButtonRefs = {};
 
@@ -55,7 +57,7 @@ export default class AssetsPage extends React.Component {
       const focusElement = this.getNextFocusElementOnDelete();
       focusElement.focus();
     }
-  }
+  };
 
   getNextFocusElementOnDelete() {
     const { deletedAssetIndex, assetsList } = this.props;
@@ -77,7 +79,7 @@ export default class AssetsPage extends React.Component {
       default:
         throw new Error(`Unknown pageType ${type}.`);
     }
-  }
+  };
 
   renderAssetsDropZone = () => (
     <WrappedAssetsDropZone
@@ -90,7 +92,7 @@ export default class AssetsPage extends React.Component {
   );
 
   renderAssetsPage = () => (
-    <React.Fragment>
+    <>
       <div className="row">
         <div className="col-10 offset-2">
           <div className="row">
@@ -100,10 +102,11 @@ export default class AssetsPage extends React.Component {
               </div>
             </div>
             <div className="col-md-4 text-right">
-              {hasSearchOrFilterApplied(this.props.filtersMetadata.assetTypes,
-                this.props.searchMetadata.search) &&
-                <WrappedAssetsClearFiltersButton className="p-3" />
-              }
+              {hasSearchOrFilterApplied(
+                this.props.filtersMetadata.assetTypes,
+                this.props.searchMetadata.search,
+              )
+                && <WrappedAssetsClearFiltersButton className="p-3" />}
             </div>
           </div>
         </div>
@@ -135,7 +138,7 @@ export default class AssetsPage extends React.Component {
           <WrappedPagination />
         </div>
       </div>
-    </React.Fragment>
+    </>
   );
 
   renderNoAssetsBody = () => (
@@ -154,10 +157,10 @@ export default class AssetsPage extends React.Component {
   );
 
   renderNoResultsBody = () => (
-    <React.Fragment>
+    <>
       <WrappedMessage message={messages.assetsPageNoResultsMessage} tagName="h3" />
       <WrappedAssetsClearFiltersButton />
-    </React.Fragment>
+    </>
   );
 
   renderNoResultsPage = () => (
@@ -183,7 +186,7 @@ export default class AssetsPage extends React.Component {
 
   render() {
     return (
-      <React.Fragment>
+      <>
         <div
           aria-atomic
           aria-live="polite"
@@ -202,8 +205,8 @@ export default class AssetsPage extends React.Component {
               />
             </div>
           </div>
-          {(this.state.pageType === pageTypes.NORMAL ||
-            this.state.pageType === pageTypes.NO_RESULTS) && (
+          {(this.state.pageType === pageTypes.NORMAL
+            || this.state.pageType === pageTypes.NO_RESULTS) && (
             <div className="row">
               <div className="col-12 p-0">
                 <WrappedAssetsSearch />
@@ -212,14 +215,14 @@ export default class AssetsPage extends React.Component {
           )}
           {this.getPage(this.state.pageType)}
         </div>
-      </React.Fragment>
+      </>
     );
   }
 }
 
 AssetsPage.propTypes = {
   // eslint-disable-next-line react/no-unused-prop-types
-  assetsList: PropTypes.arrayOf(PropTypes.object).isRequired,
+  assetsList: PropTypes.arrayOf(PropTypes.shape(ASSET_SHAPE)).isRequired,
   courseDetails: PropTypes.shape({
     lang: PropTypes.string,
     url_name: PropTypes.string,
@@ -235,7 +238,7 @@ AssetsPage.propTypes = {
   ]),
   // eslint-disable-next-line react/no-unused-prop-types
   filtersMetadata: PropTypes.shape({
-    assetTypes: PropTypes.object,
+    assetTypes: PropTypes.shape(ASSET_TYPES_SHAPE),
   }).isRequired,
   // eslint-disable-next-line react/no-unused-prop-types
   searchMetadata: PropTypes.shape({
@@ -243,10 +246,7 @@ AssetsPage.propTypes = {
   }).isRequired,
   getAssets: PropTypes.func.isRequired,
   // eslint-disable-next-line react/no-unused-prop-types
-  status: PropTypes.shape({
-    type: PropTypes.string,
-    response: PropTypes.object,
-  }).isRequired,
+  status: PropTypes.shape(ASSET_STATUS_SHAPE).isRequired,
   uploadSettings: PropTypes.shape({
     max_file_size_in_mbs: PropTypes.number,
   }).isRequired,

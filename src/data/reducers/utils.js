@@ -3,8 +3,8 @@ export const toggleLockAsset = (assets, assetId) => assets.map(asset => (
 
 export const removeLoadingField = (assets, assetId, loadingField) => assets.map((asset) => {
   if (asset.id === assetId) {
-    const loadingFields = asset.loadingFields ?
-      asset.loadingFields.filter(field => field !== loadingField) : asset.loadingFields;
+    const loadingFields = asset.loadingFields
+      ? asset.loadingFields.filter(field => field !== loadingField) : asset.loadingFields;
     return {
       ...asset,
       loadingFields,
@@ -15,8 +15,8 @@ export const removeLoadingField = (assets, assetId, loadingField) => assets.map(
 
 export const addLoadingField = (assets, assetId, loadingField) => assets.map((asset) => {
   if (asset.id === assetId) {
-    const loadingFields = asset.loadingFields ?
-      [...asset.loadingFields, loadingField] : [loadingField];
+    const loadingFields = asset.loadingFields
+      ? [...asset.loadingFields, loadingField] : [loadingField];
     return { ...asset, loadingFields };
   }
   return asset;

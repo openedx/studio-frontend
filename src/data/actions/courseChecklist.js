@@ -15,24 +15,23 @@ export const requestCourseBestPracticesFailure = response => ({
   response,
 });
 
-export const getCourseBestPractices = (parameters, courseDetails) =>
-  (dispatch) => {
-    dispatch(requestingCourseBestPractices());
+export const getCourseBestPractices = (parameters, courseDetails) => (dispatch) => {
+  dispatch(requestingCourseBestPractices());
 
-    return clientApi.requestCourseBestPractices(courseDetails.id, { ...parameters })
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        }
-        throw new Error(response);
-      })
-      .then(json => (
-        dispatch(requestCourseBestPracticesSuccess(json))
-      ))
-      .catch(error => (
-        dispatch(requestCourseBestPracticesFailure(error))
-      ));
-  };
+  return clientApi.requestCourseBestPractices(courseDetails.id, { ...parameters })
+    .then((response) => {
+      if (response.ok) {
+        return response.json();
+      }
+      throw new Error(response);
+    })
+    .then(json => (
+      dispatch(requestCourseBestPracticesSuccess(json))
+    ))
+    .catch(error => (
+      dispatch(requestCourseBestPracticesFailure(error))
+    ));
+};
 
 export const requestingCourseLaunch = () => ({
   type: courseChecklistActions.request.REQUESTING_COURSE_LAUNCH,
@@ -48,21 +47,20 @@ export const requestCourseLaunchFailure = response => ({
   response,
 });
 
-export const getCourseLaunch = (parameters, courseDetails) =>
-  (dispatch) => {
-    dispatch(requestingCourseLaunch());
+export const getCourseLaunch = (parameters, courseDetails) => (dispatch) => {
+  dispatch(requestingCourseLaunch());
 
-    return clientApi.requestCourseLaunch(courseDetails.id, { ...parameters })
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        }
-        throw new Error(response);
-      })
-      .then(json => (
-        dispatch(requestCourseLaunchSuccess(json))
-      ))
-      .catch(error => (
-        dispatch(requestCourseLaunchFailure(error))
-      ));
-  };
+  return clientApi.requestCourseLaunch(courseDetails.id, { ...parameters })
+    .then((response) => {
+      if (response.ok) {
+        return response.json();
+      }
+      throw new Error(response);
+    })
+    .then(json => (
+      dispatch(requestCourseLaunchSuccess(json))
+    ))
+    .catch(error => (
+      dispatch(requestCourseLaunchFailure(error))
+    ));
+};

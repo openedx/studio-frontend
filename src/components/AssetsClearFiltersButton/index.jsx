@@ -5,17 +5,18 @@ import { Button } from '@edx/paragon';
 import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
 import messages from './displayMessages';
 
-
-const AssetsClearFiltersButton = ({ className, clearFilters, courseDetails }) => (
-  <Button
-    className={[className]}
-    buttonType="link"
-    onClick={() => clearFilters(courseDetails)}
-    label={
-      <WrappedMessage message={messages.assetsClearFiltersButtonLabel} />
+function AssetsClearFiltersButton({ className, clearFilters, courseDetails }) {
+  return (
+    <Button
+      className={[className]}
+      buttonType="link"
+      onClick={() => clearFilters(courseDetails)}
+      label={
+        <WrappedMessage message={messages.assetsClearFiltersButtonLabel} />
     }
-  />
-);
+    />
+  );
+}
 
 AssetsClearFiltersButton.propTypes = {
   className: PropTypes.string,

@@ -6,7 +6,7 @@ const path = require('path');
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const webpack = require('webpack');
 
-const commonConfig = require('./webpack.common.config.js');
+const commonConfig = require('./webpack.common.config');
 
 module.exports = Merge.smart(commonConfig, {
   devtool: 'source-map',
@@ -61,7 +61,7 @@ module.exports = Merge.smart(commonConfig, {
                 plugins: () => [
                   /* eslint-disable global-require */
                   require('autoprefixer'),
-                  require('../src/utils/matches-prefixer.js'),
+                  require('../src/utils/matches-prefixer'),
                   require('postcss-pseudo-class-any-link'),
                   require('postcss-initial')(),
                   require('postcss-prepend-selector')({ selector: '#root.SFE ' }),

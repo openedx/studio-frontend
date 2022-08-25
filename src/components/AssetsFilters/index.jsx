@@ -4,37 +4,39 @@ import { CheckBox, CheckBoxGroup } from '@edx/paragon';
 
 import ASSET_TYPES from '../../data/constants/assetTypeFilters';
 import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
+import { ASSET_TYPES_SHAPE } from '../../utils/constants';
 import styles from './AssetsFilters.scss';
 import messages from './displayMessages';
 
-const AssetsFilters = ({ assetsFilters, updateFilter, courseDetails }) => (
-  <div role="group" aria-labelledby="filter-label">
-    <WrappedMessage message={messages.assetsFiltersSectionLabel}>
-      {
-        displayText =>
-          <h4 id="filter-label" className={styles['filter-heading']} data-identifier="asset-filters-header">{displayText}</h4>
+function AssetsFilters({ assetsFilters, updateFilter, courseDetails }) {
+  return (
+    <div role="group" aria-labelledby="filter-label">
+      <WrappedMessage message={messages.assetsFiltersSectionLabel}>
+        {
+        displayText => <h4 id="filter-label" className={styles['filter-heading']} data-identifier="asset-filters-header">{displayText}</h4>
       }
-    </WrappedMessage>
-    <div className={styles['filter-set']} data-identifier="asset-filters">
-      <CheckBoxGroup>
-        {ASSET_TYPES.map(type => (
-          <CheckBox
-            key={type.key}
-            id={type.key}
-            name={type.key}
-            label={<WrappedMessage message={messages[`assetsFilters${type.displayName}`]} />}
-            checked={assetsFilters.assetTypes[type.key]}
-            onChange={(checked) => { updateFilter(type.key, checked, courseDetails); }}
-          />
-        ))}
-      </CheckBoxGroup>
+      </WrappedMessage>
+      <div className={styles['filter-set']} data-identifier="asset-filters">
+        <CheckBoxGroup>
+          {ASSET_TYPES.map(type => (
+            <CheckBox
+              key={type.key}
+              id={type.key}
+              name={type.key}
+              label={<WrappedMessage message={messages[`assetsFilters${type.displayName}`]} />}
+              checked={assetsFilters.assetTypes[type.key]}
+              onChange={(checked) => { updateFilter(type.key, checked, courseDetails); }}
+            />
+          ))}
+        </CheckBoxGroup>
+      </div>
     </div>
-  </div>
-);
+  );
+}
 
 AssetsFilters.propTypes = {
   assetsFilters: PropTypes.shape({
-    assetTypes: PropTypes.object,
+    assetTypes: PropTypes.shape(ASSET_TYPES_SHAPE),
   }).isRequired,
   courseDetails: PropTypes.shape({
     lang: PropTypes.string,

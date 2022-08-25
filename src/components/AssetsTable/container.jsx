@@ -1,7 +1,9 @@
 import { connect } from 'react-redux';
 
 import AssetsTable from '.';
-import { clearAssetsStatus, deleteAsset, sortUpdate, stageAssetDeletion, toggleLockAsset, unstageAssetDeletion } from '../../data/actions/assets';
+import {
+  clearAssetsStatus, deleteAsset, sortUpdate, stageAssetDeletion, toggleLockAsset, unstageAssetDeletion,
+} from '../../data/actions/assets';
 
 const mapStateToProps = state => ({
   assetsList: state.assets,
@@ -19,8 +21,7 @@ const mapDispatchToProps = dispatch => ({
   deleteAsset: (asset, courseDetails) => dispatch(deleteAsset(asset, courseDetails)),
   stageAssetDeletion: (asset, index) => dispatch(stageAssetDeletion(asset, index)),
   toggleLockAsset: (asset, courseDetails) => dispatch(toggleLockAsset(asset, courseDetails)),
-  updateSort: (sortKey, sortDirection, courseDetails) =>
-    dispatch(sortUpdate(sortKey, sortDirection, courseDetails)),
+  updateSort: (sortKey, sortDirection, courseDetails) => dispatch(sortUpdate(sortKey, sortDirection, courseDetails)),
   unstageAssetDeletion: () => dispatch(unstageAssetDeletion()),
 });
 

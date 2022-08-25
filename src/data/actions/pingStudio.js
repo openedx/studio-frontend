@@ -7,7 +7,5 @@ export const pingResponse = response => ({
   status: response.status,
 });
 
-export const pingStudio = () =>
-  dispatch =>
-    pingStudioHome()
-      .then(response => dispatch(pingResponse(response)));
+export const pingStudio = () => dispatch => pingStudioHome()
+  .then(response => dispatch(pingResponse(response)));

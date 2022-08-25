@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import { checklistLoading } from '../../data/constants/loadingTypes';
 import { launchChecklist, bestPracticesChecklist } from '../../utils/CourseChecklist/courseChecklistData';
+import { COURSE_BEST_PRACTICES_DATA_SHAPE } from '../../utils/constants';
 import messages from './displayMessages';
 import WrappedCourseChecklist from '../CourseChecklist/container';
 import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
@@ -22,15 +23,13 @@ export default class CourseChecklistPage extends React.Component {
   }
 
   getAriaLiveRegion = (isCourseLaunchChecklistLoading, isCourseBestPracticeChecklistLoading) => {
-    const courseLaunchLoadingMessage =
-      isCourseLaunchChecklistLoading ?
-        <WrappedMessage message={messages.launchChecklistLoadingLabel} /> :
-        <WrappedMessage message={messages.launchChecklistDoneLoadingLabel} />;
+    const courseLaunchLoadingMessage = isCourseLaunchChecklistLoading
+      ? <WrappedMessage message={messages.launchChecklistLoadingLabel} />
+      : <WrappedMessage message={messages.launchChecklistDoneLoadingLabel} />;
 
-    const courseBestPracticesLoadingMessage =
-      isCourseBestPracticeChecklistLoading ?
-        <WrappedMessage message={messages.bestPracticesChecklistLoadingLabel} /> :
-        <WrappedMessage message={messages.bestPracticesChecklistDoneLoadingLabel} />;
+    const courseBestPracticesLoadingMessage = isCourseBestPracticeChecklistLoading
+      ? <WrappedMessage message={messages.bestPracticesChecklistLoadingLabel} />
+      : <WrappedMessage message={messages.bestPracticesChecklistDoneLoadingLabel} />;
 
     return (
       <div className="sr-only" aria-live="polite" role="status">
@@ -38,15 +37,14 @@ export default class CourseChecklistPage extends React.Component {
         {this.props.studioDetails.enable_quality ? courseBestPracticesLoadingMessage : null}
       </div>
     );
-  }
-
+  };
 
   render() {
-    const isCourseBestPracticeChecklistLoading =
-      this.props.loadingChecklists.includes(checklistLoading.COURSE_BEST_PRACTICES);
+    const isCourseBestPracticeChecklistLoading = this.props.loadingChecklists.includes(
+      checklistLoading.COURSE_BEST_PRACTICES,
+    );
 
-    const isCourseLaunchChecklistLoading =
-      this.props.loadingChecklists.includes(checklistLoading.COURSE_LAUNCH);
+    const isCourseLaunchChecklistLoading = this.props.loadingChecklists.includes(checklistLoading.COURSE_LAUNCH);
 
     const courseBestPracticesChecklist = (
       <WrappedCourseChecklist
@@ -76,8 +74,8 @@ export default class CourseChecklistPage extends React.Component {
           </div>
         </div>
         {
-          this.props.studioDetails.enable_quality ?
-            (
+          this.props.studioDetails.enable_quality
+            ? (
               <div className="row ">
                 <div className="col">
                   {courseBestPracticesChecklist}
@@ -92,19 +90,7 @@ export default class CourseChecklistPage extends React.Component {
 }
 
 CourseChecklistPage.propTypes = {
-  courseBestPracticesData: PropTypes.shape({
-    sections: PropTypes.shape({
-      number_with_highlights: PropTypes.number,
-      total_visible: PropTypes.number,
-      total_number: PropTypes.number,
-      highlights_enabled: PropTypes.bool,
-      highlights_active_for_course: PropTypes.bool,
-    }),
-    subsections: PropTypes.object,
-    units: PropTypes.object,
-    videos: PropTypes.object,
-    is_self_paced: PropTypes.bool,
-  }).isRequired,
+  courseBestPracticesData: PropTypes.shape(COURSE_BEST_PRACTICES_DATA_SHAPE).isRequired,
   courseLaunchData: PropTypes.shape({
     assignments: PropTypes.shape({
       total_number: PropTypes.number,
@@ -141,7 +127,7 @@ CourseChecklistPage.propTypes = {
       display_course_number: PropTypes.string,
       enable_quality: PropTypes.bool,
       id: PropTypes.string,
-      is_course_self_paced: PropTypes.boolean,
+      is_course_self_paced: PropTypes.bool,
       lang: PropTypes.string,
       name: PropTypes.string,
       num: PropTypes.string,
@@ -149,7 +135,7 @@ CourseChecklistPage.propTypes = {
       revision: PropTypes.string,
       url_name: PropTypes.string,
     }),
-    enable_quality: PropTypes.boolean,
+    enable_quality: PropTypes.bool,
     help_tokens: PropTypes.objectOf(PropTypes.string),
     lang: PropTypes.string,
   }).isRequired,

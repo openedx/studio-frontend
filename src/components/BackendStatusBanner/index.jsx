@@ -9,13 +9,6 @@ import statusMap from './statusMap.json';
 import { pingStudio } from '../../data/actions/pingStudio';
 
 class BackendStatusBanner extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      apiConnectionStatus: 200,
-    };
-  }
-
   componentDidMount() {
     this.props.pingStudio();
   }
@@ -36,9 +29,9 @@ class BackendStatusBanner extends React.Component {
 
   render() {
     const status = statusMap[this.props.connectionStatus];
-    return (!status || this.props.connectionStatus === 200) ?
-      null :
-      (
+    return (!status || this.props.connectionStatus === 200)
+      ? null
+      : (
         <div
           className={classNames(
             styles['api-error'],
@@ -68,12 +61,10 @@ BackendStatusBanner.defaultProps = {
   connectionStatus: null,
 };
 
-const WrappedBackendStatusBanner = connect(
-  state => ({
-    connectionStatus: state.connectionStatus,
-  }), dispatch => ({
-    pingStudio: () => dispatch(pingStudio()),
-  }),
-)(BackendStatusBanner);
+const WrappedBackendStatusBanner = connect(state => ({
+  connectionStatus: state.connectionStatus,
+}), dispatch => ({
+  pingStudio: () => dispatch(pingStudio()),
+}))(BackendStatusBanner);
 
 export default WrappedBackendStatusBanner;

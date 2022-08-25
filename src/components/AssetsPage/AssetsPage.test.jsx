@@ -383,6 +383,14 @@ describe('<AssetsPage />', () => {
     normalAssetsPageRenderTest();
   });
   describe('onDeleteStatusAlertClose', () => {
+    const focusSpy = jest.fn();
+    const deleteButtonRefs = testAssetsList
+      .map(asset => asset.id)
+      .reduce(
+        // eslint-disable-next-line no-param-reassign
+        ((memo, id) => { memo[id] = { focus: focusSpy }; return memo; }),
+        {},
+      );
     it('calls clearAssetDeletion prop', () => {
       const clearAssetDeletionSpy = jest.fn();
 
@@ -391,7 +399,9 @@ describe('<AssetsPage />', () => {
         clearAssetDeletion: clearAssetDeletionSpy,
         deletedAsset: testAssetsList[0],
         deletedAssetIndex: 0,
+        assetsList: testAssetsList,
       });
+      wrapper.instance().deleteButtonRefs = deleteButtonRefs;
 
       wrapper.instance().onDeleteStatusAlertClose();
       expect(clearAssetDeletionSpy).toHaveBeenCalledTimes(1);
@@ -414,7 +424,7 @@ describe('<AssetsPage />', () => {
 
     testData.forEach((test) => {
       it(`returns the correct element to focus on when element at index ${test.deletedAssetIndex} deleted`, () => {
-        const deletedAssetIndex = test.deletedAssetIndex;
+        const { deletedAssetIndex } = test;
 
         wrapper.setProps({
           assetsList: testAssetsList,

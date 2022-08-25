@@ -4,10 +4,11 @@ const Merge = require('webpack-merge');
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
-const apiEndpoints = require('../src/data/api/endpoints.js');
-const commonConfig = require('./webpack.common.config.js');
+const apiEndpoints = require('../src/data/api/endpoints');
+const commonConfig = require('./webpack.common.config');
 
-const targetUrl = 'http://edx.devstack.studio:18010';
+// we should move it to ENV
+const targetUrl = 'http://localhost:18010';
 
 module.exports = Merge.smart(commonConfig, {
   mode: 'development',
@@ -45,7 +46,7 @@ module.exports = Merge.smart(commonConfig, {
               plugins: () => [
                 /* eslint-disable global-require */
                 require('autoprefixer'),
-                require('../src/utils/matches-prefixer.js'),
+                require('../src/utils/matches-prefixer'),
                 require('postcss-pseudo-class-any-link'),
                 require('postcss-initial')(),
                 require('postcss-prepend-selector')({ selector: '#root.SFE ' }),
@@ -109,13 +110,15 @@ module.exports = Merge.smart(commonConfig, {
     headers: {
       'Access-Control-Allow-Origin': '*',
     },
+    publicPath: 'http://0.0.0.0:18011',
+    contentBase: './public',
+    hot: true,
     overlay: true,
-    proxy: Object.keys(apiEndpoints).reduce(
-      (map, endpoint) => {
-        map[apiEndpoints[endpoint]] = { // eslint-disable-line no-param-reassign
-          target: targetUrl,
-        };
-        return map;
-      }, {}),
+    proxy: Object.keys(apiEndpoints).reduce((map, endpoint) => {
+      map[apiEndpoints[endpoint]] = { // eslint-disable-line no-param-reassign
+        target: targetUrl,
+      };
+      return map;
+    }, {}),
   },
 });

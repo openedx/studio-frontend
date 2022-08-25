@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 
-import EditImageModal from '.';
+import EditImageModal from './index';
 import {
   clearAssetsStatus,
   clearSelectedAsset,
@@ -9,7 +9,6 @@ import {
   searchUpdate,
   selectAsset,
 } from '../../data/actions/assets';
-
 
 // Create an EditImageModal that is not aware of the Images filter.
 // This is so that the page will display a "noAssets" list instead of a "noResults" list when the

@@ -5,6 +5,7 @@ import { FormattedNumber } from 'react-intl';
 
 import { assetActions } from '../../data/constants/actionTypes';
 import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
+import { ASSET_STATUS_SHAPE } from '../../utils/constants';
 import messages from './displayMessages';
 
 const defaultState = {
@@ -22,12 +23,6 @@ export default class AssetsStatusAlert extends React.Component {
     this.state = defaultState;
 
     this.statusAlertRef = {};
-
-    this.closeStatusAlert = this.closeStatusAlert.bind(this);
-    this.updateStatusAlertFields = this.updateStatusAlertFields.bind(this);
-    this.updateUploadSuccessCount = this.updateUploadSuccessCount.bind(this);
-
-    this.closeDeleteStatus = this.closeDeleteStatus.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -35,7 +30,12 @@ export default class AssetsStatusAlert extends React.Component {
     this.updateStatusAlertFields(assetsStatus, deletedAsset);
   }
 
-  updateStatusAlertFields(assetsStatus, deletedAsset) {
+  closeDeleteStatus = () => {
+    this.closeStatusAlert();
+    this.props.onDeleteStatusAlertClose();
+  };
+
+  updateStatusAlertFields = (assetsStatus, deletedAsset) => {
     const assetName = deletedAsset.display_name;
     let alertDialog;
     let alertType;
@@ -141,25 +141,20 @@ export default class AssetsStatusAlert extends React.Component {
       },
     });
     this.statusAlertRef.focus();
-  }
+  };
 
-  closeDeleteStatus = () => {
-    this.closeStatusAlert();
-    this.props.onDeleteStatusAlertClose();
-  }
-
-  closeStatusAlert() {
+  closeStatusAlert = () => {
     this.props.clearAssetsStatus();
 
     // clear out all status related state
     this.setState(defaultState);
-  }
+  };
 
-  updateUploadSuccessCount() {
-    this.setState({
-      uploadSuccessCount: this.state.uploadSuccessCount + 1,
-    });
-  }
+  updateUploadSuccessCount = () => {
+    this.setState(prevState => ({
+      uploadSuccessCount: prevState.uploadSuccessCount + 1,
+    }));
+  };
 
   render() {
     const { assetsStatus, statusAlertRef } = this.props;
@@ -186,10 +181,7 @@ export default class AssetsStatusAlert extends React.Component {
 }
 
 AssetsStatusAlert.propTypes = {
-  assetsStatus: PropTypes.shape({
-    response: PropTypes.object,
-    type: PropTypes.string,
-  }).isRequired,
+  assetsStatus: PropTypes.shape(ASSET_STATUS_SHAPE),
   clearAssetsStatus: PropTypes.func.isRequired,
   deletedAsset: PropTypes.shape({
     display_name: PropTypes.string,

@@ -30,89 +30,88 @@ export default class AssetsDropZone extends React.Component {
     } else {
       this.props.uploadAssets(acceptedFiles, this.props.courseDetails);
     }
-  }
+  };
 
   setDropZoneRef = (ref) => {
     this.dropZoneRef = ref;
-  }
+  };
 
   setUploadButtonRef = (ref) => {
     this.props.buttonRef(ref);
-  }
+  };
 
   handleClick = () => {
     this.dropZoneRef.open();
-  }
+  };
 
   render() {
     return (
       <WrappedMessage message={messages.assetsDropZoneAriaLabel}>
-        { regionLabel =>
-          (
-            <div role="region" aria-label={regionLabel}>
-              <Dropzone
-                accept={this.props.acceptedFileTypes}
-                activeClassName={styles['drop-active']}
-                className={classNames([
-                  this.props.compactStyle ? styles['drop-zone-compact'] : styles['drop-zone'],
-                  styles['center-text'],
-                ])}
-                data-identifier="asset-drop-zone"
-                disableClick
-                maxSize={this.dropZoneMaxFileSizeBytes}
-                onDrop={this.onDrop}
-                ref={this.setDropZoneRef}
+        { regionLabel => (
+          <div role="region" aria-label={regionLabel}>
+            <Dropzone
+              accept={this.props.acceptedFileTypes}
+              activeClassName={styles['drop-active']}
+              className={classNames([
+                this.props.compactStyle ? styles['drop-zone-compact'] : styles['drop-zone'],
+                styles['center-text'],
+              ])}
+              data-identifier="asset-drop-zone"
+              disableClick
+              maxSize={this.dropZoneMaxFileSizeBytes}
+              onDrop={this.onDrop}
+              ref={this.setDropZoneRef}
+            >
+              <div className={styles['center-text']} data-identifier="asset-drop-zone-icon">
+                <span
+                  aria-hidden
+                  className={classNames(
+                    styles['center-text'],
+                    FontAwesomeStyles.fa,
+                    FontAwesomeStyles['fa-cloud-upload'],
+                    FontAwesomeStyles['fa-3x'],
+                  )}
+                />
+              </div>
+              <WrappedMessage message={messages.assetsDropZoneHeader}>
+                { displayText => (
+                  <h2 data-identifier="asset-drop-zone-header">{displayText}</h2>
+                )}
+              </WrappedMessage>
+              <div className={styles['center-text']}>
+                <WrappedMessage message={messages.assetsDropZoneBrowseLabel}>
+                  { displayText => (
+                    <Button
+                      aria-describedby="asset-drop-zone-max-file-size-label"
+                      className={['btn', 'btn-outline-primary']}
+                      data-identifier="asset-drop-zone-browse-button"
+                      label={displayText}
+                      onClick={this.handleClick}
+                      inputRef={this.setUploadButtonRef}
+                    />
+                  )}
+                </WrappedMessage>
+              </div>
+              <WrappedMessage
+                message={messages.assetsDropZoneMaxFileSizeLabel}
+                values={{
+                  maxFileSizeMB: this.props.maxFileSizeMB,
+                }}
               >
-                <div className={styles['center-text']} data-identifier="asset-drop-zone-icon">
-                  <span
+                { displayText => (
+                  <p
                     aria-hidden
-                    className={classNames(
-                      styles['center-text'],
-                      FontAwesomeStyles.fa,
-                      FontAwesomeStyles['fa-cloud-upload'],
-                      FontAwesomeStyles['fa-3x'])}
-                  />
-                </div>
-                <WrappedMessage message={messages.assetsDropZoneHeader}>
-                  { displayText => (
-                    <h2 data-identifier="asset-drop-zone-header">{displayText}</h2>
-                  )}
-                </WrappedMessage>
-                <div className={styles['center-text']}>
-                  <WrappedMessage message={messages.assetsDropZoneBrowseLabel} >
-                    { displayText => (
-                      <Button
-                        aria-describedby="asset-drop-zone-max-file-size-label"
-                        className={['btn', 'btn-outline-primary']}
-                        data-identifier="asset-drop-zone-browse-button"
-                        label={displayText}
-                        onClick={this.handleClick}
-                        inputRef={this.setUploadButtonRef}
-                      />
-                    )}
-                  </WrappedMessage>
-                </div>
-                <WrappedMessage
-                  message={messages.assetsDropZoneMaxFileSizeLabel}
-                  values={{
-                    maxFileSizeMB: this.props.maxFileSizeMB,
-                  }}
-                >
-                  { displayText => (
-                    <p
-                      aria-hidden
-                      className={styles['center-text']}
-                      data-identifier="asset-drop-zone-max-file-size-label"
-                      id="asset-drop-zone-max-file-size-label"
-                    >
-                      {displayText}
-                    </p>
-                  )}
-                </WrappedMessage>
-              </Dropzone>
-            </div>
-          )
-        }
+                    className={styles['center-text']}
+                    data-identifier="asset-drop-zone-max-file-size-label"
+                    id="asset-drop-zone-max-file-size-label"
+                  >
+                    {displayText}
+                  </p>
+                )}
+              </WrappedMessage>
+            </Dropzone>
+          </div>
+        )}
       </WrappedMessage>
     );
   }

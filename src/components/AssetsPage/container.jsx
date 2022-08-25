@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import AssetsPage from '.';
 import { clearAssetDeletion, getAssets } from '../../data/actions/assets';
 
-
 const mapStateToProps = state => ({
   assetsList: state.assets,
   assetsStatus: state.metadata.status,
