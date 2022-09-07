@@ -1,5 +1,6 @@
 UNAME := $(shell uname)
-
+transifex_resource = studio-frontend
+transifex_langs = "ar,fr,es_419,zh_CN,pt,it,de,uk,ru,hi,fr_CA"
 i18n = ./src/data/i18n/default
 transifex_input = $(i18n)/transifex_input.json
 
@@ -76,8 +77,8 @@ i18n.preprocess: ## gather all display strings into a single file
 i18n.pre_validate: | i18n.extract i18n.preprocess
 	git diff --exit-code ./src/data/i18n/default/transifex_input.json
 
-tx_url1 = https://www.transifex.com/api/2/project/edx-platform/resource/studio-frontend/translation/en/strings/
-tx_url2 = https://www.transifex.com/api/2/project/edx-platform/resource/studio-frontend/source/
+tx_url1 = https://www.transifex.com/api/2/project/edx-platform/resource/${transifex_resource}/translation/en/strings/
+tx_url2 = https://www.transifex.com/api/2/project/edx-platform/resource/${transifex_resource}/source/
 # Pushes translations to Transifex.  You must run make extract_translations first.
 push_translations:
 
@@ -90,7 +91,7 @@ push_translations:
 
 pull_translations: ## must be exactly this name for edx tooling support, see ecommerce-scripts/transifex/pull.py
 	# explicit list of languages defined here and in currentlySupportedLangs.jsx
-	tx pull -f --mode reviewed --languages="ar,fr,es_419,zh_CN"
+	tx pull -f --mode reviewed --languages=$(transifex_langs)
 
 copy-dist:
 	for f in dist/*; do docker cp $$f edx.devstack.studio:/edx/app/edxapp/edx-platform/node_modules/@edx/studio-frontend/dist/; done

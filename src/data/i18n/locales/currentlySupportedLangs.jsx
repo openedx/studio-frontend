@@ -1,28 +1,28 @@
-import arData from 'react-intl/locale-data/ar';
-import enData from 'react-intl/locale-data/en';
-import esData from 'react-intl/locale-data/es';
-import frData from 'react-intl/locale-data/fr';
-import zhData from 'react-intl/locale-data/zh';
+import arMessages from './ar.json';
+import frMessages from './fr.json';
+import es419Messages from './es_419.json';
+import zhcnMessages from './zh_CN.json';
+import ptMessages from './pt.json';
+import itMessages from './it.json';
+import ukMessages from './uk.json';
+import deMessages from './de.json';
+import ruMessages from './ru.json';
+import hiMessages from './hi.json';
+import frCAMessages from './fr_CA.json';
+// no need to import en messages-- they are in the defaultMessage field
 
-import './ar.json';
-import './es_419.json';
-import './fr.json';
-import './zh_CN.json';
-
-// Methodology: These languages (plus the default english) are the only ones that appear on edx.org
-// This was determined by inspecting the 'released_languages' method in the following file:
-//    https://github.com/edx/edx-platform/blob/master/openedx/core/djangoapps/lang_pref/api.py
-//
-// Further, I hit the read replica in order to confirm the live values, which are currently:
-//    en, fr, zh-cn, es-419, ar
-// If these values change, please also update the pull_translations command in Makefile
-
-const localeDataMap = {
-  'ar': arData,
-  'en': enData,
-  'es-419': esData,
-  'fr': frData,
-  'zh-cn': zhData,
+const messages = {
+  'ar': arMessages,
+  'es-419': es419Messages,
+  'fr': frMessages,
+  'zh-cn': zhcnMessages,
+  'pt': ptMessages,
+  'it': itMessages,
+  'de': deMessages,
+  'hi': hiMessages,
+  'fr-ca': frCAMessages,
+  'ru': ruMessages,
+  'uk': ukMessages,
 };
 
-export default localeDataMap;
+export default messages;
