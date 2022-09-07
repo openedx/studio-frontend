@@ -15,7 +15,7 @@ Platform](https://engineering.edx.org/studio-frontend-developing-frontend-separa
 
 Requirements:
 * [Docker 17.06 CE+](https://docs.docker.com/engine/installation/), which should come with [docker-compose](https://docs.docker.com/compose/install/) built in.
-* A working, running [edX devstack](https://github.com/edx/devstack)
+* A working, running [edX devstack](https://github.com/openedx/devstack)
 
 To install and run locally:
 ```
@@ -61,7 +61,7 @@ The development server will run regardless of whether devstack is running along 
 ## Development Inside Devstack Studio
 
 To load studio-frontend components from the webpack-dev-server inside your
-studio instance running in [Devstack](https://github.com/edx/devstack):
+studio instance running in [Devstack](https://github.com/openedx/devstack):
 
 1. In your devstack edx-platform folder, create `cms/envs/private.py` if it
    does not exist already.
@@ -164,7 +164,7 @@ This all happens automagically on merges to master, hooray! There are just a few
 
 ### What is the latest version?
 
-Check [github](https://github.com/edx/studio-frontend/releases), [npm](https://www.npmjs.com/package/@edx/studio-frontend), or the npm badge at [the top of this README](https://github.com/edx/studio-frontend#studio-frontend). `package.json` no longer contains the correct version (on Github), as it creates an odd loop of "something merged to master, run `semantic-release`" -> "`semantic-release` modified `package.json`, better check that in and make a PR" -> "a PR merged to master, run `semantic-release`", etc. This is the [default behavior for `semantic-release`](https://github.com/semantic-release/semantic-release/blob/caribou/docs/support/FAQ.md#why-is-the-packagejsons-version-not-updated-in-my-repository).
+Check [github](https://github.com/openedx/studio-frontend/releases), [npm](https://www.npmjs.com/package/@edx/studio-frontend), or the npm badge at [the top of this README](https://github.com/openedx/studio-frontend#studio-frontend). `package.json` no longer contains the correct version (on Github), as it creates an odd loop of "something merged to master, run `semantic-release`" -> "`semantic-release` modified `package.json`, better check that in and make a PR" -> "a PR merged to master, run `semantic-release`", etc. This is the [default behavior for `semantic-release`](https://github.com/semantic-release/semantic-release/blob/caribou/docs/support/FAQ.md#why-is-the-packagejsons-version-not-updated-in-my-repository).
 
 ### Commit message linting
 
@@ -188,39 +188,39 @@ If you are making changes to the Dockerfile or docker-compose.yml you may want t
 There's a bunch of boilerplate that needs to be created to set up a new
 studio-frontend app that can be independently embedded into a page in Studio.
 See the
-[openedx-workshop](https://github.com/edx/studio-frontend/compare/openedx-workshop)
+[openedx-workshop](https://github.com/openedx/studio-frontend/compare/openedx-workshop)
 branch, which demonstrates setting up a very basic HelloWorld app.
 
 * Create a [new webpack
-  entry](https://github.com/edx/studio-frontend/compare/openedx-workshop#diff-56ee2db4e3db0c7354bb996b003e70beR12)
+  entry](https://github.com/openedx/studio-frontend/compare/openedx-workshop#diff-56ee2db4e3db0c7354bb996b003e70beR12)
 * Add a [new
-  HtmlWebpackPlugin](https://github.com/edx/studio-frontend/compare/openedx-workshop#diff-d5d0cff71a84339db815178b7a3c23fcR95)
+  HtmlWebpackPlugin](https://github.com/openedx/studio-frontend/compare/openedx-workshop#diff-d5d0cff71a84339db815178b7a3c23fcR95)
   to create a new page in the development server to display the component.
 * Create a [new app root index
-  file](https://github.com/edx/studio-frontend/compare/openedx-workshop#diff-78a72e926d58cefa762dc661a8745f68R1)
+  file](https://github.com/openedx/studio-frontend/compare/openedx-workshop#diff-78a72e926d58cefa762dc661a8745f68R1)
   which will initialize the app.
 * For any new components that the app will use, create a new folder under
   `src/components/` with an upper camel case name.
     * For each component, create [an
-      index.jsx](https://github.com/edx/studio-frontend/compare/openedx-workshop#diff-7fea6fccbbbbf8e8648b63713da96714R1)
+      index.jsx](https://github.com/openedx/studio-frontend/compare/openedx-workshop#diff-7fea6fccbbbbf8e8648b63713da96714R1)
       to render the component.
     * A [test
-      file](https://github.com/edx/studio-frontend/compare/openedx-workshop#diff-4cd7210c4c2b6f2c3b6b2a0c1b67b2e5R1)
+      file](https://github.com/openedx/studio-frontend/compare/openedx-workshop#diff-4cd7210c4c2b6f2c3b6b2a0c1b67b2e5R1)
       named with a `.test.jsx` extension that uses Jest and Enzyme to unit test
       the component.
     * If the component contains any display strings, a
-      [displayMessages.jsx](https://github.com/edx/studio-frontend/compare/openedx-workshop#diff-e214e9bb31c5529b699ebb2e86be2cbfR1)
+      [displayMessages.jsx](https://github.com/openedx/studio-frontend/compare/openedx-workshop#diff-e214e9bb31c5529b699ebb2e86be2cbfR1)
       file.
     * If the component needs any styling, a
-      [`.scss`](https://github.com/edx/studio-frontend/compare/openedx-workshop#diff-5ce63f6d51132465b6b5d8980cc3dfc8R1)
+      [`.scss`](https://github.com/openedx/studio-frontend/compare/openedx-workshop#diff-5ce63f6d51132465b6b5d8980cc3dfc8R1)
       file.
 * To embed the app inside Studio:
     * Update the [version of
-      studio-frontend](https://github.com/edx/edx-platform/blob/master/package.json)
+      studio-frontend](https://github.com/openedx/edx-platform/blob/master/package.json)
       in edx-platform.
     * Include the component's built CSS and JS in a template using the
       [`studiofrontend` Mako template
-      tag](https://github.com/edx/edx-platform/compare/openedx-workshop-sfe).
+      tag](https://github.com/openedx/edx-platform/compare/openedx-workshop-sfe).
 
 ## CSS
 
@@ -277,16 +277,16 @@ legacy Studio styles and would not need to apply any resets.
 
 ## Getting Help
 
-If you need assistance with this repository please see our documentation for [Getting Help](https://github.com/edx/edx-platform#getting-help) for more information.
+If you need assistance with this repository please see our documentation for [Getting Help](https://github.com/openedx/edx-platform#getting-help) for more information.
 
 
 ## Issue Tracker
 
-We use JIRA for our issue tracker, not GitHub Issues. Please see our documentation for [tracking issues](https://github.com/edx/edx-platform#issue-tracker) for more information on how to track issues that we will be able to respond to and track accurately. Thanks!
+We use JIRA for our issue tracker, not GitHub Issues. Please see our documentation for [tracking issues](https://github.com/openedx/edx-platform#issue-tracker) for more information on how to track issues that we will be able to respond to and track accurately. Thanks!
 
 ## How to Contribute
 
-Contributions are very welcome, but for legal reasons, you must submit a signed [individual contributor's agreement](https://github.com/edx/edx-platform/blob/master/CONTRIBUTING.rst#step-1-sign-a-contribution-agreement) before we can accept your contribution. See our [CONTRIBUTING](https://github.com/edx/edx-platform/blob/master/CONTRIBUTING.rst) file for more information -- it also contains guidelines for how to maintain high code quality, which will make your contribution more likely to be accepted.
+Contributions are very welcome, but for legal reasons, you must submit a signed [individual contributor's agreement](https://github.com/openedx/edx-platform/blob/master/CONTRIBUTING.rst#step-1-sign-a-contribution-agreement) before we can accept your contribution. See our [CONTRIBUTING](https://github.com/openedx/edx-platform/blob/master/CONTRIBUTING.rst) file for more information -- it also contains guidelines for how to maintain high code quality, which will make your contribution more likely to be accepted.
 
 
 ## Reporting Security Issues
