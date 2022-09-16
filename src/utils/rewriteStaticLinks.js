@@ -1,6 +1,6 @@
 // Utility method for replacing a portion of a string.
 // An ES6 copy of the same function in edx-platform:
-// https://github.com/edx/edx-platform/blob/d14ec65912ef3fb5bb3284b81ccdf60d59b34c87/common/static/js/src/utility.js#L21-L39
+// https://github.com/openedx/edx-platform/blob/d14ec65912ef3fb5bb3284b81ccdf60d59b34c87/common/static/js/src/utility.js#L21-L39
 export default (content, from, to) => {
   if (from === null || to === null) {
     return content;

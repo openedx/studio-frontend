@@ -8,7 +8,7 @@ transifex_temp = ./temp/babel-plugin-react-intl
 
 export TRANSIFEX_RESOURCE = studio-frontend
 
-# Help message borrowed from https://github.com/edx/devstack, which borrowed it from https://github.com/pydanny/cookiecutter-djangopackage.
+# Help message borrowed from https://github.com/openedx/devstack, which borrowed it from https://github.com/pydanny/cookiecutter-djangopackage.
 help: ## display a help message
 	@echo $(MAKEFILE_LIST)
 	@echo "Please use \`make <target>' where <target> is one of"
