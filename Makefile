@@ -76,8 +76,6 @@ i18n.preprocess: ## gather all display strings into a single file
 i18n.pre_validate: | i18n.extract i18n.preprocess
 	git diff --exit-code ./src/data/i18n/default/transifex_input.json
 
-tx_url1 = https://www.transifex.com/api/2/project/edx-platform/resource/studio-frontend/translation/en/strings/
-tx_url2 = https://www.transifex.com/api/2/project/edx-platform/resource/studio-frontend/source/
 # Pushes translations to Transifex.  You must run make extract_translations first.
 push_translations:
 
