@@ -118,7 +118,7 @@
       "<rootDir>/src/editImageModalIndex.jsx",
       "<rootDir>/src/components/BackendStatusBanner/",
       "<rootDir>/src/.*/container.jsx",
-      "<rootDir>/src/data/i18n/locales/",
+      "<rootDir>/src/i18n/",
       "<rootDir>/src/utils/matches-prefixer.js",
       "<rootDir>/src/utils/mockPortals.js",
       "<rootDir>/src/utils/mockQuerySelector.js"

@@ -1,7 +1,8 @@
 UNAME := $(shell uname)
 
-i18n = ./src/data/i18n/default
+i18n = ./src/i18n
 transifex_input = $(i18n)/transifex_input.json
+transifex_utils = ./node_modules/.bin/edx_reactifex
 
 # This directory must match .babelrc .
 transifex_temp = ./temp/babel-plugin-react-intl
@@ -63,18 +64,21 @@ asset-page-flag: ## insert a waffle flag into local docker devstack
 	docker exec -t edx.devstack.studio bash -c 'source /edx/app/edxapp/edxapp_env && cd /edx/app/edxapp/edx-platform && echo "from cms.djangoapps.contentstore.config.models import NewAssetsPageFlag; NewAssetsPageFlag.objects.all().delete(); NewAssetsPageFlag.objects.create(enabled=True, enabled_for_all_courses=True);" | ./manage.py lms --settings=devstack_docker shell && echo "NewAssetsPageFlag inserted!"'
 
 i18n.docker: ## what devs should do from their host machines
-	docker exec -t dahlia.studio-frontend bash -c 'make i18n.extract && make i18n.preprocess'
+	docker exec -t dahlia.studio-frontend bash -c 'make i18n.extract && make i18n.concat'
 
-extract_translations: | requirements i18n.extract i18n.preprocess
+extract_translations: | requirements i18n.extract i18n.concat
 
 i18n.extract: ## move display strings from displayMessages.jsx to displayMessages.json
+	rm -rf $(transifex_temp)
 	npm run-script i18n_extract
 
-i18n.preprocess: ## gather all display strings into a single file
-	$$(npm bin)/edx_reactifex $(transifex_temp) $(transifex_input)
+i18n.concat:
+	# Gathering JSON messages into one file...
+	mkdir -p $(i18n)
+	$(transifex_utils) $(transifex_temp) $(transifex_input)
 
-i18n.pre_validate: | i18n.extract i18n.preprocess
-	git diff --exit-code ./src/data/i18n/default/transifex_input.json
+i18n.pre_validate: | i18n.extract i18n.concat
+	git diff --exit-code $(transifex_input)
 
 tx_url1 = https://www.transifex.com/api/2/project/edx-platform/resource/studio-frontend/translation/en/strings/
 tx_url2 = https://www.transifex.com/api/2/project/edx-platform/resource/studio-frontend/source/
