@@ -1,7 +1,7 @@
 import enLocaleData from 'react-intl/locale-data/en';
 import { addLocaleData } from 'react-intl';
 
-import localeDataMap from '../../data/i18n/locales/currentlySupportedLangs';
+import localeDataMap from '../../i18n/messages/currentlySupportedLangs';
 
 const loadI18nDomData = () => {
   try {

@@ -30,7 +30,7 @@ module.exports = Merge.smart(commonConfig, {
         type: 'javascript/auto',
         test: /\.json$/,
         include: [
-          path.resolve(__dirname, '../src/data/i18n/locales'),
+          path.resolve(__dirname, '../src/i18n/messages'),
         ],
         loader: 'file-loader',
         options: {
