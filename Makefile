@@ -80,8 +80,6 @@ i18n.concat:
 i18n.pre_validate: | i18n.extract i18n.concat
 	git diff --exit-code $(transifex_input)
 
-tx_url1 = https://www.transifex.com/api/2/project/edx-platform/resource/studio-frontend/translation/en/strings/
-tx_url2 = https://www.transifex.com/api/2/project/edx-platform/resource/studio-frontend/source/
 # Pushes translations to Transifex.  You must run make extract_translations first.
 push_translations:
 
