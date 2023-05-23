@@ -47,4 +47,4 @@ jobs:
       run: ./.github/validate_changes_for_merge.sh
 
     - name: Run Coverage
-      uses: codecov/codecov-action@v2
+      uses: codecov/codecov-action@v3
