@@ -1,8 +1,10 @@
 UNAME := $(shell uname)
 
+transifex_langs = "ar,fr,es_419,zh_CN"
 i18n = ./src/i18n
 transifex_input = $(i18n)/transifex_input.json
 transifex_utils = ./node_modules/.bin/edx_reactifex
+generate_supported_langs = src/i18n/scripts/generateSupportedLangs.js
 
 # This directory must match .babelrc .
 transifex_temp = ./temp/babel-plugin-react-intl
@@ -90,9 +92,19 @@ push_translations:
 	$$(npm bin)/edx_reactifex $(transifex_temp) --comments --v3-scripts-path
 	./node_modules/@edx/reactifex/bash_scripts/put_comments_v3.sh
 
-pull_translations: ## must be exactly this name for edx tooling support, see ecommerce-scripts/transifex/pull.py
-	# explicit list of languages defined here and in currentlySupportedLangs.jsx
-	tx pull -t -f --mode reviewed --languages="ar,fr,es_419,zh_CN"
+
+ifeq ($(OPENEDX_ATLAS_PULL),)
+# Pulls translations from Transifex.
+pull_translations:
+	tx pull -t -f --mode reviewed --languages=$(transifex_langs)
+else
+# Experimental: OEP-58 Pulls translations using atlas
+pull_translations:
+	rm -rf src/i18n/messages
+	cd src/i18n/ \
+	  && atlas pull --filter=$(transifex_langs) translations/studio-frontend/src/i18n/messages:messages
+	$(generate_supported_langs) $(transifex_langs)
+endif
 
 copy-dist:
 	for f in dist/*; do docker cp $$f edx.devstack.studio:/edx/app/edxapp/edx-platform/node_modules/@edx/studio-frontend/dist/; done
