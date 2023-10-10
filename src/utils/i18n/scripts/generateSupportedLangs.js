@@ -51,14 +51,6 @@ function generateSupportedLangsFile({
     const importVariableName = `${languageFamilyCode.toLowerCase()}Data`;
     const dashLanguageCode = language.toLowerCase().replace(/_/g, '-');
     importLines.push(`import ${importVariableName} from 'react-intl/locale-data/${languageFamilyCode}';`);
-
-    // Note: These imports are not directly consumed by the studio-frontend React app. They're imported to ensure that
-    //       the messages/*.json files exists and they can be loaded via the load_sfe_i18n_messages() function in
-    //       the `edx-platform`.
-    //
-    //       This pattern should probably be refactored to pull the translations directly within the `edx-platform`.
-    const jsonFilename = `${language}.json`;
-    importLines.push(`import './${jsonFilename}';`);
     exportLines.push(`  '${dashLanguageCode}': ${importVariableName},`);
   });
 
