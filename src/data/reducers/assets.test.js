@@ -591,4 +591,30 @@ describe('Assets Reducers', () => {
       });
     });
   });
+  describe('files reducer', () => {
+    it('returns correct files state on FILES_UPDATE action', () => {
+      defaultState = [];
+
+      action = {
+        files: ['file1', 'file2'],
+        type: assetActions.files.FILES_UPDATE,
+      };
+
+      state = reducers.files(defaultState, action);
+
+      expect(state).toEqual(['file1', 'file2']);
+    });
+    it('returns correct preUploadError state on FILES_PRE_UPLOAD_ERROR action', () => {
+      defaultState = '';
+
+      action = {
+        preUploadError: ['file.txt'],
+        type: assetActions.files.FILES_PRE_UPLOAD_ERROR,
+      };
+
+      state = reducers.preUploadError(defaultState, action);
+
+      expect(state).toEqual(['file.txt']);
+    });
+  });
 });

@@ -5,6 +5,7 @@ import { courseDetails } from '../../utils/testConstants';
 import { mountWithIntl } from '../../utils/i18n/enzymeHelper';
 
 const defaultProps = {
+  preUploadCheck: () => {},
   uploadAssets: () => {},
   uploadExceedMaxCount: () => {},
   uploadExceedMaxSize: () => {},
@@ -70,13 +71,13 @@ describe('<AssetsDropZone />', () => {
       wrapper.instance().onDrop([{}, {}], [{}]);
       expect(mockUploadInvalidFileType).toBeCalled();
     });
-    it('call uploadAssets() for successful uploads', () => {
-      const mockUploadAssets = jest.fn();
+    it('call preUploadCheck() for approved files', () => {
+      const mockPreUploadCheck = jest.fn();
       wrapper.setProps({
-        uploadAssets: mockUploadAssets,
+        preUploadCheck: mockPreUploadCheck,
       });
       wrapper.instance().onDrop([{}, {}], []);
-      expect(mockUploadAssets).toBeCalled();
+      expect(mockPreUploadCheck).toBeCalled();
     });
   });
 

@@ -133,6 +133,24 @@ export const search = (state = searchInitial, action) => {
   }
 };
 
+export const files = (state = [], action) => {
+  switch (action.type) {
+    case assetActions.files.FILES_UPDATE:
+      return action.files;
+    default:
+      return state;
+  }
+};
+
+export const preUploadError = (state = [], action) => {
+  switch (action.type) {
+    case assetActions.files.FILES_PRE_UPLOAD_ERROR:
+      return action.preUploadError;
+    default:
+      return state;
+  }
+};
+
 export const status = (state = {}, action) => {
   switch (action.type) {
     case assetActions.request.REQUEST_ASSETS_SUCCESS:
@@ -285,4 +303,6 @@ export const metadata = combineReducers({
   request,
   sort,
   status,
+  files,
+  preUploadError,
 });

@@ -28,7 +28,7 @@ export default class AssetsDropZone extends React.Component {
         this.props.uploadInvalidFileType();
       }
     } else {
-      this.props.uploadAssets(acceptedFiles, this.props.courseDetails);
+      this.props.preUploadCheck(acceptedFiles, this.props.courseDetails);
     }
   };
 
@@ -133,11 +133,10 @@ AssetsDropZone.propTypes = {
   }).isRequired,
   maxFileCount: PropTypes.number,
   maxFileSizeMB: PropTypes.number,
-  uploadAssets: PropTypes.func.isRequired,
   uploadExceedMaxCount: PropTypes.func.isRequired,
   uploadExceedMaxSize: PropTypes.func.isRequired,
   uploadInvalidFileType: PropTypes.func.isRequired,
-
+  preUploadCheck: PropTypes.func.isRequired,
 };
 
 AssetsDropZone.defaultProps = {

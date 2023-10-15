@@ -272,7 +272,23 @@ export const uploadAssetFailure = (asset, response) => ({
   response,
 });
 
+export const setFilesToUpload = (files) => ({
+  type: assetActions.files.FILES_UPDATE,
+  files,
+});
+
+export const setPreUploadError = (preUploadError) => ({
+  type: assetActions.files.FILES_PRE_UPLOAD_ERROR,
+  preUploadError,
+});
+
+export const clearPreUploadProps = () => (dispatch) => {
+  dispatch(setFilesToUpload([]));
+  dispatch(setPreUploadError([]));
+};
+
 export const uploadAssets = (assets, courseDetails) => (dispatch) => {
+  dispatch(clearPreUploadProps());
   dispatch(uploadingAssets(assets.length));
   // gather all the promises into a single promise that can be returned
   return Promise.all(assets.map(asset => (
@@ -289,6 +305,20 @@ export const uploadAssets = (assets, courseDetails) => (dispatch) => {
         return Promise.resolve();
       })
   )));
+};
+
+export const preUploadCheck = (assets, courseDetails) => (dispatch) => {
+  const filenames = assets.map(asset => asset.name);
+  return clientApi.preUploadCheck(courseDetails.id, filenames)
+    .then((response) => {
+      if (response.ok) {
+        return dispatch(uploadAssets(assets, courseDetails));
+      }
+      return response.json().then((resp) => {
+        dispatch(setFilesToUpload(assets));
+        return dispatch(setPreUploadError(resp.files));
+      });
+    });
 };
 
 export const uploadExceedMaxCount = maxFileCount => ({

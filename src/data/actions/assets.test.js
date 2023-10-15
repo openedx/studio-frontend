@@ -55,6 +55,19 @@ const getUploadResponse = isSuccess => (
   })
 );
 
+// currying a function that can be passed to fetch-mock to determine what
+// response should be based on whether or not pre-upload check succeeds or fails
+const getPreUploadCheckResponse = (isSuccess, errorFiles = []) => (
+  () => ({
+    status: isSuccess ? 200 : 409,
+    body: {
+      allowed: isSuccess,
+      reason: isSuccess ? '' : 'error',
+      files: isSuccess ? '' : errorFiles,
+    },
+  })
+);
+
 describe('Assets Action Creators', () => {
   beforeEach(() => {
     store = mockStore(initialState);
@@ -712,6 +725,53 @@ describe('Assets Action Creators', () => {
     expect(store.dispatch(actionCreators.uploadingAssets(99, 'response'))).toEqual(expectedAction);
   });
 
+  it('returns expected state from preUploadCheck success', () => {
+    const assetsResponse = {
+      status: 200,
+      body: {
+        assets: ['a.txt'],
+      },
+    };
+
+    fetchMock.mock(`begin:${assetsEndpoint}`, getPreUploadCheckResponse(true), { method: 'post' });
+    fetchMock.mock(`begin:${assetsEndpoint}`, assetsResponse, { method: 'get' });
+
+    const assets = ['a.txt', 'b.txt', 'c.txt'];
+
+    const expectedActions = [
+      { files: [], type: assetActions.files.FILES_UPDATE },
+      { preUploadError: [], type: assetActions.files.FILES_PRE_UPLOAD_ERROR },
+    ];
+
+    return store.dispatch(actionCreators.preUploadCheck(assets, courseDetails)).then(() => {
+      expect(store.getActions().slice(0, 2)).toEqual(expectedActions);
+      // the rest of the actions are similar to what executes in uploadAssets, and tested there
+    });
+  });
+
+  it('returns expected state from preUploadCheck failure', () => {
+    const assetsResponse = {
+      status: 200,
+      body: {
+        assets: ['a.txt', 'b.txt', 'c.txt'],
+      },
+    };
+
+    fetchMock.mock(`begin:${assetsEndpoint}`, getPreUploadCheckResponse(false, ['a.txt']), { method: 'post' });
+    fetchMock.mock(`begin:${assetsEndpoint}`, assetsResponse, { method: 'get' });
+
+    const assets = ['a.txt', 'b.txt', 'c.txt'];
+
+    const expectedActions = [
+      { files: assets, type: assetActions.files.FILES_UPDATE },
+      { preUploadError: ['a.txt'], type: assetActions.files.FILES_PRE_UPLOAD_ERROR },
+    ];
+
+    return store.dispatch(actionCreators.preUploadCheck(assets, courseDetails)).then(() => {
+      expect(store.getActions()).toEqual(expectedActions);
+    });
+  });
+
   it('returns expected state from uploadAssets success', () => {
     const assetsResponse = {
       status: 200,
@@ -726,6 +786,8 @@ describe('Assets Action Creators', () => {
     const assets = ['a.txt', 'b.txt', 'c.txt'];
 
     const expectedActions = [
+      { files: [], type: assetActions.files.FILES_UPDATE },
+      { preUploadError: [], type: assetActions.files.FILES_PRE_UPLOAD_ERROR },
       { count: assets.length, type: assetActions.upload.UPLOADING_ASSETS },
     ];
 
@@ -761,6 +823,8 @@ describe('Assets Action Creators', () => {
     const assets = ['a.txt', 'b.txt', 'c.txt'];
 
     const expectedActions = [
+      { files: [], type: assetActions.files.FILES_UPDATE },
+      { preUploadError: [], type: assetActions.files.FILES_PRE_UPLOAD_ERROR },
       { count: assets.length, type: assetActions.upload.UPLOADING_ASSETS },
     ];
 

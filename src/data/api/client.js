@@ -65,6 +65,18 @@ export function requestToggleLockAsset(courseId, asset) {
   });
 }
 
+export function preUploadCheck(courseId, filenames) {
+  return fetch(`${endpoints.assets}/${courseId}/pre_upload_check`, {
+    credentials: 'same-origin',
+    method: 'post',
+    body: JSON.stringify({ filenames }),
+    headers: {
+      'Accept': 'application/json',
+      'X-CSRFToken': Cookies.get('csrftoken'),
+    },
+  });
+}
+
 export function postUploadAsset(courseId, file) {
   const data = new FormData();
   data.append('file', file);
