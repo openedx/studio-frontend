@@ -67,7 +67,7 @@ studio instance running in [Devstack](https://github.com/openedx/devstack):
    does not exist already.
 2. Add `STUDIO_FRONTEND_CONTAINER_URL = 'http://localhost:18011'` to
    `cms/envs/private.py`.
-3. Reload your Studio server: `make studio-restart`.
+3. Restart your Studio container: `make cms-restart-container`.
 
 Pages in Studio that have studio-frontend components should now request assets
 from your studio-frontend docker container's webpack-dev-server. If you make a
@@ -88,13 +88,13 @@ your local docker devstack by following these steps:
 1. If you have a `cms/envs/private.py` file in your devstack edx-platform
    folder, then make sure the line `STUDIO_FRONTEND_CONTAINER_URL =
    'http://localhost:18011'` is commented out.
-2. Reload your Studio server: `make studio-restart`.
+2. Reload your Studio server: `make cms-restart-container`.
 3. Run the production build of studio-frontend by running `make shell` and then
    `npm run build` inside the docker container.
 4. Copy the production files over to your devstack Studio's static assets
    folder by running this make command on your host machine in the
    studio-frontend folder: `make copy-dist`.
-5. Run Studio's static asset pipeline: `make studio-static`.
+5. Run Studio's static asset pipeline: `make cms-static`.
 
 Your devstack Studio should now be using the production studio-frontend files
 built by your local checkout.
