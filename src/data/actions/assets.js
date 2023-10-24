@@ -21,6 +21,12 @@ const requestFailed = responseAction => (
   responseAction && 'type' in responseAction && responseAction.type === assetActions.request.REQUEST_ASSETS_FAILURE
 );
 
+const getUploadConflicts = (filesToUpload, response) => response.json().then((json) => {
+  const filesFound = json.assets.map(item => item.display_name);
+  const conflicts = filesToUpload.filter(item => filesFound.includes(item));
+  return conflicts;
+});
+
 export const updateRequest = newRequest => ({
   type: assetActions.request.UPDATE_REQUEST,
   newRequest,
@@ -272,23 +278,23 @@ export const uploadAssetFailure = (asset, response) => ({
   response,
 });
 
-export const setFilesToUpload = (files) => ({
-  type: assetActions.files.FILES_UPDATE,
-  files,
+export const setFilesToUpload = (filesToUpload) => ({
+  type: assetActions.uploadConfirm.FILES_TO_UPLOAD,
+  filesToUpload,
 });
 
-export const setPreUploadError = (preUploadError) => ({
-  type: assetActions.files.FILES_PRE_UPLOAD_ERROR,
-  preUploadError,
+export const setFilenameConflicts = (filenameConflicts) => ({
+  type: assetActions.uploadConfirm.FILENAME_CONFLICTS,
+  filenameConflicts,
 });
 
-export const clearPreUploadProps = () => (dispatch) => {
+export const clearUploadConfirmProps = () => (dispatch) => {
   dispatch(setFilesToUpload([]));
-  dispatch(setPreUploadError([]));
+  dispatch(setFilenameConflicts([]));
 };
 
 export const uploadAssets = (assets, courseDetails) => (dispatch) => {
-  dispatch(clearPreUploadProps());
+  dispatch(clearUploadConfirmProps());
   dispatch(uploadingAssets(assets.length));
   // gather all the promises into a single promise that can be returned
   return Promise.all(assets.map(asset => (
@@ -307,18 +313,17 @@ export const uploadAssets = (assets, courseDetails) => (dispatch) => {
   )));
 };
 
-export const preUploadCheck = (assets, courseDetails) => (dispatch) => {
+export const validateAssetsAndUpload = (assets, courseDetails) => (dispatch) => {
   const filenames = assets.map(asset => asset.name);
-  return clientApi.preUploadCheck(courseDetails.id, filenames)
-    .then((response) => {
-      if (response.ok) {
-        return dispatch(uploadAssets(assets, courseDetails));
-      }
-      return response.json().then((resp) => {
+  return clientApi.getAssetDetails(courseDetails.id, filenames)
+    .then((response) => getUploadConflicts(filenames, response)
+      .then((conflicts) => {
+        if (conflicts.length === 0) {
+          return dispatch(uploadAssets(assets, courseDetails));
+        }
         dispatch(setFilesToUpload(assets));
-        return dispatch(setPreUploadError(resp.files));
-      });
-    });
+        return dispatch(setFilenameConflicts(conflicts));
+      }));
 };
 
 export const uploadExceedMaxCount = maxFileCount => ({

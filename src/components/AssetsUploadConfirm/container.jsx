@@ -1,17 +1,17 @@
 import { connect } from 'react-redux';
 
-import { uploadAssets, clearPreUploadProps } from '../../data/actions/assets';
+import { uploadAssets, clearUploadConfirmProps } from '../../data/actions/assets';
 import AssetsUploadConfirm from '.';
 
 const mapStateToProps = state => ({
-  files: state.metadata.files,
-  preUploadError: state.metadata.preUploadError,
+  filesToUpload: state.metadata.filesToUpload,
+  filenameConflicts: state.metadata.filenameConflicts,
   courseDetails: state.studioDetails.course,
 });
 
 const mapDispatchToProps = dispatch => ({
   uploadAssets: (assets, courseDetails) => dispatch(uploadAssets(assets, courseDetails)),
-  clearPreUploadProps: () => dispatch(clearPreUploadProps()),
+  clearUploadConfirmProps: () => dispatch(clearUploadConfirmProps()),
 });
 
 const WrappedAssetsUploadConfirm = connect(

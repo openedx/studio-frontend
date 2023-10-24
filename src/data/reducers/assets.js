@@ -133,19 +133,19 @@ export const search = (state = searchInitial, action) => {
   }
 };
 
-export const files = (state = [], action) => {
+export const filesToUpload = (state = [], action) => {
   switch (action.type) {
-    case assetActions.files.FILES_UPDATE:
-      return action.files;
+    case assetActions.uploadConfirm.FILES_TO_UPLOAD:
+      return action.filesToUpload;
     default:
       return state;
   }
 };
 
-export const preUploadError = (state = [], action) => {
+export const filenameConflicts = (state = [], action) => {
   switch (action.type) {
-    case assetActions.files.FILES_PRE_UPLOAD_ERROR:
-      return action.preUploadError;
+    case assetActions.uploadConfirm.FILENAME_CONFLICTS:
+      return action.filenameConflicts;
     default:
       return state;
   }
@@ -303,6 +303,6 @@ export const metadata = combineReducers({
   request,
   sort,
   status,
-  files,
-  preUploadError,
+  filesToUpload,
+  filenameConflicts,
 });

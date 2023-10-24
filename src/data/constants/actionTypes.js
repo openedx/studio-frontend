@@ -55,9 +55,9 @@ export const assetActions = {
   imagePreview: {
     IMAGE_PREVIEW_UPDATE: 'IMAGE_PREVIEW_UPDATE',
   },
-  files: {
-    FILES_UPDATE: 'FILES_UPDATE',
-    FILES_PRE_UPLOAD_ERROR: 'FILES_PRE_UPLOAD_ERROR',
+  uploadConfirm: {
+    FILES_TO_UPLOAD: 'FILES_TO_UPLOAD',
+    FILENAME_CONFLICTS: 'FILENAME_CONFLICTS',
   },
 };
 

@@ -591,28 +591,28 @@ describe('Assets Reducers', () => {
       });
     });
   });
-  describe('files reducer', () => {
-    it('returns correct files state on FILES_UPDATE action', () => {
+  describe('filesToUpload reducer', () => {
+    it('returns correct filesToUpload state on FILES_TO_UPLOAD action', () => {
       defaultState = [];
 
       action = {
-        files: ['file1', 'file2'],
-        type: assetActions.files.FILES_UPDATE,
+        filesToUpload: ['file1', 'file2'],
+        type: assetActions.uploadConfirm.FILES_TO_UPLOAD,
       };
 
-      state = reducers.files(defaultState, action);
+      state = reducers.filesToUpload(defaultState, action);
 
       expect(state).toEqual(['file1', 'file2']);
     });
-    it('returns correct preUploadError state on FILES_PRE_UPLOAD_ERROR action', () => {
+    it('returns correct filenameConflicts state on FILENAME_CONFLICTS action', () => {
       defaultState = '';
 
       action = {
-        preUploadError: ['file.txt'],
-        type: assetActions.files.FILES_PRE_UPLOAD_ERROR,
+        filenameConflicts: ['file.txt'],
+        type: assetActions.uploadConfirm.FILENAME_CONFLICTS,
       };
 
-      state = reducers.preUploadError(defaultState, action);
+      state = reducers.filenameConflicts(defaultState, action);
 
       expect(state).toEqual(['file.txt']);
     });

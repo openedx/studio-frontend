@@ -55,19 +55,6 @@ const getUploadResponse = isSuccess => (
   })
 );
 
-// currying a function that can be passed to fetch-mock to determine what
-// response should be based on whether or not pre-upload check succeeds or fails
-const getPreUploadCheckResponse = (isSuccess, errorFiles = []) => (
-  () => ({
-    status: isSuccess ? 200 : 409,
-    body: {
-      allowed: isSuccess,
-      reason: isSuccess ? '' : 'error',
-      files: isSuccess ? '' : errorFiles,
-    },
-  })
-);
-
 describe('Assets Action Creators', () => {
   beforeEach(() => {
     store = mockStore(initialState);
@@ -725,49 +712,46 @@ describe('Assets Action Creators', () => {
     expect(store.dispatch(actionCreators.uploadingAssets(99, 'response'))).toEqual(expectedAction);
   });
 
-  it('returns expected state from preUploadCheck success', () => {
+  it('returns expected state from validateAssetsAndUpload success', () => {
+    const assets = [new File([''], 'file.txt')];
     const assetsResponse = {
       status: 200,
       body: {
-        assets: ['a.txt'],
+        assets: [],
       },
     };
 
-    fetchMock.mock(`begin:${assetsEndpoint}`, getPreUploadCheckResponse(true), { method: 'post' });
     fetchMock.mock(`begin:${assetsEndpoint}`, assetsResponse, { method: 'get' });
-
-    const assets = ['a.txt', 'b.txt', 'c.txt'];
-
+    fetchMock.mock(`begin:${assetsEndpoint}`, getUploadResponse(true), { method: 'post' });
     const expectedActions = [
-      { files: [], type: assetActions.files.FILES_UPDATE },
-      { preUploadError: [], type: assetActions.files.FILES_PRE_UPLOAD_ERROR },
+      { filesToUpload: [], type: assetActions.uploadConfirm.FILES_TO_UPLOAD },
+      { filenameConflicts: [], type: assetActions.uploadConfirm.FILENAME_CONFLICTS },
     ];
 
-    return store.dispatch(actionCreators.preUploadCheck(assets, courseDetails)).then(() => {
+    return store.dispatch(actionCreators.validateAssetsAndUpload(assets, courseDetails)).then(() => {
       expect(store.getActions().slice(0, 2)).toEqual(expectedActions);
       // the rest of the actions are similar to what executes in uploadAssets, and tested there
     });
   });
 
-  it('returns expected state from preUploadCheck failure', () => {
+  it('returns expected state from validateAssetsAndUpload failure', () => {
+    const assets = [new File([''], 'file.txt'), new File([''], 'file_2.txt')];
     const assetsResponse = {
       status: 200,
       body: {
-        assets: ['a.txt', 'b.txt', 'c.txt'],
+        assets: [{
+          display_name: 'file.txt',
+        }],
       },
     };
-
-    fetchMock.mock(`begin:${assetsEndpoint}`, getPreUploadCheckResponse(false, ['a.txt']), { method: 'post' });
-    fetchMock.mock(`begin:${assetsEndpoint}`, assetsResponse, { method: 'get' });
-
-    const assets = ['a.txt', 'b.txt', 'c.txt'];
+    fetchMock.once(`begin:${assetsEndpoint}`, assetsResponse, { method: 'get' });
 
     const expectedActions = [
-      { files: assets, type: assetActions.files.FILES_UPDATE },
-      { preUploadError: ['a.txt'], type: assetActions.files.FILES_PRE_UPLOAD_ERROR },
+      { filesToUpload: assets, type: assetActions.uploadConfirm.FILES_TO_UPLOAD },
+      { filenameConflicts: ['file.txt'], type: assetActions.uploadConfirm.FILENAME_CONFLICTS },
     ];
 
-    return store.dispatch(actionCreators.preUploadCheck(assets, courseDetails)).then(() => {
+    return store.dispatch(actionCreators.validateAssetsAndUpload(assets, courseDetails)).then(() => {
       expect(store.getActions()).toEqual(expectedActions);
     });
   });
@@ -786,8 +770,8 @@ describe('Assets Action Creators', () => {
     const assets = ['a.txt', 'b.txt', 'c.txt'];
 
     const expectedActions = [
-      { files: [], type: assetActions.files.FILES_UPDATE },
-      { preUploadError: [], type: assetActions.files.FILES_PRE_UPLOAD_ERROR },
+      { filesToUpload: [], type: assetActions.uploadConfirm.FILES_TO_UPLOAD },
+      { filenameConflicts: [], type: assetActions.uploadConfirm.FILENAME_CONFLICTS },
       { count: assets.length, type: assetActions.upload.UPLOADING_ASSETS },
     ];
 
@@ -823,8 +807,8 @@ describe('Assets Action Creators', () => {
     const assets = ['a.txt', 'b.txt', 'c.txt'];
 
     const expectedActions = [
-      { files: [], type: assetActions.files.FILES_UPDATE },
-      { preUploadError: [], type: assetActions.files.FILES_PRE_UPLOAD_ERROR },
+      { filesToUpload: [], type: assetActions.uploadConfirm.FILES_TO_UPLOAD },
+      { filenameConflicts: [], type: assetActions.uploadConfirm.FILENAME_CONFLICTS },
       { count: assets.length, type: assetActions.upload.UPLOADING_ASSETS },
     ];
 

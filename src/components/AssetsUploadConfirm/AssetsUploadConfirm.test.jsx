@@ -6,29 +6,29 @@ import { mountWithIntl } from '../../utils/i18n/enzymeHelper';
 import mockQuerySelector from '../../utils/mockQuerySelector';
 
 const defaultProps = {
-  files: [],
+  filesToUpload: [],
   uploadAssets: () => { },
-  clearPreUploadProps: () => {},
+  clearUploadConfirmProps: () => {},
   courseDetails: {},
-  preUploadError: [],
+  filenameConflicts: [],
 };
 
 const modalIsClosed = (wrapper) => {
-  expect(wrapper.prop('preUploadError')).toEqual([]);
+  expect(wrapper.prop('filenameConflicts')).toEqual([]);
   expect(wrapper.state('modalOpen')).toEqual(false);
   expect(wrapper.find(Modal).prop('open')).toEqual(false);
 };
 
 const modalIsOpen = (wrapper) => {
-  expect(wrapper.prop('preUploadError')).toBeTruthy();
+  expect(wrapper.prop('filenameConflicts')).toBeTruthy();
   expect(wrapper.state('modalOpen')).toEqual(true);
   expect(wrapper.find(Modal).prop('open')).toEqual(true);
 };
 
 const errorMessageHasCorrectFiles = (wrapper, files) => {
-  const preUploadError = wrapper.prop('preUploadError');
+  const filenameConflicts = wrapper.prop('filenameConflicts');
   files.forEach((file) => {
-    expect(preUploadError).toContain(file);
+    expect(filenameConflicts).toContain(file);
   });
 };
 
@@ -57,7 +57,7 @@ describe('AssetsUploadConfirm', () => {
 
     it('open if there is an error message', () => {
       wrapper.setProps({
-        preUploadError: ['asset.jpg'],
+        filenameConflicts: ['asset.jpg'],
       });
 
       modalIsOpen(wrapper);
@@ -67,24 +67,24 @@ describe('AssetsUploadConfirm', () => {
   describe('behaves', () => {
     it('Overwrite calls uploadAssets', () => {
       const mockUploadAssets = jest.fn();
-      const files = [new File([''], 'file1')];
+      const filesToUpload = [new File([''], 'file1')];
       const courseDetails = {
         id: 'course-v1:edX+DemoX+Demo_Course',
       };
       wrapper.setProps({
-        files,
+        filesToUpload,
         courseDetails,
         uploadAssets: mockUploadAssets,
       });
 
       wrapper.find(Button).filterWhere(button => button.text() === 'Overwrite').simulate('click');
-      expect(mockUploadAssets).toBeCalledWith(files, courseDetails);
+      expect(mockUploadAssets).toBeCalledWith(filesToUpload, courseDetails);
     });
 
     it('clicking cancel button closes the status alert', () => {
       wrapper.setProps({
-        preUploadError: ['asset.jpg'],
-        clearPreUploadProps: () => {
+        filenameConflicts: ['asset.jpg'],
+        clearUploadConfirmProps: () => {
           wrapper.setProps({
             ...defaultProps,
           });

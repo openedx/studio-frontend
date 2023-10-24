@@ -17,32 +17,32 @@ export default class AssetsUploadConfirm extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { preUploadError } = nextProps;
-    this.updateAlertOpenState(preUploadError);
+    const { filenameConflicts } = nextProps;
+    this.updateAlertOpenState(filenameConflicts);
   }
 
-  updateAlertOpenState = (preUploadError) => {
+  updateAlertOpenState = (filenameConflicts) => {
     this.setState({
-      modalOpen: preUploadError.length !== 0,
+      modalOpen: filenameConflicts.length !== 0,
     });
   };
 
   uploadFiles = () => {
-    this.props.uploadAssets(this.props.files, this.props.courseDetails);
+    this.props.uploadAssets(this.props.filesToUpload, this.props.courseDetails);
   };
 
   onClose = () => {
     this.setState(defaultState);
-    this.props.clearPreUploadProps();
+    this.props.clearUploadConfirmProps();
   };
 
   render() {
     const { uploadFiles } = this;
     const { modalOpen } = this.state;
-    const { preUploadError } = this.props;
+    const { filenameConflicts } = this.props;
     const listOfFiles = (
       <ul>
-        { preUploadError.sort().map(item => <li key={item}>{item}</li>) }
+        { filenameConflicts.sort().map(item => <li key={item}>{item}</li>) }
       </ul>
     );
     const content = (
@@ -81,9 +81,9 @@ export default class AssetsUploadConfirm extends React.Component {
 
 AssetsUploadConfirm.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
-  files: PropTypes.arrayOf(PropTypes.object),
+  filesToUpload: PropTypes.arrayOf(PropTypes.object),
   uploadAssets: PropTypes.func.isRequired,
-  clearPreUploadProps: PropTypes.func.isRequired,
+  clearUploadConfirmProps: PropTypes.func.isRequired,
   courseDetails: PropTypes.shape({
     lang: PropTypes.string,
     url_name: PropTypes.string,
@@ -94,10 +94,10 @@ AssetsUploadConfirm.propTypes = {
     id: PropTypes.string,
     revision: PropTypes.string,
   }).isRequired,
-  preUploadError: PropTypes.arrayOf(PropTypes.string),
+  filenameConflicts: PropTypes.arrayOf(PropTypes.string),
 };
 
 AssetsUploadConfirm.defaultProps = {
-  files: [],
-  preUploadError: [],
+  filesToUpload: [],
+  filenameConflicts: [],
 };
