@@ -5,6 +5,9 @@
 [![npm](https://img.shields.io/npm/dt/@edx/studio-frontend.svg)](https://www.npmjs.com/package/@edx/studio-frontend)
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 
+## This repo is in the process of being deprecated [[DEPR]: studio-frontend repo](https://github.com/openedx/studio-frontend/issues/381)
+All code changes should be made in the [course-authoring repo](https://github.com/openedx/studio-frontend).
+
 React front end for edX Studio
 
 For an introduction to what this repo is and how it fits into the rest of the
