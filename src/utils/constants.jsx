@@ -107,3 +107,5 @@ export const COURSE_BEST_PRACTICES_DATA_SHAPE = {
   videos: PropTypes.shape(UNITS_SHAPE),
   is_self_paced: PropTypes.bool,
 };
+
+export const MAX_FILE_UPLOAD_COUNT = 100;

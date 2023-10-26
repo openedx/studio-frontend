@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import { Button } from '@edx/paragon';
 import FontAwesomeStyles from 'font-awesome/css/font-awesome.min.css';
 import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
+import MAX_FILE_UPLOAD_COUNT from '../../utils/constants';
 import messages from './displayMessages';
 import styles from './AssetsDropZone.scss';
 
@@ -28,7 +29,7 @@ export default class AssetsDropZone extends React.Component {
         this.props.uploadInvalidFileType();
       }
     } else {
-      this.props.uploadAssets(acceptedFiles, this.props.courseDetails);
+      this.props.validateAssetsAndUpload(acceptedFiles, this.props.courseDetails);
     }
   };
 
@@ -133,17 +134,16 @@ AssetsDropZone.propTypes = {
   }).isRequired,
   maxFileCount: PropTypes.number,
   maxFileSizeMB: PropTypes.number,
-  uploadAssets: PropTypes.func.isRequired,
   uploadExceedMaxCount: PropTypes.func.isRequired,
   uploadExceedMaxSize: PropTypes.func.isRequired,
   uploadInvalidFileType: PropTypes.func.isRequired,
-
+  validateAssetsAndUpload: PropTypes.func.isRequired,
 };
 
 AssetsDropZone.defaultProps = {
   acceptedFileTypes: undefined,
   buttonRef: () => {},
   compactStyle: false,
-  maxFileCount: 1000,
+  maxFileCount: MAX_FILE_UPLOAD_COUNT,
   maxFileSizeMB: 10,
 };

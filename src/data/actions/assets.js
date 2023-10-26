@@ -21,6 +21,12 @@ const requestFailed = responseAction => (
   responseAction && 'type' in responseAction && responseAction.type === assetActions.request.REQUEST_ASSETS_FAILURE
 );
 
+const getUploadConflicts = (filesToUpload, response) => response.json().then((json) => {
+  const filesFound = json.assets.map(item => item.display_name);
+  const conflicts = filesToUpload.filter(item => filesFound.includes(item));
+  return conflicts;
+});
+
 export const updateRequest = newRequest => ({
   type: assetActions.request.UPDATE_REQUEST,
   newRequest,
@@ -272,7 +278,23 @@ export const uploadAssetFailure = (asset, response) => ({
   response,
 });
 
+export const setFilesToUpload = (filesToUpload) => ({
+  type: assetActions.uploadConfirm.FILES_TO_UPLOAD,
+  filesToUpload,
+});
+
+export const setFilenameConflicts = (filenameConflicts) => ({
+  type: assetActions.uploadConfirm.FILENAME_CONFLICTS,
+  filenameConflicts,
+});
+
+export const clearUploadConfirmProps = () => (dispatch) => {
+  dispatch(setFilesToUpload([]));
+  dispatch(setFilenameConflicts([]));
+};
+
 export const uploadAssets = (assets, courseDetails) => (dispatch) => {
+  dispatch(clearUploadConfirmProps());
   dispatch(uploadingAssets(assets.length));
   // gather all the promises into a single promise that can be returned
   return Promise.all(assets.map(asset => (
@@ -289,6 +311,19 @@ export const uploadAssets = (assets, courseDetails) => (dispatch) => {
         return Promise.resolve();
       })
   )));
+};
+
+export const validateAssetsAndUpload = (assets, courseDetails) => (dispatch) => {
+  const filenames = assets.map(asset => asset.name);
+  return clientApi.getAssetDetails(courseDetails.id, filenames)
+    .then((response) => getUploadConflicts(filenames, response)
+      .then((conflicts) => {
+        if (conflicts.length === 0) {
+          return dispatch(uploadAssets(assets, courseDetails));
+        }
+        dispatch(setFilesToUpload(assets));
+        return dispatch(setFilenameConflicts(conflicts));
+      }));
 };
 
 export const uploadExceedMaxCount = maxFileCount => ({

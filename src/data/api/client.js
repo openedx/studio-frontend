@@ -4,6 +4,7 @@ import 'whatwg-fetch'; // fetch polyfill
 
 import endpoints from './endpoints';
 import { getDatabaseAttributesFromAssetAttributes } from '../../utils/getAssetsAttributes';
+import { MAX_FILE_UPLOAD_COUNT } from '../../utils/constants';
 
 export function pingStudioHome() {
   return fetch(endpoints.home, {
@@ -58,6 +59,19 @@ export function requestToggleLockAsset(courseId, asset) {
     credentials: 'same-origin',
     method: 'put',
     body: JSON.stringify({ locked: !asset.locked }),
+    headers: {
+      'Accept': 'application/json',
+      'X-CSRFToken': Cookies.get('csrftoken'),
+    },
+  });
+}
+
+export function getAssetDetails(courseId, filenames) {
+  const params = new URLSearchParams(filenames.map(filename => ['display_name', filename]));
+  params.append('page_size', MAX_FILE_UPLOAD_COUNT);
+  return fetch(`${endpoints.assets}/${courseId}?${params}`, {
+    credentials: 'same-origin',
+    method: 'get',
     headers: {
       'Accept': 'application/json',
       'X-CSRFToken': Cookies.get('csrftoken'),

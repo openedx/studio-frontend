@@ -14,6 +14,7 @@ import WrappedAssetsSearch from '../AssetsSearch/container';
 import WrappedAssetsStatusAlert from '../AssetsStatusAlert/container';
 import WrappedAssetsResultsCount from '../AssetsResultsCount/container';
 import WrappedAssetsClearFiltersButton from '../AssetsClearFiltersButton/container';
+import WrappedAssetsUploadConfirm from '../AssetsUploadConfirm/container';
 import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
 import messages from './displayMessages';
 import styles from './AssetsPage.scss';
@@ -197,6 +198,9 @@ export default class AssetsPage extends React.Component {
         </div>
         <div className="container">
           <div className="row">
+            <div className="col-12">
+              <WrappedAssetsUploadConfirm />
+            </div>
             <div className="col-12">
               <WrappedAssetsStatusAlert
                 statusAlertRef={(input) => { this.statusAlertRef = input; }}

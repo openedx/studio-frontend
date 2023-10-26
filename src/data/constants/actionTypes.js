@@ -55,6 +55,10 @@ export const assetActions = {
   imagePreview: {
     IMAGE_PREVIEW_UPDATE: 'IMAGE_PREVIEW_UPDATE',
   },
+  uploadConfirm: {
+    FILES_TO_UPLOAD: 'FILES_TO_UPLOAD',
+    FILENAME_CONFLICTS: 'FILENAME_CONFLICTS',
+  },
 };
 
 export const accessibilityActions = {
