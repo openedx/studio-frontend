@@ -4,7 +4,6 @@ transifex_langs = "ar,fr,es_419,zh_CN"
 i18n = ./src/i18n
 transifex_input = $(i18n)/transifex_input.json
 transifex_utils = ./node_modules/.bin/edx_reactifex
-generate_supported_langs = src/i18n/scripts/generateSupportedLangs.js
 
 # This directory must match .babelrc .
 transifex_temp = ./temp/babel-plugin-react-intl
@@ -102,8 +101,8 @@ else
 pull_translations:
 	rm -rf src/i18n/messages
 	cd src/i18n/ \
-	  && atlas pull --filter=$(transifex_langs) translations/studio-frontend/src/i18n/messages:messages
-	$(generate_supported_langs) $(transifex_langs)
+	  && atlas pull $(ATLAS_OPTIONS) translations/studio-frontend/src/i18n/messages:messages
+	node src/utils/i18n/scripts/generateSupportedLangs.js src/i18n/messages
 endif
 
 copy-dist:
