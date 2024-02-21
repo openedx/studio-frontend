@@ -1,9 +1,9 @@
-FROM node:16
+FROM node:18
 
 USER root
 RUN apt-get update
 RUN apt-get install -y vim
-RUN npm i -g npm@8.x.x
+RUN npm i -g npm@9.x.x
 
 WORKDIR /prebuilt
 COPY config/ config/
