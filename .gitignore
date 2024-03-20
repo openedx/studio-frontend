@@ -8,6 +8,7 @@ coverage
 dist/
 src/i18n/transifex_input.json
 src/data/i18n/default/src/
+src/i18n/messages/
 temp/babel-plugin-react-intl
 
 ## Emacs ###

@@ -1,14 +1,11 @@
 UNAME := $(shell uname)
 
-transifex_langs = "ar,fr,es_419,zh_CN"
 i18n = ./src/i18n
 transifex_input = $(i18n)/transifex_input.json
 transifex_utils = ./node_modules/.bin/edx_reactifex
 
 # This directory must match .babelrc .
 transifex_temp = ./temp/babel-plugin-react-intl
-
-export TRANSIFEX_RESOURCE = studio-frontend
 
 # Help message borrowed from https://github.com/openedx/devstack, which borrowed it from https://github.com/pydanny/cookiecutter-djangopackage.
 help: ## display a help message
@@ -81,29 +78,13 @@ i18n.concat:
 i18n.pre_validate: | i18n.extract i18n.concat
 	git diff --exit-code $(transifex_input)
 
-# Pushes translations to Transifex.  You must run make extract_translations first.
-push_translations:
-
-	# # Pushing strings to Transifex...
-	tx push -s
-
-	./node_modules/@edx/reactifex/bash_scripts/get_hashed_strings_v3.sh
-	$$(npm bin)/edx_reactifex $(transifex_temp) --comments --v3-scripts-path
-	./node_modules/@edx/reactifex/bash_scripts/put_comments_v3.sh
-
-
-ifeq ($(OPENEDX_ATLAS_PULL),)
-# Pulls translations from Transifex.
-pull_translations:
-	tx pull -t -f --mode reviewed --languages=$(transifex_langs)
-else
-# Experimental: OEP-58 Pulls translations using atlas
-pull_translations:
-	rm -rf src/i18n/messages
-	cd src/i18n/ \
-	  && atlas pull $(ATLAS_OPTIONS) translations/studio-frontend/src/i18n/messages:messages
+generate_supported_langs: ## generate the currentlySupportedLangs.jsx file
 	node src/utils/i18n/scripts/generateSupportedLangs.js src/i18n/messages
-endif
+
+pull_translations:  ## pull translations via atlas for development preview
+	rm -rf src/i18n/messages
+	atlas pull $(ATLAS_OPTIONS) translations/studio-frontend/src/i18n/messages:src/i18n/messages
+	make generate_supported_langs
 
 copy-dist:
 	for f in dist/*; do docker cp $$f edx.devstack.studio:/edx/app/edxapp/edx-platform/node_modules/@edx/studio-frontend/dist/; done
