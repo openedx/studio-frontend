@@ -4,10 +4,10 @@
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: 'sfe'
-  description: "The Open edx Enterprise Service app provides enterprise features to the Open edX platform"
+  name: 'studio-frontend'
+  description: "Frontend code used as a part of the legacy authoring envirnment."
 spec:
   owner: group:openedx-unmaintained
-  type: 'website'
+  type: 'library'
   lifecycle: ''
   
