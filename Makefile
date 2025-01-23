@@ -56,7 +56,7 @@ restart-detached: ## bring container down and back up in detached mode
 	make up-detached
 
 devstack.update: ## use this if you don't want to fire up the dedicated asset watching containers
-	docker exec -t edx.devstack.studio bash -c 'source /edx/app/edxapp/edxapp_env && cd /edx/app/edxapp/edx-platform && paver webpack'
+	docker exec -t edx.devstack.studio bash -c 'source /edx/app/edxapp/edxapp_env && cd /edx/app/edxapp/edx-platform && npm run webpack-dev'
 
 asset-page-flag: ## insert a waffle flag into local docker devstack
 	docker exec -t edx.devstack.studio bash -c 'source /edx/app/edxapp/edxapp_env && cd /edx/app/edxapp/edx-platform && echo "from cms.djangoapps.contentstore.config.models import NewAssetsPageFlag; NewAssetsPageFlag.objects.all().delete(); NewAssetsPageFlag.objects.create(enabled=True, enabled_for_all_courses=True);" | ./manage.py lms shell && echo "NewAssetsPageFlag inserted!"'
