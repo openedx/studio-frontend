@@ -17,8 +17,8 @@ import { shallowWithIntl } from '../../utils/i18n/enzymeHelper';
 import WrappedEditImageModal from './container';
 import WrappedMessage from '../../utils/i18n/formattedMessageWrapper';
 
-const learnMoreLink = 'http://edx.readthedocs.io/projects/edx-partner-course-staff/en/latest/accessibility/best_'
-  + 'practices_course_content_dev.html#use-best-practices-for-describing-images';
+const learnMoreLink = 'https://docs.openedx.org/en/latest/educators/references/accessibility/'
+   + 'accessibility_best_practices_checklist.html#use-best-practices-for-describing-images';
 
 const store = getMockStore({
   help_tokens: {
