@@ -3,17 +3,17 @@ name: node_js CI
 on:
   push:
     branches:
-    - master
+      - master
   pull_request:
     branches:
-    - '**'
+      - "**"
 
 jobs:
   tests:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node: [16]
+        node: [ 12, 14, 16 ]
 
     steps:
     - name: Checkout
