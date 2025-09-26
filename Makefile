@@ -2,7 +2,7 @@ UNAME := $(shell uname)
 
 i18n = ./src/i18n
 transifex_input = $(i18n)/transifex_input.json
-transifex_utils = ./node_modules/.bin/edx_reactifex
+transifex_utils = node ./scripts/concat_translations.js
 
 # This directory must match .babelrc .
 transifex_temp = ./temp/babel-plugin-react-intl
